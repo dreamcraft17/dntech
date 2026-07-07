@@ -80,7 +80,9 @@ export interface Career {
   slug: string;
   department?: string;
   location?: string;
+  level?: string;
   type?: string;
+  benefits?: string;
   description: string;
   requirements?: string;
 }

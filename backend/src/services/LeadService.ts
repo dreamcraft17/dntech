@@ -1,6 +1,6 @@
 import prisma from '../config/database';
 import { LeadStatus } from '@prisma/client';
-import { sendWelcomeEmail } from './EmailService';
+import { sendWelcomeEmail, sendLeadNotification } from './EmailService';
 
 export interface LeadInput {
   name: string;
@@ -10,6 +10,7 @@ export interface LeadInput {
   serviceType?: string;
   projectType?: string;
   budgetRange?: string;
+  timeline?: string;
   message?: string;
   source?: string;
   pageSource?: string;
@@ -49,6 +50,7 @@ export async function createLead(data: LeadInput, meta?: { ip?: string; userAgen
       serviceInterested: data.serviceType,
       projectType: data.projectType,
       budgetRange: data.budgetRange,
+      timeline: data.timeline,
       message: data.message || '',
       subject: `Lead: ${data.serviceType || data.projectType || 'Umum'}`,
       source: data.source || 'contact-form',
@@ -83,6 +85,7 @@ export async function createLead(data: LeadInput, meta?: { ip?: string; userAgen
   });
 
   sendWelcomeEmail(data.email, data.name).catch(console.error);
+  sendLeadNotification(data).catch(console.error);
 
   return { submission, isDuplicate, leadCategory };
 }

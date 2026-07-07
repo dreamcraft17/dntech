@@ -74,7 +74,7 @@ export default async function ContactPage({
 
           <div className={contactItems.length > 0 ? 'lg:col-span-2' : 'lg:col-span-3'}>
             <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-slate-900 mb-6">Minta Demo Gratis</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-6">Mulai Konsultasi Gratis</h2>
               <MultiStepForm
                 source="contact-form"
                 pageSource="/contact"

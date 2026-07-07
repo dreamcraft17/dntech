@@ -13,15 +13,15 @@ export function Card({ title, description, children, footer, className, hover }:
   return (
     <div
       className={cn(
-        'rounded-xl border border-slate-200 bg-white p-6 shadow-sm',
-        hover && 'transition-shadow hover:shadow-md',
+        'rounded-lg border border-gray-200 bg-white p-6',
+        hover && 'transition-colors hover:border-gray-300',
         className
       )}
     >
-      {title && <h3 className="text-lg font-semibold text-slate-900">{title}</h3>}
-      {description && <p className="mt-1 text-sm text-slate-600">{description}</p>}
+      {title && <h3 className="text-lg font-semibold text-gray-900">{title}</h3>}
+      {description && <p className="mt-1 text-sm text-gray-600">{description}</p>}
       {children && <div className={cn(title || description ? 'mt-4' : '')}>{children}</div>}
-      {footer && <div className="mt-4 border-t border-slate-100 pt-4">{footer}</div>}
+      {footer && <div className="mt-4 border-t border-gray-200 pt-4">{footer}</div>}
     </div>
   );
 }

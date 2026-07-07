@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
+import { estimateReadTime, formatReadTime } from '@/lib/read-time';
 import { JsonLd, breadcrumbSchema, articleSchema } from '@/components/seo/JsonLd';
 import { InternalLinks } from '@/components/seo/InternalLinks';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
@@ -58,6 +59,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
     ...(pillar?.links ?? []),
     ...relatedServices,
   ];
+  const readMin = estimateReadTime(post.content || post.excerpt);
 
   return (
     <>
@@ -93,8 +95,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
           <article itemScope itemType="https://schema.org/Article">
             <div className="text-sm text-blue-600 font-medium">{post.category}</div>
             <h1 className="mt-2 text-4xl font-bold text-slate-900" itemProp="headline">{post.title}</h1>
-            <div className="mt-4 text-sm text-slate-500">
-              {post.publishedAt && <time itemProp="datePublished" dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>}
+            <div className="mt-4 text-sm text-gray-500">
+              {formatReadTime(readMin)}
+              {post.publishedAt && <> · <time itemProp="datePublished" dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time></>}
               {post.author && <span itemProp="author"> · {post.author.name}</span>}
             </div>
 

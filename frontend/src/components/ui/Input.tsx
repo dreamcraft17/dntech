@@ -12,22 +12,22 @@ export function Input({ label, error, helperText, className, id, ...props }: Inp
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-medium text-slate-700">
+        <label htmlFor={inputId} className="block text-sm font-medium text-gray-800">
           {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
+          {props.required && <span className="text-red-600 ml-1">*</span>}
         </label>
       )}
       <input
         id={inputId}
         className={cn(
-          'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:bg-slate-50',
-          error && 'border-red-500 focus:border-red-500 focus:ring-red-500/20',
+          'w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-gray-900 placeholder:text-gray-500 focus:border-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20 disabled:bg-gray-50 min-h-[48px]',
+          error && 'border-red-600 focus:border-red-600 focus:ring-red-600/20',
           className
         )}
         {...props}
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {helperText && !error && <p className="text-sm text-slate-500">{helperText}</p>}
+      {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
+      {helperText && !error && <p className="text-sm text-gray-600">{helperText}</p>}
     </div>
   );
 }
@@ -43,21 +43,21 @@ export function Textarea({ label, error, className, id, ...props }: TextareaProp
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-medium text-slate-700">
+        <label htmlFor={inputId} className="block text-sm font-medium text-gray-800">
           {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
+          {props.required && <span className="text-red-600 ml-1">*</span>}
         </label>
       )}
       <textarea
         id={inputId}
         className={cn(
-          'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20',
-          error && 'border-red-500',
+          'w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-gray-900 placeholder:text-gray-500 focus:border-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20',
+          error && 'border-red-600',
           className
         )}
         {...props}
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
     </div>
   );
 }
@@ -74,16 +74,16 @@ export function Select({ label, error, options, className, id, ...props }: Selec
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-medium text-slate-700">
+        <label htmlFor={inputId} className="block text-sm font-medium text-gray-800">
           {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
+          {props.required && <span className="text-red-600 ml-1">*</span>}
         </label>
       )}
       <select
         id={inputId}
         className={cn(
-          'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20',
-          error && 'border-red-500',
+          'w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-gray-900 focus:border-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20 min-h-[48px] bg-white',
+          error && 'border-red-600',
           className
         )}
         {...props}
@@ -92,7 +92,7 @@ export function Select({ label, error, options, className, id, ...props }: Selec
           <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}
       </select>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
     </div>
   );
 }

@@ -67,14 +67,20 @@ export default async function CaseStudiesPage() {
               ))}
             </div>
           ) : (
-            <p className="text-center text-slate-500">Belum ada studi kasus tersedia.</p>
+            <div className="text-center py-16 rounded-lg border border-dashed border-gray-200 bg-gray-50">
+              <p className="text-gray-600 max-w-md mx-auto">
+                Studi kasus akan dipublikasikan setelah proyek nyata selesai dan klien memberikan izin.
+              </p>
+              <p className="mt-2 text-sm text-gray-500">Sementara itu, baca artikel blog kami untuk insight teknologi startup.</p>
+              <Link href="/blog" className="inline-block mt-6 text-blue-900 font-medium hover:underline">Baca Blog</Link>
+            </div>
           )}
 
-          <div className="mt-16 text-center p-8 rounded-2xl bg-blue-600">
-            <h2 className="text-2xl font-bold text-white">Siap menjadi kisah sukses berikutnya?</h2>
-            <p className="mt-2 text-blue-100">Mari diskusikan tujuan proyek Anda.</p>
+          <div className="mt-16 text-center p-8 rounded-lg bg-blue-900">
+            <h2 className="text-2xl font-bold text-white">Punya proyek yang ingin dikerjakan?</h2>
+            <p className="mt-2 text-blue-100">Mari diskusikan kebutuhan teknologi Anda.</p>
             <Link href="/contact" className="inline-block mt-6">
-              <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">Minta Demo Gratis</Button>
+              <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-100">Konsultasi Gratis</Button>
             </Link>
           </div>
         </div>

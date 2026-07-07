@@ -220,6 +220,7 @@ model FormSubmission {
   source            String?
   pageSource        String?    @map("page_source")
   projectType       String?    @map("project_type")
+  timeline          String?
   leadCategory      String?    @map("lead_category")
   ipAddress         String?    @map("ip_address")
   userAgent         String?    @map("user_agent")
@@ -302,7 +303,9 @@ model Career {
   slug         String        @unique
   department   String?
   location     String?
+  level        String?
   type         String?
+  benefits     String?
   description  String
   requirements String?
   status       ContentStatus @default(active)
@@ -344,7 +347,7 @@ model SiteSettings {
   companyAddress        String?  @map("company_address")
   logoId                String?  @map("logo_id")
   faviconId             String?  @map("favicon_id")
-  primaryColor          String?  @default("#2563eb") @map("primary_color")
+  primaryColor          String?  @default("#1E3A8A") @map("primary_color")
   socialLinks           Json?    @map("social_links")
   seoTitleTemplate      String?  @map("seo_title_template")
   seoDescriptionTemplate String? @map("seo_description_template")

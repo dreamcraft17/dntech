@@ -120,7 +120,7 @@ export function articleSchema(post: {
 }, companyName = 'DN Tech') {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'BlogPosting',
     headline: post.title,
     description: post.description,
     url: `${SITE_URL}/blog/${post.slug}`,
@@ -166,5 +166,25 @@ export function itemListSchema(items: { name: string; url: string }[]) {
       name: item.name,
       url: item.url,
     })),
+  };
+}
+
+export function personSchema(member: {
+  name: string;
+  role?: string;
+  bio?: string;
+  url?: string;
+  image?: string;
+  sameAs?: string[];
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: member.name,
+    jobTitle: member.role,
+    description: member.bio,
+    url: member.url,
+    image: member.image,
+    ...(member.sameAs?.length ? { sameAs: member.sameAs } : {}),
   };
 }

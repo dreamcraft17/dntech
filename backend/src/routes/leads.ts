@@ -20,6 +20,7 @@ const leadSchema = z.object({
   serviceType: z.string().optional(),
   projectType: z.string().optional(),
   budgetRange: z.string().optional(),
+  timeline: z.string().optional(),
   message: z.string().optional(),
   source: z.string().optional(),
   pageSource: z.string().optional(),

@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { SITE_URL, SITE_NAME, DEFAULT_KEYWORDS } from '@/lib/seo';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-geist-sans', display: 'swap' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     default: `${SITE_NAME} - Solusi Teknologi Terpercaya`,
     template: `%s | ${SITE_NAME}`,
   },
-  description: 'DN Tech menyediakan solusi enterprise software, web development, cloud & DevOps untuk digitalisasi bisnis Anda.',
+  description: 'DN Tech — software house Indonesia untuk pengembangan aplikasi kustom dan konsultasi teknologi startup.',
   keywords: DEFAULT_KEYWORDS,
   alternates: { canonical: SITE_URL },
   openGraph: {

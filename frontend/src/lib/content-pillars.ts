@@ -1,52 +1,52 @@
-/** Content pillar strategy — maps blog categories to cluster pages for internal linking */
+/** V2 content pillars — SEO Guide & PRD v2 */
 
 export const CONTENT_PILLARS = [
   {
-    id: 'trends',
-    label: 'Tren Industri',
-    description: 'Thought leadership & tren teknologi enterprise',
-    category: 'Technology',
-    href: '/blog?category=Technology',
+    id: 'tech-stack',
+    label: 'Tech Stack Indonesia',
+    description: 'Next.js, PostgreSQL, DevOps untuk startup lokal',
+    category: 'Tech Stack',
+    href: '/blog?category=Tech Stack',
     links: [
       { href: '/services', label: 'Layanan Kami' },
-      { href: '/case-studies', label: 'Kisah Sukses' },
       { href: '/blog', label: 'Semua Artikel' },
+      { href: '/contact', label: 'Konsultasi Gratis' },
     ],
   },
   {
-    id: 'cloud',
-    label: 'Cloud & DevOps',
-    description: 'Panduan migrasi & best practice infrastruktur',
-    category: 'Cloud',
-    href: '/blog?category=Cloud',
+    id: 'scaling',
+    label: 'Scaling Proyek Software',
+    description: 'Tim remote, version control, strategi testing',
+    category: 'Scaling',
+    href: '/blog?category=Scaling',
     links: [
       { href: '/services', label: 'Layanan Kami' },
-      { href: '/resources', label: 'Sumber Daya' },
-      { href: '/contact', label: 'Asesmen Cloud Gratis' },
-    ],
-  },
-  {
-    id: 'security',
-    label: 'Keamanan & Kualitas',
-    description: 'Keamanan web, OWASP, dan best practice pengembangan',
-    category: 'Security',
-    href: '/blog?category=Security',
-    links: [
-      { href: '/services', label: 'Layanan Kami' },
-      { href: '/faq', label: 'FAQ Keamanan' },
-      { href: '/quiz', label: 'Temukan Solusi Anda' },
-    ],
-  },
-  {
-    id: 'success',
-    label: 'Kesuksesan Klien',
-    description: 'Hasil nyata dari klien enterprise',
-    category: 'Success Stories',
-    href: '/case-studies',
-    links: [
-      { href: '/case-studies', label: 'Semua Studi Kasus' },
-      { href: '/testimonials', label: 'Testimoni Klien' },
+      { href: '/faq', label: 'FAQ Proses Kerja' },
       { href: '/contact', label: 'Hubungi Kami' },
+    ],
+  },
+  {
+    id: 'startup',
+    label: 'Saran Teknologi Startup',
+    description: 'MVP, optimasi biaya, keamanan dasar',
+    category: 'Startup',
+    href: '/blog?category=Startup',
+    links: [
+      { href: '/blog', label: 'Artikel Startup' },
+      { href: '/about', label: 'Tentang Kami' },
+      { href: '/contact', label: 'Mulai Proyek' },
+    ],
+  },
+  {
+    id: 'insights',
+    label: 'Insight Kasus',
+    description: 'Pelajaran dari proyek nyata (jika tersedia)',
+    category: 'Case Insights',
+    href: '/blog?category=Case Insights',
+    links: [
+      { href: '/portfolio', label: 'Portfolio' },
+      { href: '/blog', label: 'Blog' },
+      { href: '/contact', label: 'Diskusi Proyek' },
     ],
   },
 ] as const;
