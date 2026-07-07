@@ -206,8 +206,8 @@ export default async function HomePage() {
       <section className="py-20 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-slate-900">Estimate Your Project</h2>
-            <p className="mt-3 text-slate-600">Get a rough budget estimate in seconds</p>
+            <h2 className="text-3xl font-bold text-slate-900">Estimasi Biaya Proyek</h2>
+            <p className="mt-3 text-slate-600">Dapatkan perkiraan anggaran proyek dalam Rupiah</p>
           </div>
           <ROICalculator />
         </div>

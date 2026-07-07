@@ -51,7 +51,7 @@ export const localBusinessSchema = {
     addressCountry: 'Indonesia',
   },
   openingHours: 'Mo-Fr 09:00-18:00',
-  priceRange: '$$',
+  priceRange: 'Rp100.000.000 - Rp5.000.000.000',
 };
 
 export const websiteSchema = {

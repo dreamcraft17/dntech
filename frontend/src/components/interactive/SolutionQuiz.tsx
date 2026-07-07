@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { getApiUrl } from '@/lib/api';
+import { QUIZ_BUDGET_OPTIONS } from '@/lib/currency';
 import { ArrowRight, CheckCircle, Mail } from 'lucide-react';
 
 const QUESTIONS = [
@@ -39,13 +40,8 @@ const QUESTIONS = [
   },
   {
     id: 'q4',
-    question: 'What is your estimated budget?',
-    options: [
-      { value: 'small', label: 'Under $50K' },
-      { value: 'medium', label: '$50K - $200K' },
-      { value: 'large', label: '$200K - $500K' },
-      { value: 'enterprise-budget', label: '$500K+' },
-    ],
+    question: 'Berapa perkiraan anggaran proyek Anda?',
+    options: [...QUIZ_BUDGET_OPTIONS],
   },
   {
     id: 'q5',

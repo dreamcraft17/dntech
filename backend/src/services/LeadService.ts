@@ -18,7 +18,10 @@ export interface LeadInput {
 export function categorizeLead(serviceType?: string, budget?: string): string {
   if (!serviceType) return 'general';
   const svc = serviceType.toLowerCase();
-  if (svc.includes('enterprise') || budget?.includes('100000')) return 'enterprise';
+  const enterpriseBudgets = new Set([
+    '500k+', '100k-500k', '5m-plus', '1m-5m', 'large', 'enterprise-budget',
+  ]);
+  if (svc.includes('enterprise') || (budget && enterpriseBudgets.has(budget))) return 'enterprise';
   if (svc.includes('web') || svc.includes('mobile')) return 'product';
   if (svc.includes('cloud') || svc.includes('devops')) return 'infrastructure';
   if (svc.includes('consult')) return 'consulting';

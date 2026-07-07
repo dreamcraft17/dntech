@@ -9,6 +9,7 @@ import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import { getApiUrl } from '@/lib/api';
+import { BUDGET_OPTIONS } from '@/lib/currency';
 import { Check } from 'lucide-react';
 
 const step1Schema = z.object({
@@ -145,12 +146,9 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
               { value: 'cloud-devops', label: 'Cloud & DevOps' },
               { value: 'it-consulting', label: 'IT Consulting' },
             ]} {...register('serviceType')} error={errors.serviceType?.message} required />
-            <Select label="Budget Range (optional)" options={[
-              { value: '', label: 'Prefer not to say' },
-              { value: 'under-50k', label: 'Under $50K' },
-              { value: '50k-100k', label: '$50K - $100K' },
-              { value: '100k-500k', label: '$100K - $500K' },
-              { value: '500k+', label: '$500K+' },
+            <Select label="Kisaran Anggaran (opsional)" options={[
+              { value: '', label: 'Lebih baik tidak disebutkan' },
+              ...BUDGET_OPTIONS,
             ]} {...register('budgetRange')} />
           </div>
         )}
