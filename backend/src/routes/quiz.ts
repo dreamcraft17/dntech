@@ -1,0 +1,57 @@
+import { Router } from 'express';
+import { z } from 'zod';
+import prisma from '../config/database';
+import { asyncHandler, successResponse } from '../utils/helpers';
+
+const router = Router();
+
+const QUIZ_RESULTS: Record<string, { service: string; description: string }> = {
+  enterprise: { service: 'Enterprise Software Development', description: 'Custom ERP, CRM, and large-scale systems' },
+  product: { service: 'Web & Mobile Development', description: 'MVPs, web apps, and mobile applications' },
+  cloud: { service: 'Cloud & DevOps', description: 'Cloud migration, CI/CD, and infrastructure' },
+  consulting: { service: 'IT Consulting & Strategy', description: 'Digital transformation roadmap and strategy' },
+};
+
+router.post(
+  '/submit',
+  asyncHandler(async (req, res) => {
+    const data = z.object({
+      sessionId: z.string().optional(),
+      answers: z.record(z.string()),
+      email: z.string().email().optional(),
+      name: z.string().optional(),
+    }).parse(req.body);
+
+    // Score answers
+    const values = Object.values(data.answers).join(' ').toLowerCase();
+    let result = 'consulting';
+    if (values.includes('enterprise') || values.includes('legacy') || values.includes('erp')) result = 'enterprise';
+    else if (values.includes('mvp') || values.includes('startup') || values.includes('app')) result = 'product';
+    else if (values.includes('cloud') || values.includes('scale') || values.includes('devops')) result = 'cloud';
+
+    const recommendation = QUIZ_RESULTS[result];
+
+    const submission = await prisma.quizSubmission.create({
+      data: {
+        sessionId: data.sessionId,
+        answers: data.answers,
+        result,
+        recommendedService: recommendation.service,
+        email: data.email,
+        name: data.name,
+      },
+    });
+
+    await prisma.analyticsEvent.create({
+      data: { eventType: 'quiz_complete', pageUrl: '/quiz', conversionStatus: data.email ? 'converted' : 'partial' },
+    });
+
+    successResponse(res, {
+      id: submission.id,
+      result,
+      recommendation,
+    });
+  })
+);
+
+export default router;

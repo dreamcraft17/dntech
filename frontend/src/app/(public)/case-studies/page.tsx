@@ -1,0 +1,82 @@
+import Link from 'next/link';
+import { CaseStudyCard } from '@/components/cards/CaseStudyCard';
+import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
+import { Button } from '@/components/ui/Button';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Case Studies',
+  description: 'Explore how DN Tech helped enterprises achieve digital transformation success.',
+};
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+interface CaseStudy {
+  slug: string;
+  title: string;
+  description?: string;
+  clientName?: string;
+  metrics?: Record<string, string>;
+  industries?: string[];
+}
+
+async function getCaseStudies() {
+  try {
+    const res = await fetch(`${API_URL}/case-studies?pageSize=50`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    return (await res.json()).data as CaseStudy[];
+  } catch {
+    return [];
+  }
+}
+
+export default async function CaseStudiesPage() {
+  const items = await getCaseStudies();
+
+  return (
+    <>
+      <JsonLd data={breadcrumbSchema([
+        { name: 'Home', url: SITE_URL },
+        { name: 'Case Studies', url: `${SITE_URL}/case-studies` },
+      ])} />
+
+      <div className="py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-slate-900">Case Studies</h1>
+            <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
+              Real results from real clients. See how we help enterprises transform with technology.
+            </p>
+          </div>
+
+          {items.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {items.map((item) => (
+                <CaseStudyCard
+                  key={item.slug}
+                  slug={item.slug}
+                  title={item.title}
+                  description={item.description}
+                  clientName={item.clientName}
+                  metrics={item.metrics}
+                  industries={item.industries}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-slate-500">No case studies available yet.</p>
+          )}
+
+          <div className="mt-16 text-center p-8 rounded-2xl bg-blue-600">
+            <h2 className="text-2xl font-bold text-white">Ready to be our next success story?</h2>
+            <p className="mt-2 text-blue-100">Let us discuss your project goals.</p>
+            <Link href="/contact" className="inline-block mt-6">
+              <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">Request Free Demo</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

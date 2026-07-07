@@ -1,0 +1,80 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { apiFetch } from '@/lib/api';
+import { Card } from '@/components/ui/Card';
+import { Users, Eye, MessageSquare, TrendingUp } from 'lucide-react';
+import Link from 'next/link';
+
+interface Overview {
+  pageViews: number;
+  pageViewsChange: string;
+  formSubmissions: number;
+  totalLeads: number;
+  newLeads: number;
+  conversionRate: string;
+}
+
+export default function AdminDashboardPage() {
+  const [overview, setOverview] = useState<Overview | null>(null);
+
+  useEffect(() => {
+    apiFetch<Overview>('/admin/analytics/overview').then(setOverview).catch(console.error);
+  }, []);
+
+  const stats = [
+    { label: 'Page Views (30d)', value: overview?.pageViews ?? '-', change: overview?.pageViewsChange, icon: Eye, color: 'blue' },
+    { label: 'Form Submissions', value: overview?.formSubmissions ?? '-', icon: MessageSquare, color: 'green' },
+    { label: 'Total Leads', value: overview?.totalLeads ?? '-', icon: Users, color: 'purple' },
+    { label: 'Conversion Rate', value: overview?.conversionRate ?? '-', icon: TrendingUp, color: 'orange' },
+  ];
+
+  return (
+    <div>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">Dashboard</h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {stats.map(({ label, value, change, icon: Icon }) => (
+          <Card key={label}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500">{label}</p>
+                <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
+                {change && <p className="text-xs text-green-600 mt-1">{change}% vs prev period</p>}
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                <Icon className="h-5 w-5 text-blue-600" />
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card title="Quick Actions">
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { href: '/admin/services', label: 'Manage Services' },
+              { href: '/admin/blog', label: 'New Blog Post' },
+              { href: '/admin/leads', label: 'View Leads' },
+              { href: '/admin/settings', label: 'Site Settings' },
+            ].map(({ href, label }) => (
+              <Link key={href} href={href}
+                className="p-3 rounded-lg border border-slate-200 text-sm font-medium text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-colors text-center">
+                {label}
+              </Link>
+            ))}
+          </div>
+        </Card>
+
+        <Card title="New Leads">
+          <p className="text-3xl font-bold text-slate-900">{overview?.newLeads ?? 0}</p>
+          <p className="text-sm text-slate-500 mt-1">Unread leads this month</p>
+          <Link href="/admin/leads" className="mt-4 inline-block text-sm text-blue-600 font-medium hover:underline">
+            View all leads →
+          </Link>
+        </Card>
+      </div>
+    </div>
+  );
+}

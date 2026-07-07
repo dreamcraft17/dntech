@@ -1,0 +1,435 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SuperAdmin
+  ContentManager
+  Editor
+  Viewer
+}
+
+enum ContentStatus {
+  draft
+  active
+  archived
+}
+
+enum BlogStatus {
+  draft
+  published
+  scheduled
+}
+
+enum FormType {
+  contact
+  service_request
+  career
+}
+
+enum LeadStatus {
+  new
+  contacted
+  qualified
+  converted
+  rejected
+}
+
+model User {
+  id               String    @id @default(uuid())
+  email            String    @unique
+  passwordHash     String    @map("password_hash")
+  name             String
+  role             UserRole  @default(Viewer)
+  assignedSections Json?     @map("assigned_sections")
+  isActive         Boolean   @default(true) @map("is_active")
+  lastLogin        DateTime? @map("last_login")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  createdById      String?   @map("created_by")
+  deletedAt        DateTime? @map("deleted_at")
+
+  createdBy        User?     @relation("UserCreatedBy", fields: [createdById], references: [id])
+  createdUsers     User[]    @relation("UserCreatedBy")
+  activityLogs     ActivityLog[]
+  services         Service[]
+  portfolioItems   PortfolioItem[]
+  blogPosts        BlogPost[]
+  testimonials     Testimonial[]
+  media            Media[]
+  assignedLeads    FormSubmission[] @relation("AssignedLeads")
+
+  @@map("users")
+}
+
+model ActivityLog {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  action     String
+  entityType String?  @map("entity_type")
+  entityId   String?  @map("entity_id")
+  changes    Json?
+  ipAddress  String?  @map("ip_address")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@map("activity_logs")
+}
+
+model Media {
+  id               String   @id @default(uuid())
+  filename         String
+  originalFilename String?  @map("original_filename")
+  fileSize         Int?     @map("file_size")
+  mimeType         String?  @map("mime_type")
+  url              String
+  thumbnailUrl     String?  @map("thumbnail_url")
+  altText          String?  @map("alt_text")
+  description      String?
+  uploadedById     String?  @map("uploaded_by")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  uploadedBy       User?    @relation(fields: [uploadedById], references: [id])
+  portfolioFeatured PortfolioItem[] @relation("PortfolioFeaturedImage")
+  blogFeatured     BlogPost[] @relation("BlogFeaturedImage")
+  teamPhotos       TeamMember[] @relation("TeamPhoto")
+  testimonialPhotos Testimonial[] @relation("TestimonialPhoto")
+  siteLogo         SiteSettings[] @relation("SiteLogo")
+  siteFavicon      SiteSettings[] @relation("SiteFavicon")
+
+  @@index([uploadedById])
+  @@index([createdAt])
+  @@map("media")
+}
+
+model Service {
+  id             String        @id @default(uuid())
+  name           String
+  slug           String        @unique
+  description    String
+  features       Json?
+  iconUrl        String?       @map("icon_url")
+  category       String?
+  status         ContentStatus @default(draft)
+  displayOrder   Int           @default(0) @map("display_order")
+  seoTitle       String?       @map("seo_title")
+  seoDescription String?       @map("seo_description")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  createdById    String?       @map("created_by")
+  deletedAt      DateTime?     @map("deleted_at")
+
+  createdBy User? @relation(fields: [createdById], references: [id])
+
+  @@index([slug])
+  @@index([status])
+  @@index([displayOrder])
+  @@map("services")
+}
+
+model PortfolioItem {
+  id               String        @id @default(uuid())
+  title            String
+  slug             String        @unique
+  description      String?
+  clientName       String?       @map("client_name")
+  industries       Json?
+  serviceIds       Json?         @map("service_ids")
+  startDate        DateTime?     @map("start_date")
+  endDate          DateTime?     @map("end_date")
+  budget           Float?
+  outcomes         String?
+  challenge        String?
+  solution         String?
+  metrics          Json?
+  clientLogoUrl    String?       @map("client_logo_url")
+  testimonial      String?
+  featuredImageId  String?       @map("featured_image_id")
+  imageIds         Json?         @map("image_ids")
+  status           ContentStatus @default(draft)
+  displayOrder     Int           @default(0) @map("display_order")
+  seoTitle         String?       @map("seo_title")
+  seoDescription   String?       @map("seo_description")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+  createdById      String?       @map("created_by")
+  deletedAt        DateTime?     @map("deleted_at")
+
+  featuredImage Media? @relation("PortfolioFeaturedImage", fields: [featuredImageId], references: [id])
+  createdBy     User?  @relation(fields: [createdById], references: [id])
+
+  @@index([slug])
+  @@index([status])
+  @@map("portfolio_items")
+}
+
+model BlogPost {
+  id               String     @id @default(uuid())
+  title            String
+  slug             String     @unique
+  content          String
+  excerpt          String?
+  featuredImageId  String?    @map("featured_image_id")
+  category         String?
+  tags             Json?
+  authorId         String?    @map("author_id")
+  status           BlogStatus @default(draft)
+  publishedAt      DateTime?  @map("published_at")
+  scheduledAt      DateTime?  @map("scheduled_at")
+  seoTitle         String?    @map("seo_title")
+  seoDescription   String?    @map("seo_description")
+  viewCount        Int        @default(0) @map("view_count")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+  deletedAt        DateTime?  @map("deleted_at")
+
+  featuredImage Media? @relation("BlogFeaturedImage", fields: [featuredImageId], references: [id])
+  author        User?  @relation(fields: [authorId], references: [id])
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([authorId])
+  @@map("blog_posts")
+}
+
+model FormSubmission {
+  id                String     @id @default(uuid())
+  formType          FormType   @map("form_type")
+  name              String
+  email             String
+  phone             String?
+  subject           String?
+  message           String
+  serviceInterested String?    @map("service_interested")
+  companyName       String?    @map("company_name")
+  budgetRange       String?    @map("budget_range")
+  resumeUrl         String?    @map("resume_url")
+  status            LeadStatus @default(new)
+  assignedToId      String?    @map("assigned_to")
+  notes             String?
+  followUpDate      DateTime?  @map("follow_up_date")
+  source            String?
+  pageSource        String?    @map("page_source")
+  projectType       String?    @map("project_type")
+  leadCategory      String?    @map("lead_category")
+  ipAddress         String?    @map("ip_address")
+  userAgent         String?    @map("user_agent")
+  isRead            Boolean    @default(false) @map("is_read")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+
+  assignedTo User? @relation("AssignedLeads", fields: [assignedToId], references: [id])
+
+  @@index([email])
+  @@index([status])
+  @@index([assignedToId])
+  @@index([createdAt])
+  @@map("form_submissions")
+}
+
+model TeamMember {
+  id           String   @id @default(uuid())
+  name         String
+  role         String
+  department   String?
+  email        String?
+  phone        String?
+  bio          String?
+  photoId      String?  @map("photo_id")
+  socialLinks  Json?    @map("social_links")
+  displayOrder Int      @default(0) @map("display_order")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  photo Media? @relation("TeamPhoto", fields: [photoId], references: [id])
+
+  @@index([isActive])
+  @@index([displayOrder])
+  @@map("team_members")
+}
+
+model Testimonial {
+  id          String   @id @default(uuid())
+  clientName  String   @map("client_name")
+  company     String?
+  position    String?
+  quote       String
+  title       String?
+  videoUrl    String?  @map("video_url")
+  rating      Int?
+  serviceIds  Json?    @map("service_ids")
+  photoId     String?  @map("photo_id")
+  isApproved  Boolean  @default(false) @map("is_approved")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdById String?  @map("created_by")
+
+  photo     Media? @relation("TestimonialPhoto", fields: [photoId], references: [id])
+  createdBy User?  @relation(fields: [createdById], references: [id])
+
+  @@index([isApproved])
+  @@map("testimonials")
+}
+
+model Faq {
+  id           String   @id @default(uuid())
+  question     String
+  answer       String
+  category     String   @default("General")
+  displayOrder Int      @default(0) @map("display_order")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@index([isActive])
+  @@map("faqs")
+}
+
+model Career {
+  id           String        @id @default(uuid())
+  title        String
+  slug         String        @unique
+  department   String?
+  location     String?
+  type         String?
+  description  String
+  requirements String?
+  status       ContentStatus @default(active)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("careers")
+}
+
+model AnalyticsEvent {
+  id         String   @id @default(uuid())
+  eventType  String   @map("event_type")
+  pageUrl    String?  @map("page_url")
+  pageTitle  String?  @map("page_title")
+  userId     String?  @map("user_id")
+  sessionId  String?  @map("session_id")
+  referrer   String?
+  userAgent  String?  @map("user_agent")
+  deviceType String?  @map("device_type")
+  leadSource String?  @map("lead_source")
+  conversionStatus String? @map("conversion_status")
+  country    String?
+  city       String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([eventType])
+  @@index([createdAt])
+  @@index([pageUrl])
+  @@map("analytics_events")
+}
+
+model SiteSettings {
+  id                    Int      @id @default(1)
+  companyName           String?  @map("company_name")
+  tagline               String?
+  companyEmail          String?  @map("company_email")
+  companyPhone          String?  @map("company_phone")
+  companyAddress        String?  @map("company_address")
+  logoId                String?  @map("logo_id")
+  faviconId             String?  @map("favicon_id")
+  primaryColor          String?  @default("#2563eb") @map("primary_color")
+  socialLinks           Json?    @map("social_links")
+  seoTitleTemplate      String?  @map("seo_title_template")
+  seoDescriptionTemplate String? @map("seo_description_template")
+  googleAnalyticsId     String?  @map("google_analytics_id")
+  smtpConfig            Json?    @map("smtp_config")
+  termsContent          String?  @map("terms_content")
+  privacyContent        String?  @map("privacy_content")
+  aboutContent          Json?    @map("about_content")
+  trustBadges           Json?    @map("trust_badges")
+  clientLogos           Json?    @map("client_logos")
+  calendlyUrl           String?  @map("calendly_url")
+  leadMagnetUrl         String?  @map("lead_magnet_url")
+  isMaintenanceMode     Boolean  @default(false) @map("is_maintenance_mode")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  logo    Media? @relation("SiteLogo", fields: [logoId], references: [id])
+  favicon Media? @relation("SiteFavicon", fields: [faviconId], references: [id])
+
+  @@map("site_settings")
+}
+
+model EmailTemplate {
+  id               String   @id @default(uuid())
+  name             String   @unique
+  subject          String
+  htmlContent      String?  @map("html_content")
+  plainTextContent String?  @map("plain_text_content")
+  variables        Json?
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("email_templates")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([token])
+  @@map("password_reset_tokens")
+}
+
+model ConversionFunnel {
+  id              String   @id @default(uuid())
+  sessionId       String   @map("session_id")
+  eventType       String   @map("event_type")
+  pageUrl         String   @map("page_url")
+  leadSource      String?  @map("lead_source")
+  convertedToLead Boolean  @default(false) @map("converted_to_lead")
+  metadata        Json?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([sessionId])
+  @@index([eventType])
+  @@index([leadSource])
+  @@index([createdAt])
+  @@map("conversion_funnels")
+}
+
+model NewsletterSubscriber {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String?
+  industry     String?
+  serviceType  String?  @map("service_type")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([email])
+  @@map("newsletter_subscribers")
+}
+
+model QuizSubmission {
+  id          String   @id @default(uuid())
+  sessionId   String?  @map("session_id")
+  answers     Json
+  result      String
+  recommendedService String? @map("recommended_service")
+  email       String?
+  name        String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("quiz_submissions")
+}
