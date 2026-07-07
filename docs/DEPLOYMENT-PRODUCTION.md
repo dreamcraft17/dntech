@@ -31,7 +31,7 @@ DATABASE_URL="postgresql://dntech_user:dntech2026!@localhost:5432/dntech?schema=
 JWT_SECRET="GANTI_DENGAN_STRING_RANDOM_PANJANG_MIN_32_KARAKTER"
 JWT_EXPIRES_IN="24h"
 JWT_REFRESH_EXPIRES_IN="7d"
-FRONTEND_URL="https://www.dntech.id"
+FRONTEND_URL="https://www.dntech.id,https://dntech.id"
 UPLOAD_DIR=./uploads
 ADMIN_EMAIL=admin@dntech.id
 ADMIN_PASSWORD=Admin@123456
@@ -83,19 +83,78 @@ pm2 startup
 
 ## 5. Frontend
 
+**Penting:** `NEXT_PUBLIC_*` di-embed saat `npm run build`. Tanpa ini, browser user akan fetch ke `localhost:4000` → **Failed to fetch**.
+
 ```bash
 cd /var/www/dntech/frontend
-cp .env.example .env.local
-# NEXT_PUBLIC_API_URL=https://api.dntech.id/api/v1  (atau proxy nginx)
+nano .env.local
+```
+
+Isi `.env.local` (sesuaikan jika API di subdomain atau path yang sama):
+
+```env
+NEXT_PUBLIC_API_URL=https://api.dntech.id/api/v1
+NEXT_PUBLIC_SITE_URL=https://www.dntech.id
+```
+
+Atau jika Nginx proxy `/api` ke backend di domain yang sama:
+
+```env
+NEXT_PUBLIC_API_URL=https://www.dntech.id/api/v1
+NEXT_PUBLIC_SITE_URL=https://www.dntech.id
+```
+
+```bash
 npm install
 npm run build
-pm2 start npm --name dntech-web -- start
+pm2 restart dntech-web   # atau: pm2 start npm --name dntech-web -- start
 ```
+
+Verifikasi di browser DevTools → Network: request harus ke `https://api.dntech.id/...`, **bukan** `localhost:4000`.
 
 ## 6. Nginx (contoh)
 
-- `www.dntech.id` → frontend `:3000`
-- `api.dntech.id` → backend `:4000`
+**Frontend** — `www.dntech.id` → `:3000`:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name www.dntech.id dntech.id;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+**Backend API** — `api.dntech.id` → `:4000`:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name api.dntech.id;
+
+    location / {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+**Alternatif:** proxy `/api` di domain utama (tanpa subdomain):
+
+```nginx
+location /api/ {
+    proxy_pass http://127.0.0.1:4000/api/;
+    proxy_set_header Host $host;
+}
+```
 
 ## Checklist
 
@@ -105,4 +164,6 @@ pm2 start npm --name dntech-web -- start
 - [ ] `npm run build` sukses
 - [ ] `npx prisma db push` + `npm run db:seed`
 - [ ] JWT_SECRET diganti random
-- [ ] Firewall: 5432 hanya localhost
+- [ ] `frontend/.env.local` → `NEXT_PUBLIC_API_URL` production
+- [ ] Frontend **rebuild** setelah ubah `.env.local`
+- [ ] Backend `FRONTEND_URL` mencakup `https://dntech.id` dan `https://www.dntech.id`
