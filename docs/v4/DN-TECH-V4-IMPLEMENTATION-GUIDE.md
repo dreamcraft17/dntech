@@ -812,3 +812,5 @@ pm2 restart dntech-web
 
 **Owner:** Dozer (CEO + Tech Lead)  
 **Date:** Juli 2026
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

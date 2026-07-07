@@ -154,3 +154,5 @@ DNTECH telah meluncurkan company profile website yang solid. Dokumen ini mengura
 ---
 
 **Document Version: 2.0 | Last Updated: Juli 2026**
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

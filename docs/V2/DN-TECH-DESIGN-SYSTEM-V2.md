@@ -915,3 +915,5 @@ Before shipping any page:
 **Design System Owner:** Design Team  
 **Last Updated:** Juli 2026  
 **Next Review:** Agustus 2026
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

@@ -510,3 +510,5 @@ To build a professional, dynamic company profile that reflects DN Tech's innovat
 ---
 
 **Last Updated:** June 2026
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

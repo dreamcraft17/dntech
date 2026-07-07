@@ -521,3 +521,5 @@ For clarification:
 **Owner:** Dozer (CEO + Tech Lead)  
 **Last Updated:** Juli 2026  
 **Next Review:** Agustus 2026 (after v3 launch)
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

@@ -985,3 +985,5 @@ Start with Part 1 (Exit Modal), then Part 2 (Logo), then test thoroughly.
 
 **Owner:** Dozer (CEO + Tech Lead)  
 **Date:** Juli 2026
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

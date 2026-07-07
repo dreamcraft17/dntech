@@ -391,3 +391,5 @@ Pick one, follow the sections, and iterate. You don't need to implement everythi
 *Prepared for DN Tech Product Team*  
 *July 2026*  
 *Questions? Review the relevant PRD document section.*
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

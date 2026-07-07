@@ -285,3 +285,5 @@ A: Yes, V4 is prerequisite for future V5 improvements (CDN, service worker).
 
 **Owner:** Dozer (CEO + Tech Lead)  
 **Date:** Juli 2026
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

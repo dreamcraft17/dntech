@@ -931,3 +931,5 @@ Use Tailwind CSS + existing component patterns:
 **Document Owner:** Product Manager  
 **Last Updated:** Juli 2026  
 **Next Review:** Agustus 2026
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

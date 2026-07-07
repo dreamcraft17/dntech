@@ -1367,3 +1367,5 @@ lsof -ti :4000 | xargs kill -9
 ---
 
 **DN Tech © 2026 — All rights reserved**
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026

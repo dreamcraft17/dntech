@@ -716,3 +716,5 @@ Setelah deploy, pastikan:
 ---
 
 *Dokumen ini hanya mencatat implementasi teknis yang sudah selesai. Untuk konten marketing (artikel blog, foto tim, GA4 setup), lihat checklist operasional di `docs/V2/README-V2-CHANGES.md`.*
+
+Property of DN Teh - PT. Dozer Napitupulu Technology . 2026
