@@ -25,14 +25,38 @@ import quizRoutes from './routes/quiz';
 import adminRoutes from './routes/admin';
 import { errorHandler } from './utils/helpers';
 
+function buildAllowedOrigins(): string[] {
+  const origins = new Set<string>();
+  const raw = (process.env.FRONTEND_URL || 'http://localhost:3000')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+
+  for (const origin of raw) {
+    origins.add(origin);
+    try {
+      const url = new URL(origin);
+      const port = url.port ? `:${url.port}` : '';
+      const base = `${url.protocol}//`;
+      const host = url.hostname;
+      if (host.startsWith('www.')) {
+        origins.add(`${base}${host.slice(4)}${port}`);
+      } else if (host !== 'localhost' && !/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+        origins.add(`${base}www.${host}${port}`);
+      }
+    } catch {
+      // ignore invalid URL entries
+    }
+  }
+
+  return [...origins];
+}
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
-  .split(',')
-  .map((o) => o.trim())
-  .filter(Boolean);
+const allowedOrigins = buildAllowedOrigins();
 
 app.use(cors({
   origin(origin, callback) {
@@ -40,7 +64,7 @@ app.use(cors({
       callback(null, true);
       return;
     }
-    callback(new Error(`CORS blocked for origin: ${origin}`));
+    callback(null, false);
   },
   credentials: true,
 }));
