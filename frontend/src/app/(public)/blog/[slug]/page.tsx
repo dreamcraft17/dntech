@@ -3,8 +3,9 @@ import { formatDate } from '@/lib/utils';
 import { JsonLd, breadcrumbSchema, articleSchema } from '@/components/seo/JsonLd';
 import { InternalLinks } from '@/components/seo/InternalLinks';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
-import { getPillarForCategory, getRelatedServiceSlugs } from '@/lib/content-pillars';
-import type { BlogPost } from '@/types';
+import { getPillarForCategory, getRelatedServiceLinks } from '@/lib/content-pillars';
+import { asArray } from '@/lib/api';
+import type { BlogPost, Service } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -17,6 +18,16 @@ async function getPost(slug: string) {
     return (await res.json()).data as BlogPost;
   } catch {
     return null;
+  }
+}
+
+async function getServices() {
+  try {
+    const res = await fetch(`${API_URL}/services`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    return asArray<Service>((await res.json()).data);
+  } catch {
+    return [];
   }
 }
 
@@ -38,14 +49,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const [post, services] = await Promise.all([getPost(slug), getServices()]);
   if (!post) notFound();
 
   const pillar = getPillarForCategory(post.category);
-  const serviceSlugs = getRelatedServiceSlugs(post.category);
+  const relatedServices = getRelatedServiceLinks(post.category, services);
   const internalLinks = [
     ...(pillar?.links ?? []),
-    ...serviceSlugs.map((s) => ({ href: `/services/${s}`, label: `Layanan: ${s.replace(/-/g, ' ')}` })),
+    ...relatedServices,
   ];
 
   return (

@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/Button';
 import { JsonLd, breadcrumbSchema, serviceSchema } from '@/components/seo/JsonLd';
 import { InternalLinks } from '@/components/seo/InternalLinks';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
-import { SERVICE_BLOG_CATEGORY } from '@/lib/content-pillars';
 import type { Service, BlogPost } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -49,8 +48,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   if (!service) notFound();
 
   const features = (service.features as { title: string; description?: string }[]) || [];
-  const blogCategory = SERVICE_BLOG_CATEGORY[slug];
-  const relatedPosts = blogCategory ? await getRelatedPosts(blogCategory) : [];
+  const relatedPosts = service.category ? await getRelatedPosts(service.category) : [];
 
   const internalLinks = [
     { href: '/case-studies', label: 'Lihat Studi Kasus' },

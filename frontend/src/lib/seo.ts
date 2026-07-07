@@ -35,7 +35,7 @@ export const PAGE_SEO: Record<string, { title: string; description: string; keyw
   },
   about: {
     title: 'Tentang DN Tech',
-    description: 'Partner teknologi terpercaya sejak 2018. 100+ proyek, 50+ klien enterprise di berbagai industri.',
+    description: 'Pelajari misi, visi, dan tim DN Tech — partner teknologi untuk transformasi digital bisnis Anda.',
     keywords: ['DN Tech company', 'technology partner Indonesia', 'software company Jakarta'],
   },
   contact: {
@@ -55,7 +55,7 @@ export const PAGE_SEO: Record<string, { title: string; description: string; keyw
   },
   resources: {
     title: 'Sumber Daya & Panduan',
-    description: 'Unduh gratis: Panduan Transformasi Digital Enterprise, Checklist Migrasi Cloud, dan whitepaper.',
+    description: 'Panduan, checklist, dan whitepaper gratis dari DN Tech untuk mendukung transformasi digital Anda.',
     keywords: ['checklist pengembangan aplikasi enterprise', 'panduan transformasi digital PDF'],
   },
 };

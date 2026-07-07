@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,13 +37,29 @@ interface MultiStepFormProps {
   source?: string;
   pageSource?: string;
   defaultService?: string;
+  services?: { value: string; label: string }[];
 }
 
-export function MultiStepForm({ source = 'contact-form', pageSource, defaultService }: MultiStepFormProps) {
+export function MultiStepForm({ source = 'contact-form', pageSource, defaultService, services: servicesProp }: MultiStepFormProps) {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [serviceOptions, setServiceOptions] = useState<{ value: string; label: string }[]>(servicesProp || []);
   const router = useRouter();
+
+  useEffect(() => {
+    if (servicesProp?.length) {
+      setServiceOptions(servicesProp);
+      return;
+    }
+    fetch(getApiUrl('/services'))
+      .then((res) => res.json())
+      .then((json) => {
+        const services = (json.data || []) as { slug: string; name: string }[];
+        setServiceOptions(services.map((s) => ({ value: s.slug, label: s.name })));
+      })
+      .catch(() => {});
+  }, [servicesProp]);
 
   const { register, handleSubmit, trigger, formState: { errors }, getValues } = useForm<FormData>({
     defaultValues: { serviceType: defaultService || '', projectType: '' },
@@ -139,12 +155,9 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
               { value: 'consulting', label: 'Konsultasi & Strategi' },
             ]} {...register('projectType')} error={errors.projectType?.message} required />
             <Select label="Layanan yang Diminati" options={[
-              { value: '', label: 'Pilih layanan...' },
-              { value: 'enterprise-software', label: 'Perangkat Lunak Enterprise' },
-              { value: 'web-mobile-development', label: 'Pengembangan Web & Mobile' },
-              { value: 'cloud-devops', label: 'Cloud & DevOps' },
-              { value: 'it-consulting', label: 'Konsultasi IT' },
-            ]} {...register('serviceType')} error={errors.serviceType?.message} required />
+              { value: '', label: serviceOptions.length ? 'Pilih layanan...' : 'Belum ada layanan tersedia' },
+              ...serviceOptions,
+            ]} {...register('serviceType')} error={errors.serviceType?.message} required disabled={serviceOptions.length === 0} />
             <Select label="Kisaran Anggaran (opsional)" options={[
               { value: '', label: 'Lebih baik tidak disebutkan' },
               ...BUDGET_OPTIONS,

@@ -2,17 +2,10 @@ interface ClientLogosProps {
   logos?: { name: string; initial?: string }[];
 }
 
-const DEFAULT_LOGOS = [
-  { name: 'Bank Sejahtera', initial: 'BS' },
-  { name: 'PT Maju Bersama', initial: 'MB' },
-  { name: 'CV Digital Nusantara', initial: 'DN' },
-  { name: 'TechCorp Indonesia', initial: 'TC' },
-  { name: 'Global Retail Co', initial: 'GR' },
-  { name: 'FinServe Asia', initial: 'FA' },
-];
-
 export function ClientLogos({ logos }: ClientLogosProps) {
-  const items = Array.isArray(logos) && logos.length > 0 ? logos : DEFAULT_LOGOS;
+  const items = Array.isArray(logos) ? logos.filter((l) => l.name) : [];
+  if (!items.length) return null;
+
   return (
     <section className="py-10 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

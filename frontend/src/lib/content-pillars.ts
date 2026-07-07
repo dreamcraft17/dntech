@@ -8,9 +8,9 @@ export const CONTENT_PILLARS = [
     category: 'Technology',
     href: '/blog?category=Technology',
     links: [
-      { href: '/services/enterprise-software', label: 'Perangkat Lunak Enterprise' },
-      { href: '/services/it-consulting', label: 'Konsultasi IT' },
+      { href: '/services', label: 'Layanan Kami' },
       { href: '/case-studies', label: 'Kisah Sukses' },
+      { href: '/blog', label: 'Semua Artikel' },
     ],
   },
   {
@@ -20,8 +20,8 @@ export const CONTENT_PILLARS = [
     category: 'Cloud',
     href: '/blog?category=Cloud',
     links: [
-      { href: '/services/cloud-devops', label: 'Layanan Cloud & DevOps' },
-      { href: '/resources', label: 'Checklist Migrasi Cloud' },
+      { href: '/services', label: 'Layanan Kami' },
+      { href: '/resources', label: 'Sumber Daya' },
       { href: '/contact', label: 'Asesmen Cloud Gratis' },
     ],
   },
@@ -32,7 +32,7 @@ export const CONTENT_PILLARS = [
     category: 'Security',
     href: '/blog?category=Security',
     links: [
-      { href: '/services/web-mobile-development', label: 'Pengembangan Web' },
+      { href: '/services', label: 'Layanan Kami' },
       { href: '/faq', label: 'FAQ Keamanan' },
       { href: '/quiz', label: 'Temukan Solusi Anda' },
     ],
@@ -44,36 +44,24 @@ export const CONTENT_PILLARS = [
     category: 'Success Stories',
     href: '/case-studies',
     links: [
-      { href: '/case-studies/erp-manufaktur', label: 'ERP Manufaktur' },
-      { href: '/case-studies/mobile-banking', label: 'Mobile Banking' },
+      { href: '/case-studies', label: 'Semua Studi Kasus' },
       { href: '/testimonials', label: 'Testimoni Klien' },
+      { href: '/contact', label: 'Hubungi Kami' },
     ],
   },
 ] as const;
-
-/** Maps blog categories to related service slugs for contextual internal links */
-export const CATEGORY_SERVICE_MAP: Record<string, string[]> = {
-  Technology: ['enterprise-software', 'it-consulting'],
-  Cloud: ['cloud-devops'],
-  Security: ['web-mobile-development'],
-  Development: ['web-mobile-development', 'enterprise-software'],
-  'Success Stories': [],
-};
-
-/** Maps service slugs to blog categories for related articles */
-export const SERVICE_BLOG_CATEGORY: Record<string, string> = {
-  'enterprise-software': 'Technology',
-  'web-mobile-development': 'Security',
-  'cloud-devops': 'Cloud',
-  'it-consulting': 'Technology',
-};
 
 export function getPillarForCategory(category?: string) {
   if (!category) return null;
   return CONTENT_PILLARS.find((p) => p.category === category) ?? null;
 }
 
-export function getRelatedServiceSlugs(category?: string): string[] {
+export function getRelatedServiceLinks(
+  category: string | undefined,
+  services: { slug: string; name: string; category?: string | null }[],
+) {
   if (!category) return [];
-  return CATEGORY_SERVICE_MAP[category] ?? [];
+  return services
+    .filter((s) => s.category?.toLowerCase() === category.toLowerCase())
+    .map((s) => ({ href: `/services/${s.slug}`, label: s.name }));
 }

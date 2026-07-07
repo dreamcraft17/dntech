@@ -1,14 +1,10 @@
-import { Shield, Award, CheckCircle, Zap } from 'lucide-react';
+import { Shield, Award, CheckCircle, Zap, LucideIcon } from 'lucide-react';
 
-const DEFAULT_BADGES = [
-  { icon: 'shield', label: 'Bersertifikat ISO 27001', description: 'Manajemen Keamanan Informasi' },
-  { icon: 'award', label: '1000+ Proyek', description: 'Berhasil diselesaikan' },
-  { icon: 'check', label: '50Jt+ Pengguna', description: 'Di aplikasi klien kami' },
-  { icon: 'zap', label: 'AWS Partner', description: 'Keahlian infrastruktur cloud' },
-];
-
-const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  shield: Shield, award: Award, check: CheckCircle, zap: Zap,
+const ICONS: Record<string, LucideIcon> = {
+  shield: Shield,
+  award: Award,
+  check: CheckCircle,
+  zap: Zap,
 };
 
 interface TrustBadgesProps {
@@ -16,7 +12,9 @@ interface TrustBadgesProps {
 }
 
 export function TrustBadges({ badges }: TrustBadgesProps) {
-  const items = Array.isArray(badges) && badges.length > 0 ? badges : DEFAULT_BADGES;
+  const items = Array.isArray(badges) ? badges.filter((b) => b.label) : [];
+  if (!items.length) return null;
+
   return (
     <section className="py-12 bg-slate-50 border-y border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

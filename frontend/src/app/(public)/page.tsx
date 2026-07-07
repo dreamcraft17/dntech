@@ -11,8 +11,10 @@ import { BookDemoSection } from '@/components/interactive/BookDemoSection';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { asArray } from '@/lib/api';
+import { getHomeStats } from '@/lib/settings';
 import type { Service, BlogPost, Testimonial } from '@/types';
 import type { Metadata } from 'next';
+import type { LucideIcon } from 'lucide-react';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.home.title,
@@ -22,6 +24,13 @@ export const metadata: Metadata = buildMetadata({
 });
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+
+const STAT_ICONS: Record<string, LucideIcon> = {
+  briefcase: Briefcase,
+  users: Users,
+  award: Award,
+  star: Star,
+};
 
 interface CaseStudy {
   slug: string;
@@ -68,16 +77,11 @@ async function getHomeData() {
 
 export default async function HomePage() {
   const { services, blogPosts, testimonials, settings, caseStudies } = await getHomeData();
-  const tagline = settings.tagline || 'Solusi Teknologi Terpercaya untuk Bisnis Anda';
+  const tagline = settings.tagline || settings.companyName || 'DN Tech';
+  const heroDescription = settings.heroDescription as string | undefined;
   const trustBadges = settings.trustBadges as { icon?: string; label: string; description?: string }[] | undefined;
   const clientLogos = settings.clientLogos as { name: string; initial?: string }[] | undefined;
-
-  const stats = [
-    { icon: Briefcase, value: '100+', label: 'Proyek Selesai' },
-    { icon: Users, value: '50+', label: 'Klien Enterprise' },
-    { icon: Award, value: '15+', label: 'Industri Terlayani' },
-    { icon: Star, value: '4.9', label: 'Penilaian Klien' },
-  ];
+  const stats = getHomeStats(settings);
 
   return (
     <>
@@ -89,9 +93,11 @@ export default async function HomePage() {
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               {tagline}
             </h1>
+            {heroDescription && (
             <p className="mt-6 text-lg text-blue-100 leading-relaxed">
-              Kami membantu perusahaan Indonesia bertransformasi digital dengan solusi teknologi enterprise yang scalable, aman, dan inovatif.
+              {heroDescription}
             </p>
+            )}
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/contact">
                 <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">
@@ -112,21 +118,27 @@ export default async function HomePage() {
       <TrustBadges badges={trustBadges} />
 
       {/* Stats */}
-      <section className="bg-white py-12 border-b border-slate-200">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-            {stats.map(({ icon: Icon, value, label }) => (
-              <div key={label} className="text-center">
-                <Icon className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                <div className="text-3xl font-bold text-slate-900">{value}</div>
-                <div className="text-sm text-slate-600 mt-1">{label}</div>
-              </div>
-            ))}
+      {stats.length > 0 && (
+        <section className="bg-white py-12 border-b border-slate-200">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+              {stats.map((stat) => {
+                const Icon = STAT_ICONS[stat.icon || 'briefcase'] || Briefcase;
+                return (
+                  <div key={`${stat.label}-${stat.value}`} className="text-center">
+                    <Icon className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                    <div className="text-3xl font-bold text-slate-900">{stat.value}</div>
+                    <div className="text-sm text-slate-600 mt-1">{stat.label}</div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Services */}
+      {services.length > 0 && (
       <section className="py-20 bg-slate-50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -161,8 +173,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Case Studies */}
+      )}
       {caseStudies.length > 0 && (
         <section className="py-20 bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

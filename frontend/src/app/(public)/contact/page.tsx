@@ -1,6 +1,9 @@
 import { MultiStepForm } from '@/components/forms/MultiStepForm';
 import { CalendlyEmbed } from '@/components/interactive/CalendlyEmbed';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
+import { getPublicSettings } from '@/lib/settings';
+import { asArray } from '@/lib/api';
+import type { Service } from '@/types';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -13,13 +16,18 @@ export const metadata: Metadata = buildMetadata({
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
-async function getSettings() {
+async function getContactData() {
   try {
-    const res = await fetch(`${API_URL}/settings`, { next: { revalidate: 300 } });
-    if (!res.ok) return {};
-    return (await res.json()).data;
+    const [settings, servicesRes] = await Promise.all([
+      getPublicSettings(),
+      fetch(`${API_URL}/services`, { next: { revalidate: 60 } }),
+    ]);
+    const services = servicesRes.ok
+      ? asArray<Service>((await servicesRes.json()).data)
+      : [];
+    return { settings, services };
   } catch {
-    return {};
+    return { settings: {}, services: [] };
   }
 }
 
@@ -29,8 +37,15 @@ export default async function ContactPage({
   searchParams: Promise<{ service?: string }>;
 }) {
   const { service } = await searchParams;
-  const settings = await getSettings();
-  const calendlyUrl = settings.calendlyUrl as string | undefined;
+  const { settings, services } = await getContactData();
+  const calendlyUrl = settings.calendlyUrl;
+
+  const contactItems = [
+    settings.companyEmail ? { icon: Mail, label: 'Email', value: settings.companyEmail } : null,
+    settings.companyPhone ? { icon: Phone, label: 'Telepon', value: settings.companyPhone } : null,
+    settings.companyAddress ? { icon: MapPin, label: 'Alamat', value: settings.companyAddress } : null,
+    settings.businessHours ? { icon: Clock, label: 'Jam Operasional', value: settings.businessHours } : null,
+  ].filter(Boolean) as { icon: typeof Mail; label: string; value: string }[];
 
   return (
     <div className="py-16">
@@ -41,29 +56,31 @@ export default async function ContactPage({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          <div className="space-y-6">
-            {[
-              { icon: Mail, label: 'Email', value: settings.companyEmail || 'hello@dntech.id' },
-              { icon: Phone, label: 'Telepon', value: settings.companyPhone || '+62 21 1234 5678' },
-              { icon: MapPin, label: 'Alamat', value: settings.companyAddress || 'Jakarta, Indonesia' },
-              { icon: Clock, label: 'Jam Operasional', value: 'Sen - Jum, 9:00 - 18:00 WIB' },
-            ].map(({ icon: Icon, label, value }) => (
-              <div key={label} className="flex gap-4">
-                <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-                  <Icon className="h-5 w-5 text-blue-600" />
+          {contactItems.length > 0 && (
+            <div className="space-y-6">
+              {contactItems.map(({ icon: Icon, label, value }) => (
+                <div key={label} className="flex gap-4">
+                  <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                    <Icon className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-slate-900">{label}</div>
+                    <div className="text-sm text-slate-600">{value}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-sm font-medium text-slate-900">{label}</div>
-                  <div className="text-sm text-slate-600">{value}</div>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
-          <div className="lg:col-span-2">
+          <div className={contactItems.length > 0 ? 'lg:col-span-2' : 'lg:col-span-3'}>
             <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-slate-900 mb-6">Minta Demo Gratis</h2>
-              <MultiStepForm source="contact-form" pageSource="/contact" defaultService={service} />
+              <MultiStepForm
+                source="contact-form"
+                pageSource="/contact"
+                defaultService={service}
+                services={services.map((s) => ({ value: s.slug, label: s.name }))}
+              />
             </div>
             <CalendlyEmbed url={calendlyUrl} />
           </div>

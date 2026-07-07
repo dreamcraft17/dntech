@@ -1,33 +1,60 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import { MultiStepForm } from '@/components/forms/MultiStepForm';
 
+/** Minimal waktu di halaman sebelum exit-intent aktif */
+const MIN_DWELL_MS = 8000;
+/** Kursor harus pernah masuk ke area konten (bukan tepi atas) */
+const ENGAGE_Y = 80;
+/** Trigger hanya saat kursor mendekati tab bar / address bar */
+const EXIT_Y = 5;
+
 export function ExitIntentModal() {
   const [show, setShow] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+  const enabledRef = useRef(false);
+  const engagedRef = useRef(false);
+  const triggeredRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (sessionStorage.getItem('exitIntentDismissed')) {
-      setDismissed(true);
-      return;
+    if (sessionStorage.getItem('exitIntentDismissed')) return;
+
+    // Skip perangkat sentuh — tidak ada exit intent via mouse
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+
+    const dwellTimer = window.setTimeout(() => {
+      enabledRef.current = true;
+    }, MIN_DWELL_MS);
+
+    function markEngaged(e: MouseEvent) {
+      if (e.clientY >= ENGAGE_Y) engagedRef.current = true;
     }
 
-    function handleMouseLeave(e: MouseEvent) {
-      if (e.clientY <= 0 && !dismissed && !show) {
+    function handleMouseOut(e: MouseEvent) {
+      if (!enabledRef.current || !engagedRef.current || triggeredRef.current) return;
+
+      // Keluar ke browser chrome (tab bar, address bar, dll.)
+      const exitingViaTop = e.clientY <= EXIT_Y && !e.relatedTarget;
+      if (exitingViaTop) {
+        triggeredRef.current = true;
         setShow(true);
       }
     }
 
-    document.addEventListener('mouseleave', handleMouseLeave);
-    return () => document.removeEventListener('mouseleave', handleMouseLeave);
-  }, [dismissed, show]);
+    document.addEventListener('mousemove', markEngaged, { passive: true });
+    document.documentElement.addEventListener('mouseout', handleMouseOut);
+
+    return () => {
+      window.clearTimeout(dwellTimer);
+      document.removeEventListener('mousemove', markEngaged);
+      document.documentElement.removeEventListener('mouseout', handleMouseOut);
+    };
+  }, []);
 
   function dismiss() {
     setShow(false);
-    setDismissed(true);
     sessionStorage.setItem('exitIntentDismissed', '1');
   }
 

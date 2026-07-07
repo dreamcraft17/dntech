@@ -5,18 +5,32 @@ import { ExitIntentModal } from '@/components/interactive/ExitIntentModal';
 import { StickyCTA } from '@/components/layout/StickyCTA';
 import { CrispChatLoader } from '@/components/interactive/CrispChatLoader';
 import { AnalyticsLoader } from '@/components/seo/AnalyticsLoader';
-import { JsonLd, organizationSchema, localBusinessSchema, websiteSchema } from '@/components/seo/JsonLd';
+import {
+  JsonLd,
+  buildOrganizationSchema,
+  buildLocalBusinessSchema,
+  buildWebsiteSchema,
+} from '@/components/seo/JsonLd';
+import { getPublicSettings } from '@/lib/settings';
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default async function PublicLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getPublicSettings();
+
   return (
     <>
-      <JsonLd data={organizationSchema} />
-      <JsonLd data={localBusinessSchema} />
-      <JsonLd data={websiteSchema} />
+      <JsonLd data={buildOrganizationSchema(settings)} />
+      <JsonLd data={buildLocalBusinessSchema(settings)} />
+      <JsonLd data={buildWebsiteSchema(settings)} />
       <PageTracker />
       <Header />
       <main className="flex-1 pb-16 md:pb-0">{children}</main>
-      <Footer />
+      <Footer
+        companyName={settings.companyName}
+        tagline={settings.tagline}
+        companyEmail={settings.companyEmail}
+        companyPhone={settings.companyPhone}
+        companyAddress={settings.companyAddress}
+      />
       <StickyCTA />
       <ExitIntentModal />
       <CrispChatLoader />

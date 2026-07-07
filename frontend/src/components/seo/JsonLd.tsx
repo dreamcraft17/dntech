@@ -1,3 +1,5 @@
+import type { PublicSettings } from '@/lib/settings';
+
 interface JsonLdProps {
   data: Record<string, unknown>;
 }
@@ -13,63 +15,74 @@ export function JsonLd({ data }: JsonLdProps) {
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dntech.id';
 
-export const organizationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'DN Tech',
-  url: SITE_URL,
-  logo: `${SITE_URL}/logo.png`,
-  description: 'Solusi teknologi enterprise untuk digitalisasi bisnis Anda.',
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Jakarta',
-    addressCountry: 'ID',
-  },
-  contactPoint: {
-    '@type': 'ContactPoint',
-    telephone: '+62-21-1234-5678',
-    contactType: 'sales',
-    email: 'hello@dntech.id',
-  },
-  sameAs: [
-    'https://linkedin.com/company/dntech',
-    'https://github.com/dntech',
-  ],
-};
+export function buildOrganizationSchema(settings: PublicSettings = {}) {
+  const social = settings.socialLinks ?? {};
+  const sameAs = Object.values(social).filter(Boolean);
 
-export const localBusinessSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: 'DN Tech',
-  description: 'Layanan pengembangan perangkat lunak enterprise dan transformasi digital.',
-  url: SITE_URL,
-  telephone: '+62-21-1234-5678',
-  email: 'hello@dntech.id',
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Jakarta',
-    addressCountry: 'Indonesia',
-  },
-  openingHours: 'Mo-Fr 09:00-18:00',
-  priceRange: 'Rp100.000.000 - Rp5.000.000.000',
-};
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: settings.companyName || 'DN Tech',
+    url: SITE_URL,
+    logo: `${SITE_URL}/logo.png`,
+    description: settings.heroDescription || settings.tagline || undefined,
+    ...(settings.companyAddress ? {
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: settings.companyAddress,
+        addressCountry: 'ID',
+      },
+    } : {}),
+    ...(settings.companyEmail || settings.companyPhone ? {
+      contactPoint: {
+        '@type': 'ContactPoint',
+        ...(settings.companyPhone ? { telephone: settings.companyPhone } : {}),
+        ...(settings.companyEmail ? { email: settings.companyEmail } : {}),
+        contactType: 'sales',
+      },
+    } : {}),
+    ...(sameAs.length ? { sameAs } : {}),
+  };
+}
 
-export const websiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'DN Tech',
-  url: SITE_URL,
-  description: 'Solusi teknologi enterprise untuk digitalisasi bisnis Indonesia.',
-  publisher: { '@type': 'Organization', name: 'DN Tech', url: SITE_URL },
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${SITE_URL}/blog?search={search_term_string}`,
+export function buildLocalBusinessSchema(settings: PublicSettings = {}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: settings.companyName || 'DN Tech',
+    description: settings.heroDescription || settings.tagline || undefined,
+    url: SITE_URL,
+    ...(settings.companyPhone ? { telephone: settings.companyPhone } : {}),
+    ...(settings.companyEmail ? { email: settings.companyEmail } : {}),
+    ...(settings.companyAddress ? {
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: settings.companyAddress,
+        addressCountry: 'Indonesia',
+      },
+    } : {}),
+    ...(settings.businessHours ? { openingHours: settings.businessHours } : {}),
+  };
+}
+
+export function buildWebsiteSchema(settings: PublicSettings = {}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: settings.companyName || 'DN Tech',
+    url: SITE_URL,
+    description: settings.tagline || undefined,
+    publisher: { '@type': 'Organization', name: settings.companyName || 'DN Tech', url: SITE_URL },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${SITE_URL}/blog?search={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
     },
-    'query-input': 'required name=search_term_string',
-  },
-};
+  };
+}
 
 export function faqSchema(faqs: { question: string; answer: string }[]) {
   return {
@@ -104,7 +117,7 @@ export function articleSchema(post: {
   author?: string;
   image?: string;
   category?: string;
-}) {
+}, companyName = 'DN Tech') {
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -113,10 +126,10 @@ export function articleSchema(post: {
     url: `${SITE_URL}/blog/${post.slug}`,
     datePublished: post.publishedAt,
     dateModified: post.publishedAt,
-    author: { '@type': 'Person', name: post.author || 'DN Tech Team' },
+    author: { '@type': 'Person', name: post.author || companyName },
     publisher: {
       '@type': 'Organization',
-      name: 'DN Tech',
+      name: companyName,
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
     },
     image: post.image || `${SITE_URL}/logo.png`,
@@ -130,14 +143,14 @@ export function serviceSchema(service: {
   description: string;
   slug: string;
   category?: string;
-}) {
+}, companyName = 'DN Tech') {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: service.name,
     description: service.description,
     url: `${SITE_URL}/services/${service.slug}`,
-    provider: { '@type': 'Organization', name: 'DN Tech', url: SITE_URL },
+    provider: { '@type': 'Organization', name: companyName, url: SITE_URL },
     areaServed: { '@type': 'Country', name: 'Indonesia' },
     serviceType: service.category,
   };
