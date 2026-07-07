@@ -463,4 +463,4 @@ August 2026: V4 (TBD - email capture? dark mode? multi-lang?)
 
 **Let's build something great! 🚀**
 
-Property of DN Teh - PT. Dozer Napitupulu Technology . 2026
+Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

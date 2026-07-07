@@ -4,4 +4,4 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
-Property of DN Teh - PT. Dozer Napitupulu Technology . 2026
+Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

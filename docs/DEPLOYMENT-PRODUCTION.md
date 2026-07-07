@@ -169,4 +169,4 @@ location /api/ {
 - [ ] Frontend **rebuild** setelah ubah `.env.local`
 - [ ] Backend `FRONTEND_URL` mencakup `https://dntech.id` dan `https://www.dntech.id`
 
-Property of DN Teh - PT. Dozer Napitupulu Technology . 2026
+Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

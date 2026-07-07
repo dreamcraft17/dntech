@@ -704,4 +704,4 @@ Deep dive into all documents + create implementation plan + assign tasks
 *July 2026*  
 *Version 2.0*
 
-Property of DN Teh - PT. Dozer Napitupulu Technology . 2026
+Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

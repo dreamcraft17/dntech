@@ -681,4 +681,4 @@ Konten     : 100% dari database via admin — tanpa data demo hardcoded
 
 *Terakhir diperbarui: Juni 2026*
 
-Property of DN Teh - PT. Dozer Napitupulu Technology . 2026
+Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

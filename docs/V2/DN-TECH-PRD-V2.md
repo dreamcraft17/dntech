@@ -932,4 +932,4 @@ Use Tailwind CSS + existing component patterns:
 **Last Updated:** Juli 2026  
 **Next Review:** Agustus 2026
 
-Property of DN Teh - PT. Dozer Napitupulu Technology . 2026
+Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

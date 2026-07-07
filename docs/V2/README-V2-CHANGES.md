@@ -392,4 +392,4 @@ Pick one, follow the sections, and iterate. You don't need to implement everythi
 *July 2026*  
 *Questions? Review the relevant PRD document section.*
 
-Property of DN Teh - PT. Dozer Napitupulu Technology . 2026
+Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

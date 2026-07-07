@@ -203,4 +203,4 @@ deviceType, conversionStatus, timestamp
 
 **Document Version: 2.0 | Last Updated: Juli 2026**
 
-Property of DN Teh - PT. Dozer Napitupulu Technology . 2026
+Property of DN Tech - PT. Dozer Napitupulu Technology . 2026
