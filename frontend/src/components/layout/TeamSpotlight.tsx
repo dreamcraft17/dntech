@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card } from '@/components/ui/Card';
 import { Globe } from 'lucide-react';
 import type { TeamMember } from '@/types';
@@ -25,10 +26,13 @@ export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
         {team.map((member) => (
           <Card key={member.id} className="text-center">
             {member.photo?.url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={member.photo.url}
-                alt={member.name}
+                alt={member.photo.altText || member.name}
+                width={80}
+                height={80}
+                quality={80}
+                sizes="80px"
                 className="h-20 w-20 rounded-full object-cover mx-auto mb-4 border border-gray-200"
               />
             ) : (

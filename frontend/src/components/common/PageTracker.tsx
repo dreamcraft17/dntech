@@ -9,7 +9,15 @@ export function PageTracker() {
 
   useEffect(() => {
     if (pathname && !pathname.startsWith('/admin')) {
-      trackPageView(pathname, document.title);
+      const track = () => trackPageView(pathname, document.title);
+
+      if ('requestIdleCallback' in window) {
+        const idleId = window.requestIdleCallback(track, { timeout: 3000 });
+        return () => window.cancelIdleCallback(idleId);
+      }
+
+      const timeoutId = setTimeout(track, 1500);
+      return () => clearTimeout(timeoutId);
     }
   }, [pathname]);
 

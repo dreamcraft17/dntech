@@ -33,8 +33,8 @@ export default async function PublicLayout({ children }: { children: React.React
       />
       <StickyCTA />
       <ExitIntentModalLoader />
-      <CrispChatLoader />
-      <AnalyticsLoader />
+      <CrispChatLoader crispWebsiteId={settings.crispWebsiteId} />
+      <AnalyticsLoader googleAnalyticsId={settings.googleAnalyticsId} />
     </>
   );
 }

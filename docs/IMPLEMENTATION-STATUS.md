@@ -1,11 +1,11 @@
 # DN Tech — Status Implementasi & Audit Performa
 
-Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk website DN Tech, termasuk migrasi production-ready, penghapusan data demo, implementasi PRD/Design System/SEO Guide V2, refinement V3, dan hasil audit awal kenapa website terasa lambat.
+Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk website DN Tech, termasuk migrasi production-ready, penghapusan data demo, implementasi PRD/Design System/SEO Guide V2, refinement V3, dan optimasi performa V4.
 
 **Terakhir diperbarui:** 8 Juli 2026  
 **Branch:** `main`  
-**Commit referensi:** `c3b862f` (Implement v3 UX refinements)  
-**Status build terakhir:** ✅ `npm run build` frontend sukses setelah akses jaringan untuk `next/font/google`
+**Commit referensi:** `c3b862f` (Implement v3 UX refinements) + working tree V4  
+**Status build terakhir:** ✅ `npm run build` frontend sukses tanpa dependency Google Fonts, ✅ `npm run build` backend sukses, ✅ `npm run lint` frontend sukses
 
 ---
 
@@ -23,9 +23,10 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 10. [File & Modul Baru](#10-file--modul-baru)
 11. [Yang Sengaja Tidak Di-hardcode](#11-yang-sengaja-tidak-di-hardcode)
 12. [Implementasi V3](#12-implementasi-v3)
-13. [Audit Performa: Kenapa Web Lambat](#13-audit-performa-kenapa-web-lambat)
-14. [Checklist Verifikasi Cepat](#14-checklist-verifikasi-cepat)
-15. [Referensi Dokumen](#15-referensi-dokumen)
+13. [Implementasi V4](#13-implementasi-v4)
+14. [Audit Performa: Kenapa Web Lambat](#14-audit-performa-kenapa-web-lambat)
+15. [Checklist Verifikasi Cepat](#15-checklist-verifikasi-cepat)
+16. [Referensi Dokumen](#16-referensi-dokumen)
 
 ---
 
@@ -41,9 +42,10 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 | Konten real | ✅ | Semua konten dari DB via admin |
 | PRD V2 (teknis) | ✅ | ~85–90% fitur kode selesai |
 | PRD V3 (refinement) | ✅ | Exit intent, logo variants, mobile nav, form accessibility |
-| Production build | ✅ | Frontend build sukses |
-| Lint full repo | ⚠️ | Masih gagal karena issue lama di admin/AuthContext, bukan dari patch V3 |
-| Performance audit awal | ⚠️ | Bottleneck utama: SSR API waterfall, duplicate settings fetch, client-side tracking/chat requests |
+| PRD V4 (performance) | ✅ | Search debounce, deferred scripts, cached settings, streaming homepage, image optimization, backend cache, font/build fix |
+| Production build | ✅ | Frontend + backend build sukses |
+| Lint full repo | ✅ | Frontend lint sukses tanpa error/warning |
+| Performance audit awal | ✅ | Bottleneck utama sudah ditangani di V4; perlu Lighthouse/field verification setelah deploy |
 
 ---
 
@@ -59,7 +61,7 @@ Implementasi berdasarkan `docs/V2/DN-TECH-DESIGN-SYSTEM-V2.md`.
 | Secondary | `#0D9488` (teal-600) | Badge kategori, accent tim |
 | Background | `#FFFFFF`, gray-50 | Section alternatif |
 | Teks | gray-900 / gray-600 | Body & secondary text |
-| Font | Inter | `app/layout.tsx` + `globals.css` |
+| Font | System Inter stack | `globals.css`, tanpa `next/font/google` dependency |
 | Body min | 16px | Default di `globals.css` |
 | Touch target | min 48px | Button lg, input, nav mobile |
 
@@ -467,29 +469,76 @@ Implementasi berdasarkan dokumen di `docs/v3/`.
 
 | Check | Hasil | Catatan |
 |-------|-------|---------|
-| `npm run build` frontend | ✅ Sukses | Perlu network saat build karena `next/font/google` mengambil Inter |
-| ESLint file V3 | ✅ Tidak ada error | Ada warning lama React Hook Form `watch()` di `MultiStepForm` |
-| `npm run lint` seluruh repo | ⚠️ Belum hijau | Error lama `react-hooks/set-state-in-effect` di admin/AuthContext |
+| `npm run build` frontend | ✅ Sukses | Setelah V4 tidak perlu network Google Fonts |
+| ESLint file V3 | ✅ Tidak ada error | Setelah V4 full frontend lint juga bersih |
+| `npm run lint` seluruh repo frontend | ✅ Hijau | 0 error, 0 warning |
 | Manual QA browser | ⏳ Belum dicatat | Perlu test Chrome/Safari/Firefox + mobile |
 | Lighthouse | ⏳ Belum dicatat | Belum ada angka lab audit resmi |
 
 ---
 
-## 13. Audit Performa: Kenapa Web Lambat
+## 13. Implementasi V4
 
-Audit ini adalah hasil review kode dan build, bukan hasil Lighthouse lab run. Temuan diurutkan dari yang paling mungkin terasa oleh user.
+Implementasi berdasarkan dokumen di `docs/v4/`.
+
+### Scope V4 yang sudah masuk ke codebase
+
+| Area | Status | File |
+|------|--------|------|
+| Search debounce + request cancel | ✅ | `frontend/src/components/common/Header.tsx` |
+| Settings server cache/dedupe | ✅ | `frontend/src/lib/settings.ts` |
+| GA defer until idle | ✅ | `frontend/src/components/seo/AnalyticsLoader.tsx` |
+| Crisp defer until interaction | ✅ | `frontend/src/components/interactive/CrispChatLoader.tsx` |
+| Page tracking defer until idle | ✅ | `frontend/src/components/common/PageTracker.tsx` |
+| Homepage streaming | ✅ | `frontend/src/app/(public)/page.tsx` |
+| `next/image` migration | ✅ | Blog detail, team page, team spotlight, case study detail, admin media |
+| Image remote patterns + AVIF/WebP | ✅ | `frontend/next.config.ts` |
+| Build root warning fix | ✅ | `frontend/next.config.ts` (`turbopack.root`) |
+| Remove Google Fonts build dependency | ✅ | `frontend/src/app/layout.tsx`, `frontend/src/app/globals.css` |
+| Backend memory cache | ✅ | `backend/src/services/CacheService.ts` |
+| Public endpoint caching | ✅ | Services, blog list, team, settings |
+| Admin cache invalidation | ✅ | Service/blog/team/settings mutations clear cache |
+| Frontend lint cleanup | ✅ | Admin load effects, React Hook Form watch warning, unused import |
+
+### Perilaku performa saat ini
+
+- Homepage initial render hanya menunggu settings + services; blog dan team preview stream lewat `Suspense`.
+- `getPublicSettings()` memakai React `cache()` sehingga server components dalam satu render tidak fetch settings berulang.
+- GA baru dimount saat browser idle; Crisp baru dimuat setelah interaksi user.
+- Search header menunggu 300ms setelah user berhenti mengetik dan membatalkan request sebelumnya.
+- Public API `services`, `blog`, `team`, dan `settings` punya memory TTL cache.
+- Admin mutation untuk service, blog, team, dan settings membersihkan cache supaya konten publik tidak stale terlalu lama.
+- Build frontend tidak lagi membutuhkan `fonts.googleapis.com`.
+
+### Verifikasi terakhir V4
+
+| Check | Hasil | Catatan |
+|-------|-------|---------|
+| `npm run lint` frontend | ✅ Sukses | 0 error, 0 warning |
+| `npm run build` frontend | ✅ Sukses | Perlu eskalasi sandbox karena Turbopack internal process, bukan karena network font |
+| `npm run build` backend | ✅ Sukses | Prisma generate + TypeScript compile sukses |
+| Scan `<img>` publik | ✅ Bersih | Tidak ada raw `<img>` tersisa di `frontend/src` |
+| Google Fonts dependency | ✅ Dihapus | Tidak ada `next/font/google` / `fonts.googleapis` di source |
+| Lighthouse | ⏳ Belum dicatat | Perlu lab/field test setelah deploy |
+
+---
+
+## 14. Audit Performa: Kenapa Web Lambat
+
+Audit ini awalnya adalah hasil review kode dan build, bukan hasil Lighthouse lab run. Kolom status menunjukkan kondisi setelah implementasi V4.
 
 ### Ringkasan penyebab utama
 
-| Prioritas | Temuan | Dampak |
-|-----------|--------|--------|
-| P0 | Homepage SSR menunggu beberapa request API | TTFB lambat jika API/DB/network lambat |
-| P0 | `settings` di-fetch lebih dari sekali | Request duplikat di homepage dan client loader |
-| P1 | Client loader melakukan request tambahan setelah hydration | Network/main-thread terasa ramai setelah halaman tampil |
-| P1 | Third-party scripts GA/Crisp dimuat dari data settings | Bisa menambah JS, DNS lookup, dan blocking kerja browser |
-| P1 | Beberapa gambar masih pakai `<img>` biasa | Tidak otomatis optimized/sized oleh Next Image |
-| P2 | Header search tidak debounce | Bisa spam API saat user mengetik |
-| P2 | Build warning multiple lockfiles/root inference | Bukan runtime, tapi bisa bikin deploy/build tidak stabil |
+| Prioritas | Temuan | Status V4 |
+|-----------|--------|-----------|
+| P0 | Homepage SSR menunggu beberapa request API | ✅ Ditangani dengan Suspense streaming + cache |
+| P0 | `settings` di-fetch lebih dari sekali | ✅ Ditangani server cache + props ke loader |
+| P1 | Client loader melakukan request tambahan setelah hydration | ✅ GA/Crisp tidak fetch settings lagi |
+| P1 | Third-party scripts GA/Crisp dimuat terlalu awal | ✅ GA idle, Crisp first interaction |
+| P1 | Beberapa gambar masih pakai `<img>` biasa | ✅ Migrasi ke `next/image` |
+| P2 | Header search tidak debounce | ✅ Debounce 300ms + AbortController |
+| P2 | Font/build dependency eksternal | ✅ Google Fonts dependency dihapus |
+| P2 | Build warnings root inference | ✅ `turbopack.root` dikonfigurasi |
 
 ### Detail temuan
 
@@ -497,20 +546,20 @@ Audit ini adalah hasil review kode dan build, bukan hasil Lighthouse lab run. Te
 
 File: `frontend/src/app/(public)/page.tsx`
 
-Homepage menjalankan:
+Sebelum V4, homepage menjalankan:
 
 - `GET /services`
 - `GET /blog?pageSize=4`
 - `GET /team`
 - `GET /settings`
 
-Semua request memang diparalelkan dengan `Promise.all`, tapi halaman server-render tetap harus menunggu semuanya selesai untuk menghasilkan HTML. Kalau backend/API lambat, database cold, VPS kecil, atau API domain lewat network eksternal, user akan merasakan halaman awal lambat.
+Semua request memang diparalelkan dengan `Promise.all`, tapi halaman server-render tetap harus menunggu semuanya selesai untuk menghasilkan HTML.
 
-Rekomendasi:
+Status V4:
 
-- Jadikan data non-kritis seperti team/blog preview sebagai komponen streaming/Suspense.
-- Kurangi jumlah API homepage di first render.
-- Cache settings/service/blog di layer backend atau gunakan revalidate lebih panjang untuk konten jarang berubah.
+- Blog dan team preview sudah dipindah ke async section dalam `Suspense`.
+- Initial render homepage hanya menunggu settings + services.
+- Backend public endpoints sudah memakai memory TTL cache.
 
 #### 2. `settings` di-fetch berulang
 
@@ -521,19 +570,14 @@ File terkait:
 - `frontend/src/components/interactive/CrispChatLoader.tsx`
 - `frontend/src/components/seo/AnalyticsLoader.tsx`
 
-Layout publik sudah fetch `getPublicSettings()`. Homepage juga fetch `/settings` lagi di `getHomeData()`. Setelah halaman hydrate, `CrispChatLoader` dan `AnalyticsLoader` juga fetch `/settings` dari browser kalau env ID tidak tersedia.
+Sebelum V4, layout publik fetch `getPublicSettings()`, homepage fetch `/settings` lagi di `getHomeData()`, lalu `CrispChatLoader` dan `AnalyticsLoader` fetch `/settings` dari browser.
 
-Dampak:
+Status V4:
 
-- Request duplikat ke endpoint yang sama.
-- TTFB homepage ikut tergantung settings.
-- Setelah load, browser masih melakukan request tambahan hanya untuk mendapatkan GA/Crisp ID.
-
-Rekomendasi:
-
-- Pass `settings.googleAnalyticsId` dan `settings.crispWebsiteId` dari server layout ke client loader.
-- Hindari fetch `/settings` lagi di homepage jika data sudah ada di layout, atau buat endpoint home aggregate.
-- Simpan public settings di cache memory backend/Redis jika traffic naik.
+- `getPublicSettings()` dibungkus React `cache()`.
+- Layout mengirim `googleAnalyticsId` dan `crispWebsiteId` langsung ke loader.
+- Loader GA/Crisp tidak lagi fetch `/settings` sendiri.
+- Backend `/settings` punya memory TTL cache.
 
 #### 3. Tracking dan chat menambah request setelah hydration
 
@@ -543,7 +587,7 @@ File terkait:
 - `frontend/src/components/seo/AnalyticsLoader.tsx`
 - `frontend/src/components/interactive/CrispChatLoader.tsx`
 
-Saat halaman publik dibuka, browser dapat melakukan:
+Sebelum V4, saat halaman publik dibuka browser dapat melakukan:
 
 - `POST /analytics/track`
 - `GET /settings` untuk GA
@@ -553,15 +597,15 @@ Saat halaman publik dibuka, browser dapat melakukan:
 
 Ini tidak selalu memblokir HTML awal, tetapi bisa membuat halaman terasa berat di koneksi lambat atau device low-end.
 
-Rekomendasi:
+Status V4:
 
-- Load GA/Crisp dengan delay setelah idle (`requestIdleCallback`) atau setelah interaksi.
-- Pakai env var build-time untuk GA/Crisp jika ID jarang berubah.
-- Batch/defer analytics internal.
+- GA dimount saat browser idle.
+- Crisp dimuat pada interaksi pertama user.
+- PageTracker POST juga didefer sampai idle/fallback delay.
 
 #### 4. Gambar belum seluruhnya pakai Next Image
 
-File yang masih memakai `<img>`:
+Sebelum V4, file ini masih memakai `<img>`:
 
 - `frontend/src/app/(public)/blog/[slug]/page.tsx`
 - `frontend/src/app/(public)/team/page.tsx`
@@ -575,62 +619,61 @@ Dampak:
 - Risiko CLS jika width/height/aspect ratio tidak stabil.
 - Risiko bandwidth besar jika gambar upload tidak dikompresi.
 
-Rekomendasi:
+Status V4:
 
-- Migrasi gambar publik ke `next/image`.
-- Tambahkan `remotePatterns` untuk domain upload/API production, bukan hanya localhost.
-- Pastikan gambar admin/upload diproses dengan ukuran thumbnail.
+- Semua raw `<img>` di `frontend/src` sudah dimigrasi ke `next/image`.
+- `remotePatterns` sudah mencakup localhost, `dntech.id`, `www.dntech.id`, dan `api.dntech.id`.
+- `formats` mencakup AVIF dan WebP.
 
 #### 5. `next/font/google` butuh network saat build
 
 File: `frontend/src/app/layout.tsx`
 
-Build pernah gagal ketika sandbox tidak punya akses ke `fonts.googleapis.com`. Setelah network diizinkan, build sukses. Ini bukan penyebab runtime lambat karena font di-bundle saat build, tetapi bisa membuat deploy VPS gagal kalau outbound network dibatasi.
+Sebelum V4, build pernah gagal ketika sandbox tidak punya akses ke `fonts.googleapis.com`. Ini bisa membuat deploy VPS gagal kalau outbound network dibatasi.
 
-Rekomendasi:
+Status V4:
 
-- Pastikan VPS bisa akses Google Fonts saat build, atau
-- pindahkan Inter ke local font/self-host agar build tidak bergantung network eksternal.
+- Import `next/font/google` sudah dihapus.
+- CSS memakai system Inter stack lewat `--font-inter`.
+- Build tidak lagi perlu akses Google Fonts.
 
 #### 6. Header search belum debounce
 
 File: `frontend/src/components/common/Header.tsx`
 
-Setiap perubahan input search dengan panjang query >= 2 memanggil `/search`. Ini bukan masalah first load, tetapi bisa membuat API terasa berat saat user mengetik cepat.
+Sebelum V4, setiap perubahan input search dengan panjang query >= 2 memanggil `/search`. Ini bukan masalah first load, tetapi bisa membuat API terasa berat saat user mengetik cepat.
 
-Rekomendasi:
+Status V4:
 
-- Tambahkan debounce 250-400ms.
-- Cancel request sebelumnya dengan `AbortController`.
+- Search header memakai debounce 300ms.
+- Request sebelumnya dibatalkan dengan `AbortController`.
 
 #### 7. Build warning root lockfile
 
-Saat build, Next menampilkan warning bahwa workspace root terdeteksi dari lockfile di `/Users/dozer-entropi/package-lock.json`, sementara project juga punya `frontend/package-lock.json`.
+Sebelum V4, Next menampilkan warning bahwa workspace root terdeteksi dari lockfile di `/Users/dozer-entropi/package-lock.json`, sementara project juga punya `frontend/package-lock.json`.
 
 Dampak:
 
 - Bukan runtime issue.
 - Bisa bikin cache/build path membingungkan di local/CI.
 
-Rekomendasi:
+Status V4:
 
-- Set `turbopack.root` di `frontend/next.config.ts`, atau
-- rapikan lockfile di parent directory jika tidak dipakai.
+- `turbopack.root` sudah diset ke `process.cwd()` di `frontend/next.config.ts`.
 
-### Prioritas optimasi berikutnya
+### Prioritas optimasi berikutnya setelah V4
 
 | Urutan | Action | Ekspektasi impact |
 |--------|--------|-------------------|
-| 1 | Hilangkan duplicate `/settings` fetch di layout/home/loader | TTFB dan post-hydration network lebih ringan |
-| 2 | Buat endpoint agregat homepage atau cache server-side | Homepage lebih cepat dan stabil |
-| 3 | Defer GA/Crisp sampai idle/interaksi | Main thread dan network awal lebih ringan |
-| 4 | Migrasi gambar publik ke `next/image` | LCP/CLS/bandwidth lebih baik |
-| 5 | Tambahkan debounce search | Mengurangi beban API saat search |
-| 6 | Self-host font Inter atau pastikan outbound build | Deploy lebih reliable |
+| 1 | Jalankan Lighthouse mobile/desktop setelah deploy | Validasi angka LCP/CLS/TTFB aktual |
+| 2 | Cek Network tab produksi untuk request `/settings` dan scripts | Pastikan tidak ada regresi duplicate fetch |
+| 3 | Pertimbangkan Redis jika traffic multi-instance | Memory cache saat ini per-process |
+| 4 | Tambahkan CDN/image resize pipeline untuk uploads besar | Next Image membantu, tapi upload original masih perlu governance |
+| 5 | Endpoint agregat homepage jika API latency masih tinggi | Mengurangi roundtrip antar frontend-backend |
 
 ---
 
-## 14. Checklist Verifikasi Cepat
+## 15. Checklist Verifikasi Cepat
 
 Setelah deploy, pastikan:
 
@@ -646,10 +689,14 @@ Setelah deploy, pastikan:
 - [ ] Navbar logo tidak punya background PNG hitam
 - [ ] Network tab: tidak ada request `/settings` berulang yang tidak perlu
 - [ ] Lighthouse mobile + desktop dicatat setelah deploy
+- [ ] Search hanya memanggil API setelah debounce
+- [ ] GA muncul setelah idle, Crisp muncul setelah interaksi
+- [ ] Gambar publik lewat `/_next/image`
+- [ ] Cache publik refresh setelah update konten admin
 
 ---
 
-## 15. Referensi Dokumen
+## 16. Referensi Dokumen
 
 | Dokumen | Isi |
 |---------|-----|
@@ -661,6 +708,9 @@ Setelah deploy, pastikan:
 | [`docs/v3/00-START-HERE.md`](./v3/00-START-HERE.md) | Paket dokumen V3 |
 | [`docs/v3/DN-TECH-PRD-V3.md`](./v3/DN-TECH-PRD-V3.md) | Refinement PRD V3 |
 | [`docs/v3/DN-TECH-V3-IMPLEMENTATION-GUIDE.md`](./v3/DN-TECH-V3-IMPLEMENTATION-GUIDE.md) | Panduan implementasi V3 |
+| [`docs/v4/DN-TECH-PRD-V4.md`](./v4/DN-TECH-PRD-V4.md) | Performance PRD V4 |
+| [`docs/v4/DN-TECH-V4-IMPLEMENTATION-GUIDE.md`](./v4/DN-TECH-V4-IMPLEMENTATION-GUIDE.md) | Panduan implementasi V4 |
+| [`docs/v4/DN-TECH-V4-SUMMARY.md`](./v4/DN-TECH-V4-SUMMARY.md) | Ringkasan V4 |
 | [`docs/DEPLOYMENT-PRODUCTION.md`](./DEPLOYMENT-PRODUCTION.md) | Panduan deploy |
 
 ---

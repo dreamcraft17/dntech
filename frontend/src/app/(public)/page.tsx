@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -7,7 +8,7 @@ import { TeamSpotlight } from '@/components/layout/TeamSpotlight';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { asArray } from '@/lib/api';
-import { getHomeStats } from '@/lib/settings';
+import { getHomeStats, getPublicSettings } from '@/lib/settings';
 import { estimateReadTime, formatReadTime } from '@/lib/read-time';
 import type { Service, BlogPost, TeamMember } from '@/types';
 import type { Metadata } from 'next';
@@ -31,33 +32,21 @@ const STAT_ICONS: Record<string, LucideIcon> = {
   star: Star,
 };
 
-async function getHomeData() {
+async function getHomeServices() {
   try {
-    const [servicesRes, blogRes, teamRes, settingsRes] = await Promise.all([
-      fetch(`${API_URL}/services`, { next: { revalidate: 60 } }),
-      fetch(`${API_URL}/blog?pageSize=4`, { next: { revalidate: 60 } }),
-      fetch(`${API_URL}/team`, { next: { revalidate: 60 } }),
-      fetch(`${API_URL}/settings`, { next: { revalidate: 300 } }),
-    ]);
-
-    const services = servicesRes.ok ? asArray<Service>((await servicesRes.json()).data) : [];
-    const blogPosts = blogRes.ok ? asArray<BlogPost>((await blogRes.json()).data) : [];
-    const team = teamRes.ok ? asArray<TeamMember>((await teamRes.json()).data) : [];
-    const settings = settingsRes.ok ? (await settingsRes.json()).data ?? {} : {};
-
-    return {
-      services: services.slice(0, 6),
-      blogPosts: blogPosts.slice(0, 4),
-      team,
-      settings,
-    };
+    const res = await fetch(`${API_URL}/services?pageSize=6`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    return asArray<Service>((await res.json()).data).slice(0, 6);
   } catch {
-    return { services: [], blogPosts: [], team: [], settings: {} };
+    return [];
   }
 }
 
 export default async function HomePage() {
-  const { services, blogPosts, team, settings } = await getHomeData();
+  const [services, settings] = await Promise.all([
+    getHomeServices(),
+    getPublicSettings(),
+  ]);
   const tagline = settings.tagline || settings.companyName || 'DN Tech';
   const heroDescription = settings.heroDescription as string | undefined;
   const trustBadges = settings.trustBadges as { icon?: string; label: string; description?: string }[] | undefined;
@@ -155,45 +144,14 @@ export default async function HomePage() {
       <TrustBadges badges={trustBadges} title="Mengapa Memilih Kami" />
 
       {/* Blog Preview */}
-      {blogPosts.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center mb-12">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900">Wawasan Terbaru</h2>
-                <p className="mt-2 text-gray-600">Artikel teknologi untuk founder & tim produk</p>
-              </div>
-              <Link href="/blog" className="text-blue-900 font-medium hover:underline hidden sm:block">Lihat semua</Link>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {blogPosts.map((post) => {
-                const readMin = estimateReadTime(post.content || post.excerpt);
-                return (
-                  <Link key={post.id} href={`/blog/${post.slug}`}>
-                    <Card hover className="h-full">
-                      {post.category && (
-                        <div className="text-xs text-teal-600 font-medium mb-2">{post.category}</div>
-                      )}
-                      <h3 className="font-semibold text-gray-900 line-clamp-2">{post.title}</h3>
-                      <p className="mt-2 text-sm text-gray-600 line-clamp-2">{post.excerpt}</p>
-                      <p className="mt-3 text-xs text-gray-500">{formatReadTime(readMin)}</p>
-                    </Card>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
+      <Suspense fallback={<BlogPreviewSkeleton />}>
+        <BlogPreviewSection />
+      </Suspense>
 
       {/* Team Preview */}
-      {team.length > 0 && (
-        <section className="py-16 bg-gray-50">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <TeamSpotlight members={team} limit={4} />
-          </div>
-        </section>
-      )}
+      <Suspense fallback={<TeamPreviewSkeleton />}>
+        <TeamPreviewSection />
+      </Suspense>
 
       {/* Newsletter */}
       <section className="py-16 bg-white border-t border-gray-200">
@@ -221,5 +179,104 @@ export default async function HomePage() {
         </div>
       </section>
     </>
+  );
+}
+
+async function getBlogPreview() {
+  try {
+    const res = await fetch(`${API_URL}/blog?pageSize=4`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    return asArray<BlogPost>((await res.json()).data).slice(0, 4);
+  } catch {
+    return [];
+  }
+}
+
+async function getTeamPreview() {
+  try {
+    const res = await fetch(`${API_URL}/team?pageSize=4`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    return asArray<TeamMember>((await res.json()).data);
+  } catch {
+    return [];
+  }
+}
+
+async function BlogPreviewSection() {
+  const blogPosts = await getBlogPreview();
+  if (!blogPosts.length) return null;
+
+  return (
+    <section className="py-16 bg-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center mb-12">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">Wawasan Terbaru</h2>
+            <p className="mt-2 text-gray-600">Artikel teknologi untuk founder & tim produk</p>
+          </div>
+          <Link href="/blog" className="text-blue-900 font-medium hover:underline hidden sm:block">Lihat semua</Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {blogPosts.map((post) => {
+            const readMin = estimateReadTime(post.content || post.excerpt);
+            return (
+              <Link key={post.id} href={`/blog/${post.slug}`}>
+                <Card hover className="h-full">
+                  {post.category && (
+                    <div className="text-xs text-teal-600 font-medium mb-2">{post.category}</div>
+                  )}
+                  <h3 className="font-semibold text-gray-900 line-clamp-2">{post.title}</h3>
+                  <p className="mt-2 text-sm text-gray-600 line-clamp-2">{post.excerpt}</p>
+                  <p className="mt-3 text-xs text-gray-500">{formatReadTime(readMin)}</p>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+async function TeamPreviewSection() {
+  const team = await getTeamPreview();
+  if (!team.length) return null;
+
+  return (
+    <section className="py-16 bg-gray-50">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <TeamSpotlight members={team} limit={4} />
+      </div>
+    </section>
+  );
+}
+
+function BlogPreviewSkeleton() {
+  return (
+    <section className="py-16 bg-white" aria-hidden="true">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 h-16 max-w-md rounded-lg bg-gray-100 animate-pulse" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="h-48 rounded-lg border border-gray-200 bg-gray-100 animate-pulse" />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TeamPreviewSkeleton() {
+  return (
+    <section className="py-16 bg-gray-50" aria-hidden="true">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 h-12 max-w-sm rounded-lg bg-gray-200 animate-pulse" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="h-56 rounded-lg border border-gray-200 bg-gray-200 animate-pulse" />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

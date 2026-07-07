@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import prisma from '../config/database';
-import { asyncHandler, successResponse, paginatedResponse, getPagination, param } from '../utils/helpers';
+import { asyncHandler, successResponse, param } from '../utils/helpers';
+import { cacheService } from '../services/CacheService';
 
 const router = Router();
 
@@ -8,6 +9,12 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const { category, search } = req.query;
+    const cacheKey = `services:list:${category || 'all'}`;
+    if (!search) {
+      const cached = cacheService.get<unknown[]>(cacheKey);
+      if (cached) return successResponse(res, cached);
+    }
+
     const where: Record<string, unknown> = { status: 'active', deletedAt: null };
 
     if (category) where.category = String(category);
@@ -35,6 +42,7 @@ router.get(
       },
     });
 
+    if (!search) cacheService.set(cacheKey, services, 3600);
     successResponse(res, services);
   })
 );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea, Select } from '@/components/ui/Input';
@@ -18,12 +18,18 @@ export default function AdminServicesPage() {
   const [editing, setEditing] = useState<(typeof emptyForm & { id?: string }) | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function load() {
+  const load = useCallback(async () => {
     const data = await apiFetch<Service[]>('/admin/services');
     setItems(data);
-  }
+  }, []);
 
-  useEffect(() => { load().catch(console.error); }, []);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      load().catch(console.error);
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [load]);
 
   async function save() {
     if (!editing) return;

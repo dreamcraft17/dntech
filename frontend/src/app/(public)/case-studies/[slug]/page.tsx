@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, CheckCircle, Quote } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
@@ -73,8 +74,15 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
           {/* Hero */}
           <div className="relative h-56 sm:h-72 rounded-2xl overflow-hidden mb-8">
             {item.heroImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.heroImage} alt={item.heroImageAlt || item.title} className="w-full h-full object-cover" />
+              <Image
+                src={item.heroImage}
+                alt={item.heroImageAlt || item.title}
+                fill
+                priority
+                quality={80}
+                sizes="(min-width: 1024px) 896px, 100vw"
+                className="object-cover"
+              />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600" />
             )}
@@ -88,8 +96,15 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
                 {item.clientName && <p className="mt-1 text-blue-100">{item.clientName}</p>}
               </div>
               {item.clientLogo && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={item.clientLogo} alt={item.clientName || 'Klien'} className="h-10 w-auto rounded bg-white/90 p-1 hidden sm:block" />
+                <Image
+                  src={item.clientLogo}
+                  alt={item.clientName || 'Klien'}
+                  width={120}
+                  height={40}
+                  quality={80}
+                  sizes="120px"
+                  className="h-10 w-auto rounded bg-white/90 p-1 hidden sm:block object-contain"
+                />
               )}
             </div>
           </div>

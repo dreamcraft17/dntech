@@ -41,7 +41,7 @@ export interface BlogPost {
   seoTitle?: string;
   seoDescription?: string;
   viewCount?: number;
-  featuredImage?: { url: string };
+  featuredImage?: { url: string; altText?: string };
   author?: { name: string };
   relatedPosts?: BlogPost[];
 }
@@ -52,7 +52,7 @@ export interface TeamMember {
   role: string;
   department?: string;
   bio?: string;
-  photo?: { url: string };
+  photo?: { url: string; altText?: string };
   socialLinks?: Record<string, string>;
 }
 

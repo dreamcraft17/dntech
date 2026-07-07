@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { asArray } from '@/lib/api';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
@@ -23,7 +24,7 @@ export interface PublicSettings {
   primaryColor?: string;
 }
 
-export async function getPublicSettings(): Promise<PublicSettings> {
+export const getPublicSettings = cache(async function getPublicSettings(): Promise<PublicSettings> {
   try {
     const res = await fetch(`${API_URL}/settings`, { next: { revalidate: 300 } });
     if (!res.ok) return {};
@@ -32,7 +33,7 @@ export async function getPublicSettings(): Promise<PublicSettings> {
   } catch {
     return {};
   }
-}
+});
 
 export function getHomeStats(settings: PublicSettings) {
   return asArray(settings.homeStats).filter((s) => s.value && s.label);

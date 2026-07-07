@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import prisma from '../config/database';
 import { asyncHandler, successResponse, getPagination, paginatedResponse, param } from '../utils/helpers';
+import { cacheService } from '../services/CacheService';
 
 const router = Router();
 
@@ -9,6 +10,11 @@ router.get(
   asyncHandler(async (req, res) => {
     const { category, search } = req.query;
     const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>);
+    const cacheKey = `blog:list:${category || 'all'}:${page}:${pageSize}`;
+    if (!search) {
+      const cached = cacheService.get<{ posts: unknown[]; total: number }>(cacheKey);
+      if (cached) return paginatedResponse(res, cached.posts, { page, pageSize, total: cached.total });
+    }
 
     const where: Record<string, unknown> = {
       status: 'published',
@@ -38,6 +44,7 @@ router.get(
       prisma.blogPost.count({ where }),
     ]);
 
+    if (!search) cacheService.set(cacheKey, { posts, total }, 900);
     paginatedResponse(res, posts, { page, pageSize, total });
   })
 );

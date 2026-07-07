@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card } from '@/components/ui/Card';
 import { JsonLd, breadcrumbSchema, personSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
@@ -67,10 +68,13 @@ export default async function TeamPage() {
               {team.map((member) => (
                 <Card key={member.id} className="text-center">
                   {member.photo?.url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={member.photo.url}
-                      alt={member.name}
+                      alt={member.photo.altText || member.name}
+                      width={96}
+                      height={96}
+                      quality={80}
+                      sizes="96px"
                       className="h-24 w-24 rounded-full object-cover mx-auto mb-4 border border-gray-200"
                     />
                   ) : (

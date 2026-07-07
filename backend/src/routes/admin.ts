@@ -14,6 +14,7 @@ import {
   logActivity,
 } from '../middleware/auth';
 import { hashPassword, validatePassword } from '../utils/auth';
+import { cacheService } from '../services/CacheService';
 
 const router = Router();
 router.use(authenticate);
@@ -72,6 +73,7 @@ router.post('/services', requireWrite('services'), asyncHandler(async (req: Auth
     data: { ...data, slug, createdById: req.user!.id },
   });
   await logActivity(req.user!.id, 'create', 'service', service.id, data, req.ip);
+  cacheService.clear();
   successResponse(res, service, 201);
 }));
 
@@ -79,6 +81,7 @@ router.patch('/services/:id', requireWrite('services'), asyncHandler(async (req:
   const data = serviceSchema.partial().parse(req.body);
   const service = await prisma.service.update({ where: { id: param(req.params.id) }, data });
   await logActivity(req.user!.id, 'update', 'service', service.id, data, req.ip);
+  cacheService.clear();
   successResponse(res, service);
 }));
 
@@ -88,6 +91,7 @@ router.delete('/services/:id', requireWrite('services'), asyncHandler(async (req
     data: { deletedAt: new Date(), status: 'archived' },
   });
   await logActivity(req.user!.id, 'delete', 'service', param(req.params.id), undefined, req.ip);
+  cacheService.clear();
   successResponse(res, { deleted: true });
 }));
 
@@ -96,6 +100,7 @@ router.post('/services/reorder', requireWrite('services'), asyncHandler(async (r
   await Promise.all(ids.map((id, index) =>
     prisma.service.update({ where: { id }, data: { displayOrder: index } })
   ));
+  cacheService.clear();
   successResponse(res, { reordered: true });
 }));
 
@@ -223,6 +228,7 @@ router.post('/blog', requireWrite('blog'), asyncHandler(async (req: AuthRequest,
     include: { featuredImage: true },
   });
   await logActivity(req.user!.id, 'create', 'blog', post.id, data, req.ip);
+  cacheService.clear();
   successResponse(res, post, 201);
 }));
 
@@ -237,6 +243,7 @@ router.patch('/blog/:id', requireWrite('blog'), asyncHandler(async (req: AuthReq
     },
     include: { featuredImage: true },
   });
+  cacheService.clear();
   successResponse(res, post);
 }));
 
@@ -245,11 +252,13 @@ router.post('/blog/:id/publish', requireWrite('blog'), asyncHandler(async (req, 
     where: { id: param(req.params.id) },
     data: { status: 'published', publishedAt: new Date() },
   });
+  cacheService.clear();
   successResponse(res, post);
 }));
 
 router.delete('/blog/:id', requireWrite('blog'), asyncHandler(async (req, res) => {
   await prisma.blogPost.update({ where: { id: param(req.params.id) }, data: { deletedAt: new Date() } });
+  cacheService.clear();
   successResponse(res, { deleted: true });
 }));
 
@@ -375,6 +384,7 @@ router.get('/team', asyncHandler(async (_req, res) => {
 router.post('/team', requireWrite('team'), asyncHandler(async (req, res) => {
   const data = teamSchema.parse(req.body);
   const member = await prisma.teamMember.create({ data, include: { photo: true } });
+  cacheService.clear();
   successResponse(res, member, 201);
 }));
 
@@ -385,11 +395,13 @@ router.patch('/team/:id', requireWrite('team'), asyncHandler(async (req, res) =>
     data,
     include: { photo: true },
   });
+  cacheService.clear();
   successResponse(res, member);
 }));
 
 router.delete('/team/:id', requireWrite('team'), asyncHandler(async (req, res) => {
   await prisma.teamMember.delete({ where: { id: param(req.params.id) } });
+  cacheService.clear();
   successResponse(res, { deleted: true });
 }));
 
@@ -621,6 +633,7 @@ router.patch('/settings', requireRole('SuperAdmin', 'ContentManager'), asyncHand
     include: { logo: true, favicon: true },
   });
   await logActivity(req.user!.id, 'update', 'settings', '1', data, req.ip);
+  cacheService.clear();
   successResponse(res, settings);
 }));
 

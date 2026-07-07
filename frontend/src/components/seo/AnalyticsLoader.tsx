@@ -1,20 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getApiUrl } from '@/lib/api';
 import { GoogleAnalytics } from './GoogleAnalytics';
 
-export function AnalyticsLoader() {
-  const [gaId, setGaId] = useState<string | undefined>();
+interface AnalyticsLoaderProps {
+  googleAnalyticsId?: string;
+}
+
+export function AnalyticsLoader({ googleAnalyticsId }: AnalyticsLoaderProps) {
+  const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
-    fetch(getApiUrl('/settings'))
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.data?.googleAnalyticsId) setGaId(json.data.googleAnalyticsId);
-      })
-      .catch(() => {});
-  }, []);
+    if (!googleAnalyticsId) return;
 
-  return <GoogleAnalytics measurementId={gaId} />;
+    const load = () => setShouldLoad(true);
+
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(load, { timeout: 3000 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = setTimeout(load, 2000);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [googleAnalyticsId]);
+
+  return shouldLoad ? <GoogleAnalytics measurementId={googleAnalyticsId} /> : null;
 }

@@ -10,9 +10,11 @@ Production-ready company profile website for DN Tech with a public marketing sit
 | Admin CMS | Implemented | Services, blog, team, FAQ, careers, leads, analytics, settings, users |
 | PRD/Design/SEO V2 | Implemented | Solid color design system, Indonesian copy, startup/SME positioning |
 | V3 refinements | Implemented | Exit intent fix, logo variants, mobile nav polish, form accessibility |
-| Frontend build | Passing | `npm run build` succeeds when build server can access Google Fonts |
-| Full lint | Known issues | Existing admin/AuthContext React hook lint errors remain |
-| Performance | Needs optimization | See `docs/IMPLEMENTATION-STATUS.md` for audit findings |
+| V4 performance | Implemented | Debounce search, deferred scripts, cached settings/API, streaming homepage, Next Image, font/build fix |
+| Frontend build | Passing | `npm run build` succeeds without Google Fonts network dependency |
+| Backend build | Passing | `npm run build` succeeds |
+| Full lint | Passing | Frontend lint succeeds with 0 errors/warnings |
+| Performance | Optimized | See `docs/IMPLEMENTATION-STATUS.md` for V4 details and remaining Lighthouse verification |
 
 Latest implementation reference: `c3b862f` — `Implement v3 UX refinements`.
 
@@ -119,8 +121,8 @@ npm run build
 
 Notes:
 
-- Frontend build uses `next/font/google` for Inter, so the build environment must be able to reach Google Fonts unless the font is self-hosted.
-- `npm run lint` in `frontend` currently reports known existing issues in admin/AuthContext areas. V3-touched files were checked separately and have no blocking lint errors.
+- V4 removed the `next/font/google` dependency, so frontend build no longer needs outbound access to Google Fonts.
+- Frontend lint is expected to pass cleanly.
 
 ## Deployment Notes
 
@@ -233,18 +235,19 @@ dntech/
 └── README.md
 ```
 
-## Performance Audit Summary
+## Performance Optimization Summary
 
-The current site is functional, but the first-load performance can be improved. Main findings are documented in `docs/IMPLEMENTATION-STATUS.md`.
+V4 implemented the main performance fixes identified in the audit. Remaining work is production Lighthouse/Core Web Vitals verification.
 
-Highest-impact items:
+Implemented items:
 
-- Homepage SSR waits for multiple API requests.
-- Public settings are fetched multiple times across layout, homepage, GA loader, and Crisp loader.
-- GA/Crisp/internal analytics add client-side requests after hydration.
-- Some public images still use raw `<img>` instead of `next/image`.
-- Header search calls the API without debounce.
-- Build depends on Google Fonts network access.
+- Homepage streams non-critical blog/team sections with `Suspense`.
+- Public settings use server cache and are passed to GA/Crisp loaders.
+- GA loads when the browser is idle; Crisp loads on first user interaction.
+- Public images and admin media previews use `next/image`.
+- Header search uses 300ms debounce and cancels previous requests.
+- Backend public endpoints use memory TTL cache with admin mutation invalidation.
+- Font stack no longer depends on Google Fonts during build.
 
 ## Documentation
 
@@ -255,6 +258,7 @@ Highest-impact items:
 | `docs/DEPLOYMENT-PRODUCTION.md` | Production deployment guide |
 | `docs/V2/` | PRD, design system, and SEO guide V2 |
 | `docs/v3/` | V3 refinement PRD, SDD, summary, and implementation guide |
+| `docs/v4/` | V4 performance PRD, summary, and implementation guide |
 | `docs/DNTECH-COMPANY-PROFILE.md` | Company profile content reference |
 
 ## License

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, Search } from 'lucide-react';
@@ -22,22 +22,43 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
   const pathname = usePathname();
   const router = useRouter();
 
-  async function handleSearch(q: string) {
+  const handleSearch = useCallback((q: string) => {
     setSearchQuery(q);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    abortRef.current?.abort();
+
     if (q.length < 2) {
       setSearchResults([]);
       return;
     }
-    try {
-      const results = await apiFetch<SearchResult[]>(`/search?q=${encodeURIComponent(q)}`);
-      setSearchResults(results);
-    } catch {
-      setSearchResults([]);
-    }
-  }
+
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const controller = new AbortController();
+        abortRef.current = controller;
+        const results = await apiFetch<SearchResult[]>(
+          `/search?q=${encodeURIComponent(q)}`,
+          { signal: controller.signal }
+        );
+        setSearchResults(results);
+      } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') return;
+        setSearchResults([]);
+      }
+    }, 300);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      abortRef.current?.abort();
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
@@ -107,6 +128,7 @@ export function Header() {
                       router.push(result.url);
                       setSearchOpen(false);
                       setSearchQuery('');
+                      setSearchResults([]);
                     }}
                     className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-0"
                   >

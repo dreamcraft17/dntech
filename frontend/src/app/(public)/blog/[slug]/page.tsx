@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { formatDate } from '@/lib/utils';
 import { estimateReadTime, formatReadTime } from '@/lib/read-time';
 import { JsonLd, breadcrumbSchema, articleSchema } from '@/components/seo/JsonLd';
@@ -102,8 +103,16 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
             </div>
 
             {post.featuredImage?.url && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={post.featuredImage.url} alt={post.title} className="mt-8 w-full rounded-xl" loading="lazy" itemProp="image" />
+              <Image
+                src={post.featuredImage.url}
+                alt={post.featuredImage.altText || post.title}
+                width={960}
+                height={540}
+                quality={80}
+                className="mt-8 w-full rounded-xl object-cover"
+                sizes="(min-width: 768px) 768px, 100vw"
+                itemProp="image"
+              />
             )}
 
             <div className="mt-8 prose max-w-none" itemProp="articleBody" dangerouslySetInnerHTML={{ __html: post.content || '' }} />

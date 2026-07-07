@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea, Select } from '@/components/ui/Input';
@@ -30,12 +30,18 @@ export default function AdminCrudPage({
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function load() {
+  const load = useCallback(async () => {
     const data = await apiFetch<Item[]>(`/admin/${endpoint}`);
     setItems(data);
-  }
+  }, [endpoint]);
 
-  useEffect(() => { load().catch(console.error); }, [endpoint]);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      load().catch(console.error);
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [load]);
 
   function preparePayload(data: Record<string, unknown>) {
     const payload = { ...data };

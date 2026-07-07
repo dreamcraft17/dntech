@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { apiFetch, getUploadUrl } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -21,12 +22,18 @@ export default function AdminMediaPage() {
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  async function load() {
+  const load = useCallback(async () => {
     const data = await apiFetch<MediaItem[]>('/admin/media');
     setMedia(Array.isArray(data) ? data : []);
-  }
+  }, []);
 
-  useEffect(() => { load().catch(console.error); }, []);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      load().catch(console.error);
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [load]);
 
   async function upload(files: FileList | null) {
     if (!files?.length) return;
@@ -78,9 +85,15 @@ export default function AdminMediaPage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {media.map((item) => (
           <Card key={item.id} className="p-3">
-            <div className="aspect-square rounded-lg bg-slate-100 flex items-center justify-center mb-2 overflow-hidden">
+            <div className="relative aspect-square rounded-lg bg-slate-100 flex items-center justify-center mb-2 overflow-hidden">
               {item.mimeType?.startsWith('image/') ? (
-                <img src={getUploadUrl(item.url)} alt={item.originalFilename || ''} className="w-full h-full object-cover" />
+                <Image
+                  src={getUploadUrl(item.url)}
+                  alt={item.originalFilename || ''}
+                  fill
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                  className="object-cover"
+                />
               ) : (
                 <span className="text-xs text-slate-500">{item.mimeType}</span>
               )}

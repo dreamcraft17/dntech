@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
@@ -23,12 +23,20 @@ export default function AdminUsersPage() {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'Viewer' });
 
-  async function load() {
+  const load = useCallback(async () => {
     const data = await apiFetch<AdminUser[]>('/admin/users');
     setUsers(data);
-  }
+  }, []);
 
-  useEffect(() => { if (currentUser?.role === 'SuperAdmin') load().catch(console.error); }, [currentUser]);
+  useEffect(() => {
+    if (currentUser?.role !== 'SuperAdmin') return;
+
+    const timeoutId = setTimeout(() => {
+      load().catch(console.error);
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [currentUser?.role, load]);
 
   if (currentUser?.role !== 'SuperAdmin') {
     return <p className="text-slate-500">Akses ditolak. Hanya SuperAdmin.</p>;

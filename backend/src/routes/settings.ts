@@ -1,12 +1,16 @@
 import { Router } from 'express';
 import prisma from '../config/database';
 import { asyncHandler, successResponse } from '../utils/helpers';
+import { cacheService } from '../services/CacheService';
 
 const router = Router();
 
 router.get(
   '/',
   asyncHandler(async (_req, res) => {
+    const cached = cacheService.get<Record<string, unknown>>('settings:public');
+    if (cached) return successResponse(res, cached);
+
     let settings = await prisma.siteSettings.findUnique({
       where: { id: 1 },
       include: { logo: true, favicon: true },
@@ -38,11 +42,12 @@ router.get(
       heroDescription: settings.heroDescription,
       businessHours: settings.businessHours,
       calendlyUrl: settings.calendlyUrl,
-    leadMagnetUrl: settings.leadMagnetUrl,
-    crispWebsiteId: settings.crispWebsiteId,
-    isMaintenanceMode: settings.isMaintenanceMode,
+      leadMagnetUrl: settings.leadMagnetUrl,
+      crispWebsiteId: settings.crispWebsiteId,
+      isMaintenanceMode: settings.isMaintenanceMode,
     };
 
+    cacheService.set('settings:public', publicSettings, 300);
     successResponse(res, publicSettings);
   })
 );

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -57,7 +57,7 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
   const [serviceOptions, setServiceOptions] = useState<{ value: string; label: string }[]>(servicesProp || []);
   const router = useRouter();
 
-  const { register, handleSubmit, trigger, formState: { errors }, getValues, watch } = useForm<FormData>({
+  const { register, handleSubmit, trigger, formState: { errors }, getValues, control } = useForm<FormData>({
     defaultValues: {
       serviceType: defaultService || '',
       projectType: '',
@@ -66,20 +66,30 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
     },
   });
 
-  const values = watch();
+  const values = useWatch({ control });
 
   useEffect(() => {
     if (servicesProp?.length) {
-      setServiceOptions(servicesProp);
-      return;
+      const timeoutId = setTimeout(() => {
+        setServiceOptions(servicesProp);
+      }, 0);
+
+      return () => clearTimeout(timeoutId);
     }
+
+    let ignore = false;
     fetch(getApiUrl('/services'))
       .then((res) => res.json())
       .then((json) => {
+        if (ignore) return;
         const services = (json.data || []) as { slug: string; name: string }[];
         setServiceOptions(services.map((s) => ({ value: s.slug, label: s.name })));
       })
       .catch(() => {});
+
+    return () => {
+      ignore = true;
+    };
   }, [servicesProp]);
 
   async function validateStep(s: number) {

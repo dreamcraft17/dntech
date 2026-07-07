@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiFetch, apiFetchPaginated } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
-import { Input, Textarea, Select } from '@/components/ui/Input';
+import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
-import { Plus, Pencil, Trash2, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import type { Lead } from '@/types';
 import { formatDate } from '@/lib/utils';
 
@@ -24,13 +24,19 @@ export default function AdminLeadsPage() {
   const [filter, setFilter] = useState('');
   const [note, setNote] = useState('');
 
-  async function loadLeads() {
+  const loadLeads = useCallback(async () => {
     const params = filter ? `?status=${filter}` : '';
     const { data } = await apiFetchPaginated<Lead[]>(`/admin/leads${params}`);
     setLeads(Array.isArray(data) ? data : []);
-  }
+  }, [filter]);
 
-  useEffect(() => { loadLeads().catch(console.error); }, [filter]);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      loadLeads().catch(console.error);
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [loadLeads]);
 
   async function updateStatus(id: string, status: string) {
     await apiFetch(`/admin/leads/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
