@@ -69,6 +69,11 @@ export function getUploadUrl(path: string) {
   return `${base}${path}`;
 }
 
+/** Coerce API / JSON null to a safe array for .map() during SSR. */
+export function asArray<T>(value: T[] | null | undefined): T[] {
+  return Array.isArray(value) ? value : [];
+}
+
 export async function trackPageView(pageUrl: string, pageTitle?: string, leadSource?: string) {
   try {
     const sessionId = typeof window !== 'undefined'

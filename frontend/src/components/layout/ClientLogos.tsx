@@ -11,13 +11,14 @@ const DEFAULT_LOGOS = [
   { name: 'FinServe Asia', initial: 'FA' },
 ];
 
-export function ClientLogos({ logos = DEFAULT_LOGOS }: ClientLogosProps) {
+export function ClientLogos({ logos }: ClientLogosProps) {
+  const items = Array.isArray(logos) && logos.length > 0 ? logos : DEFAULT_LOGOS;
   return (
     <section className="py-10 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="text-center text-sm text-slate-500 mb-6">Trusted by leading companies across Indonesia</p>
         <div className="flex flex-wrap items-center justify-center gap-6">
-          {logos.map((logo) => (
+          {items.map((logo) => (
             <div key={logo.name} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 bg-slate-50">
               <div className="h-8 w-8 rounded bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
                 {logo.initial || logo.name.charAt(0)}

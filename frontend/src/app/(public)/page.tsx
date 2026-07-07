@@ -10,6 +10,7 @@ import { ROICalculator } from '@/components/interactive/ROICalculator';
 import { BookDemoSection } from '@/components/interactive/BookDemoSection';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
+import { asArray } from '@/lib/api';
 import type { Service, BlogPost, Testimonial } from '@/types';
 import type { Metadata } from 'next';
 
@@ -41,15 +42,21 @@ async function getHomeData() {
       fetch(`${API_URL}/case-studies?pageSize=3`, { next: { revalidate: 60 } }),
     ]);
 
-    const services = servicesRes.ok ? (await servicesRes.json()).data as Service[] : [];
-    const blogData = blogRes.ok ? await blogRes.json() : { data: [] };
-    const testimonials = testimonialsRes.ok ? (await testimonialsRes.json()).data as Testimonial[] : [];
-    const settings = settingsRes.ok ? (await settingsRes.json()).data : {};
-    const caseStudies = caseStudiesRes.ok ? (await caseStudiesRes.json()).data as CaseStudy[] : [];
+    const servicesJson = servicesRes.ok ? await servicesRes.json() : { data: [] };
+    const blogJson = blogRes.ok ? await blogRes.json() : { data: [] };
+    const testimonialsJson = testimonialsRes.ok ? await testimonialsRes.json() : { data: [] };
+    const settingsJson = settingsRes.ok ? await settingsRes.json() : { data: {} };
+    const caseStudiesJson = caseStudiesRes.ok ? await caseStudiesRes.json() : { data: [] };
+
+    const services = asArray<Service>(servicesJson.data);
+    const blogPosts = asArray<BlogPost>(blogJson.data);
+    const testimonials = asArray<Testimonial>(testimonialsJson.data);
+    const settings = settingsJson.data ?? {};
+    const caseStudies = asArray<CaseStudy>(caseStudiesJson.data);
 
     return {
       services: services.slice(0, 4),
-      blogPosts: (blogData.data || []) as BlogPost[],
+      blogPosts,
       testimonials: testimonials.slice(0, 5),
       settings,
       caseStudies,

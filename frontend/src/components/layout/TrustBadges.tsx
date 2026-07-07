@@ -15,13 +15,14 @@ interface TrustBadgesProps {
   badges?: { icon?: string; label: string; description?: string }[];
 }
 
-export function TrustBadges({ badges = DEFAULT_BADGES }: TrustBadgesProps) {
+export function TrustBadges({ badges }: TrustBadgesProps) {
+  const items = Array.isArray(badges) && badges.length > 0 ? badges : DEFAULT_BADGES;
   return (
     <section className="py-12 bg-slate-50 border-y border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="text-center text-sm font-medium text-slate-500 uppercase tracking-wider mb-8">Trusted by Industry Leaders</p>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {badges.map((badge) => {
+          {items.map((badge) => {
             const Icon = ICONS[badge.icon || 'check'] || CheckCircle;
             return (
               <div key={badge.label} className="flex flex-col items-center text-center p-4">
