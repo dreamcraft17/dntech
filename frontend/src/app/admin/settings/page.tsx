@@ -23,6 +23,7 @@ export default function AdminSettingsPage() {
         googleAnalyticsId: String(data.googleAnalyticsId || ''),
         calendlyUrl: String(data.calendlyUrl || ''),
         leadMagnetUrl: String(data.leadMagnetUrl || ''),
+        crispWebsiteId: String(data.crispWebsiteId || ''),
         trustBadges: JSON.stringify(data.trustBadges || [], null, 2),
         clientLogos: JSON.stringify(data.clientLogos || [], null, 2),
         termsContent: String(data.termsContent || ''),
@@ -52,6 +53,7 @@ export default function AdminSettingsPage() {
           googleAnalyticsId: settings.googleAnalyticsId,
           calendlyUrl: settings.calendlyUrl,
           leadMagnetUrl: settings.leadMagnetUrl,
+          crispWebsiteId: settings.crispWebsiteId,
           trustBadges,
           clientLogos,
           termsContent: settings.termsContent,
@@ -85,6 +87,7 @@ export default function AdminSettingsPage() {
           <div className="space-y-4">
             <Input label="Calendly URL" value={settings.calendlyUrl} onChange={(e) => setSettings({ ...settings, calendlyUrl: e.target.value })} placeholder="https://calendly.com/..." />
             <Input label="Lead Magnet URL" value={settings.leadMagnetUrl} onChange={(e) => setSettings({ ...settings, leadMagnetUrl: e.target.value })} />
+            <Input label="Crisp Chat Website ID" value={settings.crispWebsiteId} onChange={(e) => setSettings({ ...settings, crispWebsiteId: e.target.value })} placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
             <Textarea label="Trust Badges (JSON)" rows={5} value={settings.trustBadges} onChange={(e) => setSettings({ ...settings, trustBadges: e.target.value })} className="font-mono text-xs" />
             <Textarea label="Client Logos (JSON)" rows={5} value={settings.clientLogos} onChange={(e) => setSettings({ ...settings, clientLogos: e.target.value })} className="font-mono text-xs" />
           </div>

@@ -7,6 +7,7 @@ import { ClientLogos } from '@/components/layout/ClientLogos';
 import { TestimonialCarousel } from '@/components/sliders/TestimonialCarousel';
 import { CaseStudyCard } from '@/components/cards/CaseStudyCard';
 import { ROICalculator } from '@/components/interactive/ROICalculator';
+import { BookDemoSection } from '@/components/interactive/BookDemoSection';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import type { Service, BlogPost, Testimonial } from '@/types';
@@ -227,6 +228,9 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Book Demo / Calendly */}
+      <BookDemoSection calendlyUrl={settings.calendlyUrl as string | undefined} />
 
       {/* Newsletter */}
       <section className="py-16 bg-white border-t border-slate-200">

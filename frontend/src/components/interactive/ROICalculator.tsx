@@ -82,8 +82,11 @@ export function ROICalculator() {
           <p className="mt-3 text-xs text-slate-500">
             * This is a rough estimate. Contact us for a detailed proposal tailored to your needs.
           </p>
-          <a href="/contact" className="mt-4 inline-block text-sm text-blue-600 font-medium hover:underline">
-            Get a detailed quote →
+          <a
+            href={`/contact?budget=${result.min}-${result.max}&team=${teamSize}&months=${months}`}
+            className="mt-4 inline-block"
+          >
+            <Button size="sm">Get a detailed quote →</Button>
           </a>
         </div>
       )}

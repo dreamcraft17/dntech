@@ -3,6 +3,8 @@ import { Footer } from '@/components/common/Footer';
 import { PageTracker } from '@/components/common/PageTracker';
 import { ExitIntentModal } from '@/components/interactive/ExitIntentModal';
 import { StickyCTA } from '@/components/layout/StickyCTA';
+import { CrispChatLoader } from '@/components/interactive/CrispChatLoader';
+import { AnalyticsLoader } from '@/components/seo/AnalyticsLoader';
 import { JsonLd, organizationSchema, localBusinessSchema, websiteSchema } from '@/components/seo/JsonLd';
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -17,6 +19,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <Footer />
       <StickyCTA />
       <ExitIntentModal />
+      <CrispChatLoader />
+      <AnalyticsLoader />
     </>
   );
 }

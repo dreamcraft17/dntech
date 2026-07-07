@@ -1,13 +1,14 @@
+import type { Metadata } from 'next';
 import { SolutionQuiz } from '@/components/interactive/SolutionQuiz';
 import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
-import type { Metadata } from 'next';
+import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Solution Finder Quiz',
-  description: 'Answer 5 quick questions and discover the best DN Tech service for your business needs.',
-};
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+export const metadata: Metadata = buildMetadata({
+  title: PAGE_SEO.quiz.title,
+  description: PAGE_SEO.quiz.description,
+  path: '/quiz',
+  keywords: PAGE_SEO.quiz.keywords,
+});
 
 export default function QuizPage() {
   return (

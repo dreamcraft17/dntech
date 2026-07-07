@@ -57,7 +57,9 @@ export default function AdminDashboardPage() {
               { href: '/admin/services', label: 'Manage Services' },
               { href: '/admin/blog', label: 'New Blog Post' },
               { href: '/admin/leads', label: 'View Leads' },
-              { href: '/admin/settings', label: 'Site Settings' },
+              { href: '/admin/newsletter', label: 'Newsletter' },
+              { href: '/admin/quiz', label: 'Quiz Results' },
+              { href: '/admin/analytics', label: 'Analytics' },
             ].map(({ href, label }) => (
               <Link key={href} href={href}
                 className="p-3 rounded-lg border border-slate-200 text-sm font-medium text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-colors text-center">

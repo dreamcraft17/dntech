@@ -357,6 +357,7 @@ model SiteSettings {
   clientLogos           Json?    @map("client_logos")
   calendlyUrl           String?  @map("calendly_url")
   leadMagnetUrl         String?  @map("lead_magnet_url")
+  crispWebsiteId        String?  @map("crisp_website_id")
   isMaintenanceMode     Boolean  @default(false) @map("is_maintenance_mode")
   updatedAt             DateTime @updatedAt @map("updated_at")
 

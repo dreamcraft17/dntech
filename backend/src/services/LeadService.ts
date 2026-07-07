@@ -117,11 +117,14 @@ export async function getDashboardMetrics() {
   const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
-  const [todayLeads, monthLeads, allLeads, pageViews] = await Promise.all([
+  const [todayLeads, monthLeads, allLeads, pageViews, newsletterTotal, quizTotal, quizMonth] = await Promise.all([
     prisma.formSubmission.count({ where: { createdAt: { gte: today } } }),
     prisma.formSubmission.count({ where: { createdAt: { gte: monthStart } } }),
     prisma.formSubmission.count(),
     prisma.analyticsEvent.count({ where: { eventType: 'page_view', createdAt: { gte: thirtyDaysAgo } } }),
+    prisma.newsletterSubscriber.count({ where: { isActive: true } }),
+    prisma.quizSubmission.count(),
+    prisma.quizSubmission.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
   ]);
 
   const conversionRate = pageViews > 0 ? ((monthLeads / pageViews) * 100).toFixed(2) : '0';
@@ -179,6 +182,9 @@ export async function getDashboardMetrics() {
     monthLeads,
     totalLeads: allLeads,
     conversionRate: `${conversionRate}%`,
+    newsletterSubscribers: newsletterTotal,
+    quizCompletions: quizMonth,
+    totalQuizSubmissions: quizTotal,
     monthTrend,
     topPages,
     topLeadSources,

@@ -33,9 +33,10 @@ router.get(
       aboutContent: settings.aboutContent,
       trustBadges: settings.trustBadges,
       clientLogos: settings.clientLogos,
-      calendlyUrl: settings.calendlyUrl,
-      leadMagnetUrl: settings.leadMagnetUrl,
-      isMaintenanceMode: settings.isMaintenanceMode,
+    calendlyUrl: settings.calendlyUrl,
+    leadMagnetUrl: settings.leadMagnetUrl,
+    crispWebsiteId: settings.crispWebsiteId,
+    isMaintenanceMode: settings.isMaintenanceMode,
     };
 
     successResponse(res, publicSettings);

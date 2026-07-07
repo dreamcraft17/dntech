@@ -593,6 +593,7 @@ router.patch('/settings', requireRole('SuperAdmin', 'ContentManager'), asyncHand
     clientLogos: z.array(z.object({ name: z.string(), initial: z.string().optional() })).optional(),
     calendlyUrl: z.string().optional(),
     leadMagnetUrl: z.string().optional(),
+    crispWebsiteId: z.string().optional(),
     isMaintenanceMode: z.boolean().optional(),
   }).parse(req.body);
 
@@ -764,6 +765,24 @@ router.get('/analytics/conversions', asyncHandler(async (req, res) => {
 }));
 
 // --- Activity Logs ---
+router.get('/newsletter-subscribers', requireRole('SuperAdmin', 'ContentManager'), asyncHandler(async (req, res) => {
+  const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>);
+  const [items, total] = await Promise.all([
+    prisma.newsletterSubscriber.findMany({ orderBy: { createdAt: 'desc' }, skip, take: pageSize }),
+    prisma.newsletterSubscriber.count(),
+  ]);
+  paginatedResponse(res, items, { page, pageSize, total });
+}));
+
+router.get('/quiz-submissions', requireRole('SuperAdmin', 'ContentManager'), asyncHandler(async (req, res) => {
+  const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>);
+  const [items, total] = await Promise.all([
+    prisma.quizSubmission.findMany({ orderBy: { createdAt: 'desc' }, skip, take: pageSize }),
+    prisma.quizSubmission.count(),
+  ]);
+  paginatedResponse(res, items, { page, pageSize, total });
+}));
+
 router.get('/activity-logs', requireRole('SuperAdmin'), asyncHandler(async (req, res) => {
   const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>);
   const [logs, total] = await Promise.all([

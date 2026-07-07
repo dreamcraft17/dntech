@@ -4,8 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 import { getApiUrl } from '@/lib/api';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Mail } from 'lucide-react';
 
 const QUESTIONS = [
   {
@@ -61,8 +62,12 @@ const QUESTIONS = [
 export function SolutionQuiz() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [result, setResult] = useState<{ result: string; recommendation: { service: string; description: string } } | null>(null);
+  const [result, setResult] = useState<{ result: string; recommendation: { service: string; description: string }; id?: string } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
 
   const q = QUESTIONS[step];
 
@@ -76,7 +81,7 @@ export function SolutionQuiz() {
     }
   }
 
-  async function submitQuiz(finalAnswers: Record<string, string>) {
+  async function submitQuiz(finalAnswers: Record<string, string>, withEmail?: { email: string; name?: string }) {
     setLoading(true);
     try {
       const sessionId = sessionStorage.getItem('sessionId') || crypto.randomUUID();
@@ -84,7 +89,7 @@ export function SolutionQuiz() {
       const res = await fetch(getApiUrl('/quiz/submit'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, answers: finalAnswers }),
+        body: JSON.stringify({ sessionId, answers: finalAnswers, ...withEmail }),
       });
       const json = await res.json();
       if (json.success) setResult(json.data);
@@ -93,21 +98,54 @@ export function SolutionQuiz() {
     }
   }
 
+  async function submitEmail(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email || !result) return;
+    setEmailLoading(true);
+    try {
+      await submitQuiz(answers, { email, name: name || undefined });
+      setEmailSent(true);
+    } finally {
+      setEmailLoading(false);
+    }
+  }
+
   if (result) {
     return (
-      <Card className="max-w-2xl mx-auto text-center p-8">
-        <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-slate-900">We found your perfect match!</h2>
-        <p className="mt-2 text-lg text-blue-600 font-semibold">{result.recommendation.service}</p>
-        <p className="mt-2 text-slate-600">{result.recommendation.description}</p>
-        <div className="mt-8 flex flex-wrap gap-4 justify-center">
-          <Link href={`/contact?service=${encodeURIComponent(result.recommendation.service)}`}>
-            <Button size="lg">Schedule a Free Consultation <ArrowRight className="h-4 w-4" /></Button>
-          </Link>
-          <Link href="/case-studies">
-            <Button size="lg" variant="outline">View Case Studies</Button>
-          </Link>
+      <Card className="max-w-2xl mx-auto p-8">
+        <div className="text-center">
+          <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-slate-900">We found your perfect match!</h2>
+          <p className="mt-2 text-lg text-blue-600 font-semibold">{result.recommendation.service}</p>
+          <p className="mt-2 text-slate-600">{result.recommendation.description}</p>
+          <div className="mt-8 flex flex-wrap gap-4 justify-center">
+            <Link href={`/contact?service=${encodeURIComponent(result.recommendation.service)}`}>
+              <Button size="lg">Schedule a Free Consultation <ArrowRight className="h-4 w-4" /></Button>
+            </Link>
+            <Link href="/case-studies">
+              <Button size="lg" variant="outline">View Case Studies</Button>
+            </Link>
+          </div>
         </div>
+
+        {!emailSent ? (
+          <form onSubmit={submitEmail} className="mt-8 pt-8 border-t border-slate-200">
+            <div className="flex items-center gap-2 mb-4">
+              <Mail className="h-5 w-5 text-blue-600" />
+              <h3 className="font-semibold text-slate-900">Get results sent to your inbox</h3>
+            </div>
+            <p className="text-sm text-slate-600 mb-4">We will email your personalized recommendation and next steps.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input label="Name (optional)" value={name} onChange={(e) => setName(e.target.value)} />
+              <Input label="Work Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </div>
+            <Button type="submit" loading={emailLoading} className="mt-4 w-full">Send My Results</Button>
+          </form>
+        ) : (
+          <div className="mt-8 p-4 rounded-lg bg-green-50 border border-green-200 text-sm text-green-700 text-center">
+            Results sent! Check your inbox for personalized recommendations.
+          </div>
+        )}
       </Card>
     );
   }

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import prisma from '../config/database';
 import { asyncHandler, successResponse } from '../utils/helpers';
+import { sendQuizFollowUp } from '../services/EmailService';
 
 const router = Router();
 
@@ -45,6 +46,10 @@ router.post(
     await prisma.analyticsEvent.create({
       data: { eventType: 'quiz_complete', pageUrl: '/quiz', conversionStatus: data.email ? 'converted' : 'partial' },
     });
+
+    if (data.email) {
+      sendQuizFollowUp(data.email, data.name || 'there', recommendation.service).catch(console.error);
+    }
 
     successResponse(res, {
       id: submission.id,

@@ -3,12 +3,15 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
+import { ConversionChart } from '@/components/admin/ConversionChart';
 
 interface DashboardMetrics {
   todayLeads: number;
   monthLeads: number;
   totalLeads: number;
   conversionRate: string;
+  newsletterSubscribers: number;
+  quizCompletions: number;
   monthTrend: [string, number][];
   topPages: { page: string; views: number; leads: number }[];
   topLeadSources: Record<string, number>;
@@ -20,7 +23,6 @@ export default function AdminAnalyticsPage() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [traffic, setTraffic] = useState<{
     byDevice: Record<string, number>;
-    topPages: [string, number][];
     dailyTrend: [string, number][];
   } | null>(null);
 
@@ -35,12 +37,14 @@ export default function AdminAnalyticsPage() {
 
       {metrics && (
         <>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
             {[
               { label: 'Leads Today', value: metrics.todayLeads },
               { label: 'Leads This Month', value: metrics.monthLeads },
               { label: 'Total Leads', value: metrics.totalLeads },
               { label: 'Conversion Rate', value: metrics.conversionRate },
+              { label: 'Newsletter', value: metrics.newsletterSubscribers },
+              { label: 'Quiz (30d)', value: metrics.quizCompletions },
             ].map(({ label, value }) => (
               <Card key={label}>
                 <div className="text-sm text-slate-500">{label}</div>
@@ -50,18 +54,16 @@ export default function AdminAnalyticsPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <Card title="Conversion Funnel (30 days)">
-              {[
-                { label: 'Page Views', value: metrics.funnel.pageViews },
-                { label: 'Form Visits', value: metrics.funnel.formVisits },
-                { label: 'Form Submits', value: metrics.funnel.formSubmits },
-                { label: 'Leads', value: metrics.funnel.leads },
-              ].map(({ label, value }) => (
-                <div key={label} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                  <span className="text-sm text-slate-600">{label}</span>
-                  <span className="font-medium">{value}</span>
-                </div>
-              ))}
+            <Card title="Conversion Funnel & Lead Trend">
+              <ConversionChart
+                funnel={[
+                  { label: 'Page Views', value: metrics.funnel.pageViews },
+                  { label: 'Form Visits', value: metrics.funnel.formVisits },
+                  { label: 'Form Submits', value: metrics.funnel.formSubmits },
+                  { label: 'Leads', value: metrics.funnel.leads },
+                ]}
+                monthTrend={metrics.monthTrend}
+              />
             </Card>
 
             <Card title="Lead Sources">
@@ -85,44 +87,19 @@ export default function AdminAnalyticsPage() {
               </div>
             ))}
           </Card>
-
-          <Card title="Leads by Status" className="mb-6">
-            {metrics.leadsByStatus.map(({ status, _count }) => (
-              <div key={status} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                <span className="text-sm text-slate-600 capitalize">{status}</span>
-                <span className="font-medium">{_count}</span>
-              </div>
-            ))}
-          </Card>
         </>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {traffic?.byDevice && (
         <Card title="Traffic by Device">
-          {traffic?.byDevice && Object.entries(traffic.byDevice).map(([device, count]) => (
-            <div key={device} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+          {Object.entries(traffic.byDevice).map(([device, count]) => (
+            <div key={device} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
               <span className="text-sm capitalize text-slate-600">{device}</span>
-              <span className="text-sm font-medium text-slate-900">{count}</span>
+              <span className="font-medium">{count}</span>
             </div>
           ))}
         </Card>
-
-        {traffic?.dailyTrend && traffic.dailyTrend.length > 0 && (
-          <Card title="Daily Page Views">
-            <div className="flex items-end gap-1 h-32">
-              {traffic.dailyTrend.map(([day, count]) => (
-                <div key={day} className="flex-1 flex flex-col items-center gap-1">
-                  <div
-                    className="w-full bg-blue-600 rounded-t"
-                    style={{ height: `${Math.max((count / Math.max(...traffic.dailyTrend.map(([, c]) => c))) * 100, 4)}%` }}
-                    title={`${day}: ${count}`}
-                  />
-                </div>
-              ))}
-            </div>
-          </Card>
-        )}
-      </div>
+      )}
     </div>
   );
 }
