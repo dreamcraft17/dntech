@@ -25,6 +25,13 @@ export default async function PortfolioPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 p-4 rounded-xl bg-blue-50 border border-blue-100 text-center">
+          <p className="text-sm text-blue-800">
+            Looking for detailed success stories with metrics and client quotes?{' '}
+            <Link href="/case-studies" className="font-semibold hover:underline">View Case Studies →</Link>
+          </p>
+        </div>
+
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-slate-900">Our Portfolio</h1>
           <p className="mt-4 text-slate-600 max-w-2xl mx-auto">

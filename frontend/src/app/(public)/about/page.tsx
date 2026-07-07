@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/Card';
+import { TeamSpotlight } from '@/components/layout/TeamSpotlight';
 import type { TeamMember, SiteSettings } from '@/types';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 export const metadata: Metadata = { title: 'About Us' };
 
@@ -71,24 +71,7 @@ export default async function AboutPage() {
           </div>
         )}
 
-        <div>
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900">Our Team</h2>
-            <Link href="/team" className="text-blue-600 text-sm font-medium hover:underline">View all</Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {team.slice(0, 4).map((member) => (
-              <Card key={member.id} className="text-center">
-                <div className="h-20 w-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
-                  {member.name.charAt(0)}
-                </div>
-                <h3 className="font-semibold text-slate-900">{member.name}</h3>
-                <p className="text-sm text-blue-600">{member.role}</p>
-                {member.bio && <p className="mt-2 text-xs text-slate-500 line-clamp-2">{member.bio}</p>}
-              </Card>
-            ))}
-          </div>
-        </div>
+        <TeamSpotlight members={team} />
       </div>
     </div>
   );

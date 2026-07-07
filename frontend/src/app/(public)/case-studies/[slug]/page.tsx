@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Quote } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
@@ -17,7 +17,11 @@ interface CaseStudy {
   results?: string;
   metrics?: Record<string, string>;
   clientName?: string;
+  clientLogo?: string;
+  clientQuote?: string;
   industries?: string[];
+  heroImage?: string;
+  heroImageAlt?: string;
 }
 
 async function getCaseStudy(slug: string) {
@@ -36,7 +40,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: item?.title || 'Case Study',
     description: item?.description,
-    openGraph: { title: item?.title, description: item?.description || undefined },
+    openGraph: {
+      title: item?.title,
+      description: item?.description || undefined,
+      images: item?.heroImage ? [{ url: item.heroImage }] : undefined,
+    },
   };
 }
 
@@ -63,15 +71,31 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
             <span className="text-slate-900">{item.title}</span>
           </nav>
 
-          <div className="h-48 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 mb-8 flex items-end p-6">
-            {item.industries && item.industries.length > 0 && (
-              <span className="text-xs px-3 py-1 rounded-full bg-white/20 text-white">{item.industries[0]}</span>
+          {/* Hero */}
+          <div className="relative h-56 sm:h-72 rounded-2xl overflow-hidden mb-8">
+            {item.heroImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={item.heroImage} alt={item.heroImageAlt || item.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600" />
             )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
+              <div>
+                {item.industries && item.industries.length > 0 && (
+                  <span className="text-xs px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm">{item.industries[0]}</span>
+                )}
+                <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-white">{item.title}</h1>
+                {item.clientName && <p className="mt-1 text-blue-100">{item.clientName}</p>}
+              </div>
+              {item.clientLogo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.clientLogo} alt={item.clientName || 'Client'} className="h-10 w-auto rounded bg-white/90 p-1 hidden sm:block" />
+              )}
+            </div>
           </div>
 
-          <h1 className="text-4xl font-bold text-slate-900">{item.title}</h1>
-          {item.clientName && <p className="mt-2 text-lg text-slate-500">{item.clientName}</p>}
-          {item.description && <p className="mt-6 text-lg text-slate-600 leading-relaxed">{item.description}</p>}
+          {item.description && <p className="text-lg text-slate-600 leading-relaxed">{item.description}</p>}
 
           {item.metrics && Object.keys(item.metrics).length > 0 && (
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -107,9 +131,19 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
             </section>
           )}
 
+          {item.clientQuote && (
+            <blockquote className="mt-10 p-6 rounded-xl border border-slate-200 bg-white shadow-sm">
+              <Quote className="h-8 w-8 text-blue-200 mb-3" />
+              <p className="text-lg text-slate-700 italic leading-relaxed">&ldquo;{item.clientQuote}&rdquo;</p>
+              {item.clientName && (
+                <footer className="mt-4 text-sm font-medium text-slate-900">— {item.clientName}</footer>
+              )}
+            </blockquote>
+          )}
+
           <div className="mt-12 flex flex-wrap gap-4">
             <Link href="/contact">
-              <Button size="lg">Start Your Project <ArrowRight className="h-4 w-4" /></Button>
+              <Button size="lg">Schedule a Demo <ArrowRight className="h-4 w-4" /></Button>
             </Link>
             <Link href="/case-studies">
               <Button size="lg" variant="outline">More Case Studies</Button>

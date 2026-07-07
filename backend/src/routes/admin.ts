@@ -398,7 +398,9 @@ const testimonialSchema = z.object({
   clientName: z.string().min(1),
   company: z.string().optional(),
   position: z.string().optional(),
+  title: z.string().optional(),
   quote: z.string().min(10),
+  videoUrl: z.string().optional(),
   rating: z.number().min(1).max(5).optional(),
   serviceIds: z.array(z.string()).optional(),
   photoId: z.string().optional(),
@@ -587,6 +589,10 @@ router.patch('/settings', requireRole('SuperAdmin', 'ContentManager'), asyncHand
     termsContent: z.string().optional(),
     privacyContent: z.string().optional(),
     aboutContent: z.record(z.unknown()).optional(),
+    trustBadges: z.array(z.object({ icon: z.string().optional(), label: z.string(), description: z.string().optional() })).optional(),
+    clientLogos: z.array(z.object({ name: z.string(), initial: z.string().optional() })).optional(),
+    calendlyUrl: z.string().optional(),
+    leadMagnetUrl: z.string().optional(),
     isMaintenanceMode: z.boolean().optional(),
   }).parse(req.body);
 

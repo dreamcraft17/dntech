@@ -6,6 +6,7 @@ import { asyncHandler, successResponse, paginatedResponse, getPagination, param 
 const router = Router();
 
 function mapCaseStudy(item: Record<string, unknown>) {
+  const featuredImage = item.featuredImage as { url?: string; altText?: string } | null | undefined;
   return {
     id: item.id,
     slug: item.slug,
@@ -17,8 +18,11 @@ function mapCaseStudy(item: Record<string, unknown>) {
     metrics: item.metrics,
     clientName: item.clientName,
     clientLogo: item.clientLogoUrl,
+    clientQuote: item.testimonial,
     industries: item.industries,
-    featuredImage: item.featuredImage,
+    heroImage: featuredImage?.url,
+    heroImageAlt: featuredImage?.altText,
+    featuredImage,
     publishedAt: item.createdAt,
   };
 }

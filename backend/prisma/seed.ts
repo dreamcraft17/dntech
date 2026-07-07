@@ -224,7 +224,7 @@ async function main() {
   }
 
   const testimonials = [
-    { clientName: 'Ahmad Rizki', company: 'PT Maju Bersama', position: 'CEO', title: 'ERP Transformation Success', quote: 'DN Tech transformed our business operations completely. Highly recommended!', rating: 5, isApproved: true },
+    { clientName: 'Ahmad Rizki', company: 'PT Maju Bersama', position: 'CEO', title: 'ERP Transformation Success', quote: 'DN Tech transformed our business operations completely. Highly recommended!', rating: 5, videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', isApproved: true },
     { clientName: 'Lisa Chen', company: 'CV Digital Nusantara', position: 'Director', title: 'E-Commerce Growth', quote: 'Professional team, on-time delivery, and excellent post-launch support.', rating: 5, isApproved: true },
     { clientName: 'Robert Tan', company: 'Bank Sejahtera', position: 'IT Director', title: 'Mobile Banking Excellence', quote: 'The mobile app exceeded our expectations in both features and security.', rating: 5, isApproved: true },
   ];

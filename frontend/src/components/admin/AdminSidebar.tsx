@@ -13,7 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/services', label: 'Services', icon: Briefcase },
-  { href: '/admin/portfolio', label: 'Portfolio', icon: FolderOpen },
+  { href: '/admin/portfolio', label: 'Case Studies', icon: FolderOpen },
   { href: '/admin/blog', label: 'Blog', icon: FileText },
   { href: '/admin/leads', label: 'Leads', icon: MessageSquare },
   { href: '/admin/team', label: 'Team', icon: Users },

@@ -12,7 +12,7 @@ export default function AdminSettingsPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    apiFetch<Record<string, string>>('/admin/settings').then((data) => {
+    apiFetch<Record<string, unknown>>('/admin/settings').then((data) => {
       setSettings({
         companyName: String(data.companyName || ''),
         tagline: String(data.tagline || ''),
@@ -21,6 +21,10 @@ export default function AdminSettingsPage() {
         companyAddress: String(data.companyAddress || ''),
         primaryColor: String(data.primaryColor || '#2563eb'),
         googleAnalyticsId: String(data.googleAnalyticsId || ''),
+        calendlyUrl: String(data.calendlyUrl || ''),
+        leadMagnetUrl: String(data.leadMagnetUrl || ''),
+        trustBadges: JSON.stringify(data.trustBadges || [], null, 2),
+        clientLogos: JSON.stringify(data.clientLogos || [], null, 2),
         termsContent: String(data.termsContent || ''),
         privacyContent: String(data.privacyContent || ''),
       });
@@ -31,7 +35,29 @@ export default function AdminSettingsPage() {
     setLoading(true);
     setSaved(false);
     try {
-      await apiFetch('/admin/settings', { method: 'PATCH', body: JSON.stringify(settings) });
+      let trustBadges = [];
+      let clientLogos = [];
+      try { trustBadges = JSON.parse(settings.trustBadges || '[]'); } catch { /* ignore */ }
+      try { clientLogos = JSON.parse(settings.clientLogos || '[]'); } catch { /* ignore */ }
+
+      await apiFetch('/admin/settings', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          companyName: settings.companyName,
+          tagline: settings.tagline,
+          companyEmail: settings.companyEmail,
+          companyPhone: settings.companyPhone,
+          companyAddress: settings.companyAddress,
+          primaryColor: settings.primaryColor,
+          googleAnalyticsId: settings.googleAnalyticsId,
+          calendlyUrl: settings.calendlyUrl,
+          leadMagnetUrl: settings.leadMagnetUrl,
+          trustBadges,
+          clientLogos,
+          termsContent: settings.termsContent,
+          privacyContent: settings.privacyContent,
+        }),
+      });
       setSaved(true);
     } finally {
       setLoading(false);
@@ -52,6 +78,15 @@ export default function AdminSettingsPage() {
             <Input label="Phone" value={settings.companyPhone} onChange={(e) => setSettings({ ...settings, companyPhone: e.target.value })} />
             <Input label="Address" value={settings.companyAddress} onChange={(e) => setSettings({ ...settings, companyAddress: e.target.value })} />
             <Input label="Primary Color" type="color" value={settings.primaryColor} onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })} />
+          </div>
+        </Card>
+
+        <Card title="Trust & Conversion">
+          <div className="space-y-4">
+            <Input label="Calendly URL" value={settings.calendlyUrl} onChange={(e) => setSettings({ ...settings, calendlyUrl: e.target.value })} placeholder="https://calendly.com/..." />
+            <Input label="Lead Magnet URL" value={settings.leadMagnetUrl} onChange={(e) => setSettings({ ...settings, leadMagnetUrl: e.target.value })} />
+            <Textarea label="Trust Badges (JSON)" rows={5} value={settings.trustBadges} onChange={(e) => setSettings({ ...settings, trustBadges: e.target.value })} className="font-mono text-xs" />
+            <Textarea label="Client Logos (JSON)" rows={5} value={settings.clientLogos} onChange={(e) => setSettings({ ...settings, clientLogos: e.target.value })} className="font-mono text-xs" />
           </div>
         </Card>
 
