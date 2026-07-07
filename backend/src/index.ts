@@ -55,6 +55,11 @@ function buildAllowedOrigins(): string[] {
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Required when behind Nginx/reverse proxy (X-Forwarded-For) — fixes express-rate-limit ERR_ERL_UNEXPECTED_X_FORWARDED_FOR
+if (process.env.TRUST_PROXY !== 'false') {
+  app.set('trust proxy', Number(process.env.TRUST_PROXY) || 1);
+}
+
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 const allowedOrigins = buildAllowedOrigins();
 

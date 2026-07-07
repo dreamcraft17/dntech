@@ -27,6 +27,7 @@ Edit via `nano` (bukan paste ke shell):
 ```env
 NODE_ENV=production
 PORT=4000
+TRUST_PROXY=1
 DATABASE_URL="postgresql://dntech_user:dntech2026!@localhost:5432/dntech?schema=public"
 JWT_SECRET="GANTI_DENGAN_STRING_RANDOM_PANJANG_MIN_32_KARAKTER"
 JWT_EXPIRES_IN="24h"
