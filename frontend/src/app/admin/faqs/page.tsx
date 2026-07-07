@@ -3,14 +3,14 @@ import AdminCrudPage from '@/components/admin/AdminCrudPage';
 export default function AdminFaqsPage() {
   return (
     <AdminCrudPage
-      title="FAQs"
+      title="FAQ"
       endpoint="faqs"
       defaultItem={{ question: '', answer: '', category: 'General', displayOrder: 0, isActive: true }}
       fields={[
-        { key: 'question', label: 'Question', required: true },
-        { key: 'answer', label: 'Answer', type: 'textarea', required: true },
-        { key: 'category', label: 'Category' },
-        { key: 'displayOrder', label: 'Order', type: 'number' },
+        { key: 'question', label: 'Pertanyaan', required: true },
+        { key: 'answer', label: 'Jawaban', type: 'textarea', required: true },
+        { key: 'category', label: 'Kategori' },
+        { key: 'displayOrder', label: 'Urutan', type: 'number' },
       ]}
     />
   );

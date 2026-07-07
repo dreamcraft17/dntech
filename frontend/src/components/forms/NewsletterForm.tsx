@@ -31,7 +31,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   if (success) {
     return (
       <div className="rounded-lg bg-green-50 border border-green-200 p-4 text-sm text-green-700 text-center">
-        ✓ You are subscribed! Check your inbox for a welcome email.
+        ✓ Berhasil berlangganan! Cek inbox Anda untuk email selamat datang.
       </div>
     );
   }
@@ -40,9 +40,9 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
     return (
       <form onSubmit={subscribe} className="flex gap-2">
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-          placeholder="your@email.com"
+          placeholder="email@perusahaan.com"
           className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none" />
-        <Button type="submit" loading={loading} size="sm">Subscribe</Button>
+        <Button type="submit" loading={loading} size="sm">Langganan</Button>
       </form>
     );
   }
@@ -51,21 +51,21 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
     <form onSubmit={subscribe} className="space-y-4">
       <div className="flex items-center gap-2 mb-2">
         <Mail className="h-5 w-5 text-blue-600" />
-        <h3 className="font-semibold text-slate-900">Subscribe to our newsletter</h3>
+        <h3 className="font-semibold text-slate-900">Langganan newsletter</h3>
       </div>
-      <p className="text-sm text-slate-600">Get insights on enterprise technology, case studies, and industry trends.</p>
+      <p className="text-sm text-slate-600">Dapatkan insight teknologi enterprise, studi kasus, dan tren industri.</p>
       <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <Select label="Industry (optional)" value={industry} onChange={(e) => setIndustry(e.target.value)}
+      <Select label="Industri (opsional)" value={industry} onChange={(e) => setIndustry(e.target.value)}
         options={[
-          { value: '', label: 'Select industry...' },
-          { value: 'finance', label: 'Finance & Banking' },
-          { value: 'retail', label: 'Retail & E-Commerce' },
-          { value: 'manufacturing', label: 'Manufacturing' },
-          { value: 'healthcare', label: 'Healthcare' },
-          { value: 'technology', label: 'Technology' },
-          { value: 'other', label: 'Other' },
+          { value: '', label: 'Pilih industri...' },
+          { value: 'finance', label: 'Keuangan & Perbankan' },
+          { value: 'retail', label: 'Ritel & E-Commerce' },
+          { value: 'manufacturing', label: 'Manufaktur' },
+          { value: 'healthcare', label: 'Kesehatan' },
+          { value: 'technology', label: 'Teknologi' },
+          { value: 'other', label: 'Lainnya' },
         ]} />
-      <Button type="submit" loading={loading} className="w-full">Subscribe</Button>
+      <Button type="submit" loading={loading} className="w-full">Langganan</Button>
     </form>
   );
 }

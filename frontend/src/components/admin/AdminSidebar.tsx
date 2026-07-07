@@ -13,21 +13,21 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Logo } from '@/components/common/Logo';
 
 const navItems = [
-  { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/services', label: 'Services', icon: Briefcase },
-  { href: '/admin/portfolio', label: 'Case Studies', icon: FolderOpen },
+  { href: '/admin/dashboard', label: 'Dasbor', icon: LayoutDashboard },
+  { href: '/admin/services', label: 'Layanan', icon: Briefcase },
+  { href: '/admin/portfolio', label: 'Studi Kasus', icon: FolderOpen },
   { href: '/admin/blog', label: 'Blog', icon: FileText },
-  { href: '/admin/leads', label: 'Leads', icon: MessageSquare },
+  { href: '/admin/leads', label: 'Lead', icon: MessageSquare },
   { href: '/admin/newsletter', label: 'Newsletter', icon: Mail },
-  { href: '/admin/quiz', label: 'Quiz', icon: ClipboardList },
-  { href: '/admin/team', label: 'Team', icon: Users },
-  { href: '/admin/testimonials', label: 'Testimonials', icon: Star },
-  { href: '/admin/faqs', label: 'FAQs', icon: HelpCircle },
-  { href: '/admin/careers', label: 'Careers', icon: Building2 },
+  { href: '/admin/quiz', label: 'Kuis', icon: ClipboardList },
+  { href: '/admin/team', label: 'Tim', icon: Users },
+  { href: '/admin/testimonials', label: 'Testimoni', icon: Star },
+  { href: '/admin/faqs', label: 'FAQ', icon: HelpCircle },
+  { href: '/admin/careers', label: 'Karier', icon: Building2 },
   { href: '/admin/media', label: 'Media', icon: Image },
-  { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/admin/settings', label: 'Settings', icon: Settings },
-  { href: '/admin/users', label: 'Users', icon: UserCog, superAdminOnly: true },
+  { href: '/admin/analytics', label: 'Analitik', icon: BarChart3 },
+  { href: '/admin/settings', label: 'Pengaturan', icon: Settings },
+  { href: '/admin/users', label: 'Pengguna', icon: UserCog, superAdminOnly: true },
 ];
 
 export function AdminSidebar() {
@@ -92,7 +92,7 @@ export function AdminSidebar() {
             onClick={logout}
             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-slate-800 rounded-lg transition-colors"
           >
-            <LogOut className="h-4 w-4" /> Logout
+            <LogOut className="h-4 w-4" /> Keluar
           </button>
         </div>
       </aside>

@@ -66,7 +66,7 @@ export default function AdminCrudPage({
   }
 
   async function remove(id: string) {
-    if (!confirm('Delete this item?')) return;
+    if (!confirm('Hapus item ini?')) return;
     await apiFetch(`/admin/${endpoint}/${id}`, { method: 'DELETE' });
     load();
   }
@@ -87,13 +87,13 @@ export default function AdminCrudPage({
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
-        <Button onClick={() => setEditing({ ...defaultItem, ...(fields.filter((f) => f.type === 'json').reduce((acc, f) => ({ ...acc, [f.key]: '{}' }), {})) })}><Plus className="h-4 w-4" /> Add</Button>
+        <Button onClick={() => setEditing({ ...defaultItem, ...(fields.filter((f) => f.type === 'json').reduce((acc, f) => ({ ...acc, [f.key]: '{}' }), {})) })}><Plus className="h-4 w-4" /> Tambah</Button>
       </div>
 
       {editing && (
         <Card className="mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="font-semibold">{editing.id ? 'Edit' : 'New'}</h2>
+            <h2 className="font-semibold">{editing.id ? 'Ubah' : 'Baru'}</h2>
             <button onClick={() => setEditing(null)}><X className="h-5 w-5 text-slate-400" /></button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -133,8 +133,8 @@ export default function AdminCrudPage({
             })}
           </div>
           <div className="mt-4 flex gap-2">
-            <Button onClick={save} loading={loading}>Save</Button>
-            <Button variant="secondary" onClick={() => setEditing(null)}>Cancel</Button>
+            <Button onClick={save} loading={loading}>Simpan</Button>
+            <Button variant="secondary" onClick={() => setEditing(null)}>Batal</Button>
           </div>
         </Card>
       )}
@@ -145,7 +145,7 @@ export default function AdminCrudPage({
             <tr>
               <th className="text-left px-4 py-3 font-medium text-slate-600">{fields[0]?.label}</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Status</th>
-              <th className="text-right px-4 py-3 font-medium text-slate-600">Actions</th>
+              <th className="text-right px-4 py-3 font-medium text-slate-600">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -154,7 +154,7 @@ export default function AdminCrudPage({
                 <td className="px-4 py-3 font-medium text-slate-900">{String(item[displayKey] || item.title || item.clientName || item.question || item.name)}</td>
                 <td className="px-4 py-3">
                   <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    {String(item.status ?? (item.isApproved ? 'published' : 'draft'))}
+                    {String(item.status ?? (item.isApproved ? 'diterbitkan' : 'draf'))}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
@@ -165,7 +165,7 @@ export default function AdminCrudPage({
             ))}
           </tbody>
         </table>
-        {items.length === 0 && <p className="text-center text-slate-500 py-8">No items yet</p>}
+        {items.length === 0 && <p className="text-center text-slate-500 py-8">Belum ada item</p>}
       </div>
     </div>
   );

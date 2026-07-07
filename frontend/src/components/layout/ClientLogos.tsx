@@ -16,7 +16,7 @@ export function ClientLogos({ logos }: ClientLogosProps) {
   return (
     <section className="py-10 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <p className="text-center text-sm text-slate-500 mb-6">Trusted by leading companies across Indonesia</p>
+        <p className="text-center text-sm text-slate-500 mb-6">Dipercaya perusahaan terkemuka di seluruh Indonesia</p>
         <div className="flex flex-wrap items-center justify-center gap-6">
           {items.map((logo) => (
             <div key={logo.name} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 bg-slate-50">

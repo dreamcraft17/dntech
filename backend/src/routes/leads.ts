@@ -32,7 +32,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const data = leadSchema.parse(req.body);
     if (data.honeypot) {
-      return successResponse(res, { leadId: 'ok', confirmationMessage: 'Thank you!' }, 201);
+      return successResponse(res, { leadId: 'ok', confirmationMessage: 'Terima kasih!' }, 201);
     }
 
     const { submission, isDuplicate, leadCategory } = await createLead(data, {
@@ -44,7 +44,7 @@ router.post(
       leadId: submission.id,
       isDuplicate,
       leadCategory,
-      confirmationMessage: 'Thank you for contacting DN Tech! We will get back to you within 1 business day.',
+      confirmationMessage: 'Terima kasih telah menghubungi DN Tech! Kami akan merespons dalam 1 hari kerja.',
     }, 201);
   })
 );

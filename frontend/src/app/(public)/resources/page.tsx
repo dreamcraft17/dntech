@@ -6,8 +6,8 @@ import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Resources',
-  description: 'Free guides, whitepapers, and insights from DN Tech.',
+  title: 'Sumber Daya',
+  description: 'Panduan gratis, whitepaper, dan wawasan dari DN Tech.',
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
@@ -24,18 +24,18 @@ async function getSettings() {
 
 const RESOURCES = [
   {
-    title: 'Enterprise Digital Transformation Guide',
-    description: 'A comprehensive guide to planning and executing your digital transformation journey.',
-    type: 'PDF Guide',
+    title: 'Panduan Transformasi Digital Enterprise',
+    description: 'Panduan komprehensif untuk merencanakan dan menjalankan perjalanan transformasi digital Anda.',
+    type: 'Panduan PDF',
   },
   {
-    title: 'Cloud Migration Checklist',
-    description: 'Step-by-step checklist for migrating your infrastructure to the cloud safely.',
+    title: 'Checklist Migrasi Cloud',
+    description: 'Checklist langkah demi langkah untuk memigrasikan infrastruktur Anda ke cloud dengan aman.',
     type: 'Checklist',
   },
   {
-    title: 'Web Application Security Best Practices',
-    description: 'OWASP-aligned security practices for modern web applications.',
+    title: 'Praktik Terbaik Keamanan Aplikasi Web',
+    description: 'Praktik keamanan selaras OWASP untuk aplikasi web modern.',
     type: 'Whitepaper',
   },
 ];
@@ -48,8 +48,8 @@ export default async function ResourcesPage() {
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Resources</h1>
-          <p className="mt-4 text-slate-600">Free guides and insights to help your digital transformation</p>
+          <h1 className="text-4xl font-bold text-slate-900">Sumber Daya</h1>
+          <p className="mt-4 text-slate-600">Panduan gratis dan wawasan untuk mendukung transformasi digital Anda</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
@@ -64,13 +64,13 @@ export default async function ResourcesPage() {
               {i === 0 && leadMagnetUrl ? (
                 <a href={leadMagnetUrl} target="_blank" rel="noopener noreferrer" className="mt-4">
                   <Button variant="outline" size="sm" className="w-full">
-                    <Download className="h-4 w-4" /> Download
+                    <Download className="h-4 w-4" /> Unduh
                   </Button>
                 </a>
               ) : (
                 <Link href="/contact" className="mt-4">
                   <Button variant="outline" size="sm" className="w-full">
-                    Request Access <ArrowRight className="h-4 w-4" />
+                    Minta Akses <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
               )}

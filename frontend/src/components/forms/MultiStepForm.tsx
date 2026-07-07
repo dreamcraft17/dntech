@@ -13,25 +13,25 @@ import { BUDGET_OPTIONS } from '@/lib/currency';
 import { Check } from 'lucide-react';
 
 const step1Schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email'),
+  name: z.string().min(1, 'Nama wajib diisi'),
+  email: z.string().email('Email tidak valid'),
   phone: z.string().optional(),
   companyName: z.string().optional(),
 });
 
 const step2Schema = z.object({
-  projectType: z.string().min(1, 'Please select a project type'),
-  serviceType: z.string().min(1, 'Please select a service'),
+  projectType: z.string().min(1, 'Pilih jenis proyek'),
+  serviceType: z.string().min(1, 'Pilih layanan'),
   budgetRange: z.string().optional(),
 });
 
 const step3Schema = z.object({
-  message: z.string().min(10, 'Please tell us more (min 10 characters)'),
+  message: z.string().min(10, 'Ceritakan lebih detail (min. 10 karakter)'),
 });
 
 type FormData = z.infer<typeof step1Schema> & z.infer<typeof step2Schema> & z.infer<typeof step3Schema> & { honeypot?: string };
 
-const STEPS = ['Contact Info', 'Project Details', 'Your Message'];
+const STEPS = ['Info Kontak', 'Detail Proyek', 'Pesan Anda'];
 
 interface MultiStepFormProps {
   source?: string;
@@ -45,7 +45,7 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
   const [emailError, setEmailError] = useState('');
   const router = useRouter();
 
-  const { register, handleSubmit, trigger, formState: { errors }, getValues, watch } = useForm<FormData>({
+  const { register, handleSubmit, trigger, formState: { errors }, getValues } = useForm<FormData>({
     defaultValues: { serviceType: defaultService || '', projectType: '' },
   });
 
@@ -64,7 +64,7 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
       });
       const json = await res.json();
       if (json.data?.isDuplicate) {
-        setEmailError('We already have your inquiry — our team will follow up soon.');
+        setEmailError('Kami sudah menerima inquiry Anda — tim kami akan segera menghubungi.');
       } else {
         setEmailError('');
       }
@@ -87,10 +87,10 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
         body: JSON.stringify({ ...data, source, pageSource: pageSource || (typeof window !== 'undefined' ? window.location.pathname : '/contact') }),
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error?.message || 'Submission failed');
+      if (!json.success) throw new Error(json.error?.message || 'Gagal mengirim');
       router.push(`/thank-you?leadId=${json.data.leadId}`);
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Something went wrong');
+      alert(err instanceof Error ? err.message : 'Terjadi kesalahan');
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,6 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
 
   return (
     <div>
-      {/* Step indicators */}
       <div className="flex items-center justify-between mb-8">
         {STEPS.map((label, i) => (
           <div key={label} className="flex items-center flex-1">
@@ -120,31 +119,31 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
         {step === 0 && (
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input label="Full Name" {...register('name')} error={errors.name?.message} required />
-              <Input label="Work Email" type="email" {...register('email')} error={errors.email?.message || emailError} required />
+              <Input label="Nama Lengkap" {...register('name')} error={errors.name?.message} required />
+              <Input label="Email Kerja" type="email" {...register('email')} error={errors.email?.message || emailError} required />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input label="Phone" type="tel" {...register('phone')} />
-              <Input label="Company Name" {...register('companyName')} />
+              <Input label="Telepon" type="tel" {...register('phone')} />
+              <Input label="Nama Perusahaan" {...register('companyName')} />
             </div>
           </div>
         )}
 
         {step === 1 && (
           <div className="space-y-4">
-            <Select label="Project Type" options={[
-              { value: '', label: 'Select project type...' },
-              { value: 'new-build', label: 'New Build / MVP' },
-              { value: 'modernization', label: 'System Modernization' },
-              { value: 'integration', label: 'Integration Project' },
-              { value: 'consulting', label: 'Consulting & Strategy' },
+            <Select label="Jenis Proyek" options={[
+              { value: '', label: 'Pilih jenis proyek...' },
+              { value: 'new-build', label: 'Pembangunan Baru / MVP' },
+              { value: 'modernization', label: 'Modernisasi Sistem' },
+              { value: 'integration', label: 'Proyek Integrasi' },
+              { value: 'consulting', label: 'Konsultasi & Strategi' },
             ]} {...register('projectType')} error={errors.projectType?.message} required />
-            <Select label="Service Interested" options={[
-              { value: '', label: 'Select service...' },
-              { value: 'enterprise-software', label: 'Enterprise Software' },
-              { value: 'web-mobile-development', label: 'Web & Mobile Development' },
+            <Select label="Layanan yang Diminati" options={[
+              { value: '', label: 'Pilih layanan...' },
+              { value: 'enterprise-software', label: 'Perangkat Lunak Enterprise' },
+              { value: 'web-mobile-development', label: 'Pengembangan Web & Mobile' },
               { value: 'cloud-devops', label: 'Cloud & DevOps' },
-              { value: 'it-consulting', label: 'IT Consulting' },
+              { value: 'it-consulting', label: 'Konsultasi IT' },
             ]} {...register('serviceType')} error={errors.serviceType?.message} required />
             <Select label="Kisaran Anggaran (opsional)" options={[
               { value: '', label: 'Lebih baik tidak disebutkan' },
@@ -155,22 +154,22 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
 
         {step === 2 && (
           <div className="space-y-4">
-            <Textarea label="Tell us about your project" rows={5} {...register('message')} error={errors.message?.message} required
-              placeholder="Describe your goals, timeline, and any specific requirements..." />
+            <Textarea label="Ceritakan tentang proyek Anda" rows={5} {...register('message')} error={errors.message?.message} required
+              placeholder="Jelaskan tujuan, timeline, dan kebutuhan spesifik proyek Anda..." />
             <div className="rounded-lg bg-blue-50 border border-blue-100 p-4 text-sm text-blue-800">
-              After submitting, you will receive a confirmation email and our team will respond within 1 business day.
+              Setelah mengirim, Anda akan menerima email konfirmasi dan tim kami akan merespons dalam 1 hari kerja.
             </div>
           </div>
         )}
 
         <div className="flex justify-between mt-6">
           {step > 0 ? (
-            <Button type="button" variant="secondary" onClick={() => setStep((s) => s - 1)}>Back</Button>
+            <Button type="button" variant="secondary" onClick={() => setStep((s) => s - 1)}>Kembali</Button>
           ) : <div />}
           {step < 2 ? (
-            <Button type="button" onClick={nextStep}>Continue</Button>
+            <Button type="button" onClick={nextStep}>Lanjut</Button>
           ) : (
-            <Button type="submit" loading={loading}>Submit Inquiry</Button>
+            <Button type="submit" loading={loading}>Kirim Inquiry</Button>
           )}
         </div>
       </form>

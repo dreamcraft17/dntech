@@ -7,10 +7,10 @@ import { sendQuizFollowUp } from '../services/EmailService';
 const router = Router();
 
 const QUIZ_RESULTS: Record<string, { service: string; description: string }> = {
-  enterprise: { service: 'Enterprise Software Development', description: 'Custom ERP, CRM, and large-scale systems' },
-  product: { service: 'Web & Mobile Development', description: 'MVPs, web apps, and mobile applications' },
-  cloud: { service: 'Cloud & DevOps', description: 'Cloud migration, CI/CD, and infrastructure' },
-  consulting: { service: 'IT Consulting & Strategy', description: 'Digital transformation roadmap and strategy' },
+  enterprise: { service: 'Pengembangan Perangkat Lunak Enterprise', description: 'ERP, CRM, dan sistem skala besar kustom' },
+  product: { service: 'Pengembangan Web & Mobile', description: 'MVP, aplikasi web, dan aplikasi mobile' },
+  cloud: { service: 'Cloud & DevOps', description: 'Migrasi cloud, CI/CD, dan infrastruktur' },
+  consulting: { service: 'Konsultasi & Strategi IT', description: 'Roadmap transformasi digital dan strategi teknologi' },
 };
 
 router.post(
@@ -48,7 +48,7 @@ router.post(
     });
 
     if (data.email) {
-      sendQuizFollowUp(data.email, data.name || 'there', recommendation.service).catch(console.error);
+      sendQuizFollowUp(data.email, data.name || 'Anda', recommendation.service).catch(console.error);
     }
 
     successResponse(res, {

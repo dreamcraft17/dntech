@@ -10,11 +10,11 @@ export function CalendlyEmbed({ url }: CalendlyEmbedProps) {
   return (
     <div className="mt-8 rounded-xl border border-slate-200 overflow-hidden">
       <div className="bg-slate-50 px-4 py-3 border-b border-slate-200">
-        <h3 className="font-semibold text-slate-900 text-sm">Or schedule a call directly</h3>
+        <h3 className="font-semibold text-slate-900 text-sm">Atau jadwalkan panggilan langsung</h3>
       </div>
       <iframe
         src={url}
-        title="Schedule a meeting"
+        title="Jadwalkan pertemuan"
         className="w-full h-[600px] border-0"
         loading="lazy"
       />

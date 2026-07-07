@@ -29,9 +29,9 @@ export const PAGE_SEO: Record<string, { title: string; description: string; keyw
     keywords: ['enterprise technology blog', 'cloud migration guide', 'web security best practices'],
   },
   'case-studies': {
-    title: 'Case Studies & Success Stories',
-    description: 'Pelajari bagaimana DN Tech membantu klien enterprise mencapai hasil measurable melalui solusi teknologi.',
-    keywords: ['software development case study', 'enterprise ERP success story', 'digital transformation results'],
+    title: 'Studi Kasus & Kisah Sukses',
+    description: 'Pelajari bagaimana DN Tech membantu klien enterprise mencapai hasil terukur melalui solusi teknologi.',
+    keywords: ['studi kasus pengembangan software', 'kisah sukses ERP enterprise', 'hasil transformasi digital'],
   },
   about: {
     title: 'Tentang DN Tech',
@@ -40,23 +40,23 @@ export const PAGE_SEO: Record<string, { title: string; description: string; keyw
   },
   contact: {
     title: 'Hubungi Kami',
-    description: 'Request demo gratis atau konsultasi dengan tim DN Tech. Respons dalam 1 hari kerja.',
+    description: 'Minta demo gratis atau konsultasi dengan tim DN Tech. Respons dalam 1 hari kerja.',
     keywords: ['contact software developer', 'request demo enterprise software', 'IT consulting Jakarta'],
   },
   faq: {
-    title: 'FAQ',
-    description: 'Jawaban pertanyaan umum tentang layanan, timeline proyek, pricing, dan support DN Tech.',
-    keywords: ['software development FAQ', 'enterprise project timeline', 'IT consulting pricing'],
+    title: 'Pertanyaan Umum (FAQ)',
+    description: 'Jawaban pertanyaan umum tentang layanan, timeline proyek, harga, dan dukungan DN Tech.',
+    keywords: ['FAQ pengembangan software', 'timeline proyek enterprise', 'harga konsultasi IT'],
   },
   quiz: {
-    title: 'Solution Finder Quiz',
+    title: 'Kuis Temukan Solusi',
     description: 'Temukan layanan DN Tech yang tepat untuk kebutuhan bisnis Anda dalam 5 pertanyaan.',
-    keywords: ['find software solution', 'technology assessment quiz'],
+    keywords: ['temukan solusi software', 'kuis asesmen teknologi'],
   },
   resources: {
-    title: 'Resources & Guides',
-    description: 'Download gratis: Enterprise Digital Transformation Guide, Cloud Migration Checklist, dan whitepapers.',
-    keywords: ['enterprise app development checklist', 'digital transformation guide PDF'],
+    title: 'Sumber Daya & Panduan',
+    description: 'Unduh gratis: Panduan Transformasi Digital Enterprise, Checklist Migrasi Cloud, dan whitepaper.',
+    keywords: ['checklist pengembangan aplikasi enterprise', 'panduan transformasi digital PDF'],
   },
 };
 

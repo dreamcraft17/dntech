@@ -6,8 +6,8 @@ import type { Testimonial } from '@/types';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Testimonials',
-  description: 'Hear from enterprise clients who transformed their business with DN Tech.',
+  title: 'Testimoni',
+  description: 'Dengarkan dari klien enterprise yang mentransformasi bisnis mereka bersama DN Tech.',
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
@@ -29,9 +29,9 @@ export default async function TestimonialsPage() {
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Client Testimonials</h1>
+          <h1 className="text-4xl font-bold text-slate-900">Testimoni Klien</h1>
           <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-            Trusted by enterprise leaders across Indonesia. See what our partners say about working with DN Tech.
+            Dipercaya oleh pemimpin enterprise di seluruh Indonesia. Lihat apa kata mitra kami tentang bekerja sama dengan DN Tech.
           </p>
         </div>
 
@@ -50,10 +50,10 @@ export default async function TestimonialsPage() {
         )}
 
         <div className="mt-16 text-center p-8 rounded-2xl bg-blue-600">
-          <h2 className="text-2xl font-bold text-white">Join our satisfied clients</h2>
-          <p className="mt-2 text-blue-100">Start your digital transformation journey today.</p>
+          <h2 className="text-2xl font-bold text-white">Bergabung dengan klien kami yang puas</h2>
+          <p className="mt-2 text-blue-100">Mulai perjalanan transformasi digital Anda hari ini.</p>
           <Link href="/contact" className="inline-block mt-6">
-            <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">Request Free Demo</Button>
+            <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">Minta Demo Gratis</Button>
           </Link>
         </div>
       </div>

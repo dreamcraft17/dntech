@@ -55,9 +55,9 @@ export function ROICalculator() {
         <Select label="Level Senioritas" value={seniority} onChange={(e) => setSeniority(e.target.value)}
           options={[
             { value: 'junior', label: `Junior (${formatIDRPerHour(DEV_RATES_IDR.junior)})` },
-            { value: 'mid', label: `Mid-level (${formatIDRPerHour(DEV_RATES_IDR.mid)})` },
+            { value: 'mid', label: `Menengah (${formatIDRPerHour(DEV_RATES_IDR.mid)})` },
             { value: 'senior', label: `Senior (${formatIDRPerHour(DEV_RATES_IDR.senior)})` },
-            { value: 'lead', label: `Lead/Architect (${formatIDRPerHour(DEV_RATES_IDR.lead)})` },
+            { value: 'lead', label: `Lead/Arsitek (${formatIDRPerHour(DEV_RATES_IDR.lead)})` },
           ]} />
         <Select label="Kompleksitas Proyek" value={complexity} onChange={(e) => setComplexity(e.target.value)}
           options={[

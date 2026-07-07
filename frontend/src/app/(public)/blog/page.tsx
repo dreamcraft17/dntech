@@ -42,7 +42,7 @@ export default async function BlogPage({
   return (
     <>
       <JsonLd data={breadcrumbSchema([
-        { name: 'Home', url: SITE_URL },
+        { name: 'Beranda', url: SITE_URL },
         { name: 'Blog', url: `${SITE_URL}/blog` },
       ])} />
       {posts.length > 0 && (
@@ -55,9 +55,9 @@ export default async function BlogPage({
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-slate-900">Blog & Insights</h1>
+            <h1 className="text-4xl font-bold text-slate-900">Blog & Wawasan</h1>
             <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-              Thought leadership, technical guides, and industry trends for enterprise technology leaders
+              Kepemimpinan pemikiran, panduan teknis, dan tren industri untuk pemimpin teknologi enterprise
             </p>
           </div>
 
@@ -65,7 +65,7 @@ export default async function BlogPage({
 
           {categories.length > 0 && (
             <div className="flex flex-wrap gap-2 justify-center mb-10">
-              <Link href="/blog" className={`px-4 py-2 rounded-full text-sm font-medium ${!params.category ? 'bg-blue-600 text-white' : 'border border-slate-300 text-slate-600'}`}>All</Link>
+              <Link href="/blog" className={`px-4 py-2 rounded-full text-sm font-medium ${!params.category ? 'bg-blue-600 text-white' : 'border border-slate-300 text-slate-600'}`}>Semua</Link>
               {categories.map((cat) => (
                 <Link key={cat} href={`/blog?category=${cat}`}
                   className={`px-4 py-2 rounded-full text-sm font-medium border ${
@@ -103,11 +103,11 @@ export default async function BlogPage({
           )}
 
           <div className="mt-16 text-center p-6 rounded-xl bg-slate-50 border border-slate-200">
-            <p className="text-slate-600">Want to implement what you read?</p>
+            <p className="text-slate-600">Ingin menerapkan apa yang Anda baca?</p>
             <div className="mt-3 flex flex-wrap gap-4 justify-center text-sm">
-              <Link href="/services" className="text-blue-600 font-medium hover:underline">Explore Services</Link>
-              <Link href="/case-studies" className="text-blue-600 font-medium hover:underline">View Case Studies</Link>
-              <Link href="/contact" className="text-blue-600 font-medium hover:underline">Talk to an Expert</Link>
+              <Link href="/services" className="text-blue-600 font-medium hover:underline">Jelajahi Layanan</Link>
+              <Link href="/case-studies" className="text-blue-600 font-medium hover:underline">Lihat Studi Kasus</Link>
+              <Link href="/contact" className="text-blue-600 font-medium hover:underline">Konsultasi dengan Ahli</Link>
             </div>
           </div>
         </div>

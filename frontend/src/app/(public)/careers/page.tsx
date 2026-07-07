@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/Card';
 import type { Career } from '@/types';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Careers' };
+export const metadata: Metadata = { title: 'Karier' };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
@@ -25,9 +25,9 @@ export default async function CareersPage() {
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Join Our Team</h1>
+          <h1 className="text-4xl font-bold text-slate-900">Bergabung dengan Tim Kami</h1>
           <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-            Build the future of technology with us. Explore open positions below.
+            Bangun masa depan teknologi bersama kami. Jelajahi posisi terbuka di bawah ini.
           </p>
         </div>
 
@@ -50,16 +50,16 @@ export default async function CareersPage() {
                   </div>
                   <p className="mt-2 text-sm text-slate-600 line-clamp-2">{job.description}</p>
                 </div>
-                <Link href={`/contact?subject=Career: ${encodeURIComponent(job.title)}`}
+                <Link href={`/contact?subject=Karier: ${encodeURIComponent(job.title)}`}
                   className="shrink-0 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
-                  Apply Now
+                  Lamar Sekarang
                 </Link>
               </div>
             </Card>
           ))}
 
           {careers.length === 0 && (
-            <p className="text-center text-slate-500 py-12">No open positions at the moment. Check back later!</p>
+            <p className="text-center text-slate-500 py-12">Tidak ada posisi terbuka saat ini. Periksa kembali nanti!</p>
           )}
         </div>
       </div>

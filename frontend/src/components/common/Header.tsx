@@ -10,13 +10,13 @@ import { Logo } from '@/components/common/Logo';
 import type { SearchResult } from '@/types';
 
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/services', label: 'Services' },
-  { href: '/case-studies', label: 'Case Studies' },
-  { href: '/about', label: 'About' },
+  { href: '/', label: 'Beranda' },
+  { href: '/services', label: 'Layanan' },
+  { href: '/case-studies', label: 'Studi Kasus' },
+  { href: '/about', label: 'Tentang' },
   { href: '/blog', label: 'Blog' },
-  { href: '/quiz', label: 'Quiz' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/quiz', label: 'Kuis' },
+  { href: '/contact', label: 'Kontak' },
 ];
 
 export function Header() {
@@ -79,7 +79,7 @@ export function Header() {
           <button
             onClick={() => setSearchOpen(!searchOpen)}
             className="p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50"
-            aria-label="Search"
+            aria-label="Cari"
           >
             <Search className="h-5 w-5" />
           </button>
@@ -90,12 +90,12 @@ export function Header() {
               scrolled && 'shadow-lg shadow-blue-600/30 ring-2 ring-blue-400/20'
             )}
           >
-            Request Demo
+            Minta Demo
           </Link>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-2 text-slate-600 rounded-lg hover:bg-slate-50"
-            aria-label="Toggle menu"
+            aria-label="Buka menu"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -107,7 +107,7 @@ export function Header() {
           <div className="mx-auto max-w-7xl">
             <input
               type="search"
-              placeholder="Search services, blog, portfolio..."
+              placeholder="Cari layanan, blog, portofolio..."
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"

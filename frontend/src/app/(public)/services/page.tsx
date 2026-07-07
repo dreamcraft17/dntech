@@ -40,8 +40,8 @@ export default async function ServicesPage({
   return (
     <>
       <JsonLd data={breadcrumbSchema([
-        { name: 'Home', url: SITE_URL },
-        { name: 'Services', url: `${SITE_URL}/services` },
+        { name: 'Beranda', url: SITE_URL },
+        { name: 'Layanan', url: `${SITE_URL}/services` },
       ])} />
       {services.length > 0 && (
         <JsonLd data={itemListSchema(services.map((s) => ({
@@ -53,15 +53,15 @@ export default async function ServicesPage({
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-slate-900">Our Services</h1>
+            <h1 className="text-4xl font-bold text-slate-900">Layanan Kami</h1>
             <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-              Comprehensive technology solutions tailored to your business needs
+              Solusi teknologi komprehensif yang disesuaikan dengan kebutuhan bisnis Anda
             </p>
           </div>
 
           {categories.length > 0 && (
             <div className="flex flex-wrap gap-2 justify-center mb-10">
-              <Link href="/services" className="px-4 py-2 rounded-full text-sm font-medium bg-blue-600 text-white">All</Link>
+              <Link href="/services" className="px-4 py-2 rounded-full text-sm font-medium bg-blue-600 text-white">Semua</Link>
               {categories.map((cat) => (
                 <Link key={cat} href={`/services?category=${encodeURIComponent(cat!)}`}
                   className={`px-4 py-2 rounded-full text-sm font-medium border ${
@@ -89,7 +89,7 @@ export default async function ServicesPage({
                     </ul>
                   )}
                   <span className="mt-4 inline-flex items-center text-sm text-blue-600 font-medium">
-                    View details <ArrowRight className="h-4 w-4 ml-1" />
+                    Lihat detail <ArrowRight className="h-4 w-4 ml-1" />
                   </span>
                 </Card>
               </Link>
@@ -97,15 +97,15 @@ export default async function ServicesPage({
           </div>
 
           {services.length === 0 && (
-            <p className="text-center text-slate-500 py-12">No services found.</p>
+            <p className="text-center text-slate-500 py-12">Tidak ada layanan ditemukan.</p>
           )}
 
           <div className="mt-16 text-center">
-            <p className="text-slate-600 mb-4">Not sure which service fits your needs?</p>
+            <p className="text-slate-600 mb-4">Belum yakin layanan mana yang sesuai?</p>
             <div className="flex flex-wrap gap-4 justify-center text-sm">
-              <Link href="/quiz" className="text-blue-600 font-medium hover:underline">Take the Solution Quiz</Link>
-              <Link href="/blog" className="text-blue-600 font-medium hover:underline">Read our Guides</Link>
-              <Link href="/contact" className="text-blue-600 font-medium hover:underline">Contact Us</Link>
+              <Link href="/quiz" className="text-blue-600 font-medium hover:underline">Ikuti Kuis Solusi</Link>
+              <Link href="/blog" className="text-blue-600 font-medium hover:underline">Baca Panduan Kami</Link>
+              <Link href="/contact" className="text-blue-600 font-medium hover:underline">Hubungi Kami</Link>
             </div>
           </div>
         </div>

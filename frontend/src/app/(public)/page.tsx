@@ -73,10 +73,10 @@ export default async function HomePage() {
   const clientLogos = settings.clientLogos as { name: string; initial?: string }[] | undefined;
 
   const stats = [
-    { icon: Briefcase, value: '100+', label: 'Projects Completed' },
-    { icon: Users, value: '50+', label: 'Enterprise Clients' },
-    { icon: Award, value: '15+', label: 'Industries Served' },
-    { icon: Star, value: '4.9', label: 'Client Rating' },
+    { icon: Briefcase, value: '100+', label: 'Proyek Selesai' },
+    { icon: Users, value: '50+', label: 'Klien Enterprise' },
+    { icon: Award, value: '15+', label: 'Industri Terlayani' },
+    { icon: Star, value: '4.9', label: 'Penilaian Klien' },
   ];
 
   return (
@@ -95,12 +95,12 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/contact">
                 <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">
-                  Request Free Demo <ArrowRight className="h-4 w-4" />
+                  Minta Demo Gratis <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/case-studies">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                  View Case Studies
+                  Lihat Studi Kasus
                 </Button>
               </Link>
             </div>
@@ -145,7 +145,7 @@ export default async function HomePage() {
                   <h3 className="font-semibold text-slate-900">{service.name}</h3>
                   <p className="mt-2 text-sm text-slate-600 line-clamp-3">{service.description}</p>
                   <span className="mt-4 inline-flex items-center text-sm text-blue-600 font-medium">
-                    Learn more <ArrowRight className="h-4 w-4 ml-1" />
+                    Pelajari lebih lanjut <ArrowRight className="h-4 w-4 ml-1" />
                   </span>
                 </Card>
               </Link>
@@ -153,10 +153,10 @@ export default async function HomePage() {
           </div>
           <div className="text-center mt-10 flex flex-wrap gap-4 justify-center">
             <Link href="/services">
-              <Button variant="outline">View All Services</Button>
+              <Button variant="outline">Lihat Semua Layanan</Button>
             </Link>
             <Link href="/quiz">
-              <Button variant="secondary">Not sure? Take our Quiz</Button>
+              <Button variant="secondary">Belum yakin? Ikuti Kuis Kami</Button>
             </Link>
           </div>
         </div>
@@ -168,10 +168,10 @@ export default async function HomePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-12">
               <div>
-                <h2 className="text-3xl font-bold text-slate-900">Success Stories</h2>
-                <p className="mt-2 text-slate-600">Real results from our enterprise clients</p>
+                <h2 className="text-3xl font-bold text-slate-900">Kisah Sukses</h2>
+                <p className="mt-2 text-slate-600">Hasil nyata dari klien enterprise kami</p>
               </div>
-              <Link href="/case-studies" className="text-blue-600 font-medium hover:underline hidden sm:block">View all</Link>
+              <Link href="/case-studies" className="text-blue-600 font-medium hover:underline hidden sm:block">Lihat semua</Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {caseStudies.map((item) => (
@@ -195,7 +195,7 @@ export default async function HomePage() {
         <section className="py-20 bg-slate-50">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-slate-900">What Our Clients Say</h2>
+              <h2 className="text-3xl font-bold text-slate-900">Apa Kata Klien Kami</h2>
             </div>
             <TestimonialCarousel testimonials={testimonials} />
           </div>
@@ -218,8 +218,8 @@ export default async function HomePage() {
         <section className="py-20 bg-slate-50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-12">
-              <h2 className="text-3xl font-bold text-slate-900">Latest Insights</h2>
-              <Link href="/blog" className="text-blue-600 font-medium hover:underline">View all</Link>
+              <h2 className="text-3xl font-bold text-slate-900">Wawasan Terbaru</h2>
+              <Link href="/blog" className="text-blue-600 font-medium hover:underline">Lihat semua</Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {blogPosts.map((post) => (
@@ -251,19 +251,19 @@ export default async function HomePage() {
       {/* CTA */}
       <section className="py-20 bg-blue-600">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white">Ready to Transform Your Business?</h2>
+          <h2 className="text-3xl font-bold text-white">Siap Mentransformasi Bisnis Anda?</h2>
           <p className="mt-4 text-blue-100 max-w-2xl mx-auto">
-            Let&apos;s discuss how DN Tech can help you achieve your digital transformation goals.
+            Mari diskusikan bagaimana DN Tech dapat membantu Anda mencapai tujuan transformasi digital.
           </p>
           <div className="mt-8 flex flex-wrap gap-4 justify-center">
             <Link href="/contact">
               <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">
-                Request Free Demo
+                Minta Demo Gratis
               </Button>
             </Link>
             <Link href="/resources">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Download Resources
+                Unduh Sumber Daya
               </Button>
             </Link>
           </div>

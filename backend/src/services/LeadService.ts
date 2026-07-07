@@ -50,7 +50,7 @@ export async function createLead(data: LeadInput, meta?: { ip?: string; userAgen
       projectType: data.projectType,
       budgetRange: data.budgetRange,
       message: data.message || '',
-      subject: `Lead: ${data.serviceType || data.projectType || 'General'}`,
+      subject: `Lead: ${data.serviceType || data.projectType || 'Umum'}`,
       source: data.source || 'contact-form',
       pageSource: data.pageSource,
       leadCategory,

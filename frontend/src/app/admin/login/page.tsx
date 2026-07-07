@@ -20,7 +20,7 @@ export default function AdminLoginPage() {
     try {
       await login(email, password);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(err instanceof Error ? err.message : 'Gagal masuk');
     } finally {
       setLoading(false);
     }
@@ -33,8 +33,8 @@ export default function AdminLoginPage() {
           <div className="flex justify-center mb-4">
             <Logo href={null} size="xl" priority />
           </div>
-          <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
-          <p className="text-slate-400 mt-2">Sign in to manage your website</p>
+          <h1 className="text-2xl font-bold text-white">Dasbor Admin</h1>
+          <p className="text-slate-400 mt-2">Masuk untuk mengelola situs web Anda</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 shadow-xl space-y-4">
@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
             autoComplete="email"
           />
           <Input
-            label="Password"
+            label="Kata Sandi"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -58,9 +58,9 @@ export default function AdminLoginPage() {
             autoComplete="current-password"
           />
           <label className="flex items-center gap-2 text-sm text-slate-600">
-            <input type="checkbox" className="rounded" /> Remember me
+            <input type="checkbox" className="rounded" /> Ingat saya
           </label>
-          <Button type="submit" loading={loading} className="w-full">Sign In</Button>
+          <Button type="submit" loading={loading} className="w-full">Masuk</Button>
         </form>
       </div>
     </div>

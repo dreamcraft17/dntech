@@ -32,7 +32,7 @@ export async function apiFetch<T>(
   const json: ApiResponse<T> = await res.json();
 
   if (!res.ok || !json.success) {
-    throw new Error(json.error?.message || 'Request failed');
+    throw new Error(json.error?.message || 'Permintaan gagal');
   }
 
   return json.data;
@@ -54,7 +54,7 @@ export async function apiFetchPaginated<T>(
   const json = await res.json();
 
   if (!res.ok || !json.success) {
-    throw new Error(json.error?.message || 'Request failed');
+    throw new Error(json.error?.message || 'Permintaan gagal');
   }
 
   return { data: json.data, pagination: json.pagination };

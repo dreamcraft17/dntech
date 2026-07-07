@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/Card';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Portfolio' };
+export const metadata: Metadata = { title: 'Portofolio' };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
@@ -27,15 +27,15 @@ export default async function PortfolioPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 p-4 rounded-xl bg-blue-50 border border-blue-100 text-center">
           <p className="text-sm text-blue-800">
-            Looking for detailed success stories with metrics and client quotes?{' '}
-            <Link href="/case-studies" className="font-semibold hover:underline">View Case Studies →</Link>
+            Mencari kisah sukses detail dengan metrik dan testimoni klien?{' '}
+            <Link href="/case-studies" className="font-semibold hover:underline">Lihat Studi Kasus →</Link>
           </p>
         </div>
 
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Our Portfolio</h1>
+          <h1 className="text-4xl font-bold text-slate-900">Portofolio Kami</h1>
           <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-            Showcasing successful projects and client transformations
+            Menampilkan proyek sukses dan transformasi klien
           </p>
         </div>
 
@@ -65,7 +65,7 @@ export default async function PortfolioPage() {
                 <p className="text-sm text-slate-500 mt-1">{item.clientName}</p>
                 <p className="mt-2 text-sm text-slate-600 line-clamp-2">{item.description}</p>
                 <span className="mt-4 inline-flex items-center text-sm text-blue-600 font-medium">
-                  View case study <ArrowRight className="h-4 w-4 ml-1" />
+                  Lihat studi kasus <ArrowRight className="h-4 w-4 ml-1" />
                 </span>
               </Card>
             </Link>
@@ -73,7 +73,7 @@ export default async function PortfolioPage() {
         </div>
 
         {items.length === 0 && (
-          <p className="text-center text-slate-500 py-12">No portfolio items yet.</p>
+          <p className="text-center text-slate-500 py-12">Belum ada item portofolio.</p>
         )}
       </div>
     </div>

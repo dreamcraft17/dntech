@@ -31,7 +31,7 @@ export default function AdminUsersPage() {
   useEffect(() => { if (currentUser?.role === 'SuperAdmin') load().catch(console.error); }, [currentUser]);
 
   if (currentUser?.role !== 'SuperAdmin') {
-    return <p className="text-slate-500">Access denied. SuperAdmin only.</p>;
+    return <p className="text-slate-500">Akses ditolak. Hanya SuperAdmin.</p>;
   }
 
   async function create() {
@@ -42,7 +42,7 @@ export default function AdminUsersPage() {
   }
 
   async function remove(id: string) {
-    if (!confirm('Deactivate this user?')) return;
+    if (!confirm('Nonaktifkan pengguna ini?')) return;
     await apiFetch(`/admin/users/${id}`, { method: 'DELETE' });
     load();
   }
@@ -50,29 +50,29 @@ export default function AdminUsersPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">User Management</h1>
-        <Button onClick={() => setCreating(true)}><Plus className="h-4 w-4" /> Add User</Button>
+        <h1 className="text-2xl font-bold text-slate-900">Manajemen Pengguna</h1>
+        <Button onClick={() => setCreating(true)}><Plus className="h-4 w-4" /> Tambah Pengguna</Button>
       </div>
 
       {creating && (
         <Card className="mb-6">
           <div className="flex justify-between mb-4">
-            <h2 className="font-semibold">New User</h2>
+            <h2 className="font-semibold">Pengguna Baru</h2>
             <button onClick={() => setCreating(false)}><X className="h-5 w-5 text-slate-400" /></button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <Input label="Nama" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
             <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
-            <Input label="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
-            <Select label="Role" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}
+            <Input label="Kata Sandi" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+            <Select label="Peran" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}
               options={[
-                { value: 'SuperAdmin', label: 'SuperAdmin' },
-                { value: 'ContentManager', label: 'ContentManager' },
+                { value: 'SuperAdmin', label: 'Super Admin' },
+                { value: 'ContentManager', label: 'Manajer Konten' },
                 { value: 'Editor', label: 'Editor' },
-                { value: 'Viewer', label: 'Viewer' },
+                { value: 'Viewer', label: 'Pengamat' },
               ]} />
           </div>
-          <Button className="mt-4" onClick={create}>Create User</Button>
+          <Button className="mt-4" onClick={create}>Buat Pengguna</Button>
         </Card>
       )}
 
@@ -80,10 +80,10 @@ export default function AdminUsersPage() {
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Name</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Nama</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Email</th>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Role</th>
-              <th className="text-right px-4 py-3 font-medium text-slate-600">Actions</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Peran</th>
+              <th className="text-right px-4 py-3 font-medium text-slate-600">Aksi</th>
             </tr>
           </thead>
           <tbody>

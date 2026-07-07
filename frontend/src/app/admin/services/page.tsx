@@ -42,7 +42,7 @@ export default function AdminServicesPage() {
   }
 
   async function remove(id: string) {
-    if (!confirm('Delete this service?')) return;
+    if (!confirm('Hapus layanan ini?')) return;
     await apiFetch(`/admin/services/${id}`, { method: 'DELETE' });
     load();
   }
@@ -50,27 +50,27 @@ export default function AdminServicesPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Services</h1>
-        <Button onClick={() => setEditing({ ...emptyForm })}><Plus className="h-4 w-4" /> Add Service</Button>
+        <h1 className="text-2xl font-bold text-slate-900">Layanan</h1>
+        <Button onClick={() => setEditing({ ...emptyForm })}><Plus className="h-4 w-4" /> Tambah Layanan</Button>
       </div>
 
       {editing && (
         <Card className="mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="font-semibold">{editing.id ? 'Edit' : 'New'} Service</h2>
+            <h2 className="font-semibold">{editing.id ? 'Ubah' : 'Baru'} Layanan</h2>
             <button onClick={() => setEditing(null)}><X className="h-5 w-5 text-slate-400" /></button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Name" value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} required />
-            <Input label="Category" value={editing.category || ''} onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
+            <Input label="Nama" value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} required />
+            <Input label="Kategori" value={editing.category || ''} onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
             <Select label="Status" value={editing.status} onChange={(e) => setEditing({ ...editing, status: e.target.value })}
-              options={[{ value: 'draft', label: 'Draft' }, { value: 'active', label: 'Active' }, { value: 'archived', label: 'Archived' }]} />
-            <Input label="Display Order" type="number" value={editing.displayOrder} onChange={(e) => setEditing({ ...editing, displayOrder: parseInt(e.target.value) })} />
+              options={[{ value: 'draft', label: 'Draf' }, { value: 'active', label: 'Aktif' }, { value: 'archived', label: 'Arsip' }]} />
+            <Input label="Urutan Tampilan" type="number" value={editing.displayOrder} onChange={(e) => setEditing({ ...editing, displayOrder: parseInt(e.target.value) })} />
           </div>
-          <Textarea label="Description" rows={4} value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} className="mt-4" required />
+          <Textarea label="Deskripsi" rows={4} value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} className="mt-4" required />
           <div className="mt-4 flex gap-2">
-            <Button onClick={save} loading={loading}>Save</Button>
-            <Button variant="secondary" onClick={() => setEditing(null)}>Cancel</Button>
+            <Button onClick={save} loading={loading}>Simpan</Button>
+            <Button variant="secondary" onClick={() => setEditing(null)}>Batal</Button>
           </div>
         </Card>
       )}
@@ -79,10 +79,10 @@ export default function AdminServicesPage() {
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Name</th>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Category</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Nama</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Kategori</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Status</th>
-              <th className="text-right px-4 py-3 font-medium text-slate-600">Actions</th>
+              <th className="text-right px-4 py-3 font-medium text-slate-600">Aksi</th>
             </tr>
           </thead>
           <tbody>

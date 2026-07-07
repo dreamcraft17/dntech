@@ -49,7 +49,7 @@ export default function AdminMediaPage() {
   }
 
   async function remove(id: string) {
-    if (!confirm('Delete this file?')) return;
+    if (!confirm('Hapus file ini?')) return;
     await apiFetch(`/admin/media/${id}`, { method: 'DELETE' });
     load();
   }
@@ -57,9 +57,9 @@ export default function AdminMediaPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Media Library</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Perpustakaan Media</h1>
         <Button onClick={() => fileRef.current?.click()} loading={uploading}>
-          <Upload className="h-4 w-4" /> Upload
+          <Upload className="h-4 w-4" /> Unggah
         </Button>
         <input ref={fileRef} type="file" multiple accept="image/*,.pdf" className="hidden" onChange={(e) => upload(e.target.files)} />
       </div>
@@ -71,8 +71,8 @@ export default function AdminMediaPage() {
         onDrop={(e) => { e.preventDefault(); upload(e.dataTransfer.files); }}
       >
         <Upload className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-        <p className="text-slate-600">Drag & drop files here or click to upload</p>
-        <p className="text-xs text-slate-400 mt-1">JPG, PNG, WebP, GIF, PDF · Max 5MB</p>
+        <p className="text-slate-600">Seret & lepas file di sini atau klik untuk mengunggah</p>
+        <p className="text-xs text-slate-400 mt-1">JPG, PNG, WebP, GIF, PDF · Maks. 5MB</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -88,7 +88,7 @@ export default function AdminMediaPage() {
             <p className="text-xs text-slate-600 truncate">{item.originalFilename || item.filename}</p>
             <div className="flex gap-1 mt-2">
               <button onClick={() => navigator.clipboard.writeText(getUploadUrl(item.url))}
-                className="p-1 text-slate-400 hover:text-blue-600" title="Copy URL">
+                className="p-1 text-slate-400 hover:text-blue-600" title="Salin URL">
                 <Copy className="h-3 w-3" />
               </button>
               <button onClick={() => remove(item.id)} className="p-1 text-slate-400 hover:text-red-600">

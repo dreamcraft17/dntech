@@ -33,18 +33,18 @@ export default function AdminAnalyticsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Analytics Dashboard</h1>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">Dasbor Analitik</h1>
 
       {metrics && (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
             {[
-              { label: 'Leads Today', value: metrics.todayLeads },
-              { label: 'Leads This Month', value: metrics.monthLeads },
-              { label: 'Total Leads', value: metrics.totalLeads },
-              { label: 'Conversion Rate', value: metrics.conversionRate },
+              { label: 'Lead Hari Ini', value: metrics.todayLeads },
+              { label: 'Lead Bulan Ini', value: metrics.monthLeads },
+              { label: 'Total Lead', value: metrics.totalLeads },
+              { label: 'Tingkat Konversi', value: metrics.conversionRate },
               { label: 'Newsletter', value: metrics.newsletterSubscribers },
-              { label: 'Quiz (30d)', value: metrics.quizCompletions },
+              { label: 'Kuis (30 hr)', value: metrics.quizCompletions },
             ].map(({ label, value }) => (
               <Card key={label}>
                 <div className="text-sm text-slate-500">{label}</div>
@@ -54,19 +54,19 @@ export default function AdminAnalyticsPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <Card title="Conversion Funnel & Lead Trend">
+            <Card title="Corong Konversi & Tren Lead">
               <ConversionChart
                 funnel={[
-                  { label: 'Page Views', value: metrics.funnel.pageViews },
-                  { label: 'Form Visits', value: metrics.funnel.formVisits },
-                  { label: 'Form Submits', value: metrics.funnel.formSubmits },
-                  { label: 'Leads', value: metrics.funnel.leads },
+                  { label: 'Tampilan Halaman', value: metrics.funnel.pageViews },
+                  { label: 'Kunjungan Formulir', value: metrics.funnel.formVisits },
+                  { label: 'Pengiriman Formulir', value: metrics.funnel.formSubmits },
+                  { label: 'Lead', value: metrics.funnel.leads },
                 ]}
                 monthTrend={metrics.monthTrend}
               />
             </Card>
 
-            <Card title="Lead Sources">
+            <Card title="Sumber Lead">
               {Object.entries(metrics.topLeadSources).map(([source, count]) => (
                 <div key={source} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
                   <span className="text-sm text-slate-600 capitalize">{source}</span>
@@ -74,12 +74,12 @@ export default function AdminAnalyticsPage() {
                 </div>
               ))}
               {Object.keys(metrics.topLeadSources).length === 0 && (
-                <p className="text-sm text-slate-500">No lead source data yet</p>
+                <p className="text-sm text-slate-500">Belum ada data sumber lead</p>
               )}
             </Card>
           </div>
 
-          <Card title="Top Pages (views / leads)" className="mb-6">
+          <Card title="Halaman Teratas (tampilan / lead)" className="mb-6">
             {metrics.topPages.map(({ page, views, leads }) => (
               <div key={page} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
                 <span className="text-sm text-slate-600 truncate">{page}</span>
@@ -91,7 +91,7 @@ export default function AdminAnalyticsPage() {
       )}
 
       {traffic?.byDevice && (
-        <Card title="Traffic by Device">
+        <Card title="Lalu Lintas per Perangkat">
           {Object.entries(traffic.byDevice).map(([device, count]) => (
             <div key={device} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
               <span className="text-sm capitalize text-slate-600">{device}</span>

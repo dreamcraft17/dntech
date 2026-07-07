@@ -31,7 +31,7 @@ export function CaseStudyCard({ slug, title, description, clientName, metrics, i
           </div>
         )}
         <span className="mt-4 inline-flex items-center text-sm text-blue-600 font-medium">
-          Read case study <ArrowRight className="h-4 w-4 ml-1" />
+          Baca studi kasus <ArrowRight className="h-4 w-4 ml-1" />
         </span>
       </Card>
     </Link>

@@ -15,9 +15,9 @@ export function BookDemoSection({ calendlyUrl }: BookDemoSectionProps) {
           <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-blue-100 mb-4">
             <Calendar className="h-6 w-6 text-blue-600" />
           </div>
-          <h2 className="text-3xl font-bold text-slate-900">Book a Free Consultation</h2>
+          <h2 className="text-3xl font-bold text-slate-900">Jadwalkan Konsultasi Gratis</h2>
           <p className="mt-3 text-slate-600 max-w-xl mx-auto">
-            Schedule a 30-minute call with our experts. No commitment — just a conversation about your goals.
+            Atur panggilan 30 menit dengan tim ahli kami. Tanpa komitmen — cukup diskusi tentang tujuan Anda.
           </p>
         </div>
 
@@ -25,10 +25,10 @@ export function BookDemoSection({ calendlyUrl }: BookDemoSectionProps) {
           <CalendlyEmbed url={calendlyUrl} />
         ) : (
           <div className="text-center p-8 rounded-xl bg-white border border-slate-200">
-            <p className="text-slate-600 mb-6">Pick a time that works for you, or send us a message.</p>
+            <p className="text-slate-600 mb-6">Pilih waktu yang sesuai, atau kirim pesan kepada kami.</p>
             <Link href="/contact">
               <Button size="lg">
-                Request a Demo <ArrowRight className="h-4 w-4" />
+                Minta Demo <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
           </div>

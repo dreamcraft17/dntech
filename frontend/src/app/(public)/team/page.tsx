@@ -4,7 +4,7 @@ import type { TeamMember } from '@/types';
 import type { Metadata } from 'next';
 import { Globe, Share2 } from 'lucide-react';
 
-export const metadata: Metadata = { title: 'Our Team' };
+export const metadata: Metadata = { title: 'Tim Kami' };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
@@ -25,8 +25,8 @@ export default async function TeamPage() {
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Meet Our Team</h1>
-          <p className="mt-4 text-slate-600">The talented people behind DN Tech</p>
+          <h1 className="text-4xl font-bold text-slate-900">Kenalan dengan Tim Kami</h1>
+          <p className="mt-4 text-slate-600">Orang-orang berbakat di balik DN Tech</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {team.map((member) => (

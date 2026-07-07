@@ -37,7 +37,7 @@ async function getCaseStudy(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const item = await getCaseStudy(slug);
-  if (!item) return { title: 'Case Study' };
+  if (!item) return { title: 'Studi Kasus' };
   return buildMetadata({
     title: item.title,
     description: item.description || '',
@@ -55,17 +55,17 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
   return (
     <>
       <JsonLd data={breadcrumbSchema([
-        { name: 'Home', url: SITE_URL },
-        { name: 'Case Studies', url: `${SITE_URL}/case-studies` },
+        { name: 'Beranda', url: SITE_URL },
+        { name: 'Studi Kasus', url: `${SITE_URL}/case-studies` },
         { name: item.title, url: `${SITE_URL}/case-studies/${slug}` },
       ])} />
 
       <div className="py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <nav className="text-sm text-slate-500 mb-8">
-            <Link href="/" className="hover:text-blue-600">Home</Link>
+            <Link href="/" className="hover:text-blue-600">Beranda</Link>
             <span className="mx-2">/</span>
-            <Link href="/case-studies" className="hover:text-blue-600">Case Studies</Link>
+            <Link href="/case-studies" className="hover:text-blue-600">Studi Kasus</Link>
             <span className="mx-2">/</span>
             <span className="text-slate-900">{item.title}</span>
           </nav>
@@ -89,7 +89,7 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
               </div>
               {item.clientLogo && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={item.clientLogo} alt={item.clientName || 'Client'} className="h-10 w-auto rounded bg-white/90 p-1 hidden sm:block" />
+                <img src={item.clientLogo} alt={item.clientName || 'Klien'} className="h-10 w-auto rounded bg-white/90 p-1 hidden sm:block" />
               )}
             </div>
           </div>
@@ -109,14 +109,14 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
 
           {item.challenge && (
             <section className="mt-12">
-              <h2 className="text-2xl font-semibold text-slate-900 mb-4">The Challenge</h2>
+              <h2 className="text-2xl font-semibold text-slate-900 mb-4">Tantangan</h2>
               <p className="text-slate-600 leading-relaxed">{item.challenge}</p>
             </section>
           )}
 
           {item.solution && (
             <section className="mt-10">
-              <h2 className="text-2xl font-semibold text-slate-900 mb-4">Our Solution</h2>
+              <h2 className="text-2xl font-semibold text-slate-900 mb-4">Solusi Kami</h2>
               <p className="text-slate-600 leading-relaxed">{item.solution}</p>
             </section>
           )}
@@ -124,7 +124,7 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
           {item.results && (
             <section className="mt-10 p-6 rounded-xl bg-blue-50 border border-blue-100">
               <h2 className="text-xl font-semibold text-slate-900 mb-3 flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-blue-600" /> Results
+                <CheckCircle className="h-5 w-5 text-blue-600" /> Hasil
               </h2>
               <p className="text-slate-700">{item.results}</p>
             </section>
@@ -142,10 +142,10 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
 
           <div className="mt-12 flex flex-wrap gap-4">
             <Link href="/contact">
-              <Button size="lg">Schedule a Demo <ArrowRight className="h-4 w-4" /></Button>
+              <Button size="lg">Jadwalkan Demo <ArrowRight className="h-4 w-4" /></Button>
             </Link>
             <Link href="/case-studies">
-              <Button size="lg" variant="outline">More Case Studies</Button>
+              <Button size="lg" variant="outline">Studi Kasus Lainnya</Button>
             </Link>
           </div>
         </div>

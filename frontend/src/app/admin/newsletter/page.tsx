@@ -34,16 +34,16 @@ export default function AdminNewsletterPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-2">Newsletter Subscribers</h1>
-      <p className="text-sm text-slate-500 mb-6">{total} active subscribers</p>
+      <h1 className="text-2xl font-bold text-slate-900 mb-2">Pelanggan Newsletter</h1>
+      <p className="text-sm text-slate-500 mb-6">{total} pelanggan aktif</p>
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Email</th>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Industry</th>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Subscribed</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Industri</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Berlangganan</th>
             </tr>
           </thead>
           <tbody>
@@ -56,7 +56,7 @@ export default function AdminNewsletterPage() {
             ))}
           </tbody>
         </table>
-        {subscribers.length === 0 && <p className="text-center text-slate-500 py-8">No subscribers yet</p>}
+        {subscribers.length === 0 && <p className="text-center text-slate-500 py-8">Belum ada pelanggan</p>}
       </div>
     </div>
   );

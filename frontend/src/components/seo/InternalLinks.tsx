@@ -12,7 +12,7 @@ interface InternalLinksProps {
   links: InternalLink[];
 }
 
-export function InternalLinks({ title = 'Explore Related', description, links }: InternalLinksProps) {
+export function InternalLinks({ title = 'Jelajahi Terkait', description, links }: InternalLinksProps) {
   if (!links.length) return null;
 
   return (

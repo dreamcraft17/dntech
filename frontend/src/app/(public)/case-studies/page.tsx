@@ -39,16 +39,16 @@ export default async function CaseStudiesPage() {
   return (
     <>
       <JsonLd data={breadcrumbSchema([
-        { name: 'Home', url: SITE_URL },
-        { name: 'Case Studies', url: `${SITE_URL}/case-studies` },
+        { name: 'Beranda', url: SITE_URL },
+        { name: 'Studi Kasus', url: `${SITE_URL}/case-studies` },
       ])} />
 
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-slate-900">Case Studies</h1>
+            <h1 className="text-4xl font-bold text-slate-900">Studi Kasus</h1>
             <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-              Real results from real clients. See how we help enterprises transform with technology.
+              Hasil nyata dari klien nyata. Lihat bagaimana kami membantu perusahaan bertransformasi dengan teknologi.
             </p>
           </div>
 
@@ -67,14 +67,14 @@ export default async function CaseStudiesPage() {
               ))}
             </div>
           ) : (
-            <p className="text-center text-slate-500">No case studies available yet.</p>
+            <p className="text-center text-slate-500">Belum ada studi kasus tersedia.</p>
           )}
 
           <div className="mt-16 text-center p-8 rounded-2xl bg-blue-600">
-            <h2 className="text-2xl font-bold text-white">Ready to be our next success story?</h2>
-            <p className="mt-2 text-blue-100">Let us discuss your project goals.</p>
+            <h2 className="text-2xl font-bold text-white">Siap menjadi kisah sukses berikutnya?</h2>
+            <p className="mt-2 text-blue-100">Mari diskusikan tujuan proyek Anda.</p>
             <Link href="/contact" className="inline-block mt-6">
-              <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">Request Free Demo</Button>
+              <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50">Minta Demo Gratis</Button>
             </Link>
           </div>
         </div>

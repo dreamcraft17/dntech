@@ -19,7 +19,7 @@ async function getItem(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const item = await getItem(slug);
-  return { title: item?.title || 'Case Study' };
+  return { title: item?.title || 'Studi Kasus' };
 }
 
 export default async function PortfolioDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -31,7 +31,7 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
     <div className="py-16">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <nav className="text-sm text-slate-500 mb-8">
-          <Link href="/portfolio" className="hover:text-blue-600">Portfolio</Link>
+          <Link href="/portfolio" className="hover:text-blue-600">Portofolio</Link>
           <span className="mx-2">/</span>
           <span className="text-slate-900">{item.title}</span>
         </nav>
@@ -39,15 +39,15 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
         <div className="h-64 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 mb-8" />
 
         <h1 className="text-4xl font-bold text-slate-900">{item.title}</h1>
-        <p className="mt-2 text-lg text-slate-500">Client: {item.clientName}</p>
+        <p className="mt-2 text-lg text-slate-500">Klien: {item.clientName}</p>
 
         <div className="mt-8 prose max-w-none">
-          <h2>Project Overview</h2>
+          <h2>Ringkasan Proyek</h2>
           <p>{item.description}</p>
 
           {item.outcomes && (
             <>
-              <h2>Results & Outcomes</h2>
+              <h2>Hasil & Capaian</h2>
               <p>{item.outcomes}</p>
             </>
           )}
@@ -61,7 +61,7 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
 
         <div className="mt-10">
           <Link href="/contact">
-            <Button>Start Your Project</Button>
+            <Button>Mulai Proyek Anda</Button>
           </Link>
         </div>
       </div>

@@ -36,17 +36,17 @@ export default async function ContactPage({
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Contact Us</h1>
-          <p className="mt-4 text-slate-600">Tell us about your project — we respond within 1 business day.</p>
+          <h1 className="text-4xl font-bold text-slate-900">Hubungi Kami</h1>
+          <p className="mt-4 text-slate-600">Ceritakan proyek Anda — kami akan merespons dalam 1 hari kerja.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="space-y-6">
             {[
               { icon: Mail, label: 'Email', value: settings.companyEmail || 'hello@dntech.id' },
-              { icon: Phone, label: 'Phone', value: settings.companyPhone || '+62 21 1234 5678' },
-              { icon: MapPin, label: 'Address', value: settings.companyAddress || 'Jakarta, Indonesia' },
-              { icon: Clock, label: 'Business Hours', value: 'Mon - Fri, 9:00 - 18:00 WIB' },
+              { icon: Phone, label: 'Telepon', value: settings.companyPhone || '+62 21 1234 5678' },
+              { icon: MapPin, label: 'Alamat', value: settings.companyAddress || 'Jakarta, Indonesia' },
+              { icon: Clock, label: 'Jam Operasional', value: 'Sen - Jum, 9:00 - 18:00 WIB' },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex gap-4">
                 <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
@@ -62,7 +62,7 @@ export default async function ContactPage({
 
           <div className="lg:col-span-2">
             <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-slate-900 mb-6">Request a Free Demo</h2>
+              <h2 className="text-lg font-semibold text-slate-900 mb-6">Minta Demo Gratis</h2>
               <MultiStepForm source="contact-form" pageSource="/contact" defaultService={service} />
             </div>
             <CalendlyEmbed url={calendlyUrl} />

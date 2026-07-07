@@ -9,6 +9,15 @@ import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import type { Lead } from '@/types';
 import { formatDate } from '@/lib/utils';
 
+const statusLabels: Record<string, string> = {
+  '': 'Semua',
+  new: 'Baru',
+  contacted: 'Dihubungi',
+  qualified: 'Berkualifikasi',
+  converted: 'Terkonversi',
+  rejected: 'Ditolak',
+};
+
 export default function AdminLeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [selected, setSelected] = useState<Lead | null>(null);
@@ -55,15 +64,15 @@ export default function AdminLeadsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Leads</h1>
-        <Button variant="outline" onClick={exportCsv}>Export CSV</Button>
+        <h1 className="text-2xl font-bold text-slate-900">Lead</h1>
+        <Button variant="outline" onClick={exportCsv}>Ekspor CSV</Button>
       </div>
 
       <div className="flex gap-2 mb-4">
         {['', 'new', 'contacted', 'qualified', 'converted', 'rejected'].map((s) => (
           <button key={s} onClick={() => setFilter(s)}
             className={`px-3 py-1 rounded-full text-sm font-medium ${filter === s ? 'bg-blue-600 text-white' : 'bg-white border border-slate-200 text-slate-600'}`}>
-            {s || 'All'}
+            {statusLabels[s] ?? s}
           </button>
         ))}
       </div>
@@ -79,13 +88,13 @@ export default function AdminLeadsPage() {
                   <div className="text-sm text-slate-500">{lead.email}</div>
                 </div>
                 <span className={`text-xs px-2 py-0.5 rounded-full ${lead.status === 'new' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600'}`}>
-                  {lead.status}
+                  {statusLabels[lead.status] ?? lead.status}
                 </span>
               </div>
               <div className="mt-2 text-xs text-slate-400">{lead.formType} · {formatDate(lead.createdAt)}</div>
             </button>
           ))}
-          {leads.length === 0 && <p className="text-slate-500 text-center py-8">No leads found</p>}
+          {leads.length === 0 && <p className="text-slate-500 text-center py-8">Tidak ada lead ditemukan</p>}
         </div>
 
         {selected && (
@@ -98,21 +107,21 @@ export default function AdminLeadsPage() {
               <button onClick={() => setSelected(null)}><X className="h-5 w-5 text-slate-400" /></button>
             </div>
             <div className="space-y-3 text-sm">
-              <div><span className="font-medium">Subject:</span> {selected.subject}</div>
-              <div><span className="font-medium">Type:</span> {selected.formType}</div>
+              <div><span className="font-medium">Subjek:</span> {selected.subject}</div>
+              <div><span className="font-medium">Tipe:</span> {selected.formType}</div>
               <div className="p-3 bg-slate-50 rounded-lg">{selected.message}</div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               {['new', 'contacted', 'qualified', 'converted', 'rejected'].map((s) => (
                 <button key={s} onClick={() => updateStatus(selected.id, s)}
                   className={`px-3 py-1 rounded text-xs font-medium ${selected.status === s ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
-                  {s}
+                  {statusLabels[s] ?? s}
                 </button>
               ))}
             </div>
             <div className="mt-4 flex gap-2">
-              <Input placeholder="Add note..." value={note} onChange={(e) => setNote(e.target.value)} className="flex-1" />
-              <Button size="sm" onClick={() => addNote(selected.id)}>Add</Button>
+              <Input placeholder="Tambah catatan..." value={note} onChange={(e) => setNote(e.target.value)} className="flex-1" />
+              <Button size="sm" onClick={() => addNote(selected.id)}>Tambah</Button>
             </div>
           </Card>
         )}

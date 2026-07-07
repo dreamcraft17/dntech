@@ -17,7 +17,7 @@ export function ConversionChart({ funnel, monthTrend }: ConversionChartProps) {
   return (
     <div className="space-y-8">
       <div>
-        <h4 className="text-sm font-medium text-slate-700 mb-4">Conversion Funnel</h4>
+        <h4 className="text-sm font-medium text-slate-700 mb-4">Corong Konversi</h4>
         <div className="space-y-3">
           {funnel.map(({ label, value }) => (
             <div key={label}>
@@ -38,7 +38,7 @@ export function ConversionChart({ funnel, monthTrend }: ConversionChartProps) {
 
       {monthTrend && monthTrend.length > 0 && (
         <div>
-          <h4 className="text-sm font-medium text-slate-700 mb-4">Lead Trend (30 days)</h4>
+          <h4 className="text-sm font-medium text-slate-700 mb-4">Tren Lead (30 hari)</h4>
           <div className="flex items-end gap-0.5 h-24">
             {monthTrend.map(([day, count]) => (
               <div key={day} className="flex-1 group relative">

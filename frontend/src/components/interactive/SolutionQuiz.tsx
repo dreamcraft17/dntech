@@ -12,30 +12,30 @@ import { ArrowRight, CheckCircle, Mail } from 'lucide-react';
 const QUESTIONS = [
   {
     id: 'q1',
-    question: 'What best describes your organization?',
+    question: 'Apa yang paling menggambarkan organisasi Anda?',
     options: [
-      { value: 'enterprise', label: 'Large Enterprise (500+ employees)' },
-      { value: 'mid', label: 'Mid-size Company (50-500 employees)' },
-      { value: 'startup', label: 'Startup / SMB (<50 employees)' },
+      { value: 'enterprise', label: 'Enterprise Besar (500+ karyawan)' },
+      { value: 'mid', label: 'Perusahaan Menengah (50–500 karyawan)' },
+      { value: 'startup', label: 'Startup / UMKM (<50 karyawan)' },
     ],
   },
   {
     id: 'q2',
-    question: 'What is your primary goal?',
+    question: 'Apa tujuan utama Anda?',
     options: [
-      { value: 'modernization', label: 'Modernize legacy systems' },
-      { value: 'mvp', label: 'Build a new product / MVP' },
-      { value: 'scale', label: 'Scale existing infrastructure' },
-      { value: 'strategy', label: 'Get strategic IT guidance' },
+      { value: 'modernization', label: 'Modernisasi sistem legacy' },
+      { value: 'mvp', label: 'Membangun produk baru / MVP' },
+      { value: 'scale', label: 'Skala infrastruktur yang ada' },
+      { value: 'strategy', label: 'Panduan strategis IT' },
     ],
   },
   {
     id: 'q3',
-    question: 'What is your timeline?',
+    question: 'Berapa timeline proyek Anda?',
     options: [
-      { value: 'urgent', label: 'ASAP (< 3 months)' },
-      { value: 'medium', label: '3-6 months' },
-      { value: 'long', label: '6+ months / planning phase' },
+      { value: 'urgent', label: 'Segera (< 3 bulan)' },
+      { value: 'medium', label: '3–6 bulan' },
+      { value: 'long', label: '6+ bulan / fase perencanaan' },
     ],
   },
   {
@@ -45,12 +45,12 @@ const QUESTIONS = [
   },
   {
     id: 'q5',
-    question: 'Which technology area interests you most?',
+    question: 'Bidang teknologi mana yang paling menarik?',
     options: [
-      { value: 'erp', label: 'Enterprise Software / ERP' },
-      { value: 'app', label: 'Web & Mobile Apps' },
+      { value: 'erp', label: 'Perangkat Lunak Enterprise / ERP' },
+      { value: 'app', label: 'Aplikasi Web & Mobile' },
       { value: 'cloud', label: 'Cloud & DevOps' },
-      { value: 'consulting', label: 'IT Consulting' },
+      { value: 'consulting', label: 'Konsultasi IT' },
     ],
   },
 ];
@@ -111,15 +111,15 @@ export function SolutionQuiz() {
       <Card className="max-w-2xl mx-auto p-8">
         <div className="text-center">
           <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-slate-900">We found your perfect match!</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Kami menemukan solusi terbaik untuk Anda!</h2>
           <p className="mt-2 text-lg text-blue-600 font-semibold">{result.recommendation.service}</p>
           <p className="mt-2 text-slate-600">{result.recommendation.description}</p>
           <div className="mt-8 flex flex-wrap gap-4 justify-center">
             <Link href={`/contact?service=${encodeURIComponent(result.recommendation.service)}`}>
-              <Button size="lg">Schedule a Free Consultation <ArrowRight className="h-4 w-4" /></Button>
+              <Button size="lg">Jadwalkan Konsultasi Gratis <ArrowRight className="h-4 w-4" /></Button>
             </Link>
             <Link href="/case-studies">
-              <Button size="lg" variant="outline">View Case Studies</Button>
+              <Button size="lg" variant="outline">Lihat Studi Kasus</Button>
             </Link>
           </div>
         </div>
@@ -128,18 +128,18 @@ export function SolutionQuiz() {
           <form onSubmit={submitEmail} className="mt-8 pt-8 border-t border-slate-200">
             <div className="flex items-center gap-2 mb-4">
               <Mail className="h-5 w-5 text-blue-600" />
-              <h3 className="font-semibold text-slate-900">Get results sent to your inbox</h3>
+              <h3 className="font-semibold text-slate-900">Kirim hasil ke email Anda</h3>
             </div>
-            <p className="text-sm text-slate-600 mb-4">We will email your personalized recommendation and next steps.</p>
+            <p className="text-sm text-slate-600 mb-4">Kami akan mengirim rekomendasi personal dan langkah selanjutnya.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input label="Name (optional)" value={name} onChange={(e) => setName(e.target.value)} />
-              <Input label="Work Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Input label="Nama (opsional)" value={name} onChange={(e) => setName(e.target.value)} />
+              <Input label="Email Kerja" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
-            <Button type="submit" loading={emailLoading} className="mt-4 w-full">Send My Results</Button>
+            <Button type="submit" loading={emailLoading} className="mt-4 w-full">Kirim Hasil Saya</Button>
           </form>
         ) : (
           <div className="mt-8 p-4 rounded-lg bg-green-50 border border-green-200 text-sm text-green-700 text-center">
-            Results sent! Check your inbox for personalized recommendations.
+            Hasil terkirim! Cek inbox Anda untuk rekomendasi personal.
           </div>
         )}
       </Card>
@@ -150,8 +150,8 @@ export function SolutionQuiz() {
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
         <div className="flex justify-between text-sm text-slate-500 mb-2">
-          <span>Question {step + 1} of {QUESTIONS.length}</span>
-          <span>{Math.round(((step) / QUESTIONS.length) * 100)}% complete</span>
+          <span>Pertanyaan {step + 1} dari {QUESTIONS.length}</span>
+          <span>{Math.round(((step) / QUESTIONS.length) * 100)}% selesai</span>
         </div>
         <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
           <div className="h-full bg-blue-600 rounded-full transition-all" style={{ width: `${(step / QUESTIONS.length) * 100}%` }} />
@@ -170,7 +170,7 @@ export function SolutionQuiz() {
         </div>
         {step > 0 && (
           <button onClick={() => setStep(step - 1)} className="mt-4 text-sm text-slate-500 hover:text-slate-700">
-            ← Back
+            ← Kembali
           </button>
         )}
       </Card>

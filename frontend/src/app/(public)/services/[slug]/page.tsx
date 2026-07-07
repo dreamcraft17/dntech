@@ -34,7 +34,7 @@ async function getRelatedPosts(category: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const service = await getService(slug);
-  if (!service) return { title: 'Service' };
+  if (!service) return { title: 'Layanan' };
   return buildMetadata({
     title: service.seoTitle || service.name,
     description: service.seoDescription || service.description,
@@ -53,16 +53,16 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const relatedPosts = blogCategory ? await getRelatedPosts(blogCategory) : [];
 
   const internalLinks = [
-    { href: '/case-studies', label: 'View Case Studies' },
-    { href: '/contact', label: 'Request Free Demo' },
+    { href: '/case-studies', label: 'Lihat Studi Kasus' },
+    { href: '/contact', label: 'Minta Demo Gratis' },
     ...relatedPosts.map((p) => ({ href: `/blog/${p.slug}`, label: p.title })),
   ];
 
   return (
     <>
       <JsonLd data={breadcrumbSchema([
-        { name: 'Home', url: SITE_URL },
-        { name: 'Services', url: `${SITE_URL}/services` },
+        { name: 'Beranda', url: SITE_URL },
+        { name: 'Layanan', url: `${SITE_URL}/services` },
         { name: service.name, url: `${SITE_URL}/services/${slug}` },
       ])} />
       <JsonLd data={serviceSchema({
@@ -74,10 +74,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <nav className="text-sm text-slate-500 mb-8" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-blue-600">Home</Link>
+          <nav className="text-sm text-slate-500 mb-8" aria-label="Jejak navigasi">
+            <Link href="/" className="hover:text-blue-600">Beranda</Link>
             <span className="mx-2">/</span>
-            <Link href="/services" className="hover:text-blue-600">Services</Link>
+            <Link href="/services" className="hover:text-blue-600">Layanan</Link>
             <span className="mx-2">/</span>
             <span className="text-slate-900">{service.name}</span>
           </nav>
@@ -90,7 +90,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               {features.length > 0 && (
                 <div className="mt-10">
-                  <h2 className="text-2xl font-semibold text-slate-900 mb-6">Key Features</h2>
+                  <h2 className="text-2xl font-semibold text-slate-900 mb-6">Fitur Utama</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {features.map((feature, i) => (
                       <div key={i} className="flex gap-3 p-4 rounded-lg bg-slate-50">
@@ -109,7 +109,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               {relatedPosts.length > 0 && (
                 <div className="mt-10">
-                  <h2 className="text-xl font-semibold text-slate-900 mb-4">Related Articles</h2>
+                  <h2 className="text-xl font-semibold text-slate-900 mb-4">Artikel Terkait</h2>
                   <div className="space-y-3">
                     {relatedPosts.map((post) => (
                       <Link key={post.id} href={`/blog/${post.slug}`}
@@ -122,25 +122,25 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               )}
 
               <div className="mt-10 lg:hidden">
-                <InternalLinks title="Next Steps" links={internalLinks.slice(0, 4)} />
+                <InternalLinks title="Langkah Selanjutnya" links={internalLinks.slice(0, 4)} />
               </div>
             </div>
 
             <div>
               <div className="sticky top-24 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                <h3 className="font-semibold text-slate-900 mb-4">Interested in this service?</h3>
-                <p className="text-sm text-slate-600 mb-6">Get a free consultation with our experts.</p>
+                <h3 className="font-semibold text-slate-900 mb-4">Tertarik dengan layanan ini?</h3>
+                <p className="text-sm text-slate-600 mb-6">Dapatkan konsultasi gratis dengan ahli kami.</p>
                 <Link href={`/contact?service=${encodeURIComponent(service.slug)}`}>
-                  <Button className="w-full">Request Free Demo</Button>
+                  <Button className="w-full">Minta Demo Gratis</Button>
                 </Link>
                 <Link href="/case-studies" className="mt-3 block text-center text-sm text-blue-600 hover:underline">
-                  View related case studies →
+                  Lihat studi kasus terkait →
                 </Link>
               </div>
 
               {service.relatedServices && service.relatedServices.length > 0 && (
                 <div className="mt-6">
-                  <h3 className="font-semibold text-slate-900 mb-4">Related Services</h3>
+                  <h3 className="font-semibold text-slate-900 mb-4">Layanan Terkait</h3>
                   <div className="space-y-3">
                     {service.relatedServices.map((related) => (
                       <Link key={related.id} href={`/services/${related.slug}`}
@@ -154,7 +154,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               )}
 
               <div className="mt-6 hidden lg:block">
-                <InternalLinks title="Learn More" links={internalLinks.slice(0, 5)} />
+                <InternalLinks title="Pelajari Lebih Lanjut" links={internalLinks.slice(0, 5)} />
               </div>
             </div>
           </div>

@@ -32,7 +32,7 @@ export function Logo({ size = 'md', className, href = '/', priority = false }: L
 
   if (href) {
     return (
-      <Link href={href} className="inline-flex shrink-0 items-center" aria-label="DN Tech Home">
+      <Link href={href} className="inline-flex shrink-0 items-center" aria-label="Beranda DN Tech">
         {image}
       </Link>
     );

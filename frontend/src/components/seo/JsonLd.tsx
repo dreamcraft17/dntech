@@ -41,7 +41,7 @@ export const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
   name: 'DN Tech',
-  description: 'Enterprise software development and digital transformation services.',
+  description: 'Layanan pengembangan perangkat lunak enterprise dan transformasi digital.',
   url: SITE_URL,
   telephone: '+62-21-1234-5678',
   email: 'hello@dntech.id',

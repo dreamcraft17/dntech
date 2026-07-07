@@ -23,7 +23,7 @@ async function getPost(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
-  if (!post) return { title: 'Blog Post' };
+  if (!post) return { title: 'Artikel Blog' };
   return buildMetadata({
     title: post.seoTitle || post.title,
     description: post.seoDescription || post.excerpt || '',
@@ -45,13 +45,13 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   const serviceSlugs = getRelatedServiceSlugs(post.category);
   const internalLinks = [
     ...(pillar?.links ?? []),
-    ...serviceSlugs.map((s) => ({ href: `/services/${s}`, label: `Service: ${s.replace(/-/g, ' ')}` })),
+    ...serviceSlugs.map((s) => ({ href: `/services/${s}`, label: `Layanan: ${s.replace(/-/g, ' ')}` })),
   ];
 
   return (
     <>
       <JsonLd data={breadcrumbSchema([
-        { name: 'Home', url: SITE_URL },
+        { name: 'Beranda', url: SITE_URL },
         { name: 'Blog', url: `${SITE_URL}/blog` },
         { name: post.title, url: `${SITE_URL}/blog/${slug}` },
       ])} />
@@ -67,8 +67,8 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
       <div className="py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <nav className="text-sm text-slate-500 mb-8" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-blue-600">Home</Link>
+          <nav className="text-sm text-slate-500 mb-8" aria-label="Jejak navigasi">
+            <Link href="/" className="hover:text-blue-600">Beranda</Link>
             <span className="mx-2">/</span>
             <Link href="/blog" className="hover:text-blue-600">Blog</Link>
             {post.category && (
@@ -97,15 +97,15 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
           <div className="mt-10">
             <InternalLinks
-              title="Continue Exploring"
-              description="Related services and resources from this topic"
+              title="Lanjutkan Menjelajah"
+              description="Layanan dan sumber daya terkait topik ini"
               links={internalLinks}
             />
           </div>
 
           {post.relatedPosts && post.relatedPosts.length > 0 && (
             <div className="mt-10 border-t border-slate-200 pt-10">
-              <h2 className="text-xl font-semibold text-slate-900 mb-6">Related Articles</h2>
+              <h2 className="text-xl font-semibold text-slate-900 mb-6">Artikel Terkait</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {post.relatedPosts.map((related) => (
                   <Link key={related.id} href={`/blog/${related.slug}`}

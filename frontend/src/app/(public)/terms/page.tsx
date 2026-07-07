@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Terms of Service' };
+export const metadata: Metadata = { title: 'Syarat & Ketentuan' };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
@@ -10,7 +10,7 @@ async function getTerms() {
     if (!res.ok) return '';
     return (await res.json()).data.content as string;
   } catch {
-    return '<h1>Terms of Service</h1><p>Content coming soon.</p>';
+    return '<h1>Syarat & Ketentuan</h1><p>Konten segera hadir.</p>';
   }
 }
 

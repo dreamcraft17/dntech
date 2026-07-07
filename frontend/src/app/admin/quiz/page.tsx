@@ -28,17 +28,17 @@ export default function AdminQuizPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-2">Quiz Submissions</h1>
-      <p className="text-sm text-slate-500 mb-6">{total} total completions</p>
+      <h1 className="text-2xl font-bold text-slate-900 mb-2">Pengiriman Kuis</h1>
+      <p className="text-sm text-slate-500 mb-6">{total} total penyelesaian</p>
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Result</th>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Recommended</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Hasil</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Rekomendasi</th>
               <th className="text-left px-4 py-3 font-medium text-slate-600">Email</th>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Date</th>
+              <th className="text-left px-4 py-3 font-medium text-slate-600">Tanggal</th>
             </tr>
           </thead>
           <tbody>
@@ -52,7 +52,7 @@ export default function AdminQuizPage() {
             ))}
           </tbody>
         </table>
-        {submissions.length === 0 && <p className="text-center text-slate-500 py-8">No quiz submissions yet</p>}
+        {submissions.length === 0 && <p className="text-center text-slate-500 py-8">Belum ada pengiriman kuis</p>}
       </div>
     </div>
   );

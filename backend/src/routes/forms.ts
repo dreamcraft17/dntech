@@ -9,7 +9,7 @@ const router = Router();
 const formLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 5,
-  message: { success: false, error: { code: 'RATE_LIMIT', message: 'Too many submissions' } },
+  message: { success: false, error: { code: 'RATE_LIMIT', message: 'Terlalu banyak pengiriman' } },
 });
 
 const contactSchema = z.object({
@@ -72,7 +72,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const data = contactSchema.parse(req.body);
     if (data.honeypot) {
-      return successResponse(res, { message: 'Thank you for your submission' }, 201);
+      return successResponse(res, { message: 'Terima kasih atas pengiriman Anda' }, 201);
     }
 
     const submission = await createSubmission(
@@ -81,13 +81,13 @@ router.post(
         name: data.name,
         email: data.email,
         phone: data.phone,
-        subject: data.subject || 'General Inquiry',
+        subject: data.subject || 'Pertanyaan Umum',
         message: data.message,
       },
       req
     );
 
-    successResponse(res, { id: submission.id, message: 'Thank you! We will contact you soon.' }, 201);
+    successResponse(res, { id: submission.id, message: 'Terima kasih! Kami akan segera menghubungi Anda.' }, 201);
   })
 );
 
@@ -97,7 +97,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const data = serviceRequestSchema.parse(req.body);
     if (data.honeypot) {
-      return successResponse(res, { message: 'Thank you for your submission' }, 201);
+      return successResponse(res, { message: 'Terima kasih atas pengiriman Anda' }, 201);
     }
 
     const submission = await createSubmission(
@@ -109,13 +109,13 @@ router.post(
         companyName: data.companyName,
         serviceInterested: data.serviceInterested,
         budgetRange: data.budgetRange,
-        subject: `Service Request: ${data.serviceInterested}`,
+        subject: `Permintaan Layanan: ${data.serviceInterested}`,
         message: data.message + (data.timeline ? `\n\nTimeline: ${data.timeline}` : ''),
       },
       req
     );
 
-    successResponse(res, { id: submission.id, message: 'Thank you! We will contact you soon.' }, 201);
+    successResponse(res, { id: submission.id, message: 'Terima kasih! Kami akan segera menghubungi Anda.' }, 201);
   })
 );
 
@@ -125,7 +125,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const data = careerSchema.parse(req.body);
     if (data.honeypot) {
-      return successResponse(res, { message: 'Thank you for your submission' }, 201);
+      return successResponse(res, { message: 'Terima kasih atas pengiriman Anda' }, 201);
     }
 
     const submission = await createSubmission(
@@ -134,14 +134,14 @@ router.post(
         name: data.name,
         email: data.email,
         phone: data.phone,
-        subject: `Career Application: ${data.position}`,
+        subject: `Lamaran Karier: ${data.position}`,
         message: data.message,
         resumeUrl: data.resumeUrl,
       },
       req
     );
 
-    successResponse(res, { id: submission.id, message: 'Thank you for applying! We will review your application.' }, 201);
+    successResponse(res, { id: submission.id, message: 'Terima kasih telah melamar! Kami akan meninjau lamaran Anda.' }, 201);
   })
 );
 

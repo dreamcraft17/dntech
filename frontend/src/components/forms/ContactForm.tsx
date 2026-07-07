@@ -9,11 +9,11 @@ import { Button } from '@/components/ui/Button';
 import { getApiUrl } from '@/lib/api';
 
 const schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email'),
+  name: z.string().min(1, 'Nama wajib diisi'),
+  email: z.string().email('Email tidak valid'),
   phone: z.string().optional(),
   subject: z.string().optional(),
-  message: z.string().min(10, 'Message must be at least 10 characters'),
+  message: z.string().min(10, 'Pesan minimal 10 karakter'),
   honeypot: z.string().optional(),
 });
 
@@ -28,7 +28,7 @@ export function ContactForm({ defaultSubject }: ContactFormProps) {
   const [error, setError] = useState('');
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { subject: defaultSubject || 'General Inquiry' },
+    defaultValues: { subject: defaultSubject || 'Pertanyaan Umum' },
   });
 
   async function onSubmit(data: FormData) {
@@ -40,20 +40,20 @@ export function ContactForm({ defaultSubject }: ContactFormProps) {
         body: JSON.stringify(data),
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error?.message || 'Submission failed');
+      if (!json.success) throw new Error(json.error?.message || 'Gagal mengirim pesan');
       setSuccess(true);
       reset();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      setError(err instanceof Error ? err.message : 'Terjadi kesalahan');
     }
   }
 
   if (success) {
     return (
       <div className="rounded-xl bg-green-50 border border-green-200 p-6 text-center">
-        <h3 className="text-lg font-semibold text-green-800">Thank you!</h3>
-        <p className="mt-2 text-green-700">We received your message and will get back to you soon.</p>
-        <Button className="mt-4" variant="outline" onClick={() => setSuccess(false)}>Send another message</Button>
+        <h3 className="text-lg font-semibold text-green-800">Terima kasih!</h3>
+        <p className="mt-2 text-green-700">Pesan Anda telah kami terima. Tim kami akan segera menghubungi Anda.</p>
+        <Button className="mt-4" variant="outline" onClick={() => setSuccess(false)}>Kirim pesan lagi</Button>
       </div>
     );
   }
@@ -63,24 +63,24 @@ export function ContactForm({ defaultSubject }: ContactFormProps) {
       {error && <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">{error}</div>}
       <input type="text" {...register('honeypot')} className="hidden" tabIndex={-1} autoComplete="off" />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input label="Name" {...register('name')} error={errors.name?.message} required />
+        <Input label="Nama" {...register('name')} error={errors.name?.message} required />
         <Input label="Email" type="email" {...register('email')} error={errors.email?.message} required />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input label="Phone" type="tel" {...register('phone')} />
+        <Input label="Telepon" type="tel" {...register('phone')} />
         <Select
-          label="Subject"
+          label="Subjek"
           options={[
-            { value: 'General Inquiry', label: 'General Inquiry' },
-            { value: 'Service Inquiry', label: 'Service Inquiry' },
-            { value: 'Partnership', label: 'Partnership' },
-            { value: 'Other', label: 'Other' },
+            { value: 'Pertanyaan Umum', label: 'Pertanyaan Umum' },
+            { value: 'Inquiry Layanan', label: 'Inquiry Layanan' },
+            { value: 'Kemitraan', label: 'Kemitraan' },
+            { value: 'Lainnya', label: 'Lainnya' },
           ]}
           {...register('subject')}
         />
       </div>
-      <Textarea label="Message" rows={5} {...register('message')} error={errors.message?.message} required />
-      <Button type="submit" loading={isSubmitting} className="w-full sm:w-auto">Send Message</Button>
+      <Textarea label="Pesan" rows={5} {...register('message')} error={errors.message?.message} required />
+      <Button type="submit" loading={isSubmitting} className="w-full sm:w-auto">Kirim Pesan</Button>
     </form>
   );
 }

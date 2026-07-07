@@ -16,10 +16,10 @@ export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
     <section>
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Meet the Team</h2>
-          <p className="mt-1 text-sm text-slate-600">Experts driving your digital transformation</p>
+          <h2 className="text-2xl font-bold text-slate-900">Kenali Tim Kami</h2>
+          <p className="mt-1 text-sm text-slate-600">Para ahli yang mendorong transformasi digital Anda</p>
         </div>
-        <Link href="/team" className="text-blue-600 text-sm font-medium hover:underline">View all</Link>
+        <Link href="/team" className="text-blue-600 text-sm font-medium hover:underline">Lihat semua</Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {team.map((member) => (

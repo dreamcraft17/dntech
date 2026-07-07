@@ -3,7 +3,7 @@ import AdminCrudPage from '@/components/admin/AdminCrudPage';
 export default function AdminPortfolioPage() {
   return (
     <AdminCrudPage
-      title="Case Studies"
+      title="Studi Kasus"
       endpoint="portfolio"
       defaultItem={{
         title: '', description: '', clientName: '', challenge: '', solution: '',
@@ -11,21 +11,21 @@ export default function AdminPortfolioPage() {
         metrics: {},
       }}
       fields={[
-        { key: 'title', label: 'Title', required: true },
-        { key: 'clientName', label: 'Client Name' },
-        { key: 'description', label: 'Summary', type: 'textarea', required: true },
-        { key: 'challenge', label: 'Challenge', type: 'textarea' },
-        { key: 'solution', label: 'Solution', type: 'textarea' },
-        { key: 'outcomes', label: 'Results / Outcomes', type: 'textarea' },
-        { key: 'testimonial', label: 'Client Quote', type: 'textarea' },
-        { key: 'clientLogoUrl', label: 'Client Logo URL' },
-        { key: 'metrics', label: 'Metrics (JSON)', type: 'json', placeholder: '{"efficiency":"+40%","uptime":"99.9%"}' },
+        { key: 'title', label: 'Judul', required: true },
+        { key: 'clientName', label: 'Nama Klien' },
+        { key: 'description', label: 'Ringkasan', type: 'textarea', required: true },
+        { key: 'challenge', label: 'Tantangan', type: 'textarea' },
+        { key: 'solution', label: 'Solusi', type: 'textarea' },
+        { key: 'outcomes', label: 'Hasil / Dampak', type: 'textarea' },
+        { key: 'testimonial', label: 'Kutipan Klien', type: 'textarea' },
+        { key: 'clientLogoUrl', label: 'URL Logo Klien' },
+        { key: 'metrics', label: 'Metrik (JSON)', type: 'json', placeholder: '{"efficiency":"+40%","uptime":"99.9%"}' },
         { key: 'status', label: 'Status', type: 'select', options: [
-          { value: 'draft', label: 'Draft' },
-          { value: 'active', label: 'Published' },
-          { value: 'archived', label: 'Archived' },
+          { value: 'draft', label: 'Draf' },
+          { value: 'active', label: 'Diterbitkan' },
+          { value: 'archived', label: 'Arsip' },
         ]},
-        { key: 'displayOrder', label: 'Order', type: 'number' },
+        { key: 'displayOrder', label: 'Urutan', type: 'number' },
       ]}
     />
   );
