@@ -1,5 +1,9 @@
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
+import { JsonLd, breadcrumbSchema, articleSchema } from '@/components/seo/JsonLd';
+import { InternalLinks } from '@/components/seo/InternalLinks';
+import { buildMetadata, SITE_URL } from '@/lib/seo';
+import { getPillarForCategory, getRelatedServiceSlugs } from '@/lib/content-pillars';
 import type { BlogPost } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -19,7 +23,17 @@ async function getPost(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
-  return { title: post?.title, description: post?.excerpt };
+  if (!post) return { title: 'Blog Post' };
+  return buildMetadata({
+    title: post.seoTitle || post.title,
+    description: post.seoDescription || post.excerpt || '',
+    path: `/blog/${slug}`,
+    keywords: [...(post.tags || []), post.category || ''].filter(Boolean) as string[],
+    type: 'article',
+    publishedTime: post.publishedAt,
+    author: post.author?.name,
+    image: post.featuredImage?.url,
+  });
 }
 
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -27,48 +41,83 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   const post = await getPost(slug);
   if (!post) notFound();
 
+  const pillar = getPillarForCategory(post.category);
+  const serviceSlugs = getRelatedServiceSlugs(post.category);
+  const internalLinks = [
+    ...(pillar?.links ?? []),
+    ...serviceSlugs.map((s) => ({ href: `/services/${s}`, label: `Service: ${s.replace(/-/g, ' ')}` })),
+  ];
+
   return (
-    <div className="py-16">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <nav className="text-sm text-slate-500 mb-8">
-          <Link href="/blog" className="hover:text-blue-600">Blog</Link>
-          <span className="mx-2">/</span>
-          <span className="text-slate-900">{post.title}</span>
-        </nav>
+    <>
+      <JsonLd data={breadcrumbSchema([
+        { name: 'Home', url: SITE_URL },
+        { name: 'Blog', url: `${SITE_URL}/blog` },
+        { name: post.title, url: `${SITE_URL}/blog/${slug}` },
+      ])} />
+      <JsonLd data={articleSchema({
+        title: post.title,
+        description: post.excerpt,
+        slug,
+        publishedAt: post.publishedAt,
+        author: post.author?.name,
+        image: post.featuredImage?.url,
+        category: post.category,
+      })} />
 
-        <div className="text-sm text-blue-600 font-medium">{post.category}</div>
-        <h1 className="mt-2 text-4xl font-bold text-slate-900">{post.title}</h1>
-        <div className="mt-4 text-sm text-slate-500">
-          {post.publishedAt && formatDate(post.publishedAt)}
-          {post.author && ` · By ${post.author.name}`}
-        </div>
+      <div className="py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <nav className="text-sm text-slate-500 mb-8" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-blue-600">Home</Link>
+            <span className="mx-2">/</span>
+            <Link href="/blog" className="hover:text-blue-600">Blog</Link>
+            {post.category && (
+              <>
+                <span className="mx-2">/</span>
+                <Link href={`/blog?category=${post.category}`} className="hover:text-blue-600">{post.category}</Link>
+              </>
+            )}
+          </nav>
 
-        <div className="mt-8 prose max-w-none" dangerouslySetInnerHTML={{ __html: post.content || '' }} />
-
-        {post.relatedPosts && post.relatedPosts.length > 0 && (
-          <div className="mt-16 border-t border-slate-200 pt-10">
-            <h2 className="text-xl font-semibold text-slate-900 mb-6">Related Posts</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {post.relatedPosts.map((related) => (
-                <Link key={related.id} href={`/blog/${related.slug}`}
-                  className="p-4 rounded-lg border border-slate-200 hover:border-blue-300 transition-colors">
-                  <div className="font-medium text-slate-900 text-sm">{related.title}</div>
-                </Link>
-              ))}
+          <article itemScope itemType="https://schema.org/Article">
+            <div className="text-sm text-blue-600 font-medium">{post.category}</div>
+            <h1 className="mt-2 text-4xl font-bold text-slate-900" itemProp="headline">{post.title}</h1>
+            <div className="mt-4 text-sm text-slate-500">
+              {post.publishedAt && <time itemProp="datePublished" dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>}
+              {post.author && <span itemProp="author"> · {post.author.name}</span>}
             </div>
-          </div>
-        )}
 
-        <div className="mt-16 p-6 rounded-xl bg-blue-50 border border-blue-100">
-          <h3 className="font-semibold text-slate-900">Need help implementing this?</h3>
-          <p className="mt-2 text-sm text-slate-600">Explore our services or see how we helped similar clients.</p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Link href="/services" className="text-sm text-blue-600 font-medium hover:underline">View Services →</Link>
-            <Link href="/case-studies" className="text-sm text-blue-600 font-medium hover:underline">Case Studies →</Link>
-            <Link href="/contact" className="text-sm text-blue-600 font-medium hover:underline">Contact Us →</Link>
+            {post.featuredImage?.url && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={post.featuredImage.url} alt={post.title} className="mt-8 w-full rounded-xl" loading="lazy" itemProp="image" />
+            )}
+
+            <div className="mt-8 prose max-w-none" itemProp="articleBody" dangerouslySetInnerHTML={{ __html: post.content || '' }} />
+          </article>
+
+          <div className="mt-10">
+            <InternalLinks
+              title="Continue Exploring"
+              description="Related services and resources from this topic"
+              links={internalLinks}
+            />
           </div>
+
+          {post.relatedPosts && post.relatedPosts.length > 0 && (
+            <div className="mt-10 border-t border-slate-200 pt-10">
+              <h2 className="text-xl font-semibold text-slate-900 mb-6">Related Articles</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {post.relatedPosts.map((related) => (
+                  <Link key={related.id} href={`/blog/${related.slug}`}
+                    className="p-4 rounded-lg border border-slate-200 hover:border-blue-300 transition-colors">
+                    <div className="font-medium text-slate-900 text-sm">{related.title}</div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

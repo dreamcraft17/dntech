@@ -1,21 +1,30 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { SITE_URL, SITE_NAME, DEFAULT_KEYWORDS } from '@/lib/seo';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-geist-sans' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-geist-sans', display: 'swap' });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'DN Tech - Solusi Teknologi Terpercaya',
-    template: '%s | DN Tech',
+    default: `${SITE_NAME} - Solusi Teknologi Terpercaya`,
+    template: `%s | ${SITE_NAME}`,
   },
   description: 'DN Tech menyediakan solusi enterprise software, web development, cloud & DevOps untuk digitalisasi bisnis Anda.',
-  keywords: ['technology', 'software development', 'enterprise', 'Indonesia', 'DN Tech'],
+  keywords: DEFAULT_KEYWORDS,
+  alternates: { canonical: SITE_URL },
   openGraph: {
     type: 'website',
     locale: 'id_ID',
-    siteName: 'DN Tech',
+    siteName: SITE_NAME,
+    url: SITE_URL,
   },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@dntech',
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

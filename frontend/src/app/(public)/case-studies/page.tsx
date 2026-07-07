@@ -2,15 +2,17 @@ import Link from 'next/link';
 import { CaseStudyCard } from '@/components/cards/CaseStudyCard';
 import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
 import { Button } from '@/components/ui/Button';
+import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Case Studies',
-  description: 'Explore how DN Tech helped enterprises achieve digital transformation success.',
-};
+export const metadata: Metadata = buildMetadata({
+  title: PAGE_SEO['case-studies'].title,
+  description: PAGE_SEO['case-studies'].description,
+  path: '/case-studies',
+  keywords: PAGE_SEO['case-studies'].keywords,
+});
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 interface CaseStudy {
   slug: string;

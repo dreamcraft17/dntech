@@ -1,9 +1,15 @@
 import { MultiStepForm } from '@/components/forms/MultiStepForm';
 import { CalendlyEmbed } from '@/components/interactive/CalendlyEmbed';
+import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Contact Us' };
+export const metadata: Metadata = buildMetadata({
+  title: PAGE_SEO.contact.title,
+  description: PAGE_SEO.contact.description,
+  path: '/contact',
+  keywords: PAGE_SEO.contact.keywords,
+});
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 

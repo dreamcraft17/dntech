@@ -38,6 +38,8 @@ export interface BlogPost {
   category?: string;
   tags?: string[];
   publishedAt?: string;
+  seoTitle?: string;
+  seoDescription?: string;
   viewCount?: number;
   featuredImage?: { url: string };
   author?: { name: string };

@@ -2,11 +2,11 @@ import Link from 'next/link';
 import { ArrowRight, CheckCircle, Quote } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
+import { buildMetadata, SITE_URL } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 interface CaseStudy {
   slug: string;
@@ -37,15 +37,14 @@ async function getCaseStudy(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const item = await getCaseStudy(slug);
-  return {
-    title: item?.title || 'Case Study',
-    description: item?.description,
-    openGraph: {
-      title: item?.title,
-      description: item?.description || undefined,
-      images: item?.heroImage ? [{ url: item.heroImage }] : undefined,
-    },
-  };
+  if (!item) return { title: 'Case Study' };
+  return buildMetadata({
+    title: item.title,
+    description: item.description || '',
+    path: `/case-studies/${slug}`,
+    keywords: [...(item.industries || []), 'case study', 'enterprise software'],
+    image: item.heroImage,
+  });
 }
 
 export default async function CaseStudyDetailPage({ params }: { params: Promise<{ slug: string }> }) {

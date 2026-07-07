@@ -8,7 +8,16 @@ import { TestimonialCarousel } from '@/components/sliders/TestimonialCarousel';
 import { CaseStudyCard } from '@/components/cards/CaseStudyCard';
 import { ROICalculator } from '@/components/interactive/ROICalculator';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
+import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import type { Service, BlogPost, Testimonial } from '@/types';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = buildMetadata({
+  title: PAGE_SEO.home.title,
+  description: PAGE_SEO.home.description,
+  path: '/',
+  keywords: PAGE_SEO.home.keywords,
+});
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 

@@ -1,9 +1,15 @@
 import { Card } from '@/components/ui/Card';
 import { TeamSpotlight } from '@/components/layout/TeamSpotlight';
 import type { TeamMember, SiteSettings } from '@/types';
+import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'About Us' };
+export const metadata: Metadata = buildMetadata({
+  title: PAGE_SEO.about.title,
+  description: PAGE_SEO.about.description,
+  path: '/about',
+  keywords: PAGE_SEO.about.keywords,
+});
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
