@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/common/Logo';
 
 export default function AdminLoginPage() {
   const { login } = useAuth();
@@ -29,8 +30,8 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg mx-auto mb-4">
-            DN
+          <div className="flex justify-center mb-4">
+            <Logo href={null} size="xl" priority />
           </div>
           <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
           <p className="text-slate-400 mt-2">Sign in to manage your website</p>

@@ -84,7 +84,7 @@ export function buildMetadata({
   noIndex,
 }: BuildMetadataOptions): Metadata {
   const url = `${SITE_URL}${path}`;
-  const ogImage = image || `${SITE_URL}/og-default.png`;
+  const ogImage = image || `${SITE_URL}/logo.png`;
   const allKeywords = [...new Set([...keywords, ...DEFAULT_KEYWORDS])];
 
   return {

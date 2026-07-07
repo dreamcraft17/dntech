@@ -10,6 +10,7 @@ import {
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { Logo } from '@/components/common/Logo';
 
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -57,7 +58,7 @@ export function AdminSidebar() {
       )}>
         <div className="flex items-center justify-between h-16 px-4 border-b border-slate-800">
           <Link href="/admin/dashboard" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center text-white text-xs font-bold">DN</div>
+            <Logo href={null} size="sm" />
             <span className="font-semibold text-white">Admin</span>
           </Link>
           <button onClick={() => setMobileOpen(false)} className="lg:hidden p-1">

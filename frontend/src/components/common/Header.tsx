@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { apiFetch } from '@/lib/api';
+import { Logo } from '@/components/common/Logo';
 import type { SearchResult } from '@/types';
 
 const navLinks = [
@@ -55,12 +56,7 @@ export function Header() {
       scrolled ? 'border-slate-200 shadow-md' : 'border-slate-200'
     )}>
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">
-            DN
-          </div>
-          <span className="text-xl font-bold text-slate-900">DN Tech</span>
-        </Link>
+        <Logo href="/" size="md" priority />
 
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (

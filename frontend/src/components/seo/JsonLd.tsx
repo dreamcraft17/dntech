@@ -119,7 +119,7 @@ export function articleSchema(post: {
       name: 'DN Tech',
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
     },
-    image: post.image || `${SITE_URL}/og-default.png`,
+    image: post.image || `${SITE_URL}/logo.png`,
     articleSection: post.category,
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
   };

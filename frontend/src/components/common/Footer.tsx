@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
+import { Logo } from '@/components/common/Logo';
 
 const footerLinks = {
   company: [
@@ -31,11 +32,8 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">
-                DN
-              </div>
-              <span className="text-xl font-bold text-white">DN Tech</span>
+            <div className="mb-4">
+              <Logo href="/" size="lg" />
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
               Solusi teknologi terpercaya untuk digitalisasi bisnis Anda.
