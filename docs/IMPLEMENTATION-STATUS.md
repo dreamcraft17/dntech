@@ -4,8 +4,10 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 
 **Terakhir diperbarui:** 8 Juli 2026  
 **Branch:** `main`  
-**Commit referensi:** `c3b862f` (Implement v3 UX refinements) + working tree V4  
-**Status build terakhir:** ✅ `npm run build` frontend sukses tanpa dependency Google Fonts, ✅ `npm run build` backend sukses, ✅ `npm run lint` frontend sukses
+**Commit referensi terbaru:** `65b3efc` (koreksi footer dokumen ke DN Tech)  
+**Commit implementasi V4:** `1d5db05` (Implement v4 performance optimizations)  
+**Status build terakhir:** ✅ `npm run build` frontend sukses tanpa dependency Google Fonts, ✅ `npm run build` backend sukses, ✅ `npm run lint` frontend sukses  
+**Status working tree saat update:** ✅ Clean
 
 ---
 
@@ -43,6 +45,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 | PRD V2 (teknis) | ✅ | ~85–90% fitur kode selesai |
 | PRD V3 (refinement) | ✅ | Exit intent, logo variants, mobile nav, form accessibility |
 | PRD V4 (performance) | ✅ | Search debounce, deferred scripts, cached settings, streaming homepage, image optimization, backend cache, font/build fix |
+| Footer dokumen `.md` | ✅ | Semua Markdown memiliki footer `Property of DN Tech - PT. Dozer Napitupulu Technology . 2026` |
 | Production build | ✅ | Frontend + backend build sukses |
 | Lint full repo | ✅ | Frontend lint sukses tanpa error/warning |
 | Performance audit awal | ✅ | Bottleneck utama sudah ditangani di V4; perlu Lighthouse/field verification setelah deploy |
