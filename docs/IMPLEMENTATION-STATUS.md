@@ -1,10 +1,11 @@
-# DN Tech — Status Implementasi (Sudah Selesai)
+# DN Tech — Status Implementasi & Audit Performa
 
-Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk website DN Tech, termasuk migrasi production-ready, penghapusan data demo, dan implementasi PRD/Design System/SEO Guide V2.
+Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk website DN Tech, termasuk migrasi production-ready, penghapusan data demo, implementasi PRD/Design System/SEO Guide V2, refinement V3, dan hasil audit awal kenapa website terasa lambat.
 
-**Terakhir diperbarui:** Juli 2026  
+**Terakhir diperbarui:** 8 Juli 2026  
 **Branch:** `main`  
-**Commit referensi:** `ffefe76` (Implement PRD V2)
+**Commit referensi:** `c3b862f` (Implement v3 UX refinements)  
+**Status build terakhir:** ✅ `npm run build` frontend sukses setelah akses jaringan untuk `next/font/google`
 
 ---
 
@@ -21,6 +22,10 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 9. [Infrastruktur & Deploy](#9-infrastruktur--deploy)
 10. [File & Modul Baru](#10-file--modul-baru)
 11. [Yang Sengaja Tidak Di-hardcode](#11-yang-sengaja-tidak-di-hardcode)
+12. [Implementasi V3](#12-implementasi-v3)
+13. [Audit Performa: Kenapa Web Lambat](#13-audit-performa-kenapa-web-lambat)
+14. [Checklist Verifikasi Cepat](#14-checklist-verifikasi-cepat)
+15. [Referensi Dokumen](#15-referensi-dokumen)
 
 ---
 
@@ -35,6 +40,10 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 | Design V2 | ✅ | Solid color, tanpa gradient/glassmorphism |
 | Konten real | ✅ | Semua konten dari DB via admin |
 | PRD V2 (teknis) | ✅ | ~85–90% fitur kode selesai |
+| PRD V3 (refinement) | ✅ | Exit intent, logo variants, mobile nav, form accessibility |
+| Production build | ✅ | Frontend build sukses |
+| Lint full repo | ⚠️ | Masih gagal karena issue lama di admin/AuthContext, bukan dari patch V3 |
+| Performance audit awal | ⚠️ | Bottleneck utama: SSR API waterfall, duplicate settings fetch, client-side tracking/chat requests |
 
 ---
 
@@ -66,7 +75,9 @@ Implementasi berdasarkan `docs/V2/DN-TECH-DESIGN-SYSTEM-V2.md`.
 | StickyCTA | `frontend/src/components/layout/StickyCTA.tsx` | Mobile CTA blue-900 |
 | TrustBadges | `frontend/src/components/layout/TrustBadges.tsx` | Section "Mengapa Memilih Kami" |
 | TeamSpotlight | `frontend/src/components/layout/TeamSpotlight.tsx` | Avatar solid (bukan gradient) |
-| ExitIntentModal | `frontend/src/components/interactive/ExitIntentModal.tsx` | Tanpa blur; trigger hanya saat exit intent (8 detik dwell) |
+| ExitIntentModal | `frontend/src/components/interactive/ExitIntentModal.tsx` | V3: trigger top-edge exit intent, max 1x/session, skip mobile |
+| ExitIntent hook | `frontend/src/hooks/useExitIntent.ts` | Session flag, `beforeunload`, `visibilitychange`, focus restore |
+| LogoLight / LogoDark | `frontend/src/components/branding/*.tsx` | Logo markup tanpa PNG background gelap |
 
 ### Anti-pattern yang dihapus
 
@@ -206,7 +217,7 @@ File: `frontend/src/components/forms/MultiStepForm.tsx`
 |----------|--------|
 | NewsletterForm | ✅ Subscribe ke DB |
 | SolutionQuiz | ✅ Rekomendasi dari layanan DB |
-| ExitIntentModal | ✅ Desktop only, 8 detik dwell, exit via top |
+| ExitIntentModal | ✅ Desktop only, trigger top-edge exit, max 1x/session |
 | ROICalculator | ✅ Masih ada (halaman terpisah, tidak di homepage) |
 | CalendlyEmbed | ✅ Dari `SiteSettings.calendlyUrl` |
 | CrispChatLoader | ✅ Dari `SiteSettings.crispWebsiteId` |
@@ -394,6 +405,10 @@ File email: `backend/src/services/EmailService.ts`
 | `frontend/src/lib/settings.ts` | Helper fetch public settings |
 | `frontend/src/lib/read-time.ts` | Estimasi waktu baca artikel |
 | `frontend/src/lib/service-process.ts` | 5 langkah proses layanan V2 |
+| `frontend/src/hooks/useExitIntent.ts` | Hook exit intent V3 |
+| `frontend/src/components/branding/LogoLight.tsx` | Logo navbar/light background |
+| `frontend/src/components/branding/LogoDark.tsx` | Logo hero/footer/dark background |
+| `frontend/src/components/interactive/ExitIntentModalLoader.tsx` | Lazy client loader untuk modal exit intent |
 | `frontend/src/components/interactive/ThankYouRedirect.tsx` | Auto-redirect thank-you → blog |
 | `backend/scripts/clear-content.ts` | Hapus konten demo dari DB |
 | `docs/PROJECT-OVERVIEW.md` | Dokumentasi lengkap proyek |
@@ -423,7 +438,199 @@ Sesuai kebijakan production — konten ini **harus diisi via Admin**, bukan di k
 
 ---
 
-## Checklist Verifikasi Cepat
+## 12. Implementasi V3
+
+Implementasi berdasarkan dokumen di `docs/v3/`.
+
+### Scope V3 yang sudah masuk ke codebase
+
+| Area | Status | File |
+|------|--------|------|
+| Exit intent hook | ✅ | `frontend/src/hooks/useExitIntent.ts` |
+| Exit modal UI | ✅ | `frontend/src/components/interactive/ExitIntentModal.tsx` |
+| Lazy loader modal | ✅ | `frontend/src/components/interactive/ExitIntentModalLoader.tsx` |
+| Logo navbar | ✅ | `frontend/src/components/branding/LogoLight.tsx`, `Header.tsx` |
+| Logo hero/footer | ✅ | `frontend/src/components/branding/LogoDark.tsx`, homepage, `Footer.tsx` |
+| Mobile nav close on link click | ✅ | Sudah ada dan dipertahankan di `Header.tsx` |
+| Form accessibility | ✅ | `Input.tsx`, `MultiStepForm.tsx` |
+| Env rollback modal | ✅ | `NEXT_PUBLIC_ENABLE_EXIT_MODAL=false` |
+
+### Perilaku exit intent saat ini
+
+- Modal hanya muncul di desktop/non-touch.
+- Trigger utama: mouse keluar dari viewport lewat sisi atas (`clientY <= 0`).
+- Modal hanya muncul 1x per session via `sessionStorage.exitIntentModalShown`.
+- `beforeunload` dan `visibilitychange` dipakai untuk menandai sesi, bukan memaksa render modal saat tab benar-benar ditutup.
+- Close button memindahkan fokus ke modal saat terbuka dan restore fokus setelah dismiss.
+
+### Verifikasi terakhir
+
+| Check | Hasil | Catatan |
+|-------|-------|---------|
+| `npm run build` frontend | ✅ Sukses | Perlu network saat build karena `next/font/google` mengambil Inter |
+| ESLint file V3 | ✅ Tidak ada error | Ada warning lama React Hook Form `watch()` di `MultiStepForm` |
+| `npm run lint` seluruh repo | ⚠️ Belum hijau | Error lama `react-hooks/set-state-in-effect` di admin/AuthContext |
+| Manual QA browser | ⏳ Belum dicatat | Perlu test Chrome/Safari/Firefox + mobile |
+| Lighthouse | ⏳ Belum dicatat | Belum ada angka lab audit resmi |
+
+---
+
+## 13. Audit Performa: Kenapa Web Lambat
+
+Audit ini adalah hasil review kode dan build, bukan hasil Lighthouse lab run. Temuan diurutkan dari yang paling mungkin terasa oleh user.
+
+### Ringkasan penyebab utama
+
+| Prioritas | Temuan | Dampak |
+|-----------|--------|--------|
+| P0 | Homepage SSR menunggu beberapa request API | TTFB lambat jika API/DB/network lambat |
+| P0 | `settings` di-fetch lebih dari sekali | Request duplikat di homepage dan client loader |
+| P1 | Client loader melakukan request tambahan setelah hydration | Network/main-thread terasa ramai setelah halaman tampil |
+| P1 | Third-party scripts GA/Crisp dimuat dari data settings | Bisa menambah JS, DNS lookup, dan blocking kerja browser |
+| P1 | Beberapa gambar masih pakai `<img>` biasa | Tidak otomatis optimized/sized oleh Next Image |
+| P2 | Header search tidak debounce | Bisa spam API saat user mengetik |
+| P2 | Build warning multiple lockfiles/root inference | Bukan runtime, tapi bisa bikin deploy/build tidak stabil |
+
+### Detail temuan
+
+#### 1. Homepage menunggu 4 API request sebelum render
+
+File: `frontend/src/app/(public)/page.tsx`
+
+Homepage menjalankan:
+
+- `GET /services`
+- `GET /blog?pageSize=4`
+- `GET /team`
+- `GET /settings`
+
+Semua request memang diparalelkan dengan `Promise.all`, tapi halaman server-render tetap harus menunggu semuanya selesai untuk menghasilkan HTML. Kalau backend/API lambat, database cold, VPS kecil, atau API domain lewat network eksternal, user akan merasakan halaman awal lambat.
+
+Rekomendasi:
+
+- Jadikan data non-kritis seperti team/blog preview sebagai komponen streaming/Suspense.
+- Kurangi jumlah API homepage di first render.
+- Cache settings/service/blog di layer backend atau gunakan revalidate lebih panjang untuk konten jarang berubah.
+
+#### 2. `settings` di-fetch berulang
+
+File terkait:
+
+- `frontend/src/app/(public)/layout.tsx`
+- `frontend/src/app/(public)/page.tsx`
+- `frontend/src/components/interactive/CrispChatLoader.tsx`
+- `frontend/src/components/seo/AnalyticsLoader.tsx`
+
+Layout publik sudah fetch `getPublicSettings()`. Homepage juga fetch `/settings` lagi di `getHomeData()`. Setelah halaman hydrate, `CrispChatLoader` dan `AnalyticsLoader` juga fetch `/settings` dari browser kalau env ID tidak tersedia.
+
+Dampak:
+
+- Request duplikat ke endpoint yang sama.
+- TTFB homepage ikut tergantung settings.
+- Setelah load, browser masih melakukan request tambahan hanya untuk mendapatkan GA/Crisp ID.
+
+Rekomendasi:
+
+- Pass `settings.googleAnalyticsId` dan `settings.crispWebsiteId` dari server layout ke client loader.
+- Hindari fetch `/settings` lagi di homepage jika data sudah ada di layout, atau buat endpoint home aggregate.
+- Simpan public settings di cache memory backend/Redis jika traffic naik.
+
+#### 3. Tracking dan chat menambah request setelah hydration
+
+File terkait:
+
+- `frontend/src/components/common/PageTracker.tsx`
+- `frontend/src/components/seo/AnalyticsLoader.tsx`
+- `frontend/src/components/interactive/CrispChatLoader.tsx`
+
+Saat halaman publik dibuka, browser dapat melakukan:
+
+- `POST /analytics/track`
+- `GET /settings` untuk GA
+- `GET /settings` untuk Crisp
+- request script GA dari Google
+- request script Crisp dari Crisp CDN
+
+Ini tidak selalu memblokir HTML awal, tetapi bisa membuat halaman terasa berat di koneksi lambat atau device low-end.
+
+Rekomendasi:
+
+- Load GA/Crisp dengan delay setelah idle (`requestIdleCallback`) atau setelah interaksi.
+- Pakai env var build-time untuk GA/Crisp jika ID jarang berubah.
+- Batch/defer analytics internal.
+
+#### 4. Gambar belum seluruhnya pakai Next Image
+
+File yang masih memakai `<img>`:
+
+- `frontend/src/app/(public)/blog/[slug]/page.tsx`
+- `frontend/src/app/(public)/team/page.tsx`
+- `frontend/src/components/layout/TeamSpotlight.tsx`
+- `frontend/src/app/(public)/case-studies/[slug]/page.tsx`
+- `frontend/src/app/admin/media/page.tsx`
+
+Dampak:
+
+- Browser tidak dapat automatic image optimization dari Next.
+- Risiko CLS jika width/height/aspect ratio tidak stabil.
+- Risiko bandwidth besar jika gambar upload tidak dikompresi.
+
+Rekomendasi:
+
+- Migrasi gambar publik ke `next/image`.
+- Tambahkan `remotePatterns` untuk domain upload/API production, bukan hanya localhost.
+- Pastikan gambar admin/upload diproses dengan ukuran thumbnail.
+
+#### 5. `next/font/google` butuh network saat build
+
+File: `frontend/src/app/layout.tsx`
+
+Build pernah gagal ketika sandbox tidak punya akses ke `fonts.googleapis.com`. Setelah network diizinkan, build sukses. Ini bukan penyebab runtime lambat karena font di-bundle saat build, tetapi bisa membuat deploy VPS gagal kalau outbound network dibatasi.
+
+Rekomendasi:
+
+- Pastikan VPS bisa akses Google Fonts saat build, atau
+- pindahkan Inter ke local font/self-host agar build tidak bergantung network eksternal.
+
+#### 6. Header search belum debounce
+
+File: `frontend/src/components/common/Header.tsx`
+
+Setiap perubahan input search dengan panjang query >= 2 memanggil `/search`. Ini bukan masalah first load, tetapi bisa membuat API terasa berat saat user mengetik cepat.
+
+Rekomendasi:
+
+- Tambahkan debounce 250-400ms.
+- Cancel request sebelumnya dengan `AbortController`.
+
+#### 7. Build warning root lockfile
+
+Saat build, Next menampilkan warning bahwa workspace root terdeteksi dari lockfile di `/Users/dozer-entropi/package-lock.json`, sementara project juga punya `frontend/package-lock.json`.
+
+Dampak:
+
+- Bukan runtime issue.
+- Bisa bikin cache/build path membingungkan di local/CI.
+
+Rekomendasi:
+
+- Set `turbopack.root` di `frontend/next.config.ts`, atau
+- rapikan lockfile di parent directory jika tidak dipakai.
+
+### Prioritas optimasi berikutnya
+
+| Urutan | Action | Ekspektasi impact |
+|--------|--------|-------------------|
+| 1 | Hilangkan duplicate `/settings` fetch di layout/home/loader | TTFB dan post-hydration network lebih ringan |
+| 2 | Buat endpoint agregat homepage atau cache server-side | Homepage lebih cepat dan stabil |
+| 3 | Defer GA/Crisp sampai idle/interaksi | Main thread dan network awal lebih ringan |
+| 4 | Migrasi gambar publik ke `next/image` | LCP/CLS/bandwidth lebih baik |
+| 5 | Tambahkan debounce search | Mengurangi beban API saat search |
+| 6 | Self-host font Inter atau pastikan outbound build | Deploy lebih reliable |
+
+---
+
+## 14. Checklist Verifikasi Cepat
 
 Setelah deploy, pastikan:
 
@@ -434,10 +641,15 @@ Setelah deploy, pastikan:
 - [ ] Tidak ada email/telepon fake di footer
 - [ ] `/case-studies` empty state (bukan data demo)
 - [ ] Login admin → isi settings & konten
+- [ ] Exit modal hanya muncul desktop saat mouse keluar dari top edge
+- [ ] Exit modal tidak muncul ulang setelah refresh di session yang sama
+- [ ] Navbar logo tidak punya background PNG hitam
+- [ ] Network tab: tidak ada request `/settings` berulang yang tidak perlu
+- [ ] Lighthouse mobile + desktop dicatat setelah deploy
 
 ---
 
-## Referensi Dokumen
+## 15. Referensi Dokumen
 
 | Dokumen | Isi |
 |---------|-----|
@@ -446,6 +658,9 @@ Setelah deploy, pastikan:
 | [`docs/V2/DN-TECH-PRD-V2.md`](./V2/DN-TECH-PRD-V2.md) | Product requirements |
 | [`docs/V2/DN-TECH-DESIGN-SYSTEM-V2.md`](./V2/DN-TECH-DESIGN-SYSTEM-V2.md) | Design system |
 | [`docs/V2/DN-TECH-SEO-GUIDE-V2.md`](./V2/DN-TECH-SEO-GUIDE-V2.md) | SEO guide |
+| [`docs/v3/00-START-HERE.md`](./v3/00-START-HERE.md) | Paket dokumen V3 |
+| [`docs/v3/DN-TECH-PRD-V3.md`](./v3/DN-TECH-PRD-V3.md) | Refinement PRD V3 |
+| [`docs/v3/DN-TECH-V3-IMPLEMENTATION-GUIDE.md`](./v3/DN-TECH-V3-IMPLEMENTATION-GUIDE.md) | Panduan implementasi V3 |
 | [`docs/DEPLOYMENT-PRODUCTION.md`](./DEPLOYMENT-PRODUCTION.md) | Panduan deploy |
 
 ---
