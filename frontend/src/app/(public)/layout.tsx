@@ -1,9 +1,9 @@
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
 import { PageTracker } from '@/components/common/PageTracker';
-import { ExitIntentModal } from '@/components/interactive/ExitIntentModal';
 import { StickyCTA } from '@/components/layout/StickyCTA';
 import { CrispChatLoader } from '@/components/interactive/CrispChatLoader';
+import { ExitIntentModalLoader } from '@/components/interactive/ExitIntentModalLoader';
 import { AnalyticsLoader } from '@/components/seo/AnalyticsLoader';
 import {
   JsonLd,
@@ -32,7 +32,7 @@ export default async function PublicLayout({ children }: { children: React.React
         companyAddress={settings.companyAddress}
       />
       <StickyCTA />
-      <ExitIntentModal />
+      <ExitIntentModalLoader />
       <CrispChatLoader />
       <AnalyticsLoader />
     </>

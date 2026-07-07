@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { apiFetch } from '@/lib/api';
-import { Logo } from '@/components/common/Logo';
+import { LogoLight } from '@/components/branding/LogoLight';
 import type { SearchResult } from '@/types';
 
 const navLinks = [
@@ -42,7 +42,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Logo href="/" size="md" priority />
+        <Link href="/" className="inline-flex shrink-0 items-center hover:opacity-80 transition-opacity" aria-label="Beranda DN Tech">
+          <LogoLight />
+        </Link>
 
         <nav className="hidden md:flex items-center gap-1" aria-label="Navigasi utama">
           {navLinks.map((link) => (

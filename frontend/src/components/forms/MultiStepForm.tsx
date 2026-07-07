@@ -232,6 +232,8 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
               <input
                 type="checkbox"
                 className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-900 focus:ring-blue-900"
+                aria-invalid={errors.consent ? true : undefined}
+                aria-describedby={errors.consent ? 'consent-error' : undefined}
                 {...register('consent', { required: 'Anda harus setuju untuk melanjutkan' })}
               />
               <span>
@@ -239,7 +241,11 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
                 <Link href="/privacy" className="text-blue-900 underline">Kebijakan Privasi</Link>.
               </span>
             </label>
-            {errors.consent && <p className="text-sm text-red-600">{errors.consent.message}</p>}
+            {errors.consent && (
+              <p id="consent-error" className="text-sm text-red-600" role="alert">
+                {errors.consent.message}
+              </p>
+            )}
             <div className="rounded-lg bg-blue-50 border border-blue-100 p-4 text-sm text-blue-900">
               Tim kami akan merespons dalam 24 jam kerja.
             </div>

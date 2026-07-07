@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
-import { Logo } from '@/components/common/Logo';
+import { LogoDark } from '@/components/branding/LogoDark';
 
 const footerLinks = {
   company: [
@@ -47,7 +47,9 @@ export function Footer({ companyName, tagline, companyEmail, companyPhone, compa
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <div className="mb-4">
-              <Logo href="/" size="lg" />
+              <Link href="/" className="inline-flex hover:opacity-80 transition-opacity" aria-label="Beranda DN Tech">
+                <LogoDark />
+              </Link>
             </div>
             {tagline && (
             <p className="text-sm text-slate-400 leading-relaxed">

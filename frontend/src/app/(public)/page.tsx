@@ -13,6 +13,7 @@ import type { Service, BlogPost, TeamMember } from '@/types';
 import type { Metadata } from 'next';
 import type { LucideIcon } from 'lucide-react';
 import { Briefcase, Users, Award, Star } from 'lucide-react';
+import { LogoDark } from '@/components/branding/LogoDark';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.home.title,
@@ -68,6 +69,9 @@ export default async function HomePage() {
       <section className="bg-blue-900 text-white">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="max-w-3xl">
+            <div className="mb-10">
+              <LogoDark />
+            </div>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl leading-tight">
               {tagline}
             </h1>
