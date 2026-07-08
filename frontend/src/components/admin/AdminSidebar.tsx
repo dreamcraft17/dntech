@@ -6,6 +6,7 @@ import {
   LayoutDashboard, Briefcase, FolderOpen, FileText, Users, MessageSquare,
   BarChart3, Settings, UserCog, Image, HelpCircle, Star, LogOut, Menu, X, Building2,
   Mail, ClipboardList,
+  Send,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -19,6 +20,7 @@ const navItems = [
   { href: '/admin/blog', label: 'Blog', icon: FileText },
   { href: '/admin/leads', label: 'Lead', icon: MessageSquare },
   { href: '/admin/newsletter', label: 'Newsletter', icon: Mail },
+  { href: '/admin/email-logs', label: 'Email Log', icon: Send },
   { href: '/admin/quiz', label: 'Kuis', icon: ClipboardList },
   { href: '/admin/team', label: 'Tim', icon: Users },
   { href: '/admin/testimonials', label: 'Testimoni', icon: Star },

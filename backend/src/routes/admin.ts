@@ -15,6 +15,7 @@ import {
 } from '../middleware/auth';
 import { hashPassword, validatePassword } from '../utils/auth';
 import { cacheService } from '../services/CacheService';
+import { emailQueueService } from '../services/EmailQueueService';
 
 const router = Router();
 router.use(authenticate);
@@ -805,6 +806,43 @@ router.get('/quiz-submissions', requireRole('SuperAdmin', 'ContentManager'), asy
     prisma.quizSubmission.count(),
   ]);
   paginatedResponse(res, items, { page, pageSize, total });
+}));
+
+router.get('/email-logs', requireRole('SuperAdmin', 'ContentManager'), asyncHandler(async (req, res) => {
+  const { status, to } = req.query;
+  const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>);
+  const where: Record<string, unknown> = {};
+  if (status) where.status = String(status);
+  if (to) where.to = { contains: String(to) };
+
+  const [items, total] = await Promise.all([
+    prisma.emailLog.findMany({ where, orderBy: { createdAt: 'desc' }, skip, take: pageSize }),
+    prisma.emailLog.count({ where }),
+  ]);
+
+  paginatedResponse(res, items, { page, pageSize, total });
+}));
+
+router.get('/email-stats', requireRole('SuperAdmin', 'ContentManager'), asyncHandler(async (_req, res) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const [todayCount, sentCount, failedCount, pendingCount] = await Promise.all([
+    prisma.emailLog.count({ where: { createdAt: { gte: today } } }),
+    prisma.emailLog.count({ where: { status: 'sent', createdAt: { gte: today } } }),
+    prisma.emailLog.count({ where: { status: 'failed', createdAt: { gte: today } } }),
+    prisma.emailLog.count({ where: { status: { in: ['pending', 'skipped'] }, createdAt: { gte: today } } }),
+  ]);
+
+  const successRate = todayCount ? Number(((sentCount / todayCount) * 100).toFixed(2)) : 0;
+  successResponse(res, {
+    todayCount,
+    sentCount,
+    failedCount,
+    pendingCount,
+    successRate,
+    queue: emailQueueService.getStatus(),
+  });
 }));
 
 router.get('/activity-logs', requireRole('SuperAdmin'), asyncHandler(async (req, res) => {

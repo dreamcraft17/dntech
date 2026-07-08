@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
+import crypto from 'crypto';
 import prisma from '../config/database';
 import { asyncHandler, successResponse } from '../utils/helpers';
-import { sendNewsletterWelcome } from '../services/EmailService';
+import { sendNewsletterConfirmation, sendNewsletterWelcome } from '../services/EmailService';
 
 const router = Router();
 
@@ -21,14 +22,86 @@ router.post(
     }).parse(req.body);
 
     const existing = await prisma.newsletterSubscriber.findUnique({ where: { email: data.email } });
-    if (existing) {
-      return successResponse(res, { message: 'You are already subscribed!', alreadySubscribed: true });
+    if (existing?.status === 'subscribed' && existing.isActive) {
+      return successResponse(res, { message: 'Anda sudah berlangganan newsletter kami.', alreadySubscribed: true });
     }
 
-    await prisma.newsletterSubscriber.create({ data });
-    sendNewsletterWelcome(data.email).catch(console.error);
+    const confirmToken = crypto.randomBytes(32).toString('hex');
+    const unsubToken = existing?.unsubToken || crypto.randomBytes(32).toString('hex');
 
-    successResponse(res, { message: 'Successfully subscribed to our newsletter!' }, 201);
+    await prisma.newsletterSubscriber.upsert({
+      where: { email: data.email },
+      create: {
+        ...data,
+        status: 'pending',
+        confirmToken,
+        unsubToken,
+        isActive: false,
+      },
+      update: {
+        name: data.name,
+        industry: data.industry,
+        serviceType: data.serviceType,
+        status: 'pending',
+        confirmToken,
+        unsubToken,
+        isActive: false,
+      },
+    });
+
+    sendNewsletterConfirmation(data.email, confirmToken).catch(console.error);
+
+    successResponse(res, { message: 'Email konfirmasi telah dikirim. Silakan cek inbox Anda.' }, 201);
+  })
+);
+
+router.get(
+  '/confirm',
+  asyncHandler(async (req, res) => {
+    const { token } = z.object({ token: z.string().min(16) }).parse(req.query);
+    const subscriber = await prisma.newsletterSubscriber.findUnique({ where: { confirmToken: token } });
+
+    if (!subscriber) {
+      return res.status(400).json({ success: false, error: { code: 'INVALID_TOKEN', message: 'Token konfirmasi tidak valid.' } });
+    }
+
+    const unsubToken = subscriber.unsubToken || crypto.randomBytes(32).toString('hex');
+    const updated = await prisma.newsletterSubscriber.update({
+      where: { id: subscriber.id },
+      data: {
+        status: 'subscribed',
+        isActive: true,
+        confirmToken: null,
+        unsubToken,
+        confirmedAt: new Date(),
+      },
+    });
+
+    sendNewsletterWelcome(updated.email, unsubToken).catch(console.error);
+    successResponse(res, { message: 'Newsletter berhasil dikonfirmasi.' });
+  })
+);
+
+router.get(
+  '/unsubscribe',
+  asyncHandler(async (req, res) => {
+    const { token } = z.object({ token: z.string().min(16) }).parse(req.query);
+    const subscriber = await prisma.newsletterSubscriber.findUnique({ where: { unsubToken: token } });
+
+    if (!subscriber) {
+      return res.status(400).json({ success: false, error: { code: 'INVALID_TOKEN', message: 'Token unsubscribe tidak valid.' } });
+    }
+
+    await prisma.newsletterSubscriber.update({
+      where: { id: subscriber.id },
+      data: {
+        status: 'unsubscribed',
+        isActive: false,
+        unsubscribedAt: new Date(),
+      },
+    });
+
+    successResponse(res, { message: 'Anda telah berhenti berlangganan newsletter.' });
   })
 );
 

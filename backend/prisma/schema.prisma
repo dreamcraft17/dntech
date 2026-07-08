@@ -417,15 +417,23 @@ model ConversionFunnel {
 }
 
 model NewsletterSubscriber {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  name         String?
-  industry     String?
-  serviceType  String?  @map("service_type")
-  isActive     Boolean  @default(true) @map("is_active")
-  createdAt    DateTime @default(now()) @map("created_at")
+  id             String    @id @default(uuid())
+  email          String    @unique
+  name           String?
+  industry       String?
+  serviceType    String?   @map("service_type")
+  status         String    @default("pending")
+  confirmToken   String?   @unique @map("confirm_token")
+  unsubToken     String?   @unique @map("unsub_token")
+  confirmedAt    DateTime? @map("confirmed_at")
+  subscribedAt   DateTime  @default(now()) @map("subscribed_at")
+  unsubscribedAt DateTime? @map("unsubscribed_at")
+  isActive       Boolean   @default(true) @map("is_active")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
 
   @@index([email])
+  @@index([status])
   @@map("newsletter_subscribers")
 }
 
@@ -440,4 +448,24 @@ model QuizSubmission {
   createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("quiz_submissions")
+}
+
+model EmailLog {
+  id         String    @id @default(uuid())
+  to         String
+  from       String
+  subject    String
+  templateId String?   @map("template_id")
+  status     String
+  messageId  String?   @map("message_id")
+  error      String?
+  attempts   Int       @default(1)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  sentAt     DateTime? @map("sent_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  @@index([to])
+  @@index([status])
+  @@index([createdAt])
+  @@map("email_logs")
 }

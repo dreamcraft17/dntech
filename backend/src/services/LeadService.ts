@@ -84,7 +84,7 @@ export async function createLead(data: LeadInput, meta?: { ip?: string; userAgen
     },
   });
 
-  sendWelcomeEmail(data.email, data.name).catch(console.error);
+  sendWelcomeEmail(data.email, data.name, data.serviceType || data.projectType).catch(console.error);
   sendLeadNotification(data).catch(console.error);
 
   return { submission, isDuplicate, leadCategory };

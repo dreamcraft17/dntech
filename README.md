@@ -11,6 +11,7 @@ Production-ready company profile website for DN Tech with a public marketing sit
 | PRD/Design/SEO V2 | Implemented | Solid color design system, Indonesian copy, startup/SME positioning |
 | V3 refinements | Implemented | Exit intent fix, logo variants, mobile nav polish, form accessibility |
 | V4 performance | Implemented | Debounce search, deferred scripts, cached settings/API, streaming homepage, Next Image, font/build fix |
+| V5 email system | Implemented | SMTP via `mx8.mailspace.id:465`, email templates, retry/logging, newsletter confirmation, admin email logs |
 | Frontend build | Passing | `npm run build` succeeds without Google Fonts network dependency |
 | Backend build | Passing | `npm run build` succeeds |
 | Full lint | Passing | Frontend lint succeeds with 0 errors/warnings |
@@ -35,6 +36,7 @@ Latest implementation reference: `c3b862f` — `Implement v3 UX refinements`.
 - Blog with categories, pagination, reading time, SEO metadata, JSON-LD
 - About, team, contact, FAQ, careers, resources, portfolio/case studies, testimonials
 - Contact lead form with multi-step validation, duplicate email check, consent, thank-you flow
+- Automated transactional emails for leads, forms, newsletter, careers, and quiz follow-up
 - Sitewide search from the header
 - Exit intent modal V3: desktop top-edge trigger, max once per session, mobile disabled
 - SEO: sitemap, robots.txt, canonical metadata, Open Graph, structured data
@@ -46,6 +48,7 @@ Latest implementation reference: `c3b862f` — `Implement v3 UX refinements`.
 - Lead management with status updates, notes, duplicate check, CSV export
 - Media library upload
 - Analytics overview and conversion tracking
+- Email log monitoring and delivery stats
 - Newsletter subscribers and quiz submissions
 - Site settings for company info, homepage copy, legal content, GA, Crisp, Calendly
 - User management for SuperAdmin
@@ -176,6 +179,16 @@ git pull --rebase
 | `SENDGRID_API_KEY` | SendGrid API key |
 | `SENDGRID_FROM_EMAIL` | Sender email |
 | `SALES_EMAIL` | Sales notification recipient |
+| `SMTP_HOST` | SMTP host, default `mx8.mailspace.id` |
+| `SMTP_PORT` | SMTP port, default `465` |
+| `SMTP_SECURE` | `true` for SSL/TLS on port 465 |
+| `SMTP_USER` | SMTP username, usually `info@dntech.id` |
+| `SMTP_PASSWORD` | SMTP mailbox password |
+| `SMTP_FROM_NAME` | Sender name, default `DN Tech` |
+| `SMTP_FROM_EMAIL` | Sender email, usually `info@dntech.id` |
+| `ADMIN_EMAIL` | Admin notification inbox, usually `info@dntech.id` |
+| `EMAIL_RETRY_ATTEMPTS` | Retry attempts for failed sends |
+| `EMAIL_RATE_LIMIT` | Nodemailer pool rate limit |
 
 ### Frontend `.env.local`
 
@@ -202,6 +215,8 @@ Public endpoints:
 | `GET` | `/settings` | Public site settings |
 | `POST` | `/leads` | Submit lead |
 | `POST` | `/newsletter/subscribe` | Subscribe email |
+| `GET` | `/newsletter/confirm?token=` | Confirm newsletter subscription |
+| `GET` | `/newsletter/unsubscribe?token=` | Unsubscribe newsletter |
 | `GET` | `/search?q=` | Sitewide search |
 
 Admin endpoints are under `/admin/*` and require a bearer token.
@@ -259,6 +274,7 @@ Implemented items:
 | `docs/V2/` | PRD, design system, and SEO guide V2 |
 | `docs/v3/` | V3 refinement PRD, SDD, summary, and implementation guide |
 | `docs/v4/` | V4 performance PRD, summary, and implementation guide |
+| `docs/v5/` | V5 email system PRD, roadmap, summary, and implementation guide |
 | `docs/DNTECH-COMPANY-PROFILE.md` | Company profile content reference |
 
 ## License

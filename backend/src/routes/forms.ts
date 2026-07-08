@@ -3,6 +3,12 @@ import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
 import prisma from '../config/database';
 import { asyncHandler, successResponse, AppError, detectDevice } from '../utils/helpers';
+import {
+  sendCareerConfirmation,
+  sendCareerNotification,
+  sendLeadNotification,
+  sendWelcomeEmail,
+} from '../services/EmailService';
 
 const router = Router();
 
@@ -87,6 +93,16 @@ router.post(
       req
     );
 
+    sendWelcomeEmail(data.email, data.name, data.subject || 'Pertanyaan Umum').catch(console.error);
+    sendLeadNotification({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      projectType: data.subject || 'Pertanyaan Umum',
+      message: data.message,
+      source: 'contact-form',
+    }).catch(console.error);
+
     successResponse(res, { id: submission.id, message: 'Terima kasih! Kami akan segera menghubungi Anda.' }, 201);
   })
 );
@@ -115,6 +131,19 @@ router.post(
       req
     );
 
+    sendWelcomeEmail(data.email, data.name, data.serviceInterested).catch(console.error);
+    sendLeadNotification({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      companyName: data.companyName,
+      serviceType: data.serviceInterested,
+      budgetRange: data.budgetRange,
+      timeline: data.timeline,
+      message: data.message,
+      source: 'service-request',
+    }).catch(console.error);
+
     successResponse(res, { id: submission.id, message: 'Terima kasih! Kami akan segera menghubungi Anda.' }, 201);
   })
 );
@@ -140,6 +169,16 @@ router.post(
       },
       req
     );
+
+    sendCareerNotification({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      position: data.position,
+      message: data.message,
+      resumeUrl: data.resumeUrl,
+    }).catch(console.error);
+    sendCareerConfirmation(data.email, data.name, data.position).catch(console.error);
 
     successResponse(res, { id: submission.id, message: 'Terima kasih telah melamar! Kami akan meninjau lamaran Anda.' }, 201);
   })

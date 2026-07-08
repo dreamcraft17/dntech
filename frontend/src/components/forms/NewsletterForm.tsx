@@ -31,7 +31,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   if (success) {
     return (
       <div className="rounded-lg bg-green-50 border border-green-200 p-4 text-sm text-green-700 text-center">
-        ✓ Berhasil berlangganan! Cek inbox Anda untuk email selamat datang.
+        ✓ Cek inbox Anda untuk email konfirmasi newsletter.
       </div>
     );
   }

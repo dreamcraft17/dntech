@@ -1,47 +1,176 @@
+import nodemailer from 'nodemailer';
 import prisma from '../config/database';
+import { emailTemplates } from '../templates/emailTemplates';
 
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'noreply@dntech.id';
-const SALES_EMAIL = process.env.SALES_EMAIL || 'sales@dntech.id';
+export interface SendEmailOptions {
+  cc?: string[];
+  bcc?: string[];
+  replyTo?: string;
+  templateId?: string;
+}
+
+export interface EmailResult {
+  success: boolean;
+  messageId?: string;
+  error?: string;
+}
+
+const DEFAULT_FROM = 'info@dntech.id';
 
 function frontendBase() {
   return (process.env.FRONTEND_URL || 'http://localhost:3000').split(',')[0].trim();
 }
 
-async function sendEmail(to: string, subject: string, html: string, name?: string) {
-  if (!SENDGRID_API_KEY) {
-    console.log(`[Email] ${subject} → ${to}`);
-    return;
+function fromAddress() {
+  const name = process.env.SMTP_FROM_NAME || 'DN Tech';
+  const email = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || DEFAULT_FROM;
+  return `${name} <${email}>`;
+}
+
+function adminEmail() {
+  return process.env.ADMIN_EMAIL || process.env.SALES_EMAIL || DEFAULT_FROM;
+}
+
+class EmailService {
+  private transporter: nodemailer.Transporter | null = null;
+  private readonly maxRetries = Number(process.env.EMAIL_RETRY_ATTEMPTS || 3);
+  private readonly retryDelay = Number(process.env.EMAIL_RETRY_DELAY_MS || 1000);
+
+  constructor() {
+    this.initializeTransporter();
   }
-  try {
-    const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${SENDGRID_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: to, name }] }],
-        from: { email: FROM_EMAIL, name: 'DN Tech' },
-        subject,
-        content: [{ type: 'text/html', value: html }],
-      }),
+
+  private initializeTransporter() {
+    const user = process.env.SMTP_USER;
+    const pass = process.env.SMTP_PASSWORD;
+
+    if (!user || !pass) {
+      console.warn('[Email] SMTP credentials are not configured. Emails will be logged as skipped.');
+      return;
+    }
+
+    this.transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'mx8.mailspace.id',
+      port: Number(process.env.SMTP_PORT || 465),
+      secure: process.env.SMTP_SECURE !== 'false',
+      auth: { user, pass },
+      pool: true,
+      maxConnections: 5,
+      maxMessages: 100,
+      rateDelta: 1000,
+      rateLimit: Number(process.env.EMAIL_RATE_LIMIT || 10),
     });
-    if (!res.ok) console.error('[Email] SendGrid error:', await res.text());
-  } catch (err) {
-    console.error('[Email] Failed to send:', err);
+
+    this.transporter?.verify((error) => {
+      if (error) {
+        console.error('[Email] SMTP connection failed:', error);
+        return;
+      }
+      console.log('[Email] SMTP server ready for info@dntech.id');
+    });
+  }
+
+  async sendEmail(
+    to: string,
+    subject: string,
+    html: string,
+    options: SendEmailOptions = {},
+  ): Promise<EmailResult> {
+    const from = fromAddress();
+    const log = await prisma.emailLog.create({
+      data: {
+        to,
+        from,
+        subject,
+        templateId: options.templateId,
+        status: this.transporter ? 'pending' : 'skipped',
+      },
+    });
+
+    if (!this.transporter) {
+      console.log(`[Email:skipped] ${subject} -> ${to}`);
+      return { success: false, error: 'SMTP credentials are not configured' };
+    }
+
+    try {
+      const result = await this.transporter.sendMail({
+        from,
+        to,
+        cc: options.cc,
+        bcc: options.bcc,
+        replyTo: options.replyTo || process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || DEFAULT_FROM,
+        subject,
+        html,
+        text: this.stripHtml(html),
+      });
+
+      await prisma.emailLog.update({
+        where: { id: log.id },
+        data: { status: 'sent', messageId: result.messageId, sentAt: new Date() },
+      });
+
+      return { success: true, messageId: result.messageId };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown email error';
+      await prisma.emailLog.update({
+        where: { id: log.id },
+        data: { status: 'failed', error: message },
+      });
+      console.error(`[Email] Failed sending ${subject} -> ${to}:`, error);
+      return { success: false, error: message };
+    }
+  }
+
+  async sendEmailWithRetry(
+    to: string,
+    subject: string,
+    html: string,
+    options: SendEmailOptions = {},
+  ): Promise<EmailResult> {
+    if (!this.transporter) {
+      return this.sendEmail(to, subject, html, options);
+    }
+
+    let lastResult: EmailResult = { success: false, error: 'Not attempted' };
+
+    for (let attempt = 1; attempt <= this.maxRetries; attempt += 1) {
+      lastResult = await this.sendEmail(to, subject, html, options);
+      if (lastResult.success) return lastResult;
+      if (attempt < this.maxRetries) await this.delay(this.retryDelay);
+    }
+
+    return {
+      success: false,
+      error: `Failed after ${this.maxRetries} attempts: ${lastResult.error}`,
+    };
+  }
+
+  async sendBulkEmail(recipients: string[], subject: string, html: string, options?: SendEmailOptions) {
+    return Promise.all(recipients.map((to) => this.sendEmailWithRetry(to, subject, html, options)));
+  }
+
+  private stripHtml(html: string) {
+    return html
+      .replace(/<style[\s\S]*?<\/style>/gi, '')
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  private delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
 
-export async function sendWelcomeEmail(to: string, name: string) {
-  const base = frontendBase();
-  const html = `
-    <h1>Halo ${name},</h1>
-    <p>Terima kasih telah menghubungi DN Tech. Tim kami akan meninjau inquiry Anda dan merespons dalam <strong>24 jam kerja</strong>.</p>
-    <p>Sementara itu, baca <a href="${base}/blog">artikel terbaru kami</a> tentang tech stack dan pengembangan startup.</p>
-    <p>Salam,<br/>Tim DN Tech</p>
-  `;
-  await sendEmail(to, 'Terima kasih telah menghubungi DN Tech', html, name);
+export const emailService = new EmailService();
+
+export async function sendWelcomeEmail(to: string, name: string, projectType?: string) {
+  const template = emailTemplates.formConfirmation(name, projectType);
+  return emailService.sendEmailWithRetry(to, template.subject, template.html, {
+    templateId: 'form-confirmation',
+  });
 }
 
 export async function sendLeadNotification(lead: {
@@ -56,43 +185,58 @@ export async function sendLeadNotification(lead: {
   message?: string;
   source?: string;
 }) {
-  const html = `
-    <h2>Lead Baru dari Website</h2>
-    <ul>
-      <li><strong>Nama:</strong> ${lead.name}</li>
-      <li><strong>Email:</strong> ${lead.email}</li>
-      ${lead.phone ? `<li><strong>Telepon:</strong> ${lead.phone}</li>` : ''}
-      ${lead.companyName ? `<li><strong>Perusahaan:</strong> ${lead.companyName}</li>` : ''}
-      ${lead.projectType ? `<li><strong>Jenis proyek:</strong> ${lead.projectType}</li>` : ''}
-      ${lead.serviceType ? `<li><strong>Layanan:</strong> ${lead.serviceType}</li>` : ''}
-      ${lead.budgetRange ? `<li><strong>Anggaran:</strong> ${lead.budgetRange}</li>` : ''}
-      ${lead.timeline ? `<li><strong>Timeline:</strong> ${lead.timeline}</li>` : ''}
-      ${lead.message ? `<li><strong>Deskripsi:</strong> ${lead.message}</li>` : ''}
-      ${lead.source ? `<li><strong>Sumber:</strong> ${lead.source}</li>` : ''}
-    </ul>
-  `;
-  await sendEmail(SALES_EMAIL, `Lead baru: ${lead.name}`, html);
+  const template = emailTemplates.adminLeadNotification(lead);
+  return emailService.sendEmailWithRetry(adminEmail(), template.subject, template.html, {
+    templateId: 'admin-lead-notification',
+    replyTo: lead.email,
+  });
 }
 
-export async function sendNewsletterWelcome(to: string) {
+export async function sendNewsletterConfirmation(to: string, token: string) {
   const base = frontendBase();
-  const html = `
-    <h1>Selamat datang di DN Tech Insights!</h1>
-    <p>Terima kasih telah berlangganan. Anda akan menerima update tentang teknologi, startup, dan best practices development.</p>
-    <p><a href="${base}/blog">Baca artikel terbaru kami</a>.</p>
-    <p>Salam,<br/>Tim DN Tech</p>
-  `;
-  await sendEmail(to, 'Selamat datang di Newsletter DN Tech', html);
+  const confirmLink = `${base}/api/v1/newsletter/confirm?token=${encodeURIComponent(token)}`;
+  const template = emailTemplates.newsletterConfirmation(confirmLink);
+  return emailService.sendEmailWithRetry(to, template.subject, template.html, {
+    templateId: 'newsletter-confirmation',
+  });
+}
+
+export async function sendNewsletterWelcome(to: string, unsubToken?: string) {
+  const base = frontendBase();
+  const unsubscribeLink = unsubToken
+    ? `${base}/api/v1/newsletter/unsubscribe?token=${encodeURIComponent(unsubToken)}`
+    : undefined;
+  const template = emailTemplates.newsletterWelcome(unsubscribeLink);
+  return emailService.sendEmailWithRetry(to, template.subject, template.html, {
+    templateId: 'newsletter-welcome',
+  });
+}
+
+export async function sendCareerNotification(application: {
+  name: string;
+  email: string;
+  phone?: string;
+  position: string;
+  message: string;
+  resumeUrl?: string;
+}) {
+  const template = emailTemplates.careerApplicationNotification(application);
+  return emailService.sendEmailWithRetry(adminEmail(), template.subject, template.html, {
+    templateId: 'career-application-notification',
+    replyTo: application.email,
+  });
+}
+
+export async function sendCareerConfirmation(to: string, name: string, position: string) {
+  const template = emailTemplates.careerApplicationConfirmation(name, position);
+  return emailService.sendEmailWithRetry(to, template.subject, template.html, {
+    templateId: 'career-application-confirmation',
+  });
 }
 
 export async function sendQuizFollowUp(to: string, name: string, service: string) {
-  const base = frontendBase();
-  const html = `
-    <h1>Halo ${name},</h1>
-    <p>Berdasarkan jawaban kuis Anda, kami merekomendasikan <strong>${service}</strong> untuk kebutuhan Anda.</p>
-    <p><a href="${base}/contact?service=${encodeURIComponent(service)}">Jadwalkan konsultasi gratis</a> dengan tim kami.</p>
-    <p>Baca juga <a href="${base}/blog">artikel blog kami</a> untuk insight teknologi startup.</p>
-    <p>Salam,<br/>Tim DN Tech</p>
-  `;
-  await sendEmail(to, `Rekomendasi solusi untuk Anda: ${service}`, html, name);
+  const template = emailTemplates.quizRecommendations(name, service);
+  return emailService.sendEmailWithRetry(to, template.subject, template.html, {
+    templateId: 'quiz-recommendations',
+  });
 }

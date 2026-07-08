@@ -26,9 +26,10 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 11. [Yang Sengaja Tidak Di-hardcode](#11-yang-sengaja-tidak-di-hardcode)
 12. [Implementasi V3](#12-implementasi-v3)
 13. [Implementasi V4](#13-implementasi-v4)
-14. [Audit Performa: Kenapa Web Lambat](#14-audit-performa-kenapa-web-lambat)
-15. [Checklist Verifikasi Cepat](#15-checklist-verifikasi-cepat)
-16. [Referensi Dokumen](#16-referensi-dokumen)
+14. [Implementasi V5](#14-implementasi-v5)
+15. [Audit Performa: Kenapa Web Lambat](#15-audit-performa-kenapa-web-lambat)
+16. [Checklist Verifikasi Cepat](#16-checklist-verifikasi-cepat)
+17. [Referensi Dokumen](#17-referensi-dokumen)
 
 ---
 
@@ -45,6 +46,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 | PRD V2 (teknis) | ✅ | ~85–90% fitur kode selesai |
 | PRD V3 (refinement) | ✅ | Exit intent, logo variants, mobile nav, form accessibility |
 | PRD V4 (performance) | ✅ | Search debounce, deferred scripts, cached settings, streaming homepage, image optimization, backend cache, font/build fix |
+| PRD V5 (email) | ✅ | SMTP nodemailer, templates, retry/logging, newsletter confirm/unsubscribe, admin email logs |
 | Footer dokumen `.md` | ✅ | Semua Markdown memiliki footer `Property of DN Tech - PT. Dozer Napitupulu Technology . 2026` |
 | Production build | ✅ | Frontend + backend build sukses |
 | Lint full repo | ✅ | Frontend lint sukses tanpa error/warning |
@@ -213,8 +215,8 @@ File: `frontend/src/components/forms/MultiStepForm.tsx`
 | Duplicate check | `/leads/check-duplicate` |
 | Rate limit | 10 submission/jam |
 | Analytics event | `form_submit` + conversion funnel |
-| Email user | Auto-reply via SendGrid |
-| Email sales | Notifikasi ke `SALES_EMAIL` |
+| Email user | Auto-reply via SMTP/nodemailer |
+| Email admin | Notifikasi ke `ADMIN_EMAIL` / `info@dntech.id` |
 
 ### Komponen interaktif lain
 
@@ -367,11 +369,14 @@ File: `frontend/src/app/admin/settings/page.tsx`
 
 | Integrasi | Status | Konfigurasi |
 |-----------|--------|-------------|
-| SendGrid | ✅ Kode siap | `SENDGRID_API_KEY`, `SENDGRID_FROM_EMAIL` |
-| Sales notification | ✅ | `SALES_EMAIL=sales@dntech.id` |
-| Welcome email lead | ✅ | Link ke `/blog` (bukan fake case studies) |
-| Newsletter welcome | ✅ | |
-| Quiz follow-up | ✅ | |
+| SMTP mailspace | ✅ Kode siap | `SMTP_HOST=mx8.mailspace.id`, `SMTP_PORT=465`, `SMTP_USER=info@dntech.id` |
+| Admin notification | ✅ | `ADMIN_EMAIL=info@dntech.id` |
+| Welcome email lead | ✅ | Konfirmasi ke user + admin alert |
+| Newsletter confirm/welcome | ✅ | Double opt-in token + unsubscribe token |
+| Quiz follow-up | ✅ | Rekomendasi dikirim ke user jika email tersedia |
+| Career email | ✅ | Admin notification + applicant confirmation |
+| Email logs | ✅ | `email_logs` table + `/admin/email-logs` |
+| SendGrid legacy | ⚠️ | Env lama masih ada untuk kompatibilitas, SMTP V5 menjadi jalur utama |
 | Google Analytics | ✅ Loader | `SiteSettings.googleAnalyticsId` |
 | Crisp Chat | ✅ Loader | `SiteSettings.crispWebsiteId` |
 | Calendly | ✅ Embed | `SiteSettings.calendlyUrl` |
@@ -526,7 +531,65 @@ Implementasi berdasarkan dokumen di `docs/v4/`.
 
 ---
 
-## 14. Audit Performa: Kenapa Web Lambat
+## 14. Implementasi V5
+
+Implementasi berdasarkan dokumen di `docs/v5/`.
+
+### Scope V5 yang sudah masuk ke codebase
+
+| Area | Status | File |
+|------|--------|------|
+| SMTP service nodemailer | ✅ | `backend/src/services/EmailService.ts` |
+| Email retry + rate limit pool | ✅ | `EMAIL_RETRY_ATTEMPTS`, `EMAIL_RATE_LIMIT` |
+| Email templates | ✅ | `backend/src/templates/emailTemplates.ts` |
+| Email queue in-memory | ✅ | `backend/src/services/EmailQueueService.ts` |
+| Email log database model | ✅ | `backend/prisma/schema.prisma` (`EmailLog`) |
+| Newsletter token fields | ✅ | `NewsletterSubscriber.status`, `confirmToken`, `unsubToken`, timestamps |
+| Lead confirmation email | ✅ | `LeadService.createLead()` |
+| Admin lead notification | ✅ | `LeadService.createLead()` → `ADMIN_EMAIL` |
+| Generic forms email | ✅ | `forms/contact`, `forms/service-request`, `forms/career` |
+| Career email flow | ✅ | Admin notification + applicant confirmation |
+| Newsletter confirm flow | ✅ | `/newsletter/subscribe`, `/newsletter/confirm`, `/newsletter/unsubscribe` |
+| Quiz follow-up | ✅ | `/quiz/submit` uses V5 template/service |
+| Admin email monitoring | ✅ | `/admin/email-logs`, `/admin/email-stats`, frontend `/admin/email-logs` |
+| Env documentation | ✅ | `backend/.env.example` |
+
+### Perilaku email saat ini
+
+- Semua lead/contact/service request mengirim konfirmasi ke user dan notifikasi admin ke `ADMIN_EMAIL` (`info@dntech.id` di production).
+- Newsletter memakai double opt-in: subscribe → email confirmation → confirm → welcome email.
+- Newsletter unsubscribe memakai token unik.
+- Quiz follow-up dikirim jika user mengisi email.
+- Career application mengirim notifikasi ke admin dan confirmation ke pelamar.
+- Semua attempt email dicatat di tabel `email_logs`.
+- Jika SMTP credentials belum diisi, email tidak membuat aplikasi crash; attempt dicatat sebagai `skipped` dan di-log ke console.
+
+### Konfigurasi SMTP V5
+
+| Variable | Nilai produksi |
+|----------|----------------|
+| `SMTP_HOST` | `mx8.mailspace.id` |
+| `SMTP_PORT` | `465` |
+| `SMTP_SECURE` | `true` |
+| `SMTP_USER` | `info@dntech.id` |
+| `SMTP_PASSWORD` | Password mailbox dari provider |
+| `SMTP_FROM_NAME` | `DN Tech` |
+| `SMTP_FROM_EMAIL` | `info@dntech.id` |
+| `ADMIN_EMAIL` | `info@dntech.id` |
+
+### Verifikasi terakhir V5
+
+| Check | Hasil | Catatan |
+|-------|-------|---------|
+| `npm run build` backend | ✅ Sukses | Prisma generate + TypeScript compile sukses |
+| `npm run lint` frontend | ✅ Sukses | Admin email logs page lint OK |
+| `npm run build` frontend | ✅ Sukses | Route `/admin/email-logs` ter-generate |
+| SMTP live send | ⏳ Belum dicatat | Perlu password mailbox production |
+| DB migration/push | ⏳ Belum dijalankan di production | Perlu `npx prisma db push` / migration di VPS |
+
+---
+
+## 15. Audit Performa: Kenapa Web Lambat
 
 Audit ini awalnya adalah hasil review kode dan build, bukan hasil Lighthouse lab run. Kolom status menunjukkan kondisi setelah implementasi V4.
 
@@ -676,7 +739,7 @@ Status V4:
 
 ---
 
-## 15. Checklist Verifikasi Cepat
+## 16. Checklist Verifikasi Cepat
 
 Setelah deploy, pastikan:
 
@@ -696,10 +759,15 @@ Setelah deploy, pastikan:
 - [ ] GA muncul setelah idle, Crisp muncul setelah interaksi
 - [ ] Gambar publik lewat `/_next/image`
 - [ ] Cache publik refresh setelah update konten admin
+- [ ] `npx prisma db push` menciptakan/menambah `email_logs` dan field newsletter token
+- [ ] SMTP `.env` production diisi untuk `info@dntech.id`
+- [ ] Submit form kontak → user dapat confirmation + admin dapat alert
+- [ ] Newsletter subscribe → confirm email → welcome email
+- [ ] `/admin/email-logs` menampilkan status pengiriman
 
 ---
 
-## 16. Referensi Dokumen
+## 17. Referensi Dokumen
 
 | Dokumen | Isi |
 |---------|-----|
@@ -714,6 +782,10 @@ Setelah deploy, pastikan:
 | [`docs/v4/DN-TECH-PRD-V4.md`](./v4/DN-TECH-PRD-V4.md) | Performance PRD V4 |
 | [`docs/v4/DN-TECH-V4-IMPLEMENTATION-GUIDE.md`](./v4/DN-TECH-V4-IMPLEMENTATION-GUIDE.md) | Panduan implementasi V4 |
 | [`docs/v4/DN-TECH-V4-SUMMARY.md`](./v4/DN-TECH-V4-SUMMARY.md) | Ringkasan V4 |
+| [`docs/v5/01-COMPLETE-ROADMAP.md`](./v5/01-COMPLETE-ROADMAP.md) | Roadmap V1-V5 |
+| [`docs/v5/DN-TECH-PRD-V5.md`](./v5/DN-TECH-PRD-V5.md) | Email PRD V5 |
+| [`docs/v5/DN-TECH-V5-IMPLEMENTATION-GUIDE.md`](./v5/DN-TECH-V5-IMPLEMENTATION-GUIDE.md) | Panduan implementasi V5 |
+| [`docs/v5/DN-TECH-V5-SUMMARY.md`](./v5/DN-TECH-V5-SUMMARY.md) | Ringkasan V5 |
 | [`docs/DEPLOYMENT-PRODUCTION.md`](./DEPLOYMENT-PRODUCTION.md) | Panduan deploy |
 
 ---
