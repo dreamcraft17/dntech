@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import prisma from '../config/database';
 import { emailTemplates } from '../templates/emailTemplates';
 
@@ -49,17 +50,23 @@ class EmailService {
       return;
     }
 
-    this.transporter = nodemailer.createTransport({
+    const transportOptions = {
       host: process.env.SMTP_HOST || 'mx8.mailspace.id',
       port: Number(process.env.SMTP_PORT || 465),
       secure: process.env.SMTP_SECURE !== 'false',
+      family: Number(process.env.SMTP_FAMILY || 4),
+      connectionTimeout: Number(process.env.SMTP_CONNECTION_TIMEOUT_MS || 15000),
+      socketTimeout: Number(process.env.SMTP_SOCKET_TIMEOUT_MS || 15000),
+      greetingTimeout: Number(process.env.SMTP_GREETING_TIMEOUT_MS || 10000),
       auth: { user, pass },
       pool: true,
       maxConnections: 5,
       maxMessages: 100,
       rateDelta: 1000,
       rateLimit: Number(process.env.EMAIL_RATE_LIMIT || 10),
-    });
+    };
+
+    this.transporter = nodemailer.createTransport(transportOptions as SMTPTransport.Options);
 
     this.transporter?.verify((error) => {
       if (error) {
