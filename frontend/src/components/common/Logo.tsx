@@ -7,10 +7,13 @@ const SIZES = {
   md: 40,
   lg: 56,
   xl: 80,
+  hero: 96,
 } as const;
 
+export type LogoSize = keyof typeof SIZES;
+
 interface LogoProps {
-  size?: keyof typeof SIZES;
+  size?: LogoSize;
   className?: string;
   href?: string | null;
   priority?: boolean;
