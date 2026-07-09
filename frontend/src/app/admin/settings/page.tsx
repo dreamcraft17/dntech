@@ -5,13 +5,22 @@ import { apiFetch } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
-import { Alert } from '@/components/ui/Alert';
+import { Toast } from '@/components/ui/Toast';
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ open: boolean; message: string; variant: 'success' | 'error' }>({
+    open: false,
+    message: '',
+    variant: 'success',
+  });
+
+  function showToast(message: string, variant: 'success' | 'error') {
+    setToast({ open: true, message, variant });
+  }
 
   function parseJsonField<T>(raw: string, fieldLabel: string, fallback: T): T {
     try {
@@ -96,8 +105,11 @@ export default function AdminSettingsPage() {
       }
 
       setSaved(true);
+      showToast('Pengaturan berhasil disimpan!', 'success');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Gagal menyimpan pengaturan');
+      const message = err instanceof Error ? err.message : 'Gagal menyimpan pengaturan';
+      setError(message);
+      showToast(message, 'error');
     } finally {
       setLoading(false);
     }
@@ -105,17 +117,14 @@ export default function AdminSettingsPage() {
 
   return (
     <div>
+      <Toast
+        open={toast.open}
+        message={toast.message}
+        variant={toast.variant}
+        onClose={() => setToast((t) => ({ ...t, open: false }))}
+      />
+
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Pengaturan Situs</h1>
-      {saved && (
-        <Alert variant="success" className="mb-4">
-          Pengaturan berhasil disimpan! Halaman About akan memperbarui konten setelah deploy terbaru.
-        </Alert>
-      )}
-      {error && (
-        <Alert variant="error" className="mb-4">
-          {error}
-        </Alert>
-      )}
 
       <div className="space-y-6 max-w-2xl">
         <Card title="Umum">
@@ -186,7 +195,21 @@ export default function AdminSettingsPage() {
           <Textarea label="Kebijakan Privasi (HTML)" rows={6} value={settings.privacyContent} onChange={(e) => setSettings({ ...settings, privacyContent: e.target.value })} className="mt-4" />
         </Card>
 
-        <Button onClick={save} loading={loading}>Simpan Pengaturan</Button>
+        <div className="sticky bottom-4 z-10 flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+          {saved && (
+            <p className="text-sm font-medium text-green-700" role="status">
+              ✓ Perubahan tersimpan ke database.
+            </p>
+          )}
+          {error && (
+            <p className="text-sm font-medium text-red-700" role="alert">
+              {error}
+            </p>
+          )}
+          <Button onClick={save} loading={loading} className="w-full sm:w-auto">
+            Simpan Pengaturan
+          </Button>
+        </div>
       </div>
     </div>
   );
