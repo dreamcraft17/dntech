@@ -4,6 +4,9 @@ import type { TeamMember, SiteSettings } from '@/types';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import type { Metadata } from 'next';
 
+/** Always fetch fresh CMS content — avoids stale static cache after admin saves settings */
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.about.title,
   description: PAGE_SEO.about.description,
@@ -16,7 +19,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1
 async function getAboutData() {
   try {
     const [settingsRes, teamRes] = await Promise.all([
-      fetch(`${API_URL}/settings`, { next: { revalidate: 300 } }),
+      fetch(`${API_URL}/settings`, { cache: 'no-store' }),
       fetch(`${API_URL}/team`, { next: { revalidate: 60 } }),
     ]);
     const settings = settingsRes.ok ? (await settingsRes.json()).data as SiteSettings : {};

@@ -11,6 +11,15 @@ export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  function parseJsonField<T>(raw: string, fieldLabel: string, fallback: T): T {
+    try {
+      return JSON.parse(raw || JSON.stringify(fallback)) as T;
+    } catch {
+      throw new Error(`Format JSON tidak valid pada "${fieldLabel}". Periksa tanda kutip, koma, dan kurung kurawal.`);
+    }
+  }
 
   useEffect(() => {
     apiFetch<Record<string, unknown>>('/admin/settings').then((data) => {
@@ -41,17 +50,13 @@ export default function AdminSettingsPage() {
   async function save() {
     setLoading(true);
     setSaved(false);
+    setError(null);
     try {
-      let trustBadges = [];
-      let clientLogos = [];
-      let homeStats = [];
-      let resources = [];
-      let aboutContent = {};
-      try { trustBadges = JSON.parse(settings.trustBadges || '[]'); } catch { /* ignore */ }
-      try { clientLogos = JSON.parse(settings.clientLogos || '[]'); } catch { /* ignore */ }
-      try { homeStats = JSON.parse(settings.homeStats || '[]'); } catch { /* ignore */ }
-      try { resources = JSON.parse(settings.resources || '[]'); } catch { /* ignore */ }
-      try { aboutContent = JSON.parse(settings.aboutContent || '{}'); } catch { /* ignore */ }
+      const trustBadges = parseJsonField(settings.trustBadges || '[]', 'Lencana Kepercayaan', []);
+      const clientLogos = parseJsonField(settings.clientLogos || '[]', 'Logo Klien', []);
+      const homeStats = parseJsonField(settings.homeStats || '[]', 'Statistik Beranda', []);
+      const resources = parseJsonField(settings.resources || '[]', 'Sumber Daya', []);
+      const aboutContent = parseJsonField(settings.aboutContent || '{}', 'Konten About', {});
 
       await apiFetch('/admin/settings', {
         method: 'PATCH',
@@ -77,7 +82,22 @@ export default function AdminSettingsPage() {
           privacyContent: settings.privacyContent,
         }),
       });
+
+      const revalidateSecret = process.env.NEXT_PUBLIC_REVALIDATE_SECRET;
+      if (revalidateSecret) {
+        await fetch('/api/revalidate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-revalidate-secret': revalidateSecret,
+          },
+          body: JSON.stringify({ paths: ['/', '/about'] }),
+        }).catch(() => undefined);
+      }
+
       setSaved(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menyimpan pengaturan');
     } finally {
       setLoading(false);
     }
@@ -88,7 +108,12 @@ export default function AdminSettingsPage() {
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Pengaturan Situs</h1>
       {saved && (
         <Alert variant="success" className="mb-4">
-          Pengaturan berhasil disimpan!
+          Pengaturan berhasil disimpan! Halaman About akan memperbarui konten setelah deploy terbaru.
+        </Alert>
+      )}
+      {error && (
+        <Alert variant="error" className="mb-4">
+          {error}
         </Alert>
       )}
 
