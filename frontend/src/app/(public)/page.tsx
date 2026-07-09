@@ -14,7 +14,7 @@ import type { Service, BlogPost, TeamMember } from '@/types';
 import type { Metadata } from 'next';
 import type { LucideIcon } from 'lucide-react';
 import { Briefcase, Users, Award, Star } from 'lucide-react';
-import { LogoDark } from '@/components/branding/LogoDark';
+import { HeroBrand } from '@/components/layout/HeroBrand';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.home.title,
@@ -57,26 +57,14 @@ export default async function HomePage() {
       {/* Hero — solid color, no gradient */}
       <section className="bg-blue-900 text-white">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <div className="max-w-3xl">
-            <div className="mb-10">
-              <LogoDark size="hero" />
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl leading-tight">
-              {tagline}
-            </h1>
-            {heroDescription && (
-              <p className="mt-6 text-lg text-blue-100 leading-relaxed">
-                {heroDescription}
-              </p>
-            )}
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Button href="/contact" size="lg" variant="inverse">
-                Konsultasi Gratis <ArrowRight className="h-4 w-4" />
-              </Button>
-              <Button href="/services" size="lg" variant="outline-on-dark">
-                Lihat Layanan
-              </Button>
-            </div>
+          <HeroBrand tagline={tagline} description={heroDescription} />
+          <div className="mt-8 flex max-w-3xl flex-wrap gap-4">
+            <Button href="/contact" size="lg" variant="inverse">
+              Konsultasi Gratis <ArrowRight className="h-4 w-4" />
+            </Button>
+            <Button href="/services" size="lg" variant="outline-on-dark">
+              Lihat Layanan
+            </Button>
           </div>
         </div>
       </section>
