@@ -3,18 +3,28 @@ import { Suspense } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { TrustBadges } from '@/components/layout/TrustBadges';
 import { TeamSpotlight } from '@/components/layout/TeamSpotlight';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { asArray } from '@/lib/api';
-import { getHomeStats, getPublicSettings } from '@/lib/settings';
+import { getPublicSettings } from '@/lib/settings';
 import { estimateReadTime, formatReadTime } from '@/lib/read-time';
-import type { Service, BlogPost, TeamMember } from '@/types';
+import type { Service, BlogPost } from '@/types';
 import type { Metadata } from 'next';
-import type { LucideIcon } from 'lucide-react';
-import { Briefcase, Users, Award, Star } from 'lucide-react';
 import { HeroBrand } from '@/components/layout/HeroBrand';
+import { BrandStats } from '@/components/branding/BrandStats';
+import { BrandStory } from '@/components/branding/BrandStory';
+import { CoreValues } from '@/components/branding/CoreValues';
+import { CompetitiveAdvantages } from '@/components/branding/CompetitiveAdvantages';
+import { BrandTestimonials } from '@/components/branding/BrandTestimonials';
+import {
+  getBrandContent,
+  getBrandStats,
+  getBrandTeam,
+  getBrandTestimonials,
+  getCompetitiveAdvantages,
+  getCoreValues,
+} from '@/lib/branding';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.home.title,
@@ -24,13 +34,6 @@ export const metadata: Metadata = buildMetadata({
 });
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
-const STAT_ICONS: Record<string, LucideIcon> = {
-  briefcase: Briefcase,
-  users: Users,
-  award: Award,
-  star: Star,
-};
 
 async function getHomeServices() {
   try {
@@ -43,14 +46,18 @@ async function getHomeServices() {
 }
 
 export default async function HomePage() {
-  const [services, settings] = await Promise.all([
+  const [services, settings, brandContent, brandValues, brandAdvantages, brandStats, brandTeam, testimonials] = await Promise.all([
     getHomeServices(),
     getPublicSettings(),
+    getBrandContent(),
+    getCoreValues(),
+    getCompetitiveAdvantages(),
+    getBrandStats(),
+    getBrandTeam(),
+    getBrandTestimonials(),
   ]);
   const tagline = settings.tagline || settings.companyName || 'DN Tech';
   const heroDescription = settings.heroDescription as string | undefined;
-  const trustBadges = settings.trustBadges as { icon?: string; label: string; description?: string }[] | undefined;
-  const stats = getHomeStats(settings);
 
   return (
     <>
@@ -69,25 +76,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Real metrics only */}
-      {stats.length > 0 && (
-        <section className="bg-white py-12 border-b border-gray-200">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-              {stats.map((stat) => {
-                const Icon = STAT_ICONS[stat.icon || 'briefcase'] || Briefcase;
-                return (
-                  <div key={`${stat.label}-${stat.value}`} className="text-center">
-                    <Icon className="h-8 w-8 text-blue-900 mx-auto mb-2" />
-                    <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
-                    <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
+      <BrandStats stats={brandStats} />
+      <BrandStory content={brandContent} />
+      <CoreValues values={brandValues} />
+      <CompetitiveAdvantages items={brandAdvantages} />
 
       {/* Services Overview */}
       {services.length > 0 && (
@@ -124,18 +116,21 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Why Choose Us */}
-      <TrustBadges badges={trustBadges} title="Mengapa Memilih Kami" />
-
       {/* Blog Preview */}
       <Suspense fallback={<BlogPreviewSkeleton />}>
         <BlogPreviewSection />
       </Suspense>
 
       {/* Team Preview */}
-      <Suspense fallback={<TeamPreviewSkeleton />}>
-        <TeamPreviewSection />
-      </Suspense>
+      {brandTeam.length > 0 && (
+        <section className="py-16 bg-white">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <TeamSpotlight members={brandTeam} limit={5} />
+          </div>
+        </section>
+      )}
+
+      <BrandTestimonials testimonials={testimonials} />
 
       {/* Newsletter */}
       <section className="py-16 bg-white border-t border-gray-200">
@@ -169,16 +164,6 @@ async function getBlogPreview() {
     const res = await fetch(`${API_URL}/blog?pageSize=4`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     return asArray<BlogPost>((await res.json()).data).slice(0, 4);
-  } catch {
-    return [];
-  }
-}
-
-async function getTeamPreview() {
-  try {
-    const res = await fetch(`${API_URL}/team?pageSize=4`, { next: { revalidate: 3600 } });
-    if (!res.ok) return [];
-    return asArray<TeamMember>((await res.json()).data);
   } catch {
     return [];
   }
@@ -220,19 +205,6 @@ async function BlogPreviewSection() {
   );
 }
 
-async function TeamPreviewSection() {
-  const team = await getTeamPreview();
-  if (!team.length) return null;
-
-  return (
-    <section className="py-16 bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <TeamSpotlight members={team} limit={4} />
-      </div>
-    </section>
-  );
-}
-
 function BlogPreviewSkeleton() {
   return (
     <section className="py-16 bg-white" aria-hidden="true">
@@ -248,17 +220,3 @@ function BlogPreviewSkeleton() {
   );
 }
 
-function TeamPreviewSkeleton() {
-  return (
-    <section className="py-16 bg-gray-50" aria-hidden="true">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 h-12 max-w-sm rounded-lg bg-gray-200 animate-pulse" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="h-56 rounded-lg border border-gray-200 bg-gray-200 animate-pulse" />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}

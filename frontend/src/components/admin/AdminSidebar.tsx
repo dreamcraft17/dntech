@@ -7,6 +7,7 @@ import {
   BarChart3, Settings, UserCog, Image, HelpCircle, Star, LogOut, Menu, X, Building2,
   Mail, ClipboardList,
   Send,
+  Palette,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -22,6 +23,7 @@ const navItems = [
   { href: '/admin/newsletter', label: 'Newsletter', icon: Mail },
   { href: '/admin/email-logs', label: 'Email Log', icon: Send },
   { href: '/admin/quiz', label: 'Kuis', icon: ClipboardList },
+  { href: '/admin/branding', label: 'Branding', icon: Palette },
   { href: '/admin/team', label: 'Tim', icon: Users },
   { href: '/admin/testimonials', label: 'Testimoni', icon: Star },
   { href: '/admin/faqs', label: 'FAQ', icon: HelpCircle },

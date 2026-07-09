@@ -23,6 +23,7 @@ import caseStudiesRoutes from './routes/case-studies';
 import newsletterRoutes from './routes/newsletter';
 import quizRoutes from './routes/quiz';
 import adminRoutes from './routes/admin';
+import brandingRoutes from './routes/branding';
 import { errorHandler } from './utils/helpers';
 
 function buildAllowedOrigins(): string[] {
@@ -109,6 +110,7 @@ v1.use('/case-studies', caseStudiesRoutes);
 v1.use('/newsletter', newsletterRoutes);
 v1.use('/quiz', quizRoutes);
 v1.use('/admin', adminRoutes);
+v1.use('/branding', brandingRoutes);
 
 app.use('/api/v1', v1);
 
