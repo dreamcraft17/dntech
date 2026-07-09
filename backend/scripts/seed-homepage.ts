@@ -17,7 +17,7 @@ const DEFAULT_FAQ = [
   {
     question: 'Berapa harga development?',
     answer:
-      'Tergantung scope. MVP typical: Rp 150 juta – Rp 750 juta. Kami bahas detail di konsultasi gratis — tanpa tekanan.',
+      'Tergantung scope. Landing page / fitur sederhana bisa mulai Rp 25 juta; MVP lebih lengkap biasanya Rp 50–150 juta. Kami bahas detail di konsultasi gratis — tanpa tekanan.',
   },
   {
     question: 'Berapa lama timeline?',

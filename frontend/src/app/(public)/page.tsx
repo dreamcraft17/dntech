@@ -2,15 +2,13 @@ import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { asArray } from '@/lib/api';
 import { getPublicSettings } from '@/lib/settings';
 import { resolveHomeContent, DEFAULT_FAQ } from '@/lib/homepage-content';
-import type { Service, Faq, TeamMember, Career } from '@/types';
+import type { Service, Faq } from '@/types';
 import type { Metadata } from 'next';
 import { HomeHero } from '@/components/homepage/HomeHero';
 import { HomeServices } from '@/components/homepage/HomeServices';
 import { HomeProcess } from '@/components/homepage/HomeProcess';
 import { HomeAdvantages } from '@/components/homepage/HomeAdvantages';
-import { HomeTechStack } from '@/components/homepage/HomeTechStack';
 import { HomePortfolio } from '@/components/homepage/HomePortfolio';
-import { HomeTeam } from '@/components/homepage/HomeTeam';
 import { HomeTestimonials } from '@/components/homepage/HomeTestimonials';
 import { HomeFaq } from '@/components/homepage/HomeFaq';
 import { HomePricing } from '@/components/homepage/HomePricing';
@@ -53,12 +51,10 @@ export default async function HomePage() {
   const settings = await getPublicSettings();
   const content = resolveHomeContent(settings);
 
-  const [services, caseStudies, faqs, team, careers, testimonials] = await Promise.all([
+  const [services, caseStudies, faqs, testimonials] = await Promise.all([
     fetchJson<Service>('/services?pageSize=6'),
     fetchJson<CaseStudyPreview>('/case-studies?pageSize=3'),
     fetchJson<Faq>('/faq'),
-    fetchJson<TeamMember>('/team'),
-    fetchJson<Career>('/careers'),
     fetchJson<{ id: string; quote: string; author: string; title?: string; company?: string }>(
       '/branding/testimonials'
     ),
@@ -79,14 +75,7 @@ export default async function HomePage() {
       <HomeServices services={services} defaults={content.defaultServices} />
       <HomeProcess steps={content.processSteps} />
       <HomeAdvantages advantages={content.advantages} />
-      <HomeTechStack categories={content.techStack} />
       <HomePortfolio projects={caseStudies} comingSoonMessage={content.portfolioMessage} />
-      <HomeTeam
-        members={team}
-        careers={careers}
-        hiringRoles={content.hiringRoles}
-        hiringEmail={content.hiringEmail}
-      />
       <HomeTestimonials
         testimonials={testimonials}
         comingSoonMessage={content.testimonialsMessage}

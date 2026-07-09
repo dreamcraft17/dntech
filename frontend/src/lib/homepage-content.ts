@@ -166,18 +166,18 @@ export const DEFAULT_TECH_STACK: HomeTechCategory[] = [
 export const DEFAULT_PRICING: HomePricingPlan[] = [
   {
     name: 'Custom Project',
-    price: 'Quote sesuai scope',
-    timeline: '3–6 bulan (typical MVP)',
+    price: 'Mulai Rp 25 juta',
+    timeline: '1–4 bulan (sesuai scope)',
     included: ['Design', 'Development', 'Testing', '30 hari support pasca-launch'],
   },
   {
     name: 'Hourly Consulting',
-    price: 'Mulai Rp 500.000/jam',
+    price: 'Mulai Rp 150.000/jam',
     included: ['Strategy & arsitektur', 'Feasibility review', 'Quick technical tasks'],
   },
   {
     name: 'Maintenance Package',
-    price: 'Mulai Rp 5 juta/bulan',
+    price: 'Mulai Rp 2 juta/bulan',
     included: ['Update bulanan', 'Bug fixes', 'Monitoring dasar'],
   },
 ];
@@ -186,7 +186,7 @@ export const DEFAULT_FAQ: { question: string; answer: string }[] = [
   {
     question: 'Berapa harga development?',
     answer:
-      'Tergantung scope. MVP typical: Rp 150 juta – Rp 750 juta. Kami bahas detail di konsultasi gratis — tanpa tekanan.',
+      'Tergantung scope. Landing page / fitur sederhana bisa mulai Rp 25 juta; MVP lebih lengkap biasanya Rp 50–150 juta. Kami bahas detail di konsultasi gratis — tanpa tekanan.',
   },
   {
     question: 'Berapa lama timeline?',
