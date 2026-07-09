@@ -15,6 +15,7 @@ export interface PublicSettings {
   trustBadges?: { icon?: string; label: string; description?: string }[];
   clientLogos?: { name: string; initial?: string }[];
   homeStats?: { icon?: string; value: string; label: string }[];
+  homeContent?: Record<string, unknown>;
   resources?: { title: string; description?: string; type?: string; downloadUrl?: string }[];
   calendlyUrl?: string;
   leadMagnetUrl?: string;

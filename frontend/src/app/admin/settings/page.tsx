@@ -48,6 +48,7 @@ export default function AdminSettingsPage() {
         trustBadges: JSON.stringify(data.trustBadges || [], null, 2),
         clientLogos: JSON.stringify(data.clientLogos || [], null, 2),
         homeStats: JSON.stringify(data.homeStats || [], null, 2),
+        homeContent: JSON.stringify(data.homeContent || {}, null, 2),
         resources: JSON.stringify(data.resources || [], null, 2),
         aboutContent: JSON.stringify(data.aboutContent || {}, null, 2),
         termsContent: String(data.termsContent || ''),
@@ -64,6 +65,7 @@ export default function AdminSettingsPage() {
       const trustBadges = parseJsonField(settings.trustBadges || '[]', 'Lencana Kepercayaan', []);
       const clientLogos = parseJsonField(settings.clientLogos || '[]', 'Logo Klien', []);
       const homeStats = parseJsonField(settings.homeStats || '[]', 'Statistik Beranda', []);
+      const homeContent = parseJsonField(settings.homeContent || '{}', 'Konten Beranda (PRD)', {});
       const resources = parseJsonField(settings.resources || '[]', 'Sumber Daya', []);
       const aboutContent = parseJsonField(settings.aboutContent || '{}', 'Konten About', {});
 
@@ -85,6 +87,7 @@ export default function AdminSettingsPage() {
           trustBadges,
           clientLogos,
           homeStats,
+          homeContent,
           resources,
           aboutContent,
           termsContent: settings.termsContent,
@@ -143,6 +146,17 @@ export default function AdminSettingsPage() {
         <Card title="Beranda">
           <div className="space-y-4">
             <Textarea
+              label="Konten Beranda — PRD Indonesia (JSON)"
+              rows={12}
+              value={settings.homeContent}
+              onChange={(e) => setSettings({ ...settings, homeContent: e.target.value })}
+              className="font-mono text-xs"
+              placeholder={'{\n  "heroTitle": "...",\n  "processSteps": [],\n  "advantages": [],\n  "techStack": [],\n  "pricing": []\n}'}
+            />
+            <p className="text-xs text-gray-500">
+              Override section homepage per PRD Indonesia Edition. Kosongkan field untuk pakai default di kode.
+            </p>
+            <Textarea
               label="Statistik Beranda (JSON)"
               rows={6}
               value={settings.homeStats}
@@ -150,7 +164,7 @@ export default function AdminSettingsPage() {
               className="font-mono text-xs"
               placeholder={'[\n  { "icon": "briefcase", "value": "10+", "label": "Proyek Selesai" }\n]'}
             />
-            <p className="text-xs text-gray-500">Icon: briefcase, users, award, star</p>
+            <p className="text-xs text-gray-500">Icon: briefcase, users, award, star (legacy — tidak dipakai homepage baru)</p>
           </div>
         </Card>
 

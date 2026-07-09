@@ -38,6 +38,7 @@ router.get(
       trustBadges: settings.trustBadges,
       clientLogos: settings.clientLogos,
       homeStats: settings.homeStats,
+      homeContent: settings.homeContent,
       resources: settings.resources,
       heroDescription: settings.heroDescription,
       businessHours: settings.businessHours,

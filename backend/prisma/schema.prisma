@@ -411,6 +411,7 @@ model SiteSettings {
   trustBadges           Json?    @map("trust_badges")
   clientLogos           Json?    @map("client_logos")
   homeStats             Json?    @map("home_stats")
+  homeContent           Json?    @map("home_content")
   resources             Json?    @map("resources")
   heroDescription       String?  @map("hero_description")
   businessHours         String?  @map("business_hours")

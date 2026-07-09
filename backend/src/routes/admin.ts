@@ -607,6 +607,7 @@ router.patch('/settings', requireRole('SuperAdmin', 'ContentManager'), asyncHand
     trustBadges: z.array(z.object({ icon: z.string().optional(), label: z.string(), description: z.string().optional() })).optional(),
     clientLogos: z.array(z.object({ name: z.string(), initial: z.string().optional() })).optional(),
     homeStats: z.array(z.object({ icon: z.string().optional(), value: z.string(), label: z.string() })).optional(),
+    homeContent: z.record(z.unknown()).optional(),
     resources: z.array(z.object({
       title: z.string(),
       description: z.string().optional(),
@@ -624,6 +625,7 @@ router.patch('/settings', requireRole('SuperAdmin', 'ContentManager'), asyncHand
   const data = {
     ...parsed,
     aboutContent: parsed.aboutContent as object | undefined,
+    homeContent: parsed.homeContent as object | undefined,
     socialLinks: parsed.socialLinks as object | undefined,
   };
 
