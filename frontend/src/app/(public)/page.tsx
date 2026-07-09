@@ -70,16 +70,21 @@ export default async function HomePage() {
               </p>
             )}
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/contact">
-                <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-100">
-                  Mulai Konsultasi Gratis <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/portfolio">
-                <Button size="lg" variant="secondary" className="border-white text-white hover:bg-blue-800 hover:text-white">
-                  Lihat Portfolio
-                </Button>
-              </Link>
+              <Button
+                href="/contact"
+                size="lg"
+                className="bg-white text-blue-900 hover:bg-gray-100"
+              >
+                Konsultasi Gratis <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button
+                href="/services"
+                size="lg"
+                variant="secondary"
+                className="border-white text-white hover:bg-blue-800 hover:text-white"
+              >
+                Lihat Layanan
+              </Button>
             </div>
           </div>
         </div>
@@ -132,9 +137,9 @@ export default async function HomePage() {
               ))}
             </div>
             <div className="text-center mt-10">
-              <Link href="/services">
-                <Button variant="outline">Lihat Semua Layanan</Button>
-              </Link>
+              <Button href="/services" variant="outline">
+                Lihat Semua Layanan
+              </Button>
             </div>
           </div>
         </section>
@@ -170,11 +175,9 @@ export default async function HomePage() {
             Ceritakan kebutuhan Anda — tim kami akan merespons dalam 24 jam.
           </p>
           <div className="mt-8">
-            <Link href="/contact">
-              <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-100">
-                Mulai Konsultasi Gratis
-              </Button>
-            </Link>
+            <Button href="/contact" size="lg" className="bg-white text-blue-900 hover:bg-gray-100">
+              Konsultasi Gratis
+            </Button>
           </div>
         </div>
       </section>

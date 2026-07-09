@@ -181,9 +181,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               <div className="sticky top-24 rounded-lg border border-gray-200 bg-white p-6">
                 <h3 className="font-semibold text-gray-900 mb-4">Mulai diskusi proyek Anda</h3>
                 <p className="text-sm text-gray-600 mb-6">Konsultasi gratis — respons dalam 24 jam.</p>
-                <Link href={`/contact?service=${encodeURIComponent(service.slug)}`}>
-                  <Button className="w-full">Konsultasi Gratis</Button>
-                </Link>
+                <Button href={`/contact?service=${encodeURIComponent(service.slug)}`} className="w-full">
+                  Konsultasi Gratis
+                </Button>
               </div>
 
               {service.relatedServices && service.relatedServices.length > 0 && (

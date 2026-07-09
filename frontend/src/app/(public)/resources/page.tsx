@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Download, FileText, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -38,17 +37,25 @@ export default async function ResourcesPage() {
                   <p className="mt-2 text-sm text-gray-600 flex-1">{resource.description}</p>
                 )}
                 {resource.downloadUrl ? (
-                  <a href={resource.downloadUrl} target="_blank" rel="noopener noreferrer" className="mt-4">
-                    <Button variant="outline" size="sm" className="w-full">
-                      <Download className="h-4 w-4" /> Unduh
-                    </Button>
-                  </a>
+                  <Button
+                    href={resource.downloadUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="outline"
+                    size="sm"
+                    className="mt-4 w-full"
+                  >
+                    <Download className="h-4 w-4" /> Unduh
+                  </Button>
                 ) : (
-                  <Link href="/contact" className="mt-4">
-                    <Button variant="outline" size="sm" className="w-full">
-                      Minta Akses <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
+                  <Button
+                    href="/contact"
+                    variant="outline"
+                    size="sm"
+                    className="mt-4 w-full"
+                  >
+                    Minta Akses <ArrowRight className="h-4 w-4" />
+                  </Button>
                 )}
               </Card>
             ))}
@@ -56,9 +63,9 @@ export default async function ResourcesPage() {
         ) : (
           <div className="text-center py-12 mb-16 rounded-xl border border-dashed border-gray-200 bg-gray-50">
             <p className="text-gray-600">Belum ada sumber daya tersedia. Hubungi kami untuk informasi lebih lanjut.</p>
-            <Link href="/contact" className="inline-block mt-4">
-              <Button variant="outline">Hubungi Kami</Button>
-            </Link>
+            <Button href="/contact" variant="outline" className="mt-4">
+              Hubungi Kami
+            </Button>
           </div>
         )}
 

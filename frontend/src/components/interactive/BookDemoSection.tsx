@@ -1,5 +1,4 @@
 import { CalendlyEmbed } from '@/components/interactive/CalendlyEmbed';
-import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Calendar, ArrowRight } from 'lucide-react';
 
@@ -26,11 +25,9 @@ export function BookDemoSection({ calendlyUrl }: BookDemoSectionProps) {
         ) : (
           <div className="text-center p-8 rounded-xl bg-white border border-gray-200">
             <p className="text-gray-600 mb-6">Pilih waktu yang sesuai, atau kirim pesan kepada kami.</p>
-            <Link href="/contact">
-              <Button size="lg">
-                Minta Demo <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+            <Button href="/contact" size="lg">
+              Minta Demo <ArrowRight className="h-4 w-4" />
+            </Button>
           </div>
         )}
       </div>

@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import { useExitIntent } from '@/hooks/useExitIntent';
 import { Modal, ModalActions } from '@/components/ui/Modal';
@@ -35,9 +34,9 @@ export function ExitIntentModal() {
         <Button variant="ghost" onClick={dismiss}>
           Tidak, terima kasih
         </Button>
-        <Link href="/contact" onClick={dismiss} ref={primaryButtonRef}>
-          <Button>Hubungi Kami</Button>
-        </Link>
+        <Button href="/contact" onClick={dismiss} ref={primaryButtonRef}>
+          Hubungi Kami
+        </Button>
       </ModalActions>
     </Modal>
   );

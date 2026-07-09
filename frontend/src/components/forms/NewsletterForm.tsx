@@ -41,7 +41,9 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
           placeholder="email@perusahaan.com"
           className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-900 focus:outline-none" />
-        <Button type="submit" loading={loading} size="sm">Langganan</Button>
+        <Button type="submit" loading={loading} size="sm" className="shrink-0 whitespace-nowrap">
+          Langganan
+        </Button>
       </form>
     );
   }

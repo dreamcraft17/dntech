@@ -27,10 +27,17 @@ export function Modal({
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', handleEscape);
+
     return () => {
       document.body.style.overflow = prev;
+      document.removeEventListener('keydown', handleEscape);
     };
-  }, [open]);
+  }, [open, onClose]);
 
   if (!open) return null;
 
@@ -46,11 +53,12 @@ export function Modal({
           role="dialog"
           aria-modal="true"
           aria-labelledby={title ? titleId : undefined}
+          onClick={(e) => e.stopPropagation()}
         >
           {(title || showClose) && (
             <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
               {title && (
-                <h2 id={titleId} className="text-lg font-semibold text-gray-900">
+                <h2 id={titleId} className="min-w-0 flex-1 pr-2 text-lg font-semibold text-gray-900">
                   {title}
                 </h2>
               )}
@@ -58,7 +66,7 @@ export function Modal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="ml-auto rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                  className="shrink-0 rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                   aria-label="Tutup modal"
                 >
                   <X className="h-5 w-5" />

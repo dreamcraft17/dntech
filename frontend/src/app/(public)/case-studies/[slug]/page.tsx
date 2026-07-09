@@ -170,12 +170,12 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
           )}
 
           <div className="mt-12 flex flex-wrap gap-4">
-            <Link href="/contact">
-              <Button size="lg">Jadwalkan Demo <ArrowRight className="h-4 w-4" /></Button>
-            </Link>
-            <Link href="/case-studies">
-              <Button size="lg" variant="outline">Studi Kasus Lainnya</Button>
-            </Link>
+            <Button href="/contact" size="lg">
+              Jadwalkan Demo <ArrowRight className="h-4 w-4" />
+            </Button>
+            <Button href="/case-studies" size="lg" variant="outline">
+              Studi Kasus Lainnya
+            </Button>
           </div>
         </div>
       </div>

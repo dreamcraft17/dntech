@@ -85,12 +85,13 @@ export function ROICalculator() {
           <p className="mt-3 text-xs text-gray-500">
             * Ini perkiraan kasar. Hubungi kami untuk proposal detail sesuai kebutuhan Anda.
           </p>
-          <a
+          <Button
             href={`/contact?budget=${result.min}-${result.max}&team=${teamSize}&months=${months}`}
-            className="mt-4 inline-block"
+            size="sm"
+            className="mt-4"
           >
-            <Button size="sm">Minta penawaran detail →</Button>
-          </a>
+            Minta penawaran detail →
+          </Button>
         </Alert>
       )}
     </Card>

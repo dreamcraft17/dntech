@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ThankYouRedirect } from '@/components/interactive/ThankYouRedirect';
@@ -25,12 +24,12 @@ export default function ThankYouPage() {
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4 justify-center">
-            <Link href="/blog">
-              <Button variant="outline">Baca Artikel Terbaru <ArrowRight className="h-4 w-4" /></Button>
-            </Link>
-            <Link href="/">
-              <Button variant="ghost">Kembali ke Beranda</Button>
-            </Link>
+            <Button href="/blog" variant="outline">
+              Baca Artikel Terbaru <ArrowRight className="h-4 w-4" />
+            </Button>
+            <Button href="/" variant="ghost">
+              Kembali ke Beranda
+            </Button>
           </div>
         </div>
       </div>

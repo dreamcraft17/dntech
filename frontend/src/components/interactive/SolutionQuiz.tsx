@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -116,12 +115,15 @@ export function SolutionQuiz() {
           <p className="mt-2 text-lg text-blue-900 font-semibold">{result.recommendation.service}</p>
           <p className="mt-2 text-gray-600">{result.recommendation.description}</p>
           <div className="mt-8 flex flex-wrap gap-4 justify-center">
-            <Link href={`/contact?service=${encodeURIComponent(result.recommendation.service)}`}>
-              <Button size="lg">Jadwalkan Konsultasi Gratis <ArrowRight className="h-4 w-4" /></Button>
-            </Link>
-            <Link href="/case-studies">
-              <Button size="lg" variant="outline">Lihat Studi Kasus</Button>
-            </Link>
+            <Button
+              href={`/contact?service=${encodeURIComponent(result.recommendation.service)}`}
+              size="lg"
+            >
+              Jadwalkan Konsultasi Gratis <ArrowRight className="h-4 w-4" />
+            </Button>
+            <Button href="/case-studies" size="lg" variant="outline">
+              Lihat Studi Kasus
+            </Button>
           </div>
         </div>
 

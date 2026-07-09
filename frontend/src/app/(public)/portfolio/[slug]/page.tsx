@@ -79,9 +79,7 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
         </div>
 
         <div className="mt-10">
-          <Link href="/contact">
-            <Button>Mulai Proyek Anda</Button>
-          </Link>
+          <Button href="/contact">Mulai Proyek Anda</Button>
         </div>
       </div>
     </div>
