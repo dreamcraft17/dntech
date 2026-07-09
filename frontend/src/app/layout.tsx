@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
+    icon: '/rlogo2.png',
+    apple: '/rlogo2.png',
   },
 };
 

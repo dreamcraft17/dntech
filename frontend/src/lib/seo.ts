@@ -84,7 +84,7 @@ export function buildMetadata({
   noIndex,
 }: BuildMetadataOptions): Metadata {
   const url = `${SITE_URL}${path}`;
-  const ogImage = image || `${SITE_URL}/logo.png`;
+  const ogImage = image || `${SITE_URL}/rlogo2.png`;
   const allKeywords = [...new Set([...keywords, ...DEFAULT_KEYWORDS])];
   const metaTitle = title.length > 60 ? `${title.slice(0, 57)}...` : title;
   const metaDesc = description.length > 160 ? `${description.slice(0, 157)}...` : description;

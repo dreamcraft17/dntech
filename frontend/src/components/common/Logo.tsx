@@ -24,7 +24,7 @@ export function Logo({ size = 'md', className, href = '/', priority = false }: L
 
   const image = (
     <Image
-      src="/logo.png"
+      src="/rlogo2.png"
       alt="DN Tech — Powering Your System"
       width={dim}
       height={dim}

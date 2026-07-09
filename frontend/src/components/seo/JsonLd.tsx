@@ -24,7 +24,7 @@ export function buildOrganizationSchema(settings: PublicSettings = {}) {
     '@type': 'Organization',
     name: settings.companyName || 'DN Tech',
     url: SITE_URL,
-    logo: `${SITE_URL}/logo.png`,
+    logo: `${SITE_URL}/rlogo2.png`,
     description: settings.heroDescription || settings.tagline || undefined,
     ...(settings.companyAddress ? {
       address: {
@@ -130,9 +130,9 @@ export function articleSchema(post: {
     publisher: {
       '@type': 'Organization',
       name: companyName,
-      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/rlogo2.png` },
     },
-    image: post.image || `${SITE_URL}/logo.png`,
+    image: post.image || `${SITE_URL}/rlogo2.png`,
     articleSection: post.category,
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
   };
