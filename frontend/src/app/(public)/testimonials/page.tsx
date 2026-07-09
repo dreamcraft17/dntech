@@ -51,7 +51,7 @@ export default async function TestimonialsPage() {
         <div className="mt-16 text-center p-8 rounded-2xl bg-blue-900">
           <h2 className="text-2xl font-bold text-white">Bergabung dengan klien kami yang puas</h2>
           <p className="mt-2 text-blue-100">Mulai perjalanan transformasi digital Anda hari ini.</p>
-          <Button href="/contact" size="lg" className="mt-6 bg-white text-blue-700 hover:bg-blue-50">
+          <Button href="/contact" size="lg" variant="inverse" className="mt-6">
             Minta Demo Gratis
           </Button>
         </div>

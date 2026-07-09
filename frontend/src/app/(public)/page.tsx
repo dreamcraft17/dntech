@@ -70,19 +70,10 @@ export default async function HomePage() {
               </p>
             )}
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button
-                href="/contact"
-                size="lg"
-                className="bg-white text-blue-900 hover:bg-gray-100"
-              >
+              <Button href="/contact" size="lg" variant="inverse">
                 Konsultasi Gratis <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button
-                href="/services"
-                size="lg"
-                variant="secondary"
-                className="border-white text-white hover:bg-blue-800 hover:text-white"
-              >
+              <Button href="/services" size="lg" variant="outline-on-dark">
                 Lihat Layanan
               </Button>
             </div>
@@ -175,7 +166,7 @@ export default async function HomePage() {
             Ceritakan kebutuhan Anda — tim kami akan merespons dalam 24 jam.
           </p>
           <div className="mt-8">
-            <Button href="/contact" size="lg" className="bg-white text-blue-900 hover:bg-gray-100">
+            <Button href="/contact" size="lg" variant="inverse">
               Konsultasi Gratis
             </Button>
           </div>

@@ -79,7 +79,7 @@ export default async function CaseStudiesPage() {
           <div className="mt-16 text-center p-8 rounded-lg bg-blue-900">
             <h2 className="text-2xl font-bold text-white">Punya proyek yang ingin dikerjakan?</h2>
             <p className="mt-2 text-blue-100">Mari diskusikan kebutuhan teknologi Anda.</p>
-            <Button href="/contact" size="lg" className="mt-6 bg-white text-blue-900 hover:bg-gray-100">
+            <Button href="/contact" size="lg" variant="inverse" className="mt-6">
               Konsultasi Gratis
             </Button>
           </div>

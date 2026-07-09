@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost' | 'inverse' | 'outline-on-dark';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface BaseButtonProps {
@@ -30,6 +30,9 @@ const variants: Record<ButtonVariant, string> = {
   outline: 'border-2 border-blue-900 text-blue-900 hover:bg-blue-50 focus:ring-blue-900 bg-white',
   danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-600',
   ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-400',
+  inverse: 'bg-white text-blue-900 hover:bg-gray-100 focus:ring-white',
+  'outline-on-dark':
+    'border-2 border-white bg-transparent text-white hover:bg-white/10 focus:ring-white',
 };
 
 const sizes: Record<ButtonSize, string> = {
