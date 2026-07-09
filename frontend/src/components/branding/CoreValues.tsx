@@ -1,13 +1,29 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { CheckCircle } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
-import type { CoreValue } from '@/lib/branding';
+import { getApiUrl } from '@/lib/api';
 
-interface CoreValuesProps {
-  values: CoreValue[];
+interface CoreValue {
+  id: string;
+  name: string;
+  description: string;
+  iconName: string;
+  order: number;
 }
 
-export function CoreValues({ values }: CoreValuesProps) {
+export function CoreValues() {
+  const [values, setValues] = useState<CoreValue[]>([]);
+
+  useEffect(() => {
+    fetch(getApiUrl('/branding/values'))
+      .then((res) => res.json())
+      .then((json) => setValues(Array.isArray(json.data) ? json.data : []))
+      .catch(() => setValues([]));
+  }, []);
+
   if (!values.length) return null;
 
   return (

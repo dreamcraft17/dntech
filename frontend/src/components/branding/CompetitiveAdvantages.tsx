@@ -1,12 +1,28 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { Shield } from 'lucide-react';
-import type { CompetitiveAdvantage } from '@/lib/branding';
+import { getApiUrl } from '@/lib/api';
 
-interface CompetitiveAdvantagesProps {
-  items: CompetitiveAdvantage[];
+interface CompetitiveAdvantage {
+  id: string;
+  title: string;
+  description: string;
+  iconName: string;
+  order: number;
 }
 
-export function CompetitiveAdvantages({ items }: CompetitiveAdvantagesProps) {
+export function CompetitiveAdvantages() {
+  const [items, setItems] = useState<CompetitiveAdvantage[]>([]);
+
+  useEffect(() => {
+    fetch(getApiUrl('/branding/advantages'))
+      .then((res) => res.json())
+      .then((json) => setItems(Array.isArray(json.data) ? json.data : []))
+      .catch(() => setItems([]));
+  }, []);
+
   if (!items.length) return null;
 
   return (

@@ -9,12 +9,11 @@ import { Input, Textarea } from '@/components/ui/Input';
 import { Toast } from '@/components/ui/Toast';
 
 type BrandingForm = {
+  id?: string;
   tagline: string;
   story: string;
   mission: string;
-  values: string;
-  advantages: string;
-  stats: string;
+  imageUrl: string;
 };
 
 export default function BrandingAdminPage() {
@@ -22,9 +21,7 @@ export default function BrandingAdminPage() {
     tagline: '',
     story: '',
     mission: '',
-    values: '[]',
-    advantages: '[]',
-    stats: '[]',
+    imageUrl: '',
   });
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ open: boolean; message: string; variant: 'success' | 'error' }>({
@@ -34,16 +31,15 @@ export default function BrandingAdminPage() {
   });
 
   useEffect(() => {
-    apiFetch<Record<string, unknown>>('/admin/settings')
-      .then((settings) => {
-        const about = (settings.aboutContent || {}) as Record<string, unknown>;
+    apiFetch<Record<string, unknown> | null>('/admin/branding/content')
+      .then((content) => {
+        if (!content) return;
         setForm({
-          tagline: String(settings.tagline || ''),
-          story: String(about.story || ''),
-          mission: String(about.mission || ''),
-          values: JSON.stringify(about.values || [], null, 2),
-          advantages: JSON.stringify(settings.trustBadges || [], null, 2),
-          stats: JSON.stringify(settings.homeStats || [], null, 2),
+          id: String(content.id || ''),
+          tagline: String(content.tagline || ''),
+          story: String(content.story || ''),
+          mission: String(content.mission || ''),
+          imageUrl: String(content.imageUrl || ''),
         });
       })
       .catch(() => {
@@ -54,22 +50,13 @@ export default function BrandingAdminPage() {
   async function saveBranding() {
     setLoading(true);
     try {
-      const values = JSON.parse(form.values || '[]');
-      const trustBadges = JSON.parse(form.advantages || '[]');
-      const homeStats = JSON.parse(form.stats || '[]');
-      const aboutContent = {
-        story: form.story,
-        mission: form.mission,
-        values,
-      };
-
-      await apiFetch('/admin/settings', {
-        method: 'PATCH',
+      await apiFetch('/admin/branding/content', {
+        method: 'PUT',
         body: JSON.stringify({
           tagline: form.tagline,
-          aboutContent,
-          trustBadges,
-          homeStats,
+        story: form.story,
+        mission: form.mission,
+          imageUrl: form.imageUrl || undefined,
         }),
       });
 
@@ -124,45 +111,28 @@ export default function BrandingAdminPage() {
             value={form.mission}
             onChange={(e) => setForm((prev) => ({ ...prev, mission: e.target.value }))}
           />
+          <Input
+            label="Image URL (opsional)"
+            value={form.imageUrl}
+            onChange={(e) => setForm((prev) => ({ ...prev, imageUrl: e.target.value }))}
+            placeholder="https://..."
+          />
         </div>
       </Card>
 
-      <Card title="Core Values (JSON)">
-        <Textarea
-          rows={10}
-          className="font-mono text-xs"
-          value={form.values}
-          onChange={(e) => setForm((prev) => ({ ...prev, values: e.target.value }))}
-          placeholder={'[\n  { "title": "Pragmatik", "description": "Solusi yang kerja", "iconName": "Wrench" }\n]'}
-        />
-      </Card>
-
-      <Card title="Competitive Advantages / Why Choose Us (JSON)">
-        <Textarea
-          rows={8}
-          className="font-mono text-xs"
-          value={form.advantages}
-          onChange={(e) => setForm((prev) => ({ ...prev, advantages: e.target.value }))}
-          placeholder={'[\n  { "icon": "shield", "label": "Local + expert", "description": "Tim Indonesia paham bisnis lokal" }\n]'}
-        />
-      </Card>
-
-      <Card title="Stats/Metrics (JSON)">
-        <Textarea
-          rows={8}
-          className="font-mono text-xs"
-          value={form.stats}
-          onChange={(e) => setForm((prev) => ({ ...prev, stats: e.target.value }))}
-          placeholder={'[\n  { "icon": "briefcase", "value": "50+", "label": "Proyek Selesai" }\n]'}
-        />
-      </Card>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Button href="/admin/branding/values" variant="secondary">Kelola Values</Button>
+        <Button href="/admin/branding/advantages" variant="secondary">Kelola Advantages</Button>
+        <Button href="/admin/branding/stats" variant="secondary">Kelola Stats</Button>
+      </div>
 
       <div className="rounded-lg border border-gray-200 bg-white p-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-gray-600">
-          Team Spotlight dan Testimonials menggunakan data dari modul <Link href="/admin/team" className="text-blue-900 hover:underline">Tim</Link> dan{' '}
-          <Link href="/admin/testimonials" className="text-blue-900 hover:underline">Testimoni</Link>.
+          Team/testimonials ada endpoint branding khusus, dan juga tetap bisa dikelola dari{' '}
+          <Link href="/admin/team" className="text-blue-900 hover:underline">/admin/team</Link> serta{' '}
+          <Link href="/admin/testimonials" className="text-blue-900 hover:underline">/admin/testimonials</Link>.
         </p>
-        <Button onClick={saveBranding} loading={loading}>Simpan Branding</Button>
+        <Button onClick={saveBranding} loading={loading}>Simpan Brand Content</Button>
       </div>
     </div>
   );

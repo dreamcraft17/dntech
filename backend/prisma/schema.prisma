@@ -282,6 +282,58 @@ model Testimonial {
   @@map("testimonials")
 }
 
+model BrandContent {
+  id        String   @id @default(cuid())
+  tagline   String
+  story     String
+  mission   String
+  imageUrl  String?  @map("image_url")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([id])
+  @@map("brand_contents")
+}
+
+model CoreValue {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  iconName    String   @map("icon_name")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([order])
+  @@map("core_values")
+}
+
+model CompetitiveAdvantage {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  iconName    String   @map("icon_name")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([order])
+  @@map("competitive_advantages")
+}
+
+model Stat {
+  id        String   @id @default(cuid())
+  label     String
+  value     Int
+  iconName  String   @map("icon_name")
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([order])
+  @@map("stats")
+}
+
 model Faq {
   id           String   @id @default(uuid())
   question     String

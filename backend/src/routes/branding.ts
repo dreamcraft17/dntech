@@ -3,35 +3,17 @@ import prisma from '../config/database';
 import { asyncHandler, successResponse } from '../utils/helpers';
 import { cacheService } from '../services/CacheService';
 
-type AboutValue = {
-  title?: string;
-  description?: string;
-  iconName?: string;
-};
-
-type AboutContent = {
-  story?: string;
-  mission?: string;
-  values?: AboutValue[];
-};
-
 const router = Router();
 
 router.get(
   '/content',
   asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown>('branding:content');
+    const cached = cacheService.get<unknown>('branding:content:v2');
     if (cached) return successResponse(res, cached);
 
-    const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
-    const about = (settings?.aboutContent || {}) as AboutContent;
-    const content = {
-      tagline: settings?.tagline || 'Tentang DN Tech',
-      story: about.story || '',
-      mission: about.mission || '',
-    };
+    const content = await prisma.brandContent.findFirst({ orderBy: { updatedAt: 'desc' } });
 
-    cacheService.set('branding:content', content, 300);
+    cacheService.set('branding:content:v2', content, 300);
     successResponse(res, content);
   })
 );
@@ -39,24 +21,12 @@ router.get(
 router.get(
   '/values',
   asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown[]>('branding:values');
+    const cached = cacheService.get<unknown[]>('branding:values:v2');
     if (cached) return successResponse(res, cached);
 
-    const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
-    const about = (settings?.aboutContent || {}) as AboutContent;
-    const values = Array.isArray(about.values)
-      ? about.values
-          .filter((value) => value?.title && value?.description)
-          .map((value, index) => ({
-            id: `${index}-${value.title}`,
-            name: value.title,
-            description: value.description,
-            iconName: value.iconName || 'CheckCircle',
-            order: index,
-          }))
-      : [];
+    const values = await prisma.coreValue.findMany({ orderBy: { order: 'asc' } });
 
-    cacheService.set('branding:values', values, 300);
+    cacheService.set('branding:values:v2', values, 300);
     successResponse(res, values);
   })
 );
@@ -64,25 +34,12 @@ router.get(
 router.get(
   '/advantages',
   asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown[]>('branding:advantages');
+    const cached = cacheService.get<unknown[]>('branding:advantages:v2');
     if (cached) return successResponse(res, cached);
 
-    const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
-    const badges = Array.isArray(settings?.trustBadges)
-      ? settings?.trustBadges
-      : [];
+    const advantages = await prisma.competitiveAdvantage.findMany({ orderBy: { order: 'asc' } });
 
-    const advantages = badges
-      .filter((item: any) => item?.label)
-      .map((item: any, index: number) => ({
-        id: `${index}-${item.label}`,
-        title: String(item.label),
-        description: String(item.description || ''),
-        iconName: String(item.icon || 'Shield'),
-        order: index,
-      }));
-
-    cacheService.set('branding:advantages', advantages, 300);
+    cacheService.set('branding:advantages:v2', advantages, 300);
     successResponse(res, advantages);
   })
 );
@@ -90,7 +47,7 @@ router.get(
 router.get(
   '/team',
   asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown[]>('branding:team');
+    const cached = cacheService.get<unknown[]>('branding:team:v2');
     if (cached) return successResponse(res, cached);
 
     const team = await prisma.teamMember.findMany({
@@ -99,41 +56,65 @@ router.get(
       include: { photo: true },
     });
 
-    cacheService.set('branding:team', team, 300);
-    successResponse(res, team);
+    const mapped = team.map((member) => ({
+      id: member.id,
+      name: member.name,
+      role: member.role,
+      bio: member.bio || '',
+      photoUrl: member.photo?.url || null,
+      linkedinUrl: typeof member.socialLinks === 'object' && member.socialLinks && 'linkedin' in member.socialLinks
+        ? String((member.socialLinks as Record<string, unknown>).linkedin || '')
+        : null,
+      twitterUrl: typeof member.socialLinks === 'object' && member.socialLinks && 'twitter' in member.socialLinks
+        ? String((member.socialLinks as Record<string, unknown>).twitter || '')
+        : null,
+      order: member.displayOrder,
+      published: member.isActive,
+    }));
+
+    cacheService.set('branding:team:v2', mapped, 300);
+    successResponse(res, mapped);
   })
 );
 
 router.get(
   '/testimonials',
   asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown[]>('branding:testimonials');
+    const cached = cacheService.get<unknown[]>('branding:testimonials:v2');
     if (cached) return successResponse(res, cached);
 
     const testimonials = await prisma.testimonial.findMany({
       where: { isApproved: true },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: 'asc' },
       include: { photo: true },
       take: 6,
     });
 
-    cacheService.set('branding:testimonials', testimonials, 300);
-    successResponse(res, testimonials);
+    const mapped = testimonials.map((item, index) => ({
+      id: item.id,
+      quote: item.quote,
+      author: item.clientName,
+      title: item.title || item.position || '',
+      company: item.company,
+      logoUrl: item.photo?.url || null,
+      order: index,
+      published: item.isApproved,
+    }));
+
+    cacheService.set('branding:testimonials:v2', mapped, 300);
+    successResponse(res, mapped);
   })
 );
 
 router.get(
   '/stats',
   asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown[]>('branding:stats');
+    const cached = cacheService.get<unknown[]>('branding:stats:v2');
     if (cached) return successResponse(res, cached);
 
-    const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
-    const stats = Array.isArray(settings?.homeStats)
-      ? settings.homeStats
-      : [];
+    const stats = await prisma.stat.findMany({ orderBy: { order: 'asc' } });
 
-    cacheService.set('branding:stats', stats as unknown[], 300);
+    cacheService.set('branding:stats:v2', stats as unknown[], 300);
     successResponse(res, stats as unknown[]);
   })
 );

@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { TeamSpotlight } from '@/components/layout/TeamSpotlight';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { asArray } from '@/lib/api';
@@ -17,14 +16,7 @@ import { BrandStory } from '@/components/branding/BrandStory';
 import { CoreValues } from '@/components/branding/CoreValues';
 import { CompetitiveAdvantages } from '@/components/branding/CompetitiveAdvantages';
 import { BrandTestimonials } from '@/components/branding/BrandTestimonials';
-import {
-  getBrandContent,
-  getBrandStats,
-  getBrandTeam,
-  getBrandTestimonials,
-  getCompetitiveAdvantages,
-  getCoreValues,
-} from '@/lib/branding';
+import { TeamSpotlightSection } from '@/components/branding/TeamSpotlightSection';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.home.title,
@@ -46,15 +38,9 @@ async function getHomeServices() {
 }
 
 export default async function HomePage() {
-  const [services, settings, brandContent, brandValues, brandAdvantages, brandStats, brandTeam, testimonials] = await Promise.all([
+  const [services, settings] = await Promise.all([
     getHomeServices(),
     getPublicSettings(),
-    getBrandContent(),
-    getCoreValues(),
-    getCompetitiveAdvantages(),
-    getBrandStats(),
-    getBrandTeam(),
-    getBrandTestimonials(),
   ]);
   const tagline = settings.tagline || settings.companyName || 'DN Tech';
   const heroDescription = settings.heroDescription as string | undefined;
@@ -76,10 +62,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <BrandStats stats={brandStats} />
-      <BrandStory content={brandContent} />
-      <CoreValues values={brandValues} />
-      <CompetitiveAdvantages items={brandAdvantages} />
+      <BrandStats />
+      <BrandStory />
+      <CoreValues />
+      <CompetitiveAdvantages />
 
       {/* Services Overview */}
       {services.length > 0 && (
@@ -121,16 +107,8 @@ export default async function HomePage() {
         <BlogPreviewSection />
       </Suspense>
 
-      {/* Team Preview */}
-      {brandTeam.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <TeamSpotlight members={brandTeam} limit={5} />
-          </div>
-        </section>
-      )}
-
-      <BrandTestimonials testimonials={testimonials} />
+      <TeamSpotlightSection />
+      <BrandTestimonials />
 
       {/* Newsletter */}
       <section className="py-16 bg-white border-t border-gray-200">
