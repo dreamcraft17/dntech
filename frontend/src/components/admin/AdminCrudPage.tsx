@@ -44,13 +44,39 @@ export default function AdminCrudPage({
   }, [load]);
 
   function preparePayload(data: Record<string, unknown>) {
-    const payload = { ...data };
-    fields.filter((f) => f.type === 'json').forEach((f) => {
-      const val = payload[f.key];
-      if (typeof val === 'string') {
-        try { payload[f.key] = val ? JSON.parse(val) : {}; } catch { /* keep string */ }
+    const payload: Record<string, unknown> = {};
+
+    for (const f of fields) {
+      let val = data[f.key];
+
+      if (f.type === 'json') {
+        if (typeof val === 'string') {
+          try {
+            val = val ? JSON.parse(val) : {};
+          } catch {
+            /* keep string for server validation */
+          }
+        }
+      } else if (f.type === 'number') {
+        if (val === '' || val === null || val === undefined) {
+          val = undefined;
+        } else {
+          const num = Number(val);
+          val = Number.isNaN(num) ? undefined : num;
+        }
+      } else if (val === '') {
+        val = undefined;
       }
-    });
+
+      if (val !== undefined) {
+        payload[f.key] = val;
+      }
+    }
+
+    if (typeof data.isActive === 'boolean') {
+      payload.isActive = data.isActive;
+    }
+
     return payload;
   }
 
@@ -66,6 +92,9 @@ export default function AdminCrudPage({
       }
       setEditing(null);
       load();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Gagal menyimpan';
+      alert(message);
     } finally {
       setLoading(false);
     }

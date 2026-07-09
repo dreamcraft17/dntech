@@ -361,16 +361,27 @@ router.delete('/leads/:id', requireRole('SuperAdmin', 'ContentManager'), asyncHa
 }));
 
 // --- Team ---
+const optionalString = z.preprocess(
+  (v) => (v === null || v === '' ? undefined : v),
+  z.string().optional()
+);
+
 const teamSchema = z.object({
   name: z.string().min(1),
   role: z.string().min(1),
-  department: z.string().optional(),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
-  bio: z.string().optional(),
-  photoId: z.string().optional(),
-  socialLinks: z.record(z.string()).optional(),
-  displayOrder: z.number().optional(),
+  department: optionalString,
+  email: z.preprocess(
+    (v) => (v === null || v === '' ? undefined : v),
+    z.string().email().optional()
+  ),
+  phone: optionalString,
+  bio: optionalString,
+  photoId: z.preprocess((v) => (v === null ? undefined : v), z.string().optional()),
+  socialLinks: z.preprocess(
+    (v) => (v === null ? undefined : v),
+    z.record(z.string()).optional()
+  ),
+  displayOrder: z.coerce.number().optional(),
   isActive: z.boolean().optional(),
 });
 
