@@ -4,7 +4,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 
 **Terakhir diperbarui:** 9 Juli 2026  
 **Branch:** `main`  
-**Commit referensi terbaru:** hotfix button text + modal close (9 Jul 2026)  
+**Commit referensi terbaru:** `fb1a72b` — fix(ui): button text + modal close  
 **Commit sebelumnya:** `ecf9eb2` — IMPLEMENTATION-STATUS V2.1 · `352140f` — V2.1 design remediation  
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9)  
 **Status working tree:** ✅ Clean (sync dengan `origin/main`)
