@@ -1,4 +1,20 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const DEFAULT_API_URL = 'http://localhost:4000/api/v1';
+
+/** Production API lives on api.dntech.id — not dntech.id/api (404). */
+export function getApiBaseUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
+
+  if (
+    configured.includes('://dntech.id/') ||
+    configured.includes('://www.dntech.id/')
+  ) {
+    return 'https://api.dntech.id/api/v1';
+  }
+
+  return configured;
+}
+
+const API_URL = getApiBaseUrl();
 
 export interface ApiResponse<T> {
   success: boolean;
