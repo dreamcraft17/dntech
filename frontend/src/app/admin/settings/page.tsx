@@ -5,6 +5,7 @@ import { apiFetch } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
+import { Alert } from '@/components/ui/Alert';
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<Record<string, string>>({});
@@ -84,8 +85,12 @@ export default function AdminSettingsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Pengaturan Situs</h1>
-      {saved && <div className="mb-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm">Pengaturan berhasil disimpan!</div>}
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">Pengaturan Situs</h1>
+      {saved && (
+        <Alert variant="success" className="mb-4">
+          Pengaturan berhasil disimpan!
+        </Alert>
+      )}
 
       <div className="space-y-6 max-w-2xl">
         <Card title="Umum">
@@ -111,7 +116,7 @@ export default function AdminSettingsPage() {
               className="font-mono text-xs"
               placeholder={'[\n  { "icon": "briefcase", "value": "10+", "label": "Proyek Selesai" }\n]'}
             />
-            <p className="text-xs text-slate-500">Icon: briefcase, users, award, star</p>
+            <p className="text-xs text-gray-500">Icon: briefcase, users, award, star</p>
           </div>
         </Card>
 

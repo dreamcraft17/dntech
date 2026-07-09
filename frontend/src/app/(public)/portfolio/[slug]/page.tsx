@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import { FolderOpen } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
@@ -30,18 +32,35 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
   return (
     <div className="py-16">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <nav className="text-sm text-slate-500 mb-8">
-          <Link href="/portfolio" className="hover:text-blue-600">Portofolio</Link>
+        <nav className="mb-8 text-sm text-gray-500">
+          <Link href="/portfolio" className="text-blue-900 hover:underline">
+            Portofolio
+          </Link>
           <span className="mx-2">/</span>
-          <span className="text-slate-900">{item.title}</span>
+          <span className="text-gray-900">{item.title}</span>
         </nav>
 
-        <div className="h-64 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 mb-8" />
+        {item.featuredImage?.url ? (
+          <div className="relative mb-8 h-64 overflow-hidden rounded-lg">
+            <Image
+              src={item.featuredImage.url}
+              alt={item.featuredImage.altText || item.title}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 896px) 100vw, 896px"
+            />
+          </div>
+        ) : (
+          <div className="mb-8 flex h-64 items-center justify-center rounded-lg bg-blue-900/10">
+            <FolderOpen className="h-16 w-16 text-blue-900" />
+          </div>
+        )}
 
-        <h1 className="text-4xl font-bold text-slate-900">{item.title}</h1>
-        <p className="mt-2 text-lg text-slate-500">Klien: {item.clientName}</p>
+        <h1 className="text-4xl font-bold text-gray-900">{item.title}</h1>
+        <p className="mt-2 text-lg text-gray-500">Klien: {item.clientName}</p>
 
-        <div className="mt-8 prose max-w-none">
+        <div className="prose mt-8 max-w-none">
           <h2>Ringkasan Proyek</h2>
           <p>{item.description}</p>
 
@@ -53,7 +72,7 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
           )}
 
           {item.testimonial && (
-            <blockquote className="border-l-4 border-blue-600 pl-4 italic text-slate-600 my-6">
+            <blockquote className="my-6 border-l-4 border-blue-900 pl-4 italic text-gray-600">
               &ldquo;{item.testimonial}&rdquo;
             </blockquote>
           )}

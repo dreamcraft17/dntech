@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, CheckCircle, Quote } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
+import { Badge } from '@/components/ui/Badge';
 import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
 import type { Metadata } from 'next';
@@ -63,17 +65,17 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
 
       <div className="py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <nav className="text-sm text-slate-500 mb-8">
-            <Link href="/" className="hover:text-blue-600">Beranda</Link>
+          <nav className="mb-8 text-sm text-gray-500">
+            <Link href="/" className="text-blue-900 hover:underline">Beranda</Link>
             <span className="mx-2">/</span>
-            <Link href="/case-studies" className="hover:text-blue-600">Studi Kasus</Link>
+            <Link href="/case-studies" className="text-blue-900 hover:underline">Studi Kasus</Link>
             <span className="mx-2">/</span>
-            <span className="text-slate-900">{item.title}</span>
+            <span className="text-gray-900">{item.title}</span>
           </nav>
 
-          {/* Hero */}
-          <div className="relative h-56 sm:h-72 rounded-2xl overflow-hidden mb-8">
-            {item.heroImage ? (
+          {/* Hero — solid colors only (V2.1 mandate) */}
+          {item.heroImage ? (
+            <div className="relative mb-8 h-56 overflow-hidden rounded-lg sm:h-72">
               <Image
                 src={item.heroImage}
                 alt={item.heroImageAlt || item.title}
@@ -83,40 +85,52 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
                 sizes="(min-width: 1024px) 896px, 100vw"
                 className="object-cover"
               />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600" />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
-              <div>
-                {item.industries && item.industries.length > 0 && (
-                  <span className="text-xs px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm">{item.industries[0]}</span>
+              <div className="absolute inset-0 bg-black/45" />
+              <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between p-6">
+                <div>
+                  {item.industries && item.industries.length > 0 && (
+                    <span className="inline-flex rounded-full border border-white/30 bg-white px-3 py-1 text-xs font-medium text-blue-900">
+                      {item.industries[0]}
+                    </span>
+                  )}
+                  <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">{item.title}</h1>
+                  {item.clientName && <p className="mt-1 text-blue-100">{item.clientName}</p>}
+                </div>
+                {item.clientLogo && (
+                  <Image
+                    src={item.clientLogo}
+                    alt={item.clientName || 'Klien'}
+                    width={120}
+                    height={40}
+                    quality={80}
+                    sizes="120px"
+                    className="hidden h-10 w-auto rounded bg-white p-1 object-contain sm:block"
+                  />
                 )}
-                <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-white">{item.title}</h1>
-                {item.clientName && <p className="mt-1 text-blue-100">{item.clientName}</p>}
               </div>
-              {item.clientLogo && (
-                <Image
-                  src={item.clientLogo}
-                  alt={item.clientName || 'Klien'}
-                  width={120}
-                  height={40}
-                  quality={80}
-                  sizes="120px"
-                  className="h-10 w-auto rounded bg-white/90 p-1 hidden sm:block object-contain"
-                />
-              )}
             </div>
-          </div>
+          ) : (
+            <div className="mb-8 rounded-lg bg-blue-900 px-6 py-12 text-white sm:px-8">
+              {item.industries && item.industries.length > 0 && (
+                <span className="inline-flex rounded-full border border-blue-700 bg-blue-800 px-3 py-1 text-xs font-medium text-blue-100">
+                  {item.industries[0]}
+                </span>
+              )}
+              <h1 className="mt-3 text-2xl font-bold sm:text-3xl">{item.title}</h1>
+              {item.clientName && <p className="mt-2 text-blue-100">{item.clientName}</p>}
+            </div>
+          )}
 
-          {item.description && <p className="text-lg text-slate-600 leading-relaxed">{item.description}</p>}
+          {item.description && <p className="text-lg leading-relaxed text-gray-600">{item.description}</p>}
 
           {item.metrics && Object.keys(item.metrics).length > 0 && (
-            <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="mt-8 flex flex-wrap gap-3">
               {Object.entries(item.metrics).map(([key, val]) => (
-                <div key={key} className="text-center p-4 rounded-xl bg-green-50 border border-green-100">
+                <div key={key} className="min-w-[120px] flex-1 rounded-lg border border-green-200 bg-green-50 p-4 text-center">
                   <div className="text-2xl font-bold text-green-700">{val}</div>
-                  <div className="text-xs text-green-600 mt-1 capitalize">{key.replace(/_/g, ' ')}</div>
+                  <Badge variant="success" className="mt-2 capitalize">
+                    {key.replace(/_/g, ' ')}
+                  </Badge>
                 </div>
               ))}
             </div>
@@ -124,33 +138,33 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
 
           {item.challenge && (
             <section className="mt-12">
-              <h2 className="text-2xl font-semibold text-slate-900 mb-4">Tantangan</h2>
-              <p className="text-slate-600 leading-relaxed">{item.challenge}</p>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Tantangan</h2>
+              <p className="text-gray-600 leading-relaxed">{item.challenge}</p>
             </section>
           )}
 
           {item.solution && (
             <section className="mt-10">
-              <h2 className="text-2xl font-semibold text-slate-900 mb-4">Solusi Kami</h2>
-              <p className="text-slate-600 leading-relaxed">{item.solution}</p>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Solusi Kami</h2>
+              <p className="text-gray-600 leading-relaxed">{item.solution}</p>
             </section>
           )}
 
           {item.results && (
-            <section className="mt-10 p-6 rounded-xl bg-blue-50 border border-blue-100">
-              <h2 className="text-xl font-semibold text-slate-900 mb-3 flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-blue-600" /> Hasil
-              </h2>
-              <p className="text-slate-700">{item.results}</p>
-            </section>
+            <Alert variant="info" title="Hasil" className="mt-10">
+              <div className="flex items-start gap-2">
+                <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-blue-900" />
+                <p>{item.results}</p>
+              </div>
+            </Alert>
           )}
 
           {item.clientQuote && (
-            <blockquote className="mt-10 p-6 rounded-xl border border-slate-200 bg-white shadow-sm">
-              <Quote className="h-8 w-8 text-blue-200 mb-3" />
-              <p className="text-lg text-slate-700 italic leading-relaxed">&ldquo;{item.clientQuote}&rdquo;</p>
+            <blockquote className="mt-10 rounded-lg border border-gray-200 bg-white p-6">
+              <Quote className="mb-3 h-8 w-8 text-blue-200" />
+              <p className="text-lg italic leading-relaxed text-gray-700">&ldquo;{item.clientQuote}&rdquo;</p>
               {item.clientName && (
-                <footer className="mt-4 text-sm font-medium text-slate-900">— {item.clientName}</footer>
+                <footer className="mt-4 text-sm font-medium text-gray-900">— {item.clientName}</footer>
               )}
             </blockquote>
           )}

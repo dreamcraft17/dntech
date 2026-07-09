@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
+import { Alert } from '@/components/ui/Alert';
 import { getApiUrl } from '@/lib/api';
 import { QUIZ_BUDGET_OPTIONS } from '@/lib/currency';
 import { ArrowRight, CheckCircle, Mail } from 'lucide-react';
@@ -111,9 +112,9 @@ export function SolutionQuiz() {
       <Card className="max-w-2xl mx-auto p-8">
         <div className="text-center">
           <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-slate-900">Kami menemukan solusi terbaik untuk Anda!</h2>
-          <p className="mt-2 text-lg text-blue-600 font-semibold">{result.recommendation.service}</p>
-          <p className="mt-2 text-slate-600">{result.recommendation.description}</p>
+          <h2 className="text-2xl font-bold text-gray-900">Kami menemukan solusi terbaik untuk Anda!</h2>
+          <p className="mt-2 text-lg text-blue-900 font-semibold">{result.recommendation.service}</p>
+          <p className="mt-2 text-gray-600">{result.recommendation.description}</p>
           <div className="mt-8 flex flex-wrap gap-4 justify-center">
             <Link href={`/contact?service=${encodeURIComponent(result.recommendation.service)}`}>
               <Button size="lg">Jadwalkan Konsultasi Gratis <ArrowRight className="h-4 w-4" /></Button>
@@ -125,12 +126,12 @@ export function SolutionQuiz() {
         </div>
 
         {!emailSent ? (
-          <form onSubmit={submitEmail} className="mt-8 pt-8 border-t border-slate-200">
+          <form onSubmit={submitEmail} className="mt-8 pt-8 border-t border-gray-200">
             <div className="flex items-center gap-2 mb-4">
-              <Mail className="h-5 w-5 text-blue-600" />
-              <h3 className="font-semibold text-slate-900">Kirim hasil ke email Anda</h3>
+              <Mail className="h-5 w-5 text-blue-900" />
+              <h3 className="font-semibold text-gray-900">Kirim hasil ke email Anda</h3>
             </div>
-            <p className="text-sm text-slate-600 mb-4">Kami akan mengirim rekomendasi personal dan langkah selanjutnya.</p>
+            <p className="text-sm text-gray-600 mb-4">Kami akan mengirim rekomendasi personal dan langkah selanjutnya.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input label="Nama (opsional)" value={name} onChange={(e) => setName(e.target.value)} />
               <Input label="Email Kerja" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -138,9 +139,9 @@ export function SolutionQuiz() {
             <Button type="submit" loading={emailLoading} className="mt-4 w-full">Kirim Hasil Saya</Button>
           </form>
         ) : (
-          <div className="mt-8 p-4 rounded-lg bg-green-50 border border-green-200 text-sm text-green-700 text-center">
+          <Alert variant="success" className="mt-8 text-center">
             Hasil terkirim! Cek inbox Anda untuk rekomendasi personal.
-          </div>
+          </Alert>
         )}
       </Card>
     );
@@ -149,27 +150,27 @@ export function SolutionQuiz() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <div className="flex justify-between text-sm text-slate-500 mb-2">
+        <div className="flex justify-between text-sm text-gray-500 mb-2">
           <span>Pertanyaan {step + 1} dari {QUESTIONS.length}</span>
           <span>{Math.round(((step) / QUESTIONS.length) * 100)}% selesai</span>
         </div>
-        <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-          <div className="h-full bg-blue-600 rounded-full transition-all" style={{ width: `${(step / QUESTIONS.length) * 100}%` }} />
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-full bg-blue-900 rounded-full transition-all" style={{ width: `${(step / QUESTIONS.length) * 100}%` }} />
         </div>
       </div>
 
       <Card>
-        <h2 className="text-xl font-semibold text-slate-900 mb-6">{q.question}</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">{q.question}</h2>
         <div className="space-y-3">
           {q.options.map((opt) => (
             <button key={opt.value} onClick={() => select(opt.value)} disabled={loading}
-              className="w-full text-left px-4 py-3 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-colors text-sm font-medium text-slate-700">
+              className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-colors text-sm font-medium text-gray-700">
               {opt.label}
             </button>
           ))}
         </div>
         {step > 0 && (
-          <button onClick={() => setStep(step - 1)} className="mt-4 text-sm text-slate-500 hover:text-slate-700">
+          <button onClick={() => setStep(step - 1)} className="mt-4 text-sm text-gray-500 hover:text-gray-700">
             ← Kembali
           </button>
         )}

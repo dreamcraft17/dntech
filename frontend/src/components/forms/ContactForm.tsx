@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
 import { getApiUrl } from '@/lib/api';
 
 const schema = z.object({
@@ -50,17 +51,18 @@ export function ContactForm({ defaultSubject }: ContactFormProps) {
 
   if (success) {
     return (
-      <div className="rounded-xl bg-green-50 border border-green-200 p-6 text-center">
-        <h3 className="text-lg font-semibold text-green-800">Terima kasih!</h3>
-        <p className="mt-2 text-green-700">Pesan Anda telah kami terima. Tim kami akan segera menghubungi Anda.</p>
-        <Button className="mt-4" variant="outline" onClick={() => setSuccess(false)}>Kirim pesan lagi</Button>
-      </div>
+      <Alert variant="success" title="Terima kasih!" className="text-center">
+        <p>Pesan Anda telah kami terima. Tim kami akan segera menghubungi Anda.</p>
+        <Button className="mt-4" variant="outline" onClick={() => setSuccess(false)}>
+          Kirim pesan lagi
+        </Button>
+      </Alert>
     );
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {error && <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">{error}</div>}
+      {error && <Alert variant="error">{error}</Alert>}
       <input type="text" {...register('honeypot')} className="hidden" tabIndex={-1} autoComplete="off" />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input label="Nama" {...register('name')} error={errors.name?.message} required />

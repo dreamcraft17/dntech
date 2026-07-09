@@ -33,7 +33,7 @@ export default function AdminAnalyticsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Dasbor Analitik</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">Dasbor Analitik</h1>
 
       {metrics && (
         <>
@@ -47,8 +47,8 @@ export default function AdminAnalyticsPage() {
               { label: 'Kuis (30 hr)', value: metrics.quizCompletions },
             ].map(({ label, value }) => (
               <Card key={label}>
-                <div className="text-sm text-slate-500">{label}</div>
-                <div className="text-2xl font-bold text-slate-900 mt-1">{value}</div>
+                <div className="text-sm text-gray-500">{label}</div>
+                <div className="text-2xl font-bold text-gray-900 mt-1">{value}</div>
               </Card>
             ))}
           </div>
@@ -68,21 +68,21 @@ export default function AdminAnalyticsPage() {
 
             <Card title="Sumber Lead">
               {Object.entries(metrics.topLeadSources).map(([source, count]) => (
-                <div key={source} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                  <span className="text-sm text-slate-600 capitalize">{source}</span>
+                <div key={source} className="flex justify-between py-2 border-b border-gray-100 last:border-0">
+                  <span className="text-sm text-gray-600 capitalize">{source}</span>
                   <span className="font-medium">{count}</span>
                 </div>
               ))}
               {Object.keys(metrics.topLeadSources).length === 0 && (
-                <p className="text-sm text-slate-500">Belum ada data sumber lead</p>
+                <p className="text-sm text-gray-500">Belum ada data sumber lead</p>
               )}
             </Card>
           </div>
 
           <Card title="Halaman Teratas (tampilan / lead)" className="mb-6">
             {metrics.topPages.map(({ page, views, leads }) => (
-              <div key={page} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                <span className="text-sm text-slate-600 truncate">{page}</span>
+              <div key={page} className="flex justify-between py-2 border-b border-gray-100 last:border-0">
+                <span className="text-sm text-gray-600 truncate">{page}</span>
                 <span className="text-sm font-medium ml-2">{views} / {leads}</span>
               </div>
             ))}
@@ -93,8 +93,8 @@ export default function AdminAnalyticsPage() {
       {traffic?.byDevice && (
         <Card title="Lalu Lintas per Perangkat">
           {Object.entries(traffic.byDevice).map(([device, count]) => (
-            <div key={device} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-              <span className="text-sm capitalize text-slate-600">{device}</span>
+            <div key={device} className="flex justify-between py-2 border-b border-gray-100 last:border-0">
+              <span className="text-sm capitalize text-gray-600">{device}</span>
               <span className="font-medium">{count}</span>
             </div>
           ))}

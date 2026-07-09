@@ -51,8 +51,8 @@ export default async function ContactPage({
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Hubungi Kami</h1>
-          <p className="mt-4 text-slate-600">Ceritakan proyek Anda — kami akan merespons dalam 1 hari kerja.</p>
+          <h1 className="text-4xl font-bold text-gray-900">Hubungi Kami</h1>
+          <p className="mt-4 text-gray-600">Ceritakan proyek Anda — kami akan merespons dalam 1 hari kerja.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -61,11 +61,11 @@ export default async function ContactPage({
               {contactItems.map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex gap-4">
                   <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-                    <Icon className="h-5 w-5 text-blue-600" />
+                    <Icon className="h-5 w-5 text-blue-900" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-slate-900">{label}</div>
-                    <div className="text-sm text-slate-600">{value}</div>
+                    <div className="text-sm font-medium text-gray-900">{label}</div>
+                    <div className="text-sm text-gray-600">{value}</div>
                   </div>
                 </div>
               ))}
@@ -73,7 +73,7 @@ export default async function ContactPage({
           )}
 
           <div className={contactItems.length > 0 ? 'lg:col-span-2' : 'lg:col-span-3'}>
-            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="rounded-lg border border-gray-200 bg-white p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">Mulai Konsultasi Gratis</h2>
               <MultiStepForm
                 source="contact-form"

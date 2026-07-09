@@ -92,7 +92,7 @@ export default function AdminCrudPage({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
         <Button onClick={() => setEditing({ ...defaultItem, ...(fields.filter((f) => f.type === 'json').reduce((acc, f) => ({ ...acc, [f.key]: '{}' }), {})) })}><Plus className="h-4 w-4" /> Tambah</Button>
       </div>
 
@@ -100,7 +100,7 @@ export default function AdminCrudPage({
         <Card className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-semibold">{editing.id ? 'Ubah' : 'Baru'}</h2>
-            <button onClick={() => setEditing(null)}><X className="h-5 w-5 text-slate-400" /></button>
+            <button onClick={() => setEditing(null)}><X className="h-5 w-5 text-gray-400" /></button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {fields.map((f) => {
@@ -125,8 +125,8 @@ export default function AdminCrudPage({
                   <label key={f.key} className="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" checked={Boolean(editing[f.key])}
                       onChange={(e) => setEditing({ ...editing, [f.key]: e.target.checked })}
-                      className="h-4 w-4 rounded border-slate-300 text-blue-600" />
-                    <span className="text-sm font-medium text-slate-700">{f.label}</span>
+                      className="h-4 w-4 rounded border-gray-300 text-blue-900" />
+                    <span className="text-sm font-medium text-gray-700">{f.label}</span>
                   </label>
                 );
               }
@@ -145,33 +145,33 @@ export default function AdminCrudPage({
         </Card>
       )}
 
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b border-slate-200">
+          <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">{fields[0]?.label}</th>
-              <th className="text-left px-4 py-3 font-medium text-slate-600">Status</th>
-              <th className="text-right px-4 py-3 font-medium text-slate-600">Aksi</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">{fields[0]?.label}</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
+              <th className="text-right px-4 py-3 font-medium text-gray-600">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {items.map((item) => (
-              <tr key={item.id} className="border-b border-slate-100 hover:bg-slate-50">
-                <td className="px-4 py-3 font-medium text-slate-900">{String(item[displayKey] || item.title || item.clientName || item.question || item.name)}</td>
+              <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <td className="px-4 py-3 font-medium text-gray-900">{String(item[displayKey] || item.title || item.clientName || item.question || item.name)}</td>
                 <td className="px-4 py-3">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
                     {String(item.status ?? (item.isApproved ? 'diterbitkan' : 'draf'))}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <button onClick={() => startEdit(item)} className="p-1 text-slate-400 hover:text-blue-600"><Pencil className="h-4 w-4" /></button>
-                  <button onClick={() => remove(item.id)} className="p-1 text-slate-400 hover:text-red-600 ml-1"><Trash2 className="h-4 w-4" /></button>
+                  <button onClick={() => startEdit(item)} className="p-1 text-gray-400 hover:text-blue-900"><Pencil className="h-4 w-4" /></button>
+                  <button onClick={() => remove(item.id)} className="p-1 text-gray-400 hover:text-red-600 ml-1"><Trash2 className="h-4 w-4" /></button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {items.length === 0 && <p className="text-center text-slate-500 py-8">Belum ada item</p>}
+        {items.length === 0 && <p className="text-center text-gray-500 py-8">Belum ada item</p>}
       </div>
     </div>
   );

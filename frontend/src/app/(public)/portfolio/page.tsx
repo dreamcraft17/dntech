@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
+import { PortfolioCard } from '@/components/cards/PortfolioCard';
+import { Badge } from '@/components/ui/Badge';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
 
@@ -25,55 +25,40 @@ export default async function PortfolioPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 p-4 rounded-xl bg-blue-50 border border-blue-100 text-center">
+        <div className="mb-8 rounded-lg border border-blue-100 bg-blue-50 p-4 text-center">
           <p className="text-sm text-blue-800">
             Mencari kisah sukses detail dengan metrik dan testimoni klien?{' '}
-            <Link href="/case-studies" className="font-semibold hover:underline">Lihat Studi Kasus →</Link>
+            <Link href="/case-studies" className="font-semibold text-blue-900 hover:underline">
+              Lihat Studi Kasus →
+            </Link>
           </p>
         </div>
 
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Portofolio Kami</h1>
-          <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-bold text-gray-900">Portofolio Kami</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-gray-600">
             Menampilkan proyek sukses dan transformasi klien
           </p>
         </div>
 
         {industries.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-center mb-10">
+          <div className="mb-10 flex flex-wrap justify-center gap-2">
             {industries.map((ind) => (
-              <span key={ind} className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+              <Badge key={ind} variant="default">
                 {ind}
-              </span>
+              </Badge>
             ))}
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
-            <Link key={item.id} href={`/portfolio/${item.slug}`}>
-              <Card hover className="h-full">
-                <div className="h-40 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 mb-4 flex items-center justify-center">
-                  <span className="text-white text-2xl font-bold opacity-50">{item.title.charAt(0)}</span>
-                </div>
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {((item.industries as string[]) || []).map((ind) => (
-                    <span key={ind} className="text-xs px-2 py-0.5 rounded bg-blue-50 text-blue-700">{ind}</span>
-                  ))}
-                </div>
-                <h2 className="text-lg font-semibold text-slate-900">{item.title}</h2>
-                <p className="text-sm text-slate-500 mt-1">{item.clientName}</p>
-                <p className="mt-2 text-sm text-slate-600 line-clamp-2">{item.description}</p>
-                <span className="mt-4 inline-flex items-center text-sm text-blue-600 font-medium">
-                  Lihat studi kasus <ArrowRight className="h-4 w-4 ml-1" />
-                </span>
-              </Card>
-            </Link>
+            <PortfolioCard key={item.id} item={item} />
           ))}
         </div>
 
         {items.length === 0 && (
-          <p className="text-center text-slate-500 py-12">Belum ada item portofolio.</p>
+          <p className="py-12 text-center text-gray-500">Belum ada item portofolio.</p>
         )}
       </div>
     </div>

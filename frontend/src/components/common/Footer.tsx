@@ -42,7 +42,7 @@ export function Footer({ companyName, tagline, companyEmail, companyPhone, compa
   ].filter(Boolean) as { icon: typeof Mail; label: string; value: string }[];
 
   return (
-    <footer className="border-t border-slate-200 bg-slate-900 text-slate-300">
+    <footer className="border-t border-gray-200 bg-gray-900 text-gray-300">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
@@ -52,7 +52,7 @@ export function Footer({ companyName, tagline, companyEmail, companyPhone, compa
               </Link>
             </div>
             {tagline && (
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <p className="text-sm text-gray-400 leading-relaxed">
               {tagline}
             </p>
             )}
@@ -99,13 +99,13 @@ export function Footer({ companyName, tagline, companyEmail, companyPhone, compa
           )}
         </div>
 
-        <div className="mt-10 border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-slate-500">
+        <div className="mt-10 border-t border-gray-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-gray-500">
             &copy; {new Date().getFullYear()} {companyName || 'DN Tech'}. Hak cipta dilindungi.
           </p>
           <div className="flex gap-4">
             {footerLinks.legal.map((link) => (
-              <Link key={link.href} href={link.href} className="text-sm text-slate-500 hover:text-white transition-colors">
+              <Link key={link.href} href={link.href} className="text-sm text-gray-500 hover:text-white transition-colors">
                 {link.label}
               </Link>
             ))}

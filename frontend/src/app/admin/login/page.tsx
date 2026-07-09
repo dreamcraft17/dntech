@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
 import { Logo } from '@/components/common/Logo';
 
 export default function AdminLoginPage() {
@@ -27,20 +28,21 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gray-900 px-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
+        <div className="mb-8 text-center">
+          <div className="mb-4 flex justify-center">
             <Logo href={null} size="xl" priority />
           </div>
           <h1 className="text-2xl font-bold text-white">Dasbor Admin</h1>
-          <p className="text-slate-400 mt-2">Masuk untuk mengelola situs web Anda</p>
+          <p className="mt-2 text-gray-400">Masuk untuk mengelola situs web Anda</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 shadow-xl space-y-4">
-          {error && (
-            <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">{error}</div>
-          )}
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 rounded-lg border border-gray-200 bg-white p-6"
+        >
+          {error && <Alert variant="error">{error}</Alert>}
           <Input
             label="Email"
             type="email"
@@ -57,10 +59,12 @@ export default function AdminLoginPage() {
             required
             autoComplete="current-password"
           />
-          <label className="flex items-center gap-2 text-sm text-slate-600">
+          <label className="flex items-center gap-2 text-sm text-gray-600">
             <input type="checkbox" className="rounded" /> Ingat saya
           </label>
-          <Button type="submit" loading={loading} className="w-full">Masuk</Button>
+          <Button type="submit" loading={loading} className="w-full">
+            Masuk
+          </Button>
         </form>
       </div>
     </div>

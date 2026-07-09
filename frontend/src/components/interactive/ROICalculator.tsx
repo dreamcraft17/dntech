@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { Alert } from '@/components/ui/Alert';
 import { Calculator } from 'lucide-react';
 import {
   DEV_RATES_IDR,
@@ -42,11 +43,11 @@ export function ROICalculator() {
     <Card className="max-w-2xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
-          <Calculator className="h-5 w-5 text-blue-600" />
+          <Calculator className="h-5 w-5 text-blue-900" />
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Estimasi Biaya Proyek</h2>
-          <p className="text-sm text-slate-500">Dapatkan perkiraan anggaran proyek Anda dalam Rupiah</p>
+          <h2 className="text-lg font-semibold text-gray-900">Estimasi Biaya Proyek</h2>
+          <p className="text-sm text-gray-500">Dapatkan perkiraan anggaran proyek Anda dalam Rupiah</p>
         </div>
       </div>
 
@@ -72,9 +73,8 @@ export function ROICalculator() {
       <Button onClick={calculate} className="mt-6 w-full">Hitung Estimasi</Button>
 
       {result && (
-        <div className="mt-6 p-6 rounded-xl bg-blue-50 border border-blue-100">
-          <h3 className="font-semibold text-slate-900 mb-3">Perkiraan Biaya Proyek</h3>
-          <div className="text-3xl font-bold text-blue-600">
+        <Alert variant="info" title="Perkiraan Biaya Proyek" className="mt-6">
+          <div className="text-3xl font-bold text-blue-900">
             {formatIDRRange(result.min, result.max)}
           </div>
           {result.savings > 0 && (
@@ -82,7 +82,7 @@ export function ROICalculator() {
               Potensi penghematan vs tim in-house: ~{formatIDR(result.savings)}
             </p>
           )}
-          <p className="mt-3 text-xs text-slate-500">
+          <p className="mt-3 text-xs text-gray-500">
             * Ini perkiraan kasar. Hubungi kami untuk proposal detail sesuai kebutuhan Anda.
           </p>
           <a
@@ -91,7 +91,7 @@ export function ROICalculator() {
           >
             <Button size="sm">Minta penawaran detail →</Button>
           </a>
-        </div>
+        </Alert>
       )}
     </Card>
   );

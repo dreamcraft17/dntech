@@ -19,8 +19,8 @@ export default async function ResourcesPage() {
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">Sumber Daya</h1>
-          <p className="mt-4 text-slate-600">Panduan dan wawasan untuk mendukung transformasi digital Anda</p>
+          <h1 className="text-4xl font-bold text-gray-900">Sumber Daya</h1>
+          <p className="mt-4 text-gray-600">Panduan dan wawasan untuk mendukung transformasi digital Anda</p>
         </div>
 
         {resources.length > 0 ? (
@@ -28,14 +28,14 @@ export default async function ResourcesPage() {
             {resources.map((resource) => (
               <Card key={resource.title} className="flex flex-col">
                 <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center mb-4">
-                  <FileText className="h-5 w-5 text-blue-600" />
+                  <FileText className="h-5 w-5 text-blue-900" />
                 </div>
                 {resource.type && (
-                  <span className="text-xs text-blue-600 font-medium">{resource.type}</span>
+                  <span className="text-xs text-blue-900 font-medium">{resource.type}</span>
                 )}
-                <h3 className="mt-1 font-semibold text-slate-900">{resource.title}</h3>
+                <h3 className="mt-1 font-semibold text-gray-900">{resource.title}</h3>
                 {resource.description && (
-                  <p className="mt-2 text-sm text-slate-600 flex-1">{resource.description}</p>
+                  <p className="mt-2 text-sm text-gray-600 flex-1">{resource.description}</p>
                 )}
                 {resource.downloadUrl ? (
                   <a href={resource.downloadUrl} target="_blank" rel="noopener noreferrer" className="mt-4">
@@ -54,8 +54,8 @@ export default async function ResourcesPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 mb-16 rounded-xl border border-dashed border-slate-200 bg-slate-50">
-            <p className="text-slate-600">Belum ada sumber daya tersedia. Hubungi kami untuk informasi lebih lanjut.</p>
+          <div className="text-center py-12 mb-16 rounded-xl border border-dashed border-gray-200 bg-gray-50">
+            <p className="text-gray-600">Belum ada sumber daya tersedia. Hubungi kami untuk informasi lebih lanjut.</p>
             <Link href="/contact" className="inline-block mt-4">
               <Button variant="outline">Hubungi Kami</Button>
             </Link>

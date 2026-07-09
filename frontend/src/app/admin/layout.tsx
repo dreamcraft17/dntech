@@ -13,8 +13,8 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full" />
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="animate-spin h-8 w-8 border-4 border-blue-900 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -22,7 +22,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-gray-100">
       <AdminSidebar />
       <main className="lg:pl-64">
         <div className="p-4 lg:p-8">{children}</div>

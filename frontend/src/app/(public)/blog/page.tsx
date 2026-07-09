@@ -106,12 +106,12 @@ export default async function BlogPage({
             </div>
           )}
 
-          <div className="mt-16 text-center p-6 rounded-xl bg-slate-50 border border-slate-200">
-            <p className="text-slate-600">Ingin menerapkan apa yang Anda baca?</p>
+          <div className="mt-16 text-center p-6 rounded-xl bg-gray-50 border border-gray-200">
+            <p className="text-gray-600">Ingin menerapkan apa yang Anda baca?</p>
             <div className="mt-3 flex flex-wrap gap-4 justify-center text-sm">
-              <Link href="/services" className="text-blue-600 font-medium hover:underline">Jelajahi Layanan</Link>
-              <Link href="/case-studies" className="text-blue-600 font-medium hover:underline">Lihat Studi Kasus</Link>
-              <Link href="/contact" className="text-blue-600 font-medium hover:underline">Konsultasi dengan Ahli</Link>
+              <Link href="/services" className="text-blue-900 font-medium hover:underline">Jelajahi Layanan</Link>
+              <Link href="/case-studies" className="text-blue-900 font-medium hover:underline">Lihat Studi Kasus</Link>
+              <Link href="/contact" className="text-blue-900 font-medium hover:underline">Konsultasi dengan Ahli</Link>
             </div>
           </div>
         </div>

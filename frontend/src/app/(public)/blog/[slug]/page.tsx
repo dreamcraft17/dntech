@@ -81,21 +81,21 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
       <div className="py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <nav className="text-sm text-slate-500 mb-8" aria-label="Jejak navigasi">
-            <Link href="/" className="hover:text-blue-600">Beranda</Link>
+          <nav className="text-sm text-gray-500 mb-8" aria-label="Jejak navigasi">
+            <Link href="/" className="hover:text-blue-900">Beranda</Link>
             <span className="mx-2">/</span>
-            <Link href="/blog" className="hover:text-blue-600">Blog</Link>
+            <Link href="/blog" className="hover:text-blue-900">Blog</Link>
             {post.category && (
               <>
                 <span className="mx-2">/</span>
-                <Link href={`/blog?category=${post.category}`} className="hover:text-blue-600">{post.category}</Link>
+                <Link href={`/blog?category=${post.category}`} className="hover:text-blue-900">{post.category}</Link>
               </>
             )}
           </nav>
 
           <article itemScope itemType="https://schema.org/Article">
-            <div className="text-sm text-blue-600 font-medium">{post.category}</div>
-            <h1 className="mt-2 text-4xl font-bold text-slate-900" itemProp="headline">{post.title}</h1>
+            <div className="text-sm text-blue-900 font-medium">{post.category}</div>
+            <h1 className="mt-2 text-4xl font-bold text-gray-900" itemProp="headline">{post.title}</h1>
             <div className="mt-4 text-sm text-gray-500">
               {formatReadTime(readMin)}
               {post.publishedAt && <> · <time itemProp="datePublished" dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time></>}
@@ -127,13 +127,13 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
           </div>
 
           {post.relatedPosts && post.relatedPosts.length > 0 && (
-            <div className="mt-10 border-t border-slate-200 pt-10">
-              <h2 className="text-xl font-semibold text-slate-900 mb-6">Artikel Terkait</h2>
+            <div className="mt-10 border-t border-gray-200 pt-10">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Artikel Terkait</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {post.relatedPosts.map((related) => (
                   <Link key={related.id} href={`/blog/${related.slug}`}
-                    className="p-4 rounded-lg border border-slate-200 hover:border-blue-300 transition-colors">
-                    <div className="font-medium text-slate-900 text-sm">{related.title}</div>
+                    className="p-4 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
+                    <div className="font-medium text-gray-900 text-sm">{related.title}</div>
                   </Link>
                 ))}
               </div>

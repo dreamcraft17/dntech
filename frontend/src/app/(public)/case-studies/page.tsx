@@ -46,8 +46,8 @@ export default async function CaseStudiesPage() {
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-slate-900">Studi Kasus</h1>
-            <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
+            <h1 className="text-4xl font-bold text-gray-900">Studi Kasus</h1>
+            <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
               Hasil nyata dari klien nyata. Lihat bagaimana kami membantu perusahaan bertransformasi dengan teknologi.
             </p>
           </div>

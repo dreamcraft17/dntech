@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Alert } from '@/components/ui/Alert';
 import { cn } from '@/lib/utils';
 import { getApiUrl } from '@/lib/api';
 import { BUDGET_OPTIONS } from '@/lib/currency';
@@ -256,9 +257,7 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
                 {errors.consent.message}
               </p>
             )}
-            <div className="rounded-lg bg-blue-50 border border-blue-100 p-4 text-sm text-blue-900">
-              Tim kami akan merespons dalam 24 jam kerja.
-            </div>
+            <Alert variant="info">Tim kami akan merespons dalam 24 jam kerja.</Alert>
           </div>
         )}
 

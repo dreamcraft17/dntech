@@ -70,14 +70,14 @@ export default function AdminLeadsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Lead</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Lead</h1>
         <Button variant="outline" onClick={exportCsv}>Ekspor CSV</Button>
       </div>
 
       <div className="flex gap-2 mb-4">
         {['', 'new', 'contacted', 'qualified', 'converted', 'rejected'].map((s) => (
           <button key={s} onClick={() => setFilter(s)}
-            className={`px-3 py-1 rounded-full text-sm font-medium ${filter === s ? 'bg-blue-600 text-white' : 'bg-white border border-slate-200 text-slate-600'}`}>
+            className={`px-3 py-1 rounded-full text-sm font-medium ${filter === s ? 'bg-blue-900 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}>
             {statusLabels[s] ?? s}
           </button>
         ))}
@@ -87,40 +87,40 @@ export default function AdminLeadsPage() {
         <div className="space-y-2">
           {leads.map((lead) => (
             <button key={lead.id} onClick={() => setSelected(lead)}
-              className={`w-full text-left p-4 rounded-lg border transition-colors ${selected?.id === lead.id ? 'border-blue-500 bg-blue-50' : 'border-slate-200 bg-white hover:border-slate-300'} ${!lead.isRead ? 'border-l-4 border-l-blue-600' : ''}`}>
+              className={`w-full text-left p-4 rounded-lg border transition-colors ${selected?.id === lead.id ? 'border-blue-900 bg-blue-50' : 'border-gray-200 bg-white hover:border-gray-300'} ${!lead.isRead ? 'border-l-4 border-l-blue-600' : ''}`}>
               <div className="flex justify-between items-start">
                 <div>
-                  <div className="font-medium text-slate-900">{lead.name}</div>
-                  <div className="text-sm text-slate-500">{lead.email}</div>
+                  <div className="font-medium text-gray-900">{lead.name}</div>
+                  <div className="text-sm text-gray-500">{lead.email}</div>
                 </div>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${lead.status === 'new' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600'}`}>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${lead.status === 'new' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
                   {statusLabels[lead.status] ?? lead.status}
                 </span>
               </div>
-              <div className="mt-2 text-xs text-slate-400">{lead.formType} · {formatDate(lead.createdAt)}</div>
+              <div className="mt-2 text-xs text-gray-400">{lead.formType} · {formatDate(lead.createdAt)}</div>
             </button>
           ))}
-          {leads.length === 0 && <p className="text-slate-500 text-center py-8">Tidak ada lead ditemukan</p>}
+          {leads.length === 0 && <p className="text-gray-500 text-center py-8">Tidak ada lead ditemukan</p>}
         </div>
 
         {selected && (
           <Card>
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">{selected.name}</h2>
-                <p className="text-sm text-slate-500">{selected.email} · {selected.phone}</p>
+                <h2 className="text-lg font-semibold text-gray-900">{selected.name}</h2>
+                <p className="text-sm text-gray-500">{selected.email} · {selected.phone}</p>
               </div>
-              <button onClick={() => setSelected(null)}><X className="h-5 w-5 text-slate-400" /></button>
+              <button onClick={() => setSelected(null)}><X className="h-5 w-5 text-gray-400" /></button>
             </div>
             <div className="space-y-3 text-sm">
               <div><span className="font-medium">Subjek:</span> {selected.subject}</div>
               <div><span className="font-medium">Tipe:</span> {selected.formType}</div>
-              <div className="p-3 bg-slate-50 rounded-lg">{selected.message}</div>
+              <div className="p-3 bg-gray-50 rounded-lg">{selected.message}</div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               {['new', 'contacted', 'qualified', 'converted', 'rejected'].map((s) => (
                 <button key={s} onClick={() => updateStatus(selected.id, s)}
-                  className={`px-3 py-1 rounded text-xs font-medium ${selected.status === s ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
+                  className={`px-3 py-1 rounded text-xs font-medium ${selected.status === s ? 'bg-blue-900 text-white' : 'bg-gray-100 text-gray-600'}`}>
                   {statusLabels[s] ?? s}
                 </button>
               ))}

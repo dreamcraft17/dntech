@@ -31,19 +31,19 @@ export default function AdminDashboardPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Dasbor</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">Dasbor</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map(({ label, value, change, icon: Icon }) => (
           <Card key={label}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500">{label}</p>
-                <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
+                <p className="text-sm text-gray-500">{label}</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
                 {change && <p className="text-xs text-green-600 mt-1">{change}% vs periode sebelumnya</p>}
               </div>
               <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <Icon className="h-5 w-5 text-blue-600" />
+                <Icon className="h-5 w-5 text-blue-900" />
               </div>
             </div>
           </Card>
@@ -62,7 +62,7 @@ export default function AdminDashboardPage() {
               { href: '/admin/analytics', label: 'Analitik' },
             ].map(({ href, label }) => (
               <Link key={href} href={href}
-                className="p-3 rounded-lg border border-slate-200 text-sm font-medium text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-colors text-center">
+                className="p-3 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-blue-300 hover:text-blue-900 transition-colors text-center">
                 {label}
               </Link>
             ))}
@@ -70,9 +70,9 @@ export default function AdminDashboardPage() {
         </Card>
 
         <Card title="Lead Baru">
-          <p className="text-3xl font-bold text-slate-900">{overview?.newLeads ?? 0}</p>
-          <p className="text-sm text-slate-500 mt-1">Lead belum dibaca bulan ini</p>
-          <Link href="/admin/leads" className="mt-4 inline-block text-sm text-blue-600 font-medium hover:underline">
+          <p className="text-3xl font-bold text-gray-900">{overview?.newLeads ?? 0}</p>
+          <p className="text-sm text-gray-500 mt-1">Lead belum dibaca bulan ini</p>
+          <Link href="/admin/leads" className="mt-4 inline-block text-sm text-blue-900 font-medium hover:underline">
             Lihat semua lead →
           </Link>
         </Card>

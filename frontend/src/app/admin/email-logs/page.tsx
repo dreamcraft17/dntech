@@ -57,8 +57,8 @@ export default function AdminEmailLogsPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Email Log</h1>
-        <p className="text-sm text-slate-500">Monitoring pengiriman email SMTP DN Tech.</p>
+        <h1 className="text-2xl font-bold text-gray-900">Email Log</h1>
+        <p className="text-sm text-gray-500">Monitoring pengiriman email SMTP DN Tech.</p>
       </div>
 
       {stats && (
@@ -77,7 +77,7 @@ export default function AdminEmailLogsPage() {
             key={item || 'all'}
             onClick={() => setStatus(item)}
             className={`rounded-full px-3 py-1 text-sm font-medium ${
-              status === item ? 'bg-blue-900 text-white' : 'border border-slate-200 bg-white text-slate-600'
+              status === item ? 'bg-blue-900 text-white' : 'border border-gray-200 bg-white text-gray-600'
             }`}
           >
             {item || 'Semua'}
@@ -85,9 +85,9 @@ export default function AdminEmailLogsPage() {
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
         <table className="w-full text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-left text-slate-600">
+          <thead className="border-b border-gray-200 bg-gray-50 text-left text-gray-600">
             <tr>
               <th className="px-4 py-3 font-medium">Waktu</th>
               <th className="px-4 py-3 font-medium">To</th>
@@ -98,14 +98,14 @@ export default function AdminEmailLogsPage() {
           </thead>
           <tbody>
             {logs.map((log) => (
-              <tr key={log.id} className="border-b border-slate-100 last:border-0">
-                <td className="px-4 py-3 text-slate-500">{formatDate(log.createdAt)}</td>
-                <td className="px-4 py-3 text-slate-700">{log.to}</td>
+              <tr key={log.id} className="border-b border-gray-100 last:border-0">
+                <td className="px-4 py-3 text-gray-500">{formatDate(log.createdAt)}</td>
+                <td className="px-4 py-3 text-gray-700">{log.to}</td>
                 <td className="px-4 py-3">
-                  <div className="font-medium text-slate-900">{log.subject}</div>
+                  <div className="font-medium text-gray-900">{log.subject}</div>
                   {log.error && <div className="mt-1 text-xs text-red-600">{log.error}</div>}
                 </td>
-                <td className="px-4 py-3 text-slate-500">{log.templateId || '-'}</td>
+                <td className="px-4 py-3 text-gray-500">{log.templateId || '-'}</td>
                 <td className="px-4 py-3">
                   <span className={`rounded-full px-2 py-1 text-xs font-medium ${statusClass(log.status)}`}>
                     {log.status}
@@ -115,7 +115,7 @@ export default function AdminEmailLogsPage() {
             ))}
             {logs.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
                   Belum ada email log.
                 </td>
               </tr>
@@ -129,9 +129,9 @@ export default function AdminEmailLogsPage() {
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <div className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</div>
-      <div className="mt-1 text-2xl font-bold text-slate-900">{value}</div>
+    <div className="rounded-xl border border-gray-200 bg-white p-4">
+      <div className="text-xs font-medium uppercase tracking-wide text-gray-500">{label}</div>
+      <div className="mt-1 text-2xl font-bold text-gray-900">{value}</div>
     </div>
   );
 }
@@ -140,5 +140,5 @@ function statusClass(status: string) {
   if (status === 'sent') return 'bg-green-100 text-green-700';
   if (status === 'failed') return 'bg-red-100 text-red-700';
   if (status === 'pending') return 'bg-amber-100 text-amber-700';
-  return 'bg-slate-100 text-slate-700';
+  return 'bg-gray-100 text-gray-700';
 }
