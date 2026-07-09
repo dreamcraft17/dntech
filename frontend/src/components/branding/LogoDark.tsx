@@ -5,8 +5,8 @@ interface LogoDarkProps {
   size?: LogoSize;
 }
 
-/** Footer, hero, and dark backgrounds */
-export function LogoDark({ className, size = 'lg' }: LogoDarkProps) {
+/** Dark backgrounds (e.g. admin chrome) — use sm/md; avoid large logo on dark blocks */
+export function LogoDark({ className, size = 'md' }: LogoDarkProps) {
   return <Logo href={null} size={size} className={className} />;
 }
 
