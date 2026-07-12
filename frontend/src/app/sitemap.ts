@@ -5,7 +5,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
-    '', '/services', '/case-studies', '/portfolio', '/about', '/blog', '/contact',
+    '', '/services', '/products', '/case-studies', '/portfolio', '/about', '/blog', '/contact',
     '/faq', '/careers', '/team', '/testimonials', '/terms', '/privacy', '/quiz', '/resources',
   ];
 
@@ -17,13 +17,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   try {
-    const [servicesRes, blogRes, caseStudiesRes] = await Promise.all([
+    const [servicesRes, productsRes, blogRes, caseStudiesRes] = await Promise.all([
       fetch(`${API_URL}/services`),
+      fetch(`${API_URL}/products`),
       fetch(`${API_URL}/blog?pageSize=100`),
       fetch(`${API_URL}/case-studies?pageSize=100`),
     ]);
 
     const services = servicesRes.ok ? (await servicesRes.json()).data : [];
+    const products = productsRes.ok ? (await productsRes.json()).data : [];
     const blog = blogRes.ok ? (await blogRes.json()).data : [];
     const caseStudies = caseStudiesRes.ok ? (await caseStudiesRes.json()).data : [];
 
@@ -32,6 +34,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...services.map((s: { slug: string; updatedAt?: string }) => ({
         url: `${SITE_URL}/services/${s.slug}`,
         lastModified: s.updatedAt ? new Date(s.updatedAt) : new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      })),
+      ...products.map((p: { slug: string; updatedAt?: string }) => ({
+        url: `${SITE_URL}/products/${p.slug}`,
+        lastModified: p.updatedAt ? new Date(p.updatedAt) : new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.7,
       })),

@@ -58,6 +58,7 @@ model User {
   createdUsers     User[]    @relation("UserCreatedBy")
   activityLogs     ActivityLog[]
   services         Service[]
+  products         Product[]
   portfolioItems   PortfolioItem[]
   blogPosts        BlogPost[]
   testimonials     Testimonial[]
@@ -133,6 +134,31 @@ model Service {
   @@index([status])
   @@index([displayOrder])
   @@map("services")
+}
+
+model Product {
+  id             String        @id @default(uuid())
+  name           String
+  slug           String        @unique
+  description    String
+  features       Json?
+  iconUrl        String?       @map("icon_url")
+  category       String?
+  status         ContentStatus @default(draft)
+  displayOrder   Int           @default(0) @map("display_order")
+  seoTitle       String?       @map("seo_title")
+  seoDescription String?       @map("seo_description")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  createdById    String?       @map("created_by")
+  deletedAt      DateTime?     @map("deleted_at")
+
+  createdBy User? @relation(fields: [createdById], references: [id])
+
+  @@index([slug])
+  @@index([status])
+  @@index([displayOrder])
+  @@map("products")
 }
 
 model PortfolioItem {

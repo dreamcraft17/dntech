@@ -105,6 +105,70 @@ router.post('/services/reorder', requireWrite('services'), asyncHandler(async (r
   successResponse(res, { reordered: true });
 }));
 
+// --- Products ---
+const productSchema = z.object({
+  name: z.string().min(1).max(255),
+  slug: z.string().optional(),
+  description: z.string().min(10),
+  features: z.array(z.object({ title: z.string(), description: z.string().optional() })).optional(),
+  iconUrl: z.string().optional(),
+  category: z.string().optional(),
+  status: z.enum(['draft', 'active', 'archived']).optional(),
+  displayOrder: z.number().optional(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+});
+
+router.get('/products', asyncHandler(async (req, res) => {
+  const { status, category, search } = req.query;
+  const where: Record<string, unknown> = { deletedAt: null };
+  if (status) where.status = String(status);
+  if (category) where.category = String(category);
+  if (search) where.name = { contains: String(search) };
+
+  const products = await prisma.product.findMany({ where, orderBy: { displayOrder: 'asc' } });
+  successResponse(res, products);
+}));
+
+router.post('/products', requireWrite('products'), asyncHandler(async (req: AuthRequest, res) => {
+  const data = productSchema.parse(req.body);
+  const slug = data.slug || slugify(data.name);
+
+  const product = await prisma.product.create({
+    data: { ...data, slug, createdById: req.user!.id },
+  });
+  await logActivity(req.user!.id, 'create', 'product', product.id, data, req.ip);
+  cacheService.clear();
+  successResponse(res, product, 201);
+}));
+
+router.patch('/products/:id', requireWrite('products'), asyncHandler(async (req: AuthRequest, res) => {
+  const data = productSchema.partial().parse(req.body);
+  const product = await prisma.product.update({ where: { id: param(req.params.id) }, data });
+  await logActivity(req.user!.id, 'update', 'product', product.id, data, req.ip);
+  cacheService.clear();
+  successResponse(res, product);
+}));
+
+router.delete('/products/:id', requireWrite('products'), asyncHandler(async (req: AuthRequest, res) => {
+  await prisma.product.update({
+    where: { id: param(req.params.id) },
+    data: { deletedAt: new Date(), status: 'archived' },
+  });
+  await logActivity(req.user!.id, 'delete', 'product', param(req.params.id), undefined, req.ip);
+  cacheService.clear();
+  successResponse(res, { deleted: true });
+}));
+
+router.post('/products/reorder', requireWrite('products'), asyncHandler(async (req, res) => {
+  const { ids } = z.object({ ids: z.array(z.string()) }).parse(req.body);
+  await Promise.all(ids.map((id, index) =>
+    prisma.product.update({ where: { id }, data: { displayOrder: index } })
+  ));
+  cacheService.clear();
+  successResponse(res, { reordered: true });
+}));
+
 // --- Portfolio ---
 const portfolioSchema = z.object({
   title: z.string().min(1),

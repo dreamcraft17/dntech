@@ -8,6 +8,7 @@ import rateLimit from 'express-rate-limit';
 
 import authRoutes from './routes/auth';
 import servicesRoutes from './routes/services';
+import productsRoutes from './routes/products';
 import portfolioRoutes from './routes/portfolio';
 import blogRoutes from './routes/blog';
 import formsRoutes from './routes/forms';
@@ -96,6 +97,7 @@ app.get('/health', (_req, res) => {
 const v1 = express.Router();
 v1.use('/auth', authRoutes);
 v1.use('/services', servicesRoutes);
+v1.use('/products', productsRoutes);
 v1.use('/portfolio', portfolioRoutes);
 v1.use('/blog', blogRoutes);
 v1.use('/forms', formsRoutes);

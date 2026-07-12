@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard, Briefcase, FolderOpen, FileText, Users, MessageSquare,
+  LayoutDashboard, Briefcase, Package, FolderOpen, FileText, Users, MessageSquare,
   BarChart3, Settings, UserCog, Image, HelpCircle, Star, LogOut, Menu, X, Building2,
   Mail, ClipboardList,
   Send,
@@ -17,6 +17,7 @@ import { Logo } from '@/components/common/Logo';
 const navItems = [
   { href: '/admin/dashboard', label: 'Dasbor', icon: LayoutDashboard },
   { href: '/admin/services', label: 'Layanan', icon: Briefcase },
+  { href: '/admin/products', label: 'Produk', icon: Package },
   { href: '/admin/portfolio', label: 'Studi Kasus', icon: FolderOpen },
   { href: '/admin/blog', label: 'Blog', icon: FileText },
   { href: '/admin/leads', label: 'Lead', icon: MessageSquare },

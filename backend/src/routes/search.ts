@@ -12,8 +12,20 @@ router.get(
       return successResponse(res, []);
     }
 
-    const [services, blogPosts, faqs, portfolio] = await Promise.all([
+    const [services, products, blogPosts, faqs, portfolio] = await Promise.all([
       prisma.service.findMany({
+        where: {
+          status: 'active',
+          deletedAt: null,
+          OR: [
+            { name: { contains: q } },
+            { description: { contains: q } },
+          ],
+        },
+        take: 5,
+        select: { id: true, name: true, slug: true, description: true },
+      }),
+      prisma.product.findMany({
         where: {
           status: 'active',
           deletedAt: null,
@@ -68,6 +80,12 @@ router.get(
         title: s.name,
         snippet: s.description?.substring(0, 150),
         url: `/services/${s.slug}`,
+      })),
+      ...products.map((p) => ({
+        type: 'product',
+        title: p.name,
+        snippet: p.description?.substring(0, 150),
+        url: `/products/${p.slug}`,
       })),
       ...blogPosts.map((b) => ({
         type: 'blog',

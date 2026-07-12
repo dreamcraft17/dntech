@@ -12,6 +12,7 @@ import type { SearchResult } from '@/types';
 const navLinks = [
   { href: '/', label: 'Beranda' },
   { href: '/services', label: 'Layanan' },
+  { href: '/products', label: 'Produk' },
   { href: '/about', label: 'Tentang' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Kontak' },

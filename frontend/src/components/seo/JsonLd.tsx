@@ -156,6 +156,23 @@ export function serviceSchema(service: {
   };
 }
 
+export function productSchema(product: {
+  name: string;
+  description: string;
+  slug: string;
+  category?: string;
+}, companyName = 'DN Tech') {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description,
+    url: `${SITE_URL}/products/${product.slug}`,
+    brand: { '@type': 'Organization', name: companyName, url: SITE_URL },
+    category: product.category,
+  };
+}
+
 export function itemListSchema(items: { name: string; url: string }[]) {
   return {
     '@context': 'https://schema.org',

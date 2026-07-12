@@ -13,6 +13,21 @@ export interface Service {
   relatedServices?: Service[];
 }
 
+export interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  features?: { title: string; description?: string }[];
+  iconUrl?: string;
+  category?: string;
+  status?: string;
+  displayOrder?: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  relatedProducts?: Product[];
+}
+
 export interface PortfolioItem {
   id: string;
   title: string;
