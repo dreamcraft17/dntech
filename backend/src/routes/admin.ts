@@ -110,13 +110,42 @@ const productSchema = z.object({
   name: z.string().min(1).max(255),
   slug: z.string().optional(),
   description: z.string().min(10),
-  features: z.array(z.object({ title: z.string(), description: z.string().optional() })).optional(),
+  features: z.any().optional(),
   iconUrl: z.string().optional(),
   category: z.string().optional(),
   status: z.enum(['draft', 'active', 'archived']).optional(),
   displayOrder: z.number().optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
+
+  tagline: z.string().optional(),
+  heroImage: z.string().optional(),
+  heroAlt: z.string().optional(),
+  logoUrl: z.string().optional(),
+  screenshotUrls: z.any().optional(),
+  keywords: z.string().optional(),
+  canonical: z.string().optional(),
+  featured: z.boolean().optional(),
+  publishedAt: z.string().optional(),
+  launchStatus: z.enum(['launched', 'beta', 'coming_soon']).optional(),
+  freemiumEnabled: z.boolean().optional(),
+  freeLimit: z.string().optional(),
+  trialDays: z.number().optional(),
+  customerCount: z.string().optional(),
+  techStack: z.any().optional(),
+  pricingTiers: z.any().optional(),
+  integrations: z.any().optional(),
+  useCases: z.any().optional(),
+  testimonials: z.any().optional(),
+  caseStudies: z.any().optional(),
+  comparisonTable: z.any().optional(),
+  roadmap: z.any().optional(),
+  primaryCta: z.any().optional(),
+  secondaryCtas: z.any().optional(),
+  pricingCalcUrl: z.string().optional(),
+  demoUrl: z.string().optional(),
+  longFormContent: z.string().optional(),
+  faq: z.any().optional(),
 });
 
 router.get('/products', asyncHandler(async (req, res) => {
@@ -135,7 +164,7 @@ router.post('/products', requireWrite('products'), asyncHandler(async (req: Auth
   const slug = data.slug || slugify(data.name);
 
   const product = await prisma.product.create({
-    data: { ...data, slug, createdById: req.user!.id },
+    data: { ...data, slug, publishedAt: data.publishedAt ? new Date(data.publishedAt) : undefined, createdById: req.user!.id },
   });
   await logActivity(req.user!.id, 'create', 'product', product.id, data, req.ip);
   cacheService.clear();
@@ -144,7 +173,10 @@ router.post('/products', requireWrite('products'), asyncHandler(async (req: Auth
 
 router.patch('/products/:id', requireWrite('products'), asyncHandler(async (req: AuthRequest, res) => {
   const data = productSchema.partial().parse(req.body);
-  const product = await prisma.product.update({ where: { id: param(req.params.id) }, data });
+  const product = await prisma.product.update({
+    where: { id: param(req.params.id) },
+    data: { ...data, publishedAt: data.publishedAt ? new Date(data.publishedAt) : undefined },
+  });
   await logActivity(req.user!.id, 'update', 'product', product.id, data, req.ip);
   cacheService.clear();
   successResponse(res, product);

@@ -13,12 +13,101 @@ export interface Service {
   relatedServices?: Service[];
 }
 
+export interface ProductCta {
+  label: string;
+  url: string;
+  type?: string;
+  color?: string;
+  size?: string;
+}
+
+export interface PricingTier {
+  id: string;
+  name: string;
+  icon?: string;
+  tagline?: string;
+  popular?: boolean;
+  featured?: boolean;
+  pricing: {
+    amount: number | null;
+    currency: string;
+    billingPeriod: string;
+    description?: string;
+  };
+  features: string[];
+  cta: ProductCta;
+  saveLabel?: string | null;
+}
+
+export interface ProductFeatureItem {
+  title?: string;
+  name?: string;
+  description?: string;
+}
+
+export interface ProductFeatureGroup {
+  category: string;
+  icon?: string;
+  features: ProductFeatureItem[];
+}
+
+export interface ProductIntegration {
+  name: string;
+  logo?: string;
+  category?: string;
+  description?: string;
+  status?: string;
+  url?: string;
+}
+
+export interface UseCaseSegment {
+  id: string;
+  segment: string;
+  icon?: string;
+  description?: string;
+  uniqueFeatures?: string[];
+  testimonial?: { quote: string; author: string; company?: string; location?: string };
+  stats?: Record<string, string>;
+  cta?: ProductCta;
+}
+
+export interface ProductTestimonial {
+  id: string;
+  quote: string;
+  author: string;
+  company?: string;
+  employeeCount?: string;
+  location?: string;
+  industry?: string;
+  avatar?: string;
+  rating?: number;
+  videoUrl?: string | null;
+  segment?: string;
+}
+
+export interface ComparisonTable {
+  title?: string;
+  competitors: string[];
+  rows: Array<Record<string, string> & { feature: string; category?: string }>;
+}
+
+export interface RoadmapQuarter {
+  quarter: string;
+  status: string;
+  features: { name: string; description?: string }[];
+}
+
+export interface ProductFaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface Product {
   id: string;
   name: string;
   slug: string;
   description: string;
-  features?: { title: string; description?: string }[];
+  features?: ProductFeatureItem[] | ProductFeatureGroup[];
   iconUrl?: string;
   category?: string;
   status?: string;
@@ -26,6 +115,35 @@ export interface Product {
   seoTitle?: string;
   seoDescription?: string;
   relatedProducts?: Product[];
+
+  tagline?: string;
+  heroImage?: string;
+  heroAlt?: string;
+  logoUrl?: string;
+  screenshotUrls?: string[];
+  keywords?: string;
+  canonical?: string;
+  featured?: boolean;
+  publishedAt?: string;
+  launchStatus?: string;
+  freemiumEnabled?: boolean;
+  freeLimit?: string;
+  trialDays?: number;
+  customerCount?: string;
+  techStack?: string[];
+  pricingTiers?: PricingTier[];
+  integrations?: ProductIntegration[];
+  useCases?: UseCaseSegment[];
+  testimonials?: ProductTestimonial[];
+  caseStudies?: unknown[];
+  comparisonTable?: ComparisonTable;
+  roadmap?: RoadmapQuarter[];
+  primaryCta?: ProductCta;
+  secondaryCtas?: ProductCta[];
+  pricingCalcUrl?: string;
+  demoUrl?: string;
+  longFormContent?: string;
+  faq?: ProductFaqItem[];
 }
 
 export interface PortfolioItem {

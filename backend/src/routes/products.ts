@@ -39,6 +39,13 @@ router.get(
         displayOrder: true,
         seoTitle: true,
         seoDescription: true,
+        tagline: true,
+        heroImage: true,
+        logoUrl: true,
+        featured: true,
+        launchStatus: true,
+        customerCount: true,
+        pricingTiers: true,
       },
     });
 

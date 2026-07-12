@@ -137,17 +137,47 @@ model Service {
 }
 
 model Product {
-  id             String        @id @default(uuid())
-  name           String
-  slug           String        @unique
-  description    String
-  features       Json?
-  iconUrl        String?       @map("icon_url")
-  category       String?
-  status         ContentStatus @default(draft)
-  displayOrder   Int           @default(0) @map("display_order")
-  seoTitle       String?       @map("seo_title")
-  seoDescription String?       @map("seo_description")
+  id              String        @id @default(uuid())
+  name            String
+  slug            String        @unique
+  description     String
+  features        Json?
+  iconUrl         String?       @map("icon_url")
+  category        String?
+  status          ContentStatus @default(draft)
+  displayOrder    Int           @default(0) @map("display_order")
+  seoTitle        String?       @map("seo_title")
+  seoDescription  String?       @map("seo_description")
+
+  tagline         String?
+  heroImage       String?       @map("hero_image")
+  heroAlt         String?       @map("hero_alt")
+  logoUrl         String?       @map("logo_url")
+  screenshotUrls  Json?         @map("screenshot_urls")
+  keywords        String?
+  canonical       String?
+  featured        Boolean       @default(false)
+  publishedAt     DateTime?     @map("published_at")
+  launchStatus    String?       @map("launch_status")
+  freemiumEnabled Boolean       @default(false) @map("freemium_enabled")
+  freeLimit       String?       @map("free_limit")
+  trialDays       Int?          @map("trial_days")
+  customerCount   String?       @map("customer_count")
+  techStack       Json?         @map("tech_stack")
+  pricingTiers    Json?         @map("pricing_tiers")
+  integrations    Json?
+  useCases        Json?         @map("use_cases")
+  testimonials    Json?
+  caseStudies     Json?         @map("case_studies")
+  comparisonTable Json?         @map("comparison_table")
+  roadmap         Json?
+  primaryCta      Json?         @map("primary_cta")
+  secondaryCtas   Json?         @map("secondary_ctas")
+  pricingCalcUrl  String?       @map("pricing_calc_url")
+  demoUrl         String?       @map("demo_url")
+  longFormContent String?       @map("long_form_content") @db.Text
+  faq             Json?
+
   createdAt      DateTime      @default(now()) @map("created_at")
   updatedAt      DateTime      @updatedAt @map("updated_at")
   createdById    String?       @map("created_by")

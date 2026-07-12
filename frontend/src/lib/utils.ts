@@ -21,3 +21,11 @@ export function truncate(text: string, length: number) {
 export function stripHtml(html: string) {
   return html.replace(/<[^>]*>/g, '');
 }
+
+export function formatCurrencyIDR(amount: number) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}

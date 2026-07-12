@@ -3,8 +3,25 @@ import { ArrowRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
-import type { Product } from '@/types';
+import { formatCurrencyIDR } from '@/lib/utils';
+import type { Product, ProductFeatureGroup, ProductFeatureItem } from '@/types';
 import type { Metadata } from 'next';
+
+function featureTeasers(features?: ProductFeatureItem[] | ProductFeatureGroup[]): string[] {
+  if (!features || !features.length) return [];
+  const first = features[0] as ProductFeatureGroup;
+  if (first.category && first.features) {
+    return first.features.slice(0, 3).map((f) => f.name || f.title || '');
+  }
+  return (features as ProductFeatureItem[]).slice(0, 3).map((f) => f.title || f.name || '');
+}
+
+function cheapestPrice(product: Product): number | null {
+  const amounts = (product.pricingTiers || [])
+    .map((t) => t.pricing?.amount)
+    .filter((a): a is number => typeof a === 'number');
+  return amounts.length ? Math.min(...amounts) : null;
+}
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.products.title,
@@ -72,28 +89,41 @@ export default async function ProductsPage({
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <Link key={product.id} href={`/products/${product.slug}`}>
-                <Card hover className="h-full">
-                  <div className="text-xs text-blue-900 font-medium mb-2">{product.category}</div>
-                  <h2 className="text-xl font-semibold text-gray-900">{product.name}</h2>
-                  <p className="mt-3 text-gray-600 line-clamp-3">{product.description}</p>
-                  {product.features && Array.isArray(product.features) && (
-                    <ul className="mt-4 space-y-1">
-                      {(product.features as { title: string }[]).slice(0, 3).map((f, i) => (
-                        <li key={i} className="text-sm text-gray-500 flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-blue-900" />
-                          {f.title}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <span className="mt-4 inline-flex items-center text-sm text-blue-900 font-medium">
-                    Lihat detail <ArrowRight className="h-4 w-4 ml-1" />
-                  </span>
-                </Card>
-              </Link>
-            ))}
+            {products.map((product) => {
+              const teasers = featureTeasers(product.features);
+              const price = cheapestPrice(product);
+              return (
+                <Link key={product.id} href={`/products/${product.slug}`}>
+                  <Card hover className="h-full">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-xs text-blue-900 font-medium">{product.category}</span>
+                      {product.featured && <span className="text-xs font-semibold text-amber-600">★ Unggulan</span>}
+                    </div>
+                    <h2 className="text-xl font-semibold text-gray-900">{product.name}</h2>
+                    {product.tagline && <p className="mt-1 text-sm text-gray-500">{product.tagline}</p>}
+                    <p className="mt-3 text-gray-600 line-clamp-3">{product.description}</p>
+                    {teasers.length > 0 && (
+                      <ul className="mt-4 space-y-1">
+                        {teasers.map((title, i) => (
+                          <li key={i} className="text-sm text-gray-500 flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-blue-900" />
+                            {title}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {price != null && (
+                      <p className="mt-4 text-sm font-semibold text-gray-900">
+                        Mulai dari {price === 0 ? 'Gratis' : formatCurrencyIDR(price)}
+                      </p>
+                    )}
+                    <span className="mt-2 inline-flex items-center text-sm text-blue-900 font-medium">
+                      Lihat detail <ArrowRight className="h-4 w-4 ml-1" />
+                    </span>
+                  </Card>
+                </Link>
+              );
+            })}
           </div>
 
           {products.length === 0 && (
