@@ -9,15 +9,17 @@ import { formatCurrencyIDR } from '@/lib/utils';
 import type { Product, ProductFeatureGroup, ProductFeatureItem, BlogPost, Faq } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getApiBaseUrl } from '@/lib/api';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const API_URL = getApiBaseUrl();
 
 async function getProduct(slug: string) {
   try {
     const res = await fetch(`${API_URL}/products/${slug}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return (await res.json()).data as Product;
-  } catch {
+  } catch (error) {
+    console.error('[products] Failed to load product detail', { slug, apiUrl: API_URL, error });
     return null;
   }
 }

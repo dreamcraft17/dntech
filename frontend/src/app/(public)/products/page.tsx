@@ -6,6 +6,7 @@ import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
 import { formatCurrencyIDR } from '@/lib/utils';
 import type { Product, ProductFeatureGroup, ProductFeatureItem } from '@/types';
 import type { Metadata } from 'next';
+import { getApiBaseUrl } from '@/lib/api';
 
 function featureTeasers(features?: ProductFeatureItem[] | ProductFeatureGroup[]): string[] {
   if (!features || !features.length) return [];
@@ -30,7 +31,7 @@ export const metadata: Metadata = buildMetadata({
   keywords: PAGE_SEO.products.keywords,
 });
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const API_URL = getApiBaseUrl();
 
 async function getProducts(searchParams: { category?: string; search?: string }) {
   const params = new URLSearchParams();
@@ -40,7 +41,8 @@ async function getProducts(searchParams: { category?: string; search?: string })
     const res = await fetch(`${API_URL}/products?${params}`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     return (await res.json()).data as Product[];
-  } catch {
+  } catch (error) {
+    console.error('[products] Failed to load public products', { apiUrl: API_URL, error });
     return [];
   }
 }

@@ -1,10 +1,19 @@
 import { endGlobalLoading, startGlobalLoading } from './loading-events';
 
-const DEFAULT_API_URL = 'http://localhost:4000/api/v1';
+const DEFAULT_API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://api.dntech.id/api/v1'
+  : 'http://localhost:4000/api/v1';
 
 /** Production API lives on api.dntech.id — not dntech.id/api (404). */
 export function getApiBaseUrl(): string {
   const configured = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
+
+  if (
+    process.env.NODE_ENV === 'production' &&
+    (/localhost(?::\d+)?/i.test(configured) || /127\.0\.0\.1(?::\d+)?/.test(configured))
+  ) {
+    return 'https://api.dntech.id/api/v1';
+  }
 
   if (
     configured.includes('://dntech.id/') ||
