@@ -75,7 +75,7 @@ async function main() {
       companyName: 'DN Tech',
       tagline: DEFAULT_HERO.title,
       heroDescription: DEFAULT_HERO.supporting,
-      companyEmail: 'hello@dntech.id',
+      companyEmail: 'info@dntech.id',
       homeContent,
     },
   });

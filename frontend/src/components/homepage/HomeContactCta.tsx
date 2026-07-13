@@ -8,7 +8,7 @@ interface HomeContactCtaProps {
 }
 
 export function HomeContactCta({ settings }: HomeContactCtaProps) {
-  const email = settings.companyEmail || 'hello@dntech.id';
+  const email = settings.companyEmail || 'info@dntech.id';
   const phone = settings.companyPhone;
   const linkedin = settings.socialLinks?.linkedin;
   const calendly = settings.calendlyUrl;
