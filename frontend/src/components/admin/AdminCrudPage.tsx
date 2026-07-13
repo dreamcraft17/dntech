@@ -29,10 +29,15 @@ export default function AdminCrudPage({
   const [items, setItems] = useState<Item[]>([]);
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const load = useCallback(async () => {
-    const data = await apiFetch<Item[]>(`/admin/${endpoint}`);
-    setItems(data);
+    try {
+      const data = await apiFetch<Item[]>(`/admin/${endpoint}`);
+      setItems(data);
+    } finally {
+      setInitialLoading(false);
+    }
   }, [endpoint]);
 
   useEffect(() => {
@@ -200,7 +205,8 @@ export default function AdminCrudPage({
             ))}
           </tbody>
         </table>
-        {items.length === 0 && <p className="text-center text-gray-500 py-8">Belum ada item</p>}
+        {initialLoading && <div className="flex items-center justify-center gap-2 py-10 text-sm text-gray-500"><span className="h-5 w-5 animate-spin rounded-full border-2 border-blue-900 border-t-transparent" /> Memuat data...</div>}
+        {!initialLoading && items.length === 0 && <p className="text-center text-gray-500 py-8">Belum ada item</p>}
       </div>
     </div>
   );

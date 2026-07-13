@@ -3,6 +3,7 @@
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { usePathname } from 'next/navigation';
+import { PageLoading } from '@/components/ui/PageLoading';
 
 function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const { loading, user } = useAuth();
@@ -12,11 +13,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   if (isLoginPage) return <>{children}</>;
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-900 border-t-transparent rounded-full" />
-      </div>
-    );
+    return <PageLoading fullScreen label="Memeriksa sesi admin..." />;
   }
 
   if (!user) return null;

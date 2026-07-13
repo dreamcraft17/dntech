@@ -1,3 +1,5 @@
+import { endGlobalLoading, startGlobalLoading } from './loading-events';
+
 const DEFAULT_API_URL = 'http://localhost:4000/api/v1';
 
 /** Production API lives on api.dntech.id — not dntech.id/api (404). */
@@ -44,14 +46,19 @@ export async function apiFetch<T>(
     ...options.headers,
   };
 
-  const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
-  const json: ApiResponse<T> = await res.json();
+  startGlobalLoading();
+  try {
+    const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+    const json: ApiResponse<T> = await res.json();
 
-  if (!res.ok || !json.success) {
-    throw new Error(json.error?.message || 'Permintaan gagal');
+    if (!res.ok || !json.success) {
+      throw new Error(json.error?.message || 'Permintaan gagal');
+    }
+
+    return json.data;
+  } finally {
+    endGlobalLoading();
   }
-
-  return json.data;
 }
 
 export async function apiFetchPaginated<T>(
@@ -66,14 +73,19 @@ export async function apiFetchPaginated<T>(
     ...options.headers,
   };
 
-  const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
-  const json = await res.json();
+  startGlobalLoading();
+  try {
+    const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+    const json = await res.json();
 
-  if (!res.ok || !json.success) {
-    throw new Error(json.error?.message || 'Permintaan gagal');
+    if (!res.ok || !json.success) {
+      throw new Error(json.error?.message || 'Permintaan gagal');
+    }
+
+    return { data: json.data, pagination: json.pagination };
+  } finally {
+    endGlobalLoading();
   }
-
-  return { data: json.data, pagination: json.pagination };
 }
 
 export function getApiUrl(path: string) {
