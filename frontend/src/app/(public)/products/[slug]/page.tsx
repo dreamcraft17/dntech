@@ -9,26 +9,20 @@ import { formatCurrencyIDR } from '@/lib/utils';
 import type { Product, ProductFeatureGroup, ProductFeatureItem, BlogPost, Faq } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getApiBaseUrl } from '@/lib/api';
-
-const API_URL = getApiBaseUrl();
+import { fetchPublicApi } from '@/lib/server-api';
 
 async function getProduct(slug: string) {
   try {
-    const res = await fetch(`${API_URL}/products/${slug}`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    return (await res.json()).data as Product;
+    return await fetchPublicApi<Product>(`/products/${slug}`);
   } catch (error) {
-    console.error('[products] Failed to load product detail', { slug, apiUrl: API_URL, error });
+    console.error('[products] Failed to load product detail', { slug, error });
     return null;
   }
 }
 
 async function getRelatedPosts(category: string) {
   try {
-    const res = await fetch(`${API_URL}/blog?category=${encodeURIComponent(category)}&pageSize=3`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    return (await res.json()).data as BlogPost[];
+    return await fetchPublicApi<BlogPost[]>(`/blog?category=${encodeURIComponent(category)}&pageSize=3`);
   } catch {
     return [];
   }
@@ -36,9 +30,7 @@ async function getRelatedPosts(category: string) {
 
 async function getGlobalFaqs() {
   try {
-    const res = await fetch(`${API_URL}/faq`, { next: { revalidate: 300 } });
-    if (!res.ok) return [];
-    return ((await res.json()).data as Faq[]).slice(0, 6);
+    return (await fetchPublicApi<Faq[]>('/faq', 300)).slice(0, 6);
   } catch {
     return [];
   }
