@@ -1,7 +1,7 @@
 /**
  * Seed the dnPeople flagship product page — pricing tiers, features, integrations,
  * use cases, testimonials, comparison table, roadmap, FAQ, and CTAs.
- * Source copy: company-wiki/docs/02_COMPANY_OVERVIEW.md (dnPeople website copywriting).
+ * Source copy: company-wiki/docs/products/dnPeople/copywriting/dnpeople-website-copywriting-id_2.md.
  * Run from backend/: npx tsx scripts/seed-dnpeople-product.ts
  */
 import { PrismaClient } from '@prisma/client';
@@ -25,7 +25,7 @@ const PRICING_TIERS = [
   {
     id: 'starter', name: 'Starter', icon: 'rocket', tagline: 'Untuk 1-50 karyawan',
     popular: false, featured: false,
-    pricing: { amount: 20000, currency: 'IDR', billingPeriod: 'per karyawan per bulan', description: '30 karyawan = IDR 600K/bulan = IDR 7.2M/tahun (Talenta: IDR 4.5M/bulan = IDR 54M/tahun)' },
+    pricing: { amount: 20000, currency: 'IDR', billingPeriod: 'per karyawan per bulan', description: '30 karyawan = IDR 600K/bulan = IDR 7.2M/tahun (Vendor enterprise: IDR 4.5M/bulan = IDR 54M/tahun)' },
     features: [
       'Payroll otomatis',
       'Attendance & leave',
@@ -38,7 +38,7 @@ const PRICING_TIERS = [
   {
     id: 'professional', name: 'Professional', icon: 'star', tagline: 'Recommended untuk 50-300 karyawan',
     popular: true, featured: true,
-    pricing: { amount: 25000, currency: 'IDR', billingPeriod: 'per karyawan per bulan', description: '150 karyawan = IDR 3.75M/bulan = IDR 45M/tahun. Hemat IDR 225M/tahun vs Talenta' },
+    pricing: { amount: 25000, currency: 'IDR', billingPeriod: 'per karyawan per bulan', description: '150 karyawan = IDR 3.75M/bulan = IDR 45M/tahun. Hemat IDR 225M/tahun dibanding Vendor enterprise' },
     features: [
       'Everything di Starter +',
       'Talent development (IDP, competency framework)',
@@ -53,7 +53,7 @@ const PRICING_TIERS = [
   {
     id: 'business', name: 'Business', icon: 'building', tagline: 'Untuk 300+ karyawan (volume discount)',
     popular: false, featured: false,
-    pricing: { amount: 20000, currency: 'IDR', billingPeriod: 'per karyawan per bulan', description: '500 karyawan = IDR 10M/bulan = IDR 120M/tahun. Hemat IDR 600M/tahun vs Talenta' },
+    pricing: { amount: 20000, currency: 'IDR', billingPeriod: 'per karyawan per bulan', description: '500 karyawan = IDR 10M/bulan = IDR 120M/tahun. Hemat IDR 600M/tahun dibanding Vendor enterprise' },
     features: [
       'Everything di Professional +',
       'Multi-branch support',
@@ -110,7 +110,7 @@ const FEATURES = [
       { name: 'IDP (Individual Development Plan)', description: 'Setiap karyawan punya growth roadmap' },
       { name: '9-Box Matrix', description: 'Visualisasi siapa high performer, siapa high potential' },
       { name: 'Succession Planning', description: 'Siapa pengganti untuk critical roles?' },
-      { name: 'LMS (Learning Management System)', description: 'Training + skill tracking. Talenta charge IDR 200K/bulan untuk fitur ini — dnPeople include di semua paket' },
+      { name: 'LMS (Learning Management System)', description: 'Training + skill tracking. Vendor enterprise charge IDR 200K/bulan untuk fitur ini — dnPeople include di semua paket' },
     ],
   },
   {
@@ -146,15 +146,15 @@ const INTEGRATIONS = [
 const USE_CASES = [
   {
     id: 'manufacturing', segment: 'Manufaktur & Pabrik', icon: 'factory',
-    description: 'HR Management untuk pabrik dengan shift kompleks & multi-branch UMR. Harga 1/5 dari Talenta. Payroll jadi 10 menit.',
+    description: 'HR Management untuk pabrik dengan shift kompleks & multi-branch UMR. Harga 1/5 dari Vendor enterprise. Payroll jadi 10 menit.',
     uniqueFeatures: ['Shift scheduling (rotation, swap)', 'Night shift premium calculation', 'Production incentives', 'Safety incident tracking', 'Multi-branch differential UMR setup'],
-    testimonial: { quote: 'Hemat IDR 200 juta per tahun dari Talenta. Setup multi-branch dengan UMR berbeda jadi simple.', author: 'HR Director', company: 'Manufaktur 500 orang', location: 'Jakarta' },
+    testimonial: { quote: 'Hemat IDR 200 juta per tahun dari Vendor enterprise. Setup multi-branch dengan UMR berbeda jadi simple.', author: 'HR Director', company: 'Manufaktur 500 orang', location: 'Jakarta' },
     stats: { savings: 'IDR 200M/tahun', timeToPayroll: '10 menit', setupTime: '1 hari' },
     cta: { label: 'Lihat Demo untuk Manufaktur', url: 'https://calendly.com/dntech/demo-manufacturing' },
   },
   {
     id: 'retail', segment: 'Retail & F&B', icon: 'shopping-bag',
-    description: 'HRIS untuk retail & F&B — crew scheduling, tip pooling, high-volume hiring, semua otomatis. Hemat IDR 50M/bulan dari Talenta.',
+    description: 'HRIS untuk retail & F&B — crew scheduling, tip pooling, high-volume hiring, semua otomatis. Hemat IDR 50M/bulan dari Vendor enterprise.',
     uniqueFeatures: ['Crew scheduling dashboard', 'Tip pooling & distribution', 'High-volume bulk hiring', 'Quick onboarding/offboarding', 'Shift flexibility'],
     testimonial: { quote: 'Crew scheduling jadi automated. Tidak lagi conflict antar shift. Crew happy, we happy.', author: 'People Manager', company: 'Retail Chain 300 orang', location: 'Surabaya' },
     stats: { savings: 'IDR 90M/tahun', timeToPayroll: '10 menit', setupTime: '3 hari' },
@@ -165,7 +165,7 @@ const USE_CASES = [
     description: 'HRIS untuk startup — gratis untuk 100 orang, bayar hanya saat scale. Modern, mobile-friendly, developer-friendly.',
     uniqueFeatures: ['Free tier generous (100 employees)', 'API-first architecture', 'Webhooks & integrations', 'Mobile browser-responsive', 'Flexible payment (month-to-month)'],
     testimonial: { quote: 'Coba free tier dulu, terus upgrade ke Professional. Harganya terjangkau, fiturnya lengkap.', author: 'CEO', company: 'Tech Startup 50 orang', location: 'Bandung' },
-    stats: { savings: 'IDR 25M/tahun (vs Talenta)', timeToPayroll: '10 menit', setupTime: '30 menit' },
+    stats: { savings: 'IDR 25M/tahun (vs Vendor enterprise)', timeToPayroll: '10 menit', setupTime: '30 menit' },
     cta: { label: 'Mulai Gratis Sekarang', url: 'https://app.dnpeople.id/signup' },
   },
 ];
@@ -173,7 +173,7 @@ const USE_CASES = [
 const TESTIMONIALS = [
   {
     id: 'testimonial-1',
-    quote: 'Hemat IDR 200 juta per tahun dari Talenta. Talent development yang included sangat membantu untuk succession planning kami.',
+    quote: 'Hemat IDR 200 juta per tahun dari Vendor enterprise. Talent development yang included sangat membantu untuk succession planning kami.',
     author: 'HR Director', company: 'Perusahaan Manufaktur', employeeCount: '500 karyawan', location: 'Jakarta', industry: 'Manufacturing',
     avatar: 'https://cdn.dntech.id/testimonials/avatar-1.jpg', rating: 5, videoUrl: null, segment: 'manufacturing',
   },
@@ -192,17 +192,22 @@ const TESTIMONIALS = [
 ];
 
 const COMPARISON_TABLE = {
-  title: 'dnPeople vs Kompetitor',
-  competitors: ['dnPeople', 'Talenta', 'Gadjian', 'Gajihub'],
+  title: 'Perbandingan Fitur: dnPeople vs Industry Standard',
+  conclusion: 'dnPeople adalah titik tengah yang tepat: 80% lebih terjangkau daripada Vendor enterprise, tetapi lebih powerful daripada Budget HRIS karena talent development, API, dan customization sudah termasuk. Harga transparan, tanpa biaya tersembunyi, dengan trial penuh selama 30 hari.',
+  competitors: ['dnPeople', 'Enterprise Vendor', 'Budget HRIS'],
   rows: [
-    { feature: 'Harga per Employee', dnpeople: 'IDR 20-25K', talenta: 'IDR 100-150K', gadjian: 'IDR 12-20K', gajihub: 'IDR 11.9K', category: 'pricing' },
-    { feature: 'Payroll', dnpeople: '✅', talenta: '✅', gadjian: '✅', gajihub: '✅', category: 'core' },
-    { feature: 'Talent Development', dnpeople: '✅ Included', talenta: '❌ +IDR 200K', gadjian: '⚠️ Limited', gajihub: '❌', category: 'features' },
-    { feature: 'API', dnpeople: '✅ Included', talenta: '❌ No', gadjian: '⚠️ Limited', gajihub: '❌', category: 'features' },
-    { feature: 'Customization', dnpeople: '✅ Advanced', talenta: '⚠️ Basic', gadjian: '⚠️ Basic', gajihub: '⚠️ Limited', category: 'features' },
-    { feature: 'Mobile App', dnpeople: '🚧 Coming Q3 2027', talenta: '✅', gadjian: '⚠️ Web only', gajihub: '✅', category: 'features' },
-    { feature: 'Transparent Pricing', dnpeople: '✅', talenta: '❌ Contact sales', gadjian: '✅', gajihub: '✅', category: 'pricing' },
-    { feature: 'Free Trial', dnpeople: '✅ 30 hari', talenta: '✅ 14 hari', gadjian: '✅', gajihub: '⚠️ Limited', category: 'pricing' },
+    { feature: 'Harga/Employee', dnpeople: 'IDR 20-25K', enterprisevendor: 'IDR 100-150K', budgethris: 'IDR 10-20K', category: 'pricing' },
+    { feature: 'Payroll (BPJS, PPh 21)', dnpeople: '✅ Complete', enterprisevendor: '✅ Complete', budgethris: '✅ Basic', category: 'core' },
+    { feature: 'Talent Development', dnpeople: '✅ Included (IDP, 9-box, succession)', enterprisevendor: '❌ Add-on +IDR 100-200K', budgethris: '⚠️ Limited/None', category: 'features' },
+    { feature: 'API & Integrations', dnpeople: '✅ Included (REST, webhooks)', enterprisevendor: '❌ Extra cost or not available', budgethris: '⚠️ Limited', category: 'features' },
+    { feature: 'Customization', dnpeople: '✅ Rule-based (flexible)', enterprisevendor: '⚠️ Template-based (rigid)', budgethris: '⚠️ Very limited', category: 'features' },
+    { feature: 'Multi-branch Support', dnpeople: '✅ Advanced (different UMR per location)', enterprisevendor: '⚠️ Basic', budgethris: '⚠️ Limited', category: 'features' },
+    { feature: 'Mobile App', dnpeople: '🚧 Q3 2027', enterprisevendor: '✅ Native app', budgethris: '✅ Web responsive', category: 'features' },
+    { feature: 'Transparent Pricing', dnpeople: '✅ Fixed pricing on website', enterprisevendor: '❌ "Contact sales" mystery pricing', budgethris: '✅ Clear pricing', category: 'pricing' },
+    { feature: 'Implementation Time', dnpeople: '2-4 minggu', enterprisevendor: '8-12 minggu', budgethris: '1-2 minggu', category: 'service' },
+    { feature: 'Support Response', dnpeople: '24-hour guaranteed', enterprisevendor: 'Slow (enterprise SLA)', budgethris: 'Email only', category: 'service' },
+    { feature: 'Free Trial', dnpeople: '✅ 30 hari (full access)', enterprisevendor: '⚠️ 14 hari (limited)', budgethris: '⚠️ Free tier terbatas', category: 'pricing' },
+    { feature: 'No Hidden Fees', dnpeople: '✅ Transparan', enterprisevendor: '❌ Surprise add-ons', budgethris: '✅ Tapi fitur terbatas', category: 'pricing' },
   ],
 };
 
@@ -243,8 +248,8 @@ const FAQ = [
     answer: 'Ya! Dua cara: (1) Free tier — gratis selamanya untuk sampai 100 karyawan, full access ke semua fitur core (payroll, leave, attendance, talent dev). (2) Paid tier trial — 30 hari free di tier manapun, tanpa credit card, coba Professional tier dengan full features.',
   },
   {
-    question: 'Bisakah migrate dari Talenta?',
-    answer: 'Bisa! Kami punya dedicated migration service — export data dari Talenta, mapping ke dnPeople schema, training tim Anda, dan go-live support. Included di paket tahun pertama, tanpa biaya tambahan.',
+    question: 'Bisakah migrate dari Vendor enterprise?',
+    answer: 'Bisa! Kami punya dedicated migration service — export data dari Vendor enterprise, mapping ke dnPeople schema, training tim Anda, dan go-live support. Included di paket tahun pertama, tanpa biaya tambahan.',
   },
   {
     question: 'Support-nya bagus ga?',
@@ -285,7 +290,7 @@ async function main() {
     longFormContent: [
       '## Kenapa HR Teams Milih dnPeople?',
       '',
-      '**Hemat hingga 80% dari Talenta** — Talenta bayar IDR 100-150K per karyawan per bulan, dnPeople hanya IDR 20-25K, fitur yang sama, harga 1/4 nya. Untuk 200 karyawan: hemat IDR 15-18 juta per bulan, atau IDR 180-216 juta setahun.',
+      '**Hemat hingga 80% dari Vendor enterprise** — Vendor HRIS enterprise charge IDR 100-150K per karyawan per bulan, dnPeople hanya IDR 20-25K, fitur yang sama, harga 1/4 nya. Untuk 200 karyawan: hemat IDR 15-18 juta per bulan, atau IDR 180-216 juta setahun.',
       '',
       '**Payroll, Talent Dev, Customization — semuanya included** — Tidak ada biaya tersembunyi atau fitur tambahan yang mahal. Semua tier punya payroll otomatis (BPJS, PPh 21, THR), talent development (IDP, 9-box matrix, succession planning), leave & attendance management, dan API untuk integrasi.',
       '',
@@ -311,8 +316,8 @@ async function main() {
     demoUrl: 'https://calendly.com/dntech/demo',
     pricingCalcUrl: '/contact?product=dnpeople&intent=pricing-calculator',
     seoTitle: 'dnPeople — Payroll & HR Jadi Mudah, Harga Terjangkau',
-    seoDescription: 'Solusi HRIS untuk SME Indonesia. Kelola karyawan, payroll, dan talent development di satu platform. Harga 1/4 dari Talenta, tanpa biaya tersembunyi.',
-    keywords: 'HRIS Indonesia, payroll software, talent development, aplikasi HR SME, alternatif Talenta',
+    seoDescription: 'Solusi HRIS untuk SME Indonesia. Kelola karyawan, payroll, dan talent development di satu platform. Harga 1/4 dari Vendor enterprise, tanpa biaya tersembunyi.',
+    keywords: 'HRIS Indonesia, payroll software, talent development, aplikasi HR SME, HRIS harga terjangkau',
   };
 
   const product = await prisma.product.upsert({
