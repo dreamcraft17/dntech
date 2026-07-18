@@ -2,6 +2,11 @@
 
 Dokumentasi lengkap website company profile **DN Tech** (`dntech.id`): arsitektur, tech stack, fitur, database, API, dan panduan operasional.
 
+**Owner:** Dozer (CEO + Tech Lead)  
+**Company:** DN Tech (PT. Dozer Napitupulu Technology)  
+**Brand:** DN Tech (DN Tech.id)  
+**UpdatedAt:** July 18, 2026  
+
 ---
 
 ## Daftar Isi
@@ -98,7 +103,7 @@ Proyek ini dirancang untuk **production dengan data real**:
 ### Bahasa & Lokal
 
 - UI website: **Bahasa Indonesia**
-- Mata uang: **Rupiah (IDR)** — estimasi biaya, form anggaran, kalkulator ROI
+- Mata uang: **Rupiah (IDR)** — estimasi biaya, form anggaran, pricing homepage
 - Locale SEO: `id_ID`
 
 ---
@@ -128,8 +133,8 @@ Proyek ini dirancang untuk **production dengan data real**:
           ┌─────────────┼─────────────┐
           ▼             ▼             ▼
    ┌────────────┐ ┌──────────┐ ┌─────────────┐
-   │ PostgreSQL │ │  Uploads │ │  SendGrid   │
-   │  (Prisma)  │ │  (disk)  │ │  (email)    │
+   │ PostgreSQL │ │  Uploads │ │ SMTP /      │
+   │  (Prisma)  │ │  (disk)  │ │ nodemailer  │
    └────────────┘ └──────────┘ └─────────────┘
 ```
 
@@ -150,7 +155,7 @@ Semua halaman berada di `frontend/src/app/(public)/`.
 
 | Route | Deskripsi |
 |-------|-----------|
-| `/` | Beranda — hero, statistik, layanan, studi kasus, testimoni, blog, kalkulator ROI, newsletter |
+| `/` | Beranda Indonesia Edition — hero, layanan, proses, keunggulan, portfolio, testimoni, FAQ, harga, CTA (tech stack & tim hidden) |
 | `/services` | Daftar layanan |
 | `/services/[slug]` | Detail layanan + artikel terkait |
 | `/products` | Daftar produk (V6, terpisah dari Layanan) |
@@ -179,12 +184,13 @@ Semua halaman berada di `frontend/src/app/(public)/`.
 |----------|--------|
 | `MultiStepForm` | Form kontak 3 langkah (info → proyek → pesan) |
 | `SolutionQuiz` | Kuis 5 pertanyaan → rekomendasi layanan dari DB |
-| `ROICalculator` | Estimasi biaya proyek dalam Rupiah |
-| `ExitIntentModal` | Popup saat user mau menutup tab (desktop, setelah 8 detik) |
-| `BookDemoSection` | Embed Calendly dari settings |
-| `NewsletterForm` | Langganan newsletter |
-| `TestimonialCarousel` | Slider testimoni |
+| `ExitIntentModal` | Popup desktop saat mouse keluar dari top edge (sekali per session; mobile off) |
+| `CalendlyEmbed` | Embed Calendly di `/contact` dari settings |
+| `NewsletterForm` | Langganan newsletter (aktif di `/resources`, bukan homepage/footer) |
+| `HomeTestimonials` | Testimoni homepage dari `/branding/testimonials` |
 | `StickyCTA` | CTA mobile di bagian bawah |
+
+> Catatan: `ROICalculator` / `BookDemoSection` masih ada di source tapi **tidak di-mount** di halaman live.
 
 ### Konten Dinamis dari Settings
 
@@ -595,12 +601,13 @@ Panduan lengkap: [`docs/DEPLOYMENT-PRODUCTION.md`](./DEPLOYMENT-PRODUCTION.md)
 
 | Integrasi | Konfigurasi | Fungsi |
 |-----------|-------------|--------|
-| **SendGrid** | `SENDGRID_API_KEY` di backend `.env` | Email konfirmasi form & quiz follow-up |
+| **SMTP (V5, primary)** | `SMTP_HOST` / `SMTP_USER` / `SMTP_PASSWORD` (`mx8.mailspace.id:465`) | Email transactional: leads, newsletter, careers, quiz |
+| **SendGrid (legacy env)** | `SENDGRID_*` di `.env.example` | **Unused** — tidak ada fallback path di kode; biarkan kosong |
 | **Google Analytics** | Admin settings → `googleAnalyticsId` | Tracking traffic |
 | **Crisp Chat** | Admin settings → `crispWebsiteId` | Live chat widget |
 | **Calendly** | Admin settings → `calendlyUrl` | Jadwal demo di halaman kontak |
 
-Jika SendGrid tidak dikonfigurasi, email di-log ke console (development mode).
+Jika SMTP tidak dikonfigurasi, email di-log ke console (development mode). Lihat `docs/v5/` dan `docs/IMPLEMENTATION-STATUS.md` §14.
 
 ---
 
@@ -678,16 +685,25 @@ pm2 restart dntech-web
 
 ```
 Proyek     : Website company profile + CMS admin untuk DN Tech
-Stack      : Next.js 16 + Express 5 + PostgreSQL + Prisma
+Stack      : Next.js 16.2.9 + React 19.2.4 + Express 5 + PostgreSQL + Prisma
 Bahasa UI  : Indonesia | Mata uang: IDR
 Repo       : https://github.com/dreamcraft17/dntech
 Production : dntech.id | api.dntech.id
 Admin      : /admin/login
 Konten     : 100% dari database via admin — tanpa data demo hardcoded
+Owner      : Dozer (CEO + Tech Lead)
+Brand      : DN Tech (DN Tech.id)
 ```
 
 ---
 
-*Terakhir diperbarui: 12 Juli 2026*
+*Terakhir diperbarui: 18 Juli 2026*
+
+| | |
+|---|---|
+| Owner | Dozer (CEO + Tech Lead) |
+| Company | DN Tech (PT. Dozer Napitupulu Technology) |
+| Brand | DN Tech (DN Tech.id) |
+| UpdatedAt | July 18, 2026 |
 
 Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

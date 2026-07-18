@@ -1,5 +1,10 @@
 # Production Deployment (Ubuntu + PostgreSQL)
 
+**Owner:** Dozer (CEO + Tech Lead)  
+**Company:** DN Tech (PT. Dozer Napitupulu Technology)  
+**Brand:** DN Tech (DN Tech.id)  
+**UpdatedAt:** July 18, 2026  
+
 ## 1. PostgreSQL
 
 ```bash
@@ -36,6 +41,13 @@ FRONTEND_URL="https://www.dntech.id,https://dntech.id"
 UPLOAD_DIR=./uploads
 ADMIN_EMAIL=admin@dntech.id
 ADMIN_PASSWORD=Admin@123456
+SMTP_HOST=mx8.mailspace.id
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=info@dntech.id
+SMTP_PASSWORD=CHANGE_ME
+SMTP_FROM_NAME=DN Tech
+SMTP_FROM_EMAIL=info@dntech.id
 ```
 
 Encode `!` di URL jika perlu: `dntech2026%21`
@@ -56,6 +68,8 @@ npx prisma generate
 npm run build
 npx prisma db push
 npm run db:seed
+# Setelah schema Product V6/V7 aktif:
+npm run db:seed-dnpeople
 ```
 
 ### Prisma generate gagal (network)
@@ -176,5 +190,12 @@ location /api/ {
 - [ ] Frontend **rebuild** setelah ubah `.env.local`
 - [ ] `/products` dan satu detail produk aktif tampil setelah rebuild
 - [ ] Backend `FRONTEND_URL` mencakup `https://dntech.id` dan `https://www.dntech.id`
+
+| | |
+|---|---|
+| Owner | Dozer (CEO + Tech Lead) |
+| Company | DN Tech (PT. Dozer Napitupulu Technology) |
+| Brand | DN Tech (DN Tech.id) |
+| UpdatedAt | July 18, 2026 |
 
 Property of DN Tech - PT. Dozer Napitupulu Technology . 2026
