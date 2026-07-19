@@ -10,8 +10,12 @@ interface HomeHeroProps {
 
 export function HomeHero({ content }: HomeHeroProps) {
   return (
-    <section className="bg-blue-900 text-white">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+    <section
+      className="relative overflow-hidden bg-blue-950 bg-cover bg-center text-white"
+      style={{ backgroundImage: "url('/hero_bg.png')" }}
+    >
+      <div className="absolute inset-0 bg-blue-950/45" aria-hidden="true" />
+      <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="max-w-3xl">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-blue-200">
             DN Tech<span className="text-white">.id</span>
