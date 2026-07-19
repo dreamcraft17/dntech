@@ -23,6 +23,9 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState('');
+  const [searchSearched, setSearchSearched] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const pathname = usePathname();
@@ -35,11 +38,16 @@ export function Header() {
 
     if (q.length < 2) {
       setSearchResults([]);
+      setSearchLoading(false);
+      setSearchError('');
+      setSearchSearched(false);
       return;
     }
 
     debounceRef.current = setTimeout(async () => {
       try {
+        setSearchLoading(true);
+        setSearchError('');
         const controller = new AbortController();
         abortRef.current = controller;
         const results = await apiFetch<SearchResult[]>(
@@ -47,9 +55,14 @@ export function Header() {
           { signal: controller.signal }
         );
         setSearchResults(results);
+        setSearchSearched(true);
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') return;
+        setSearchError(err instanceof Error ? err.message : 'Pencarian gagal');
         setSearchResults([]);
+        setSearchSearched(true);
+      } finally {
+        setSearchLoading(false);
       }
     }, 300);
   }, []);
@@ -137,6 +150,13 @@ export function Header() {
                     <div className="text-xs text-gray-500 mt-0.5">{result.type} · {result.snippet}</div>
                   </button>
                 ))}
+              </div>
+            )}
+            {(searchLoading || searchError || (searchSearched && searchQuery.length >= 2 && searchResults.length === 0)) && (
+              <div className="mt-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-600">
+                {searchLoading && 'Mencari...'}
+                {!searchLoading && searchError && `Search error: ${searchError}`}
+                {!searchLoading && !searchError && `Belum ada hasil untuk “${searchQuery}”. Coba kata lain seperti “software”, “web”, “produk”, atau “kontak”.`}
               </div>
             )}
           </div>

@@ -8,7 +8,9 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const q = String(req.query.q || '').trim();
+    const startedAt = Date.now();
     if (!q || q.length < 2) {
+      console.info('[search] ignored short query', { q, ip: req.ip });
       return successResponse(res, []);
     }
 
@@ -106,6 +108,18 @@ router.get(
         url: `/faq#${f.id}`,
       })),
     ];
+
+    console.info('[search] completed', {
+      q,
+      total: results.length,
+      services: services.length,
+      products: products.length,
+      blogPosts: blogPosts.length,
+      portfolio: portfolio.length,
+      faqs: faqs.length,
+      durationMs: Date.now() - startedAt,
+      ip: req.ip,
+    });
 
     successResponse(res, results);
   })
