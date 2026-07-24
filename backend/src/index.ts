@@ -6,6 +6,7 @@ import compression from 'compression';
 import path from 'path';
 import rateLimit from 'express-rate-limit';
 
+import prisma from './config/database';
 import authRoutes from './routes/auth';
 import servicesRoutes from './routes/services';
 import productsRoutes from './routes/products';
@@ -90,8 +91,22 @@ app.use('/api/v1', apiLimiter);
 const uploadDir = process.env.UPLOAD_DIR || './uploads';
 app.use('/uploads', express.static(path.resolve(uploadDir)));
 
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('/health', async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV || 'development',
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : 'Database unavailable',
+    });
+  }
 });
 
 const v1 = express.Router();

@@ -14,6 +14,8 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:clear-content": "tsx scripts/clear-content.ts",
     "db:seed-dnpeople": "tsx scripts/seed-dnpeople-product.ts",
+    "db:disable-seed-admin": "tsx scripts/disable-seed-admin.ts",
+    "validate:env": "tsx scripts/validate-env.ts",
     "postinstall": "prisma generate",
     "lint": "eslint src --ext .ts"
   },

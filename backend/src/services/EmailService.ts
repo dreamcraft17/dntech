@@ -247,3 +247,12 @@ export async function sendQuizFollowUp(to: string, name: string, service: string
     templateId: 'quiz-recommendations',
   });
 }
+
+export async function sendPasswordResetEmail(to: string, name: string, token: string) {
+  const base = frontendBase();
+  const resetUrl = `${base}/admin/reset-password?token=${encodeURIComponent(token)}`;
+  const template = emailTemplates.passwordReset(name, resetUrl);
+  return emailService.sendEmailWithRetry(to, template.subject, template.html, {
+    templateId: 'password-reset',
+  });
+}

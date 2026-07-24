@@ -70,6 +70,30 @@ export async function apiFetch<T>(
   }
 }
 
+export async function apiUpload<T>(endpoint: string, file: File): Promise<T> {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const formData = new FormData();
+  formData.append('file', file);
+
+  startGlobalLoading();
+  try {
+    const res = await fetch(`${API_URL}${endpoint}`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      body: formData,
+    });
+    const json: ApiResponse<T> = await res.json();
+
+    if (!res.ok || !json.success) {
+      throw new Error(json.error?.message || 'Upload gagal');
+    }
+
+    return json.data;
+  } finally {
+    endGlobalLoading();
+  }
+}
+
 export async function apiFetchPaginated<T>(
   endpoint: string,
   options: RequestInit = {}

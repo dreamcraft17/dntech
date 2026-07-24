@@ -162,4 +162,16 @@ export const emailTemplates = {
       `),
     };
   },
+
+  passwordReset(userName: string, resetUrl: string) {
+    return {
+      subject: 'Reset Password - DN Tech Admin',
+      html: shell('Reset Password', `
+        <p>Halo <strong>${escapeHtml(userName)}</strong>,</p>
+        <p>Kami menerima permintaan untuk mereset password akun admin Anda.</p>
+        <p><a href="${resetUrl}" style="display:inline-block;background:#1e3a8a;color:#fff;text-decoration:none;padding:10px 16px;border-radius:6px;">Reset Password</a></p>
+        <p style="font-size:13px;color:#6b7280;">Link ini berlaku selama <strong>1 jam</strong>. Jika Anda tidak meminta reset password, abaikan email ini.</p>
+      `),
+    };
+  },
 };

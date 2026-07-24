@@ -7,8 +7,11 @@ import {
   hashPassword,
   comparePassword,
   generateToken,
+  generateRefreshToken,
+  verifyRefreshToken,
   validatePassword,
 } from '../utils/auth';
+import { sendPasswordResetEmail } from '../services/EmailService';
 import { asyncHandler, successResponse, AppError } from '../utils/helpers';
 import { authenticate, AuthRequest, logActivity } from '../middleware/auth';
 
@@ -50,11 +53,39 @@ router.post(
     await logActivity(user.id, 'login', 'user', user.id, undefined, req.ip);
 
     const token = generateToken({ sub: user.id, email: user.email, role: user.role });
+    const refreshToken = generateRefreshToken(user.id);
 
     successResponse(res, {
       access_token: token,
+      refresh_token: refreshToken,
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
     });
+  })
+);
+
+const refreshSchema = z.object({ refresh_token: z.string().min(1) });
+
+router.post(
+  '/refresh',
+  rateLimit({ windowMs: 15 * 60 * 1000, max: 30 }),
+  asyncHandler(async (req, res) => {
+    const { refresh_token } = refreshSchema.parse(req.body);
+
+    let payload;
+    try {
+      payload = verifyRefreshToken(refresh_token);
+    } catch {
+      throw new AppError(401, 'INVALID_REFRESH_TOKEN', 'Invalid or expired refresh token');
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: payload.sub } });
+    if (!user || !user.isActive) {
+      throw new AppError(401, 'INVALID_REFRESH_TOKEN', 'Invalid or expired refresh token');
+    }
+
+    const accessToken = generateToken({ sub: user.id, email: user.email, role: user.role });
+
+    successResponse(res, { access_token: accessToken });
   })
 );
 
@@ -96,11 +127,10 @@ router.post(
         data: {
           userId: user.id,
           token,
-          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          expiresAt: new Date(Date.now() + 60 * 60 * 1000),
         },
       });
-      // In production, send email with reset link
-      console.log(`Password reset token for ${email}: ${token}`);
+      await sendPasswordResetEmail(user.email, user.name, token);
     }
 
     successResponse(res, { message: 'If the email exists, a reset link has been sent' });

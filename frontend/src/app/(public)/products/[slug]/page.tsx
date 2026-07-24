@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { JsonLd, breadcrumbSchema, productSchema, faqSchema } from '@/components/seo/JsonLd';
 import { InternalLinks } from '@/components/seo/InternalLinks';
+import { ROICalculator } from '@/components/interactive/ROICalculator';
+import { BookDemoSection } from '@/components/interactive/BookDemoSection';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { formatCurrencyIDR } from '@/lib/utils';
 import type { Product, ProductFeatureGroup, ProductFeatureItem, BlogPost, Faq } from '@/types';
@@ -276,6 +278,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
           )}
 
+          {product.pricingTiers && product.pricingTiers.length > 0 && (
+            <div className="mt-20">
+              <ROICalculator />
+            </div>
+          )}
+
           {product.integrations && product.integrations.length > 0 && (
             <div className="mt-20">
               <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Integrasi</h2>
@@ -363,6 +371,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </div>
             </div>
           )}
+
+          <div className="mt-20 -mx-4 sm:-mx-6 lg:-mx-8">
+            <BookDemoSection calendlyUrl={product.demoUrl} />
+          </div>
 
           {faqs.length > 0 && (
             <div className="mt-20 max-w-3xl mx-auto">

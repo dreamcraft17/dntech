@@ -7,18 +7,22 @@ import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { Toast } from '@/components/ui/Toast';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
-import type { Product } from '@/types';
+import type { Product, PricingTier, ProductFaqItem } from '@/types';
+import { ImageUploadField } from '@/components/admin/ImageUploadField';
+import { ImageListUploadField } from '@/components/admin/ImageListUploadField';
+import { PricingTiersEditor } from '@/components/admin/PricingTiersEditor';
+import { FaqEditor } from '@/components/admin/FaqEditor';
 
 const emptyForm = {
   name: '', slug: '', description: '', tagline: '', category: '', longFormContent: '',
   seoTitle: '', seoDescription: '', keywords: '', canonical: '',
-  heroImage: '', heroAlt: '', logoUrl: '', screenshotUrls: '[]',
+  heroImage: '', heroAlt: '', logoUrl: '', screenshotUrls: [] as string[],
   primaryCta: '{}', secondaryCtas: '[]', demoUrl: '', pricingCalcUrl: '',
-  pricingTiers: '[]', freemiumEnabled: false, freeLimit: '', trialDays: '',
+  pricingTiers: [] as PricingTier[], freemiumEnabled: false, freeLimit: '', trialDays: '',
   features: '[]', useCases: '[]', techStack: '[]',
   integrations: '[]', comparisonTable: '{}',
   testimonials: '[]', caseStudies: '[]', customerCount: '',
-  roadmap: '[]', faq: '[]',
+  roadmap: '[]', faq: [] as ProductFaqItem[],
   status: 'draft' as string, featured: false, launchStatus: '', displayOrder: 0, publishedAt: '',
 };
 
@@ -80,12 +84,12 @@ export default function AdminProductsPage() {
       heroImage: item.heroImage || '',
       heroAlt: item.heroAlt || '',
       logoUrl: item.logoUrl || '',
-      screenshotUrls: JSON.stringify(item.screenshotUrls || [], null, 2),
+      screenshotUrls: item.screenshotUrls || [],
       primaryCta: JSON.stringify(item.primaryCta || {}, null, 2),
       secondaryCtas: JSON.stringify(item.secondaryCtas || [], null, 2),
       demoUrl: item.demoUrl || '',
       pricingCalcUrl: item.pricingCalcUrl || '',
-      pricingTiers: JSON.stringify(item.pricingTiers || [], null, 2),
+      pricingTiers: item.pricingTiers || [],
       freemiumEnabled: item.freemiumEnabled || false,
       freeLimit: item.freeLimit || '',
       trialDays: item.trialDays != null ? String(item.trialDays) : '',
@@ -98,7 +102,7 @@ export default function AdminProductsPage() {
       caseStudies: JSON.stringify(item.caseStudies || [], null, 2),
       customerCount: item.customerCount || '',
       roadmap: JSON.stringify(item.roadmap || [], null, 2),
-      faq: JSON.stringify(item.faq || [], null, 2),
+      faq: item.faq || [],
       status: item.status || 'draft',
       featured: item.featured || false,
       launchStatus: item.launchStatus || '',
@@ -126,12 +130,12 @@ export default function AdminProductsPage() {
         heroImage: editing.heroImage || undefined,
         heroAlt: editing.heroAlt || undefined,
         logoUrl: editing.logoUrl || undefined,
-        screenshotUrls: parseJsonField(editing.screenshotUrls, 'Screenshot URLs', []),
+        screenshotUrls: editing.screenshotUrls,
         primaryCta: parseJsonField(editing.primaryCta, 'Primary CTA', {}),
         secondaryCtas: parseJsonField(editing.secondaryCtas, 'Secondary CTAs', []),
         demoUrl: editing.demoUrl || undefined,
         pricingCalcUrl: editing.pricingCalcUrl || undefined,
-        pricingTiers: parseJsonField(editing.pricingTiers, 'Pricing Tiers', []),
+        pricingTiers: editing.pricingTiers,
         freemiumEnabled: editing.freemiumEnabled,
         freeLimit: editing.freeLimit || undefined,
         trialDays: editing.trialDays ? Number(editing.trialDays) : undefined,
@@ -144,7 +148,7 @@ export default function AdminProductsPage() {
         caseStudies: parseJsonField(editing.caseStudies, 'Studi Kasus', []),
         customerCount: editing.customerCount || undefined,
         roadmap: parseJsonField(editing.roadmap, 'Roadmap', []),
-        faq: parseJsonField(editing.faq, 'FAQ', []),
+        faq: editing.faq,
         status: editing.status,
         featured: editing.featured,
         launchStatus: editing.launchStatus || undefined,
@@ -218,13 +222,15 @@ export default function AdminProductsPage() {
 
           <Card title="Media & CTA">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input label="Hero Image URL" value={editing.heroImage} onChange={(e) => setEditing({ ...editing, heroImage: e.target.value })} />
+              <ImageUploadField label="Hero Image" value={editing.heroImage} onChange={(url) => setEditing({ ...editing, heroImage: url })} />
               <Input label="Hero Alt Text" value={editing.heroAlt} onChange={(e) => setEditing({ ...editing, heroAlt: e.target.value })} />
-              <Input label="Logo URL" value={editing.logoUrl} onChange={(e) => setEditing({ ...editing, logoUrl: e.target.value })} />
+              <ImageUploadField label="Logo" value={editing.logoUrl} onChange={(url) => setEditing({ ...editing, logoUrl: url })} />
               <Input label="Demo URL (Calendly)" value={editing.demoUrl} onChange={(e) => setEditing({ ...editing, demoUrl: e.target.value })} />
               <Input label="Pricing Calculator URL" value={editing.pricingCalcUrl} onChange={(e) => setEditing({ ...editing, pricingCalcUrl: e.target.value })} />
             </div>
-            <Textarea label="Screenshot URLs (JSON array)" rows={4} value={editing.screenshotUrls} onChange={(e) => setEditing({ ...editing, screenshotUrls: e.target.value })} className="mt-4 font-mono text-xs" placeholder={'["https://...", "https://..."]'} />
+            <div className="mt-4">
+              <ImageListUploadField label="Screenshots" values={editing.screenshotUrls} onChange={(urls) => setEditing({ ...editing, screenshotUrls: urls })} />
+            </div>
             <Textarea label="Primary CTA (JSON)" rows={5} value={editing.primaryCta} onChange={(e) => setEditing({ ...editing, primaryCta: e.target.value })} className="mt-4 font-mono text-xs" placeholder={'{\n  "label": "Mulai Gratis",\n  "url": "https://...",\n  "type": "trial"\n}'} />
             <Textarea label="Secondary CTAs (JSON array)" rows={6} value={editing.secondaryCtas} onChange={(e) => setEditing({ ...editing, secondaryCtas: e.target.value })} className="mt-4 font-mono text-xs" placeholder={'[\n  { "label": "Lihat Pricing", "url": "#pricing", "type": "link" }\n]'} />
           </Card>
@@ -238,7 +244,9 @@ export default function AdminProductsPage() {
               <Input label="Batas Gratis" value={editing.freeLimit} onChange={(e) => setEditing({ ...editing, freeLimit: e.target.value })} placeholder="100 employees" />
               <Input label="Trial (hari)" type="number" value={editing.trialDays} onChange={(e) => setEditing({ ...editing, trialDays: e.target.value })} />
             </div>
-            <Textarea label="Pricing Tiers (JSON array)" rows={14} value={editing.pricingTiers} onChange={(e) => setEditing({ ...editing, pricingTiers: e.target.value })} className="mt-4 font-mono text-xs" placeholder={'[\n  {\n    "id": "starter",\n    "name": "Starter",\n    "pricing": { "amount": 20000, "currency": "IDR", "billingPeriod": "per employee per month" },\n    "features": ["..."],\n    "cta": { "label": "Coba Sekarang", "url": "https://...", "type": "trial" }\n  }\n]'} />
+            <div className="mt-4">
+              <PricingTiersEditor tiers={editing.pricingTiers} onChange={(tiers) => setEditing({ ...editing, pricingTiers: tiers })} />
+            </div>
           </Card>
 
           <Card title="Fitur & Use Case">
@@ -260,7 +268,9 @@ export default function AdminProductsPage() {
 
           <Card title="Roadmap & FAQ">
             <Textarea label="Roadmap (JSON array)" rows={10} value={editing.roadmap} onChange={(e) => setEditing({ ...editing, roadmap: e.target.value })} className="font-mono text-xs" placeholder={'[\n  { "quarter": "Q3 2026", "status": "launched", "features": [{ "name": "...", "description": "..." }] }\n]'} />
-            <Textarea label="FAQ khusus produk ini (JSON array, opsional)" rows={8} value={editing.faq} onChange={(e) => setEditing({ ...editing, faq: e.target.value })} className="mt-4 font-mono text-xs" placeholder={'[\n  { "question": "...", "answer": "..." }\n]'} />
+            <div className="mt-4">
+              <FaqEditor items={editing.faq} onChange={(faq) => setEditing({ ...editing, faq })} />
+            </div>
             <p className="mt-2 text-xs text-gray-500">Jika dikosongkan, halaman produk memakai FAQ global (<code>/faq</code>).</p>
           </Card>
 
