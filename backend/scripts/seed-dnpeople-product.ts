@@ -20,7 +20,7 @@ const PRICING_TIERS = [
       'Employee portal (karyawan lihat own data)',
       'Mobile browser-friendly',
     ],
-    cta: { label: 'Mulai Gratis', url: 'https://app.dnpeople.id/signup', type: 'trial' },
+    cta: { label: 'Mulai Gratis', url: 'https://hris.dntech.id/', type: 'trial' },
   },
   {
     id: 'starter', name: 'Starter', icon: 'rocket', tagline: 'Untuk 1-50 karyawan',
@@ -33,7 +33,7 @@ const PRICING_TIERS = [
       'Basic reporting',
       'Webhooks',
     ],
-    cta: { label: 'Coba Sekarang', url: 'https://app.dnpeople.id/signup', type: 'trial' },
+    cta: { label: 'Coba Sekarang', url: 'https://hris.dntech.id/', type: 'trial' },
   },
   {
     id: 'professional', name: 'Professional', icon: 'star', tagline: 'Recommended untuk 50-300 karyawan',
@@ -48,7 +48,7 @@ const PRICING_TIERS = [
       'Basic customization',
       'Webhooks + 100 API calls/day',
     ],
-    cta: { label: 'Pilih Professional', url: 'https://app.dnpeople.id/signup?plan=pro', type: 'trial' },
+    cta: { label: 'Pilih Professional', url: 'https://hris.dntech.id/?plan=pro', type: 'trial' },
   },
   {
     id: 'business', name: 'Business', icon: 'building', tagline: 'Untuk 300+ karyawan (volume discount)',
@@ -166,7 +166,7 @@ const USE_CASES = [
     uniqueFeatures: ['Free tier generous (100 employees)', 'API-first architecture', 'Webhooks & integrations', 'Mobile browser-responsive', 'Flexible payment (month-to-month)'],
     testimonial: { quote: 'Coba free tier dulu, terus upgrade ke Professional. Harganya terjangkau, fiturnya lengkap.', author: 'CEO', company: 'Tech Startup 50 orang', location: 'Bandung' },
     stats: { savings: 'IDR 25M/tahun (vs Vendor enterprise)', timeToPayroll: '10 menit', setupTime: '30 menit' },
-    cta: { label: 'Mulai Gratis Sekarang', url: 'https://app.dnpeople.id/signup' },
+    cta: { label: 'Mulai Gratis Sekarang', url: 'https://hris.dntech.id/' },
   },
 ];
 
@@ -230,7 +230,7 @@ const ROADMAP = [
   ] },
 ];
 
-const PRIMARY_CTA = { label: 'Coba Gratis Sekarang', url: 'https://app.dnpeople.id/signup', type: 'trial', color: 'blue', size: 'lg' };
+const PRIMARY_CTA = { label: 'Coba Gratis Sekarang', url: 'https://hris.dntech.id/', type: 'trial', color: 'blue', size: 'lg' };
 
 const SECONDARY_CTAS = [
   { label: 'Lihat Pricing', url: '#pricing', type: 'link' },
