@@ -40,17 +40,44 @@ Production-ready company profile website for DN Tech with a public marketing sit
 | Full lint | Passing | Frontend lint succeeds with 0 errors/warnings |
 | Performance | Optimized | See `docs/IMPLEMENTATION-STATUS.md` for V4 details and remaining Lighthouse verification |
 
-Latest implementation reference: Jul 26 — public SSR API audit (BF-020); blog (BF-019); services (BF-018); product crash (BF-017).
+Latest implementation reference: **`836266b`** (Jul 26) — public SSR API audit **BF-020**; prior BF-017–BF-019 (product crash, services, blog).
 
-**Docs:** [`docs/CHANGELOG.md`](docs/CHANGELOG.md) · [`docs/BUG_FIXES.md`](docs/BUG_FIXES.md) · [`docs/IMPLEMENTATION-STATUS.md`](docs/IMPLEMENTATION-STATUS.md)
+**Docs:** [`docs/CHANGELOG.md`](docs/CHANGELOG.md) · [`docs/BUG_FIXES.md`](docs/BUG_FIXES.md) · [`docs/IMPLEMENTATION-STATUS.md`](docs/IMPLEMENTATION-STATUS.md) · [`docs/QA-CHECKLIST-V8.md`](docs/QA-CHECKLIST-V8.md) · [`docs/DEPLOYMENT-PRODUCTION.md`](docs/DEPLOYMENT-PRODUCTION.md)
 
 **Branding:** Logo resmi `frontend/public/rlogo2.png`; favicon `src/app/icon.png`; navbar & footer menampilkan **DN Tech.id** (`LogoLight` / `FooterBrand`).
 
-**Homepage:** PRD [Indonesia Edition](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/branding/DN-TECH-HOMEPAGE-REDESIGN-PRD-INDONESIA-EDITION.md) — hero, layanan, proses, keunggulan, portfolio, testimoni, FAQ, harga, CTA. **Hidden di beranda:** tech stack, tim (tetap di `/team`, `/careers`). Default harga: custom dari **Rp 25 juta**, konsultasi **Rp 150rb/jam**, maintenance **Rp 2 juta/bulan**.
+**Homepage:** PRD [Indonesia Edition](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/branding/DN-TECH-HOMEPAGE-REDESIGN-PRD-INDONESIA-EDITION.md) — hero, layanan (max 6 **aktif** dari admin), proses, keunggulan, portfolio, testimoni, FAQ, harga, CTA. **Hidden di beranda:** tech stack, tim (tetap di `/team`, `/careers`). Kartu layanan **tanpa** baris tech per item.
 
 **Footer:** `components/common/Footer.tsx` — putih, link horizontal, CTA Konsultasi Gratis.
 
 **Branding admin (legacy):** API `/branding/*` dan `/admin/branding/*` tetap tersedia; section branding lama tidak lagi di homepage utama.
+
+## Production SSR API (Jul 26)
+
+Semua halaman publik yang render di server memakai helper di `frontend/src/lib/server-api.ts`:
+
+| Helper | Use case |
+|--------|----------|
+| `fetchPublicApiList` | Listing (services, blog posts in homepage, team, …) |
+| `fetchPublicApiSafe` | Detail by slug (`/services/[slug]`, `/blog/[slug]`, …) |
+| `fetchPublicApiPaginated` | Paginated lists (`/blog` with page/category) |
+
+**Resolver chain (production):** `API_INTERNAL_URL` → `http://127.0.0.1:4000/api/v1` → `getApiBaseUrl()` (`https://api.dntech.id/api/v1`).
+
+Jangan fetch langsung dengan `NEXT_PUBLIC_API_URL || localhost` di Server Components — itu menyebabkan data kosong / 404 di `dntech.id` (BF-016–BF-020).
+
+**Client-side OK:** `/faq`, `/about` memakai `getApiUrl()` di browser (sudah normalisasi production).
+
+### Konten admin → website
+
+| Modul | Syarat tampil di publik |
+|-------|-------------------------|
+| Layanan | Status **Aktif** di `/admin/services` |
+| Blog | Status **Published** + `publishedAt` ≤ hari ini |
+| Produk | Status **active** / launched sesuai seed |
+| Tim, FAQ, careers, portfolio, case studies | CRUD admin + API public endpoint |
+
+Setelah `git pull`, **wajib** `npm run build` di frontend — perubahan SSR/API tidak live hanya dengan restart PM2 tanpa rebuild.
 
 ## Tech Stack
 
@@ -65,7 +92,7 @@ Latest implementation reference: Jul 26 — public SSR API audit (BF-020); blog 
 
 ### Public Website
 
-- Homepage Indonesia Edition: hero, layanan, proses, keunggulan, portfolio, testimoni, FAQ, harga, CTA (`homeContent` CMS)
+- Homepage Indonesia Edition: hero, layanan dari admin (API), proses, keunggulan, portfolio, testimoni, FAQ, harga, CTA
 - Tech stack & tim **hidden** on homepage (tetap di `/team`, `/careers`); newsletter tidak di footer
 - Services listing and detail pages with process steps, FAQ, related articles, Calendly CTA
 - Products listing and detail pages (separate nav from Services) — V7 flagship fields for dnPeople
@@ -180,9 +207,12 @@ docker compose build
 docker compose up -d
 ```
 
-PM2-style deployment:
+PM2-style deployment (VPS):
 
 ```bash
+cd /var/www/dntech   # or your deploy path
+git pull --rebase origin main
+
 cd backend
 npm ci
 npx prisma generate
@@ -191,8 +221,16 @@ pm2 restart dntech-api
 
 cd ../frontend
 npm ci
-npm run build
+npm run build          # required — SSR helpers baked at build time
 pm2 restart dntech-web
+```
+
+Pastikan `frontend/.env.local` (production) memuat:
+
+```env
+NEXT_PUBLIC_API_URL=https://api.dntech.id/api/v1
+NEXT_PUBLIC_SITE_URL=https://dntech.id
+API_INTERNAL_URL=http://127.0.0.1:4000/api/v1
 ```
 
 If `git pull --rebase` is blocked by `docs/IMPLEMENTATION-STATUS.md`, move the local untracked file first:
@@ -231,7 +269,9 @@ git pull --rebase
 
 | Variable | Description |
 |----------|-------------|
-| `NEXT_PUBLIC_API_URL` | Backend API base URL, e.g. `https://api.dntech.id/api/v1` |
+| `NEXT_PUBLIC_API_URL` | Public API base URL, e.g. `https://api.dntech.id/api/v1` (browser + fallback SSR) |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL, e.g. `https://dntech.id` (required for `validate:env` + sitemap) |
+| `API_INTERNAL_URL` | **Production SSR:** loopback to PM2 API, e.g. `http://127.0.0.1:4000/api/v1` |
 | `NEXT_PUBLIC_ENABLE_EXIT_MODAL` | Set `false` to disable V3 exit modal |
 | `NEXT_PUBLIC_CRISP_WEBSITE_ID` | Optional build-time Crisp website ID |
 
@@ -312,9 +352,13 @@ Implemented items:
 
 | Document | Purpose |
 |----------|---------|
-| `docs/IMPLEMENTATION-STATUS.md` | Current implementation status and performance audit |
+| `docs/CHANGELOG.md` | Release notes (0.8.x hotfixes Jul 26) |
+| `docs/BUG_FIXES.md` | Bug register BF-013–BF-020 |
+| `docs/IMPLEMENTATION-STATUS.md` | Full implementation status + hotfix sections |
+| `docs/QA-CHECKLIST-V8.md` | Pre/post deploy QA checklist |
 | `docs/PROJECT-OVERVIEW.md` | Technical project overview |
 | `docs/DEPLOYMENT-PRODUCTION.md` | Production deployment guide |
+| `docs/DN-TECH-PRD-V8-FOUNDATION.md` | V8 baseline for next PRD |
 | `docs/V2/` | PRD, design system, and SEO guide V2 |
 | `docs/v3/` | V3 refinement PRD, SDD, summary, and implementation guide |
 | `docs/v4/` | V4 performance PRD, summary, and implementation guide |
@@ -332,4 +376,4 @@ Property of DN Tech - PT. Dozer Napitupulu Technology . 2026
 | Owner | Dozer (CEO + Tech Lead) |
 | Company | DN Tech (PT. Dozer Napitupulu Technology) |
 | Brand | DN Tech (DN Tech.id) |
-| UpdatedAt | July 18, 2026 |
+| UpdatedAt | July 26, 2026 |
