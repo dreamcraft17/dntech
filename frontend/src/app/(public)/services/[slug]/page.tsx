@@ -7,40 +7,22 @@ import { CalendlyEmbed } from '@/components/interactive/CalendlyEmbed';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { SERVICE_PROCESS_STEPS } from '@/lib/service-process';
 import { getPublicSettings } from '@/lib/settings';
+import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
 import type { Service, BlogPost, Faq } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
 async function getService(slug: string) {
-  try {
-    const res = await fetch(`${API_URL}/services/${slug}`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    return (await res.json()).data as Service;
-  } catch {
-    return null;
-  }
+  return fetchPublicApiSafe<Service>(`/services/${slug}`, 60);
 }
 
 async function getRelatedPosts(category: string) {
-  try {
-    const res = await fetch(`${API_URL}/blog?category=${encodeURIComponent(category)}&pageSize=3`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    return (await res.json()).data as BlogPost[];
-  } catch {
-    return [];
-  }
+  return fetchPublicApiList<BlogPost>(`/blog?category=${encodeURIComponent(category)}&pageSize=3`, 60);
 }
 
 async function getFaqs() {
-  try {
-    const res = await fetch(`${API_URL}/faq`, { next: { revalidate: 300 } });
-    if (!res.ok) return [];
-    return ((await res.json()).data as Faq[]).slice(0, 6);
-  } catch {
-    return [];
-  }
+  const faqs = await fetchPublicApiList<Faq>('/faq', 300);
+  return faqs.slice(0, 6);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

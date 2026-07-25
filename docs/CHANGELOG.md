@@ -6,7 +6,7 @@ All notable changes to the DN Tech company profile website (`dntech.id`).
 
 ### Fixed
 - **Homepage layanan tidak sinkron dengan admin** — section "Apa yang Kami Tawarkan" memakai `fetchPublicApiList('/services')` (resolver API production + fallback internal), bukan fetch URL mentah yang gagal di SSR. Lihat `docs/BUG_FIXES.md` **BF-018**.
-- **`/services`** — public listing memakai helper SSR yang sama.
+- **`/services` dan `/services/[slug]`** — public listing + detail memakai helper SSR yang sama (`fetchPublicApiList` / `fetchPublicApiSafe`); fixes 404 on service detail pages in production.
 
 ### Changed
 - **Kartu layanan homepage** — baris `Tech: …` per item dihapus (judul + deskripsi saja).

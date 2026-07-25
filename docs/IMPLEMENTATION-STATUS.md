@@ -1260,6 +1260,7 @@ Verifikasi: buka `/products/dnpeople` — tidak ada error console; semua section
 | `fetchPublicApiList` — resolver production + `API_INTERNAL_URL` + localhost fallback | `frontend/src/lib/server-api.ts` |
 | Homepage fetch layanan via helper SSR | `frontend/src/app/(public)/page.tsx` |
 | Public `/services` listing via helper yang sama | `frontend/src/app/(public)/services/page.tsx` |
+| Public `/services/[slug]` detail via `fetchPublicApiSafe` | `frontend/src/app/(public)/services/[slug]/page.tsx` |
 | Hapus baris `Tech:` per kartu; prioritas data API | `HomeServices.tsx`, `homepage-content.ts` |
 | Hint admin: hanya status **Aktif** yang publik | `frontend/src/app/admin/services/page.tsx` |
 

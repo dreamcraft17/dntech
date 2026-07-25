@@ -43,3 +43,13 @@ export async function fetchPublicApiList<T>(endpoint: string, revalidate = 60): 
     return [];
   }
 }
+
+/** SSR-safe single-resource fetch — returns null when missing or API unreachable. */
+export async function fetchPublicApiSafe<T>(endpoint: string, revalidate = 60): Promise<T | null> {
+  try {
+    return await fetchPublicApi<T>(endpoint, revalidate);
+  } catch (error) {
+    console.error(`[public-api] Failed to fetch ${endpoint}`, error);
+    return null;
+  }
+}
