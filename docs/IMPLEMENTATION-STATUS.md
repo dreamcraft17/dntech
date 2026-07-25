@@ -13,7 +13,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 **Sebelumnya:** `35bd6d3` — homepage services API hotfix BF-018 (Jul 26)  
 **Rentang Jul 9:** footer redesign, homepage PRD full, hide tech stack & tim di beranda, harga UMKM-friendly  
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9 / React 19.2.4)  
-**Status working tree:** ✅ Sync dengan `origin/main` (HEAD `35bd6d3`)
+**Status working tree:** ✅ Sync dengan `origin/main` (HEAD `217cbf5`)
 
 ---
 
@@ -80,6 +80,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 | dnPeople seed copy (Jul 16) | ✅ | Refresh copy di `scripts/seed-dnpeople-product.ts` (`f1c7dca`); jalankan `db:seed-dnpeople` di production masih pending |
 | Product page crash hotfix (Jul 26) | ✅ | BF-017: hapus `ROICalculator` dari `/products/[slug]`; fallback rates di komponen; lihat `docs/BUG_FIXES.md` |
 | Homepage services API (Jul 26) | ✅ | BF-018: `HomeServices` + `/services` memakai `fetchPublicApiList`; kartu tanpa baris `Tech:`; admin hint status Aktif |
+| Blog SSR (Jul 26) | ✅ | BF-019: `/blog` + `/blog/[slug]` memakai `fetchPublicApiPaginated` / `fetchPublicApiSafe` |
 
 ---
 

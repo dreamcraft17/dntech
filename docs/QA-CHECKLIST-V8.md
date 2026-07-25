@@ -44,4 +44,4 @@ Reference: [PRD V8](../dntech/PRD/DN-TECH-PRD-V8.md) · [SDD V8](../dntech/PRD/D
 - [ ] No errors in browser console / server logs during golden-path walkthrough
 - [ ] Homepage "Apa yang Kami Tawarkan" shows active services from admin (not hardcoded defaults) — BF-018
 - [ ] Service cards on homepage have no per-item `Tech:` line
-- [ ] `/services/[slug]` opens for each active service linked from homepage (no 404) — BF-018
+- [ ] `/blog` lists published posts from admin; `/blog/[slug]` opens without 404 — BF-019

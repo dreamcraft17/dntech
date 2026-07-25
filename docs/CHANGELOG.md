@@ -2,6 +2,16 @@
 
 All notable changes to the DN Tech company profile website (`dntech.id`).
 
+## [0.8.3] — 2026-07-26
+
+### Fixed
+- **Blog listing & detail empty / 404 in production** — `/blog` and `/blog/[slug]` now use `fetchPublicApiPaginated` / `fetchPublicApiSafe` (same SSR resolver as services/products). See **BF-019**.
+
+### Changed
+- Blog category chips always show content pillars (not only when posts exist); empty-state message when no published posts for a topic.
+
+---
+
 ## [0.8.2] — 2026-07-26
 
 ### Fixed

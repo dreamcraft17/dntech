@@ -6,31 +6,17 @@ import { JsonLd, breadcrumbSchema, articleSchema } from '@/components/seo/JsonLd
 import { InternalLinks } from '@/components/seo/InternalLinks';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { getPillarForCategory, getRelatedServiceLinks } from '@/lib/content-pillars';
-import { asArray } from '@/lib/api';
+import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
 import type { BlogPost, Service } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
 async function getPost(slug: string) {
-  try {
-    const res = await fetch(`${API_URL}/blog/${slug}`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    return (await res.json()).data as BlogPost;
-  } catch {
-    return null;
-  }
+  return fetchPublicApiSafe<BlogPost>(`/blog/${slug}`, 60);
 }
 
 async function getServices() {
-  try {
-    const res = await fetch(`${API_URL}/services`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    return asArray<Service>((await res.json()).data);
-  } catch {
-    return [];
-  }
+  return fetchPublicApiList<Service>('/services', 60);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

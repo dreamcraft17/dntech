@@ -53,3 +53,39 @@ export async function fetchPublicApiSafe<T>(endpoint: string, revalidate = 60): 
     return null;
   }
 }
+
+export interface PublicPagination {
+  page: number;
+  pageSize: number;
+  total: number;
+  pages: number;
+}
+
+/** SSR-safe paginated list fetch — returns empty data when API is unreachable. */
+export async function fetchPublicApiPaginated<T>(
+  endpoint: string,
+  revalidate = 60
+): Promise<{ data: T[]; pagination: PublicPagination | null }> {
+  const errors: string[] = [];
+
+  for (const apiUrl of apiCandidates()) {
+    try {
+      const response = await fetch(`${apiUrl}${endpoint}`, { next: { revalidate } });
+      if (!response.ok) {
+        errors.push(`${apiUrl}: HTTP ${response.status}`);
+        continue;
+      }
+
+      const payload = await response.json();
+      return {
+        data: Array.isArray(payload.data) ? (payload.data as T[]) : [],
+        pagination: payload.pagination ?? null,
+      };
+    } catch (error) {
+      errors.push(`${apiUrl}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  console.error(`[public-api] Failed to fetch paginated ${endpoint} (${errors.join('; ')})`);
+  return { data: [], pagination: null };
+}
