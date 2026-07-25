@@ -1,21 +1,14 @@
 import Link from 'next/link';
 import { MapPin, Clock, Briefcase } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
+import { fetchPublicApiList } from '@/lib/server-api';
 import type { Career } from '@/types';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = { title: 'Karier' };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
 async function getCareers() {
-  try {
-    const res = await fetch(`${API_URL}/careers`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    return (await res.json()).data as Career[];
-  } catch {
-    return [];
-  }
+  return fetchPublicApiList<Career>('/careers', 60);
 }
 
 export default async function CareersPage() {

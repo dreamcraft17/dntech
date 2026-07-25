@@ -1,6 +1,7 @@
 import { TestimonialCarousel } from '@/components/sliders/TestimonialCarousel';
 import { TestimonialCard } from '@/components/cards/TestimonialCard';
 import { Button } from '@/components/ui/Button';
+import { fetchPublicApiList } from '@/lib/server-api';
 import type { Testimonial } from '@/types';
 import type { Metadata } from 'next';
 
@@ -9,16 +10,8 @@ export const metadata: Metadata = {
   description: 'Dengarkan dari klien enterprise yang mentransformasi bisnis mereka bersama DN Tech.',
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
 async function getTestimonials() {
-  try {
-    const res = await fetch(`${API_URL}/testimonials`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    return (await res.json()).data as Testimonial[];
-  } catch {
-    return [];
-  }
+  return fetchPublicApiList<Testimonial>('/testimonials', 60);
 }
 
 export default async function TestimonialsPage() {

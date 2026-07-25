@@ -3,6 +3,7 @@ import { CaseStudyCard } from '@/components/cards/CaseStudyCard';
 import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
 import { Button } from '@/components/ui/Button';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
+import { fetchPublicApiList } from '@/lib/server-api';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = buildMetadata({
@@ -11,8 +12,6 @@ export const metadata: Metadata = buildMetadata({
   path: '/case-studies',
   keywords: PAGE_SEO['case-studies'].keywords,
 });
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 interface CaseStudy {
   slug: string;
@@ -24,13 +23,7 @@ interface CaseStudy {
 }
 
 async function getCaseStudies() {
-  try {
-    const res = await fetch(`${API_URL}/case-studies?pageSize=50`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    return (await res.json()).data as CaseStudy[];
-  } catch {
-    return [];
-  }
+  return fetchPublicApiList<CaseStudy>('/case-studies?pageSize=50', 60);
 }
 
 export default async function CaseStudiesPage() {

@@ -9,8 +9,8 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 
 **Terakhir diperbarui:** 26 Juli 2026  
 **Branch:** `main`  
-**Commit referensi terbaru:** `217cbf5` — service detail SSR fix BF-018 (Jul 26)  
-**Sebelumnya:** `35bd6d3` — homepage services API hotfix BF-018 (Jul 26)  
+**Commit referensi terbaru:** (pending) — public SSR API audit BF-020 (Jul 26)  
+**Sebelumnya:** `d23d21d` — blog SSR BF-019 (Jul 26)  
 **Rentang Jul 9:** footer redesign, homepage PRD full, hide tech stack & tim di beranda, harga UMKM-friendly  
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9 / React 19.2.4)  
 **Status working tree:** ✅ Sync dengan `origin/main` (HEAD `217cbf5`)
@@ -41,6 +41,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 20. [Referensi Dokumen](#20-referensi-dokumen)
 21. [Hotfix — Product Page Crash (Jul 26)](#21-hotfix--product-page-crash-jul-26)
 22. [Hotfix — Homepage Services API (Jul 26)](#22-hotfix--homepage-services-api-jul-26)
+23. [Hotfix — Public SSR API Audit (Jul 26)](#23-hotfix--public-ssr-api-audit-jul-26)
 
 ---
 
@@ -81,6 +82,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 | Product page crash hotfix (Jul 26) | ✅ | BF-017: hapus `ROICalculator` dari `/products/[slug]`; fallback rates di komponen; lihat `docs/BUG_FIXES.md` |
 | Homepage services API (Jul 26) | ✅ | BF-018: `HomeServices` + `/services` memakai `fetchPublicApiList`; kartu tanpa baris `Tech:`; admin hint status Aktif |
 | Blog SSR (Jul 26) | ✅ | BF-019: `/blog` + `/blog/[slug]` memakai `fetchPublicApiPaginated` / `fetchPublicApiSafe` |
+| Public SSR audit (Jul 26) | ✅ | BF-020: semua halaman publik SSR + `settings.ts` / `branding.ts` / `sitemap.ts` memakai `fetchPublicApi*` |
 
 ---
 
@@ -1271,6 +1273,42 @@ Verifikasi: buka `/products/dnpeople` — tidak ada error console; semua section
 1. Buat/ubah layanan di admin → set **Aktif** → set **Urutan Tampilan**.
 2. Rebuild frontend → homepage menampilkan nama/deskripsi/slug dari DB (max 6).
 3. Kartu tidak menampilkan baris `Tech:`.
+
+---
+
+## 23. Hotfix — Public SSR API Audit (Jul 26)
+
+**ID:** BF-020 · **Changelog:** `0.8.4`
+
+### Gejala
+
+Setelah perbaikan bertahap (BF-016–BF-019), masih ada halaman publik yang kosong atau 404 di production karena fetch SSR memakai URL mentah.
+
+### Root cause
+
+Pattern yang sama: `const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1'` di banyak file SSR — gagal saat Next.js render di VPS.
+
+### Perbaikan (audit Jul 26)
+
+| Area | Helper |
+|------|--------|
+| `lib/settings.ts`, `lib/branding.ts` | `fetchPublicApiSafe` |
+| `sitemap.ts` | `fetchPublicApiList` |
+| Listing pages (team, careers, portfolio, case studies, testimonials, contact services) | `fetchPublicApiList` |
+| Detail pages (portfolio, case studies) | `fetchPublicApiSafe` |
+| Legal (terms, privacy) | `fetchPublicApiSafe` |
+| FAQ JSON-LD | `fetchPublicApiList` |
+| Products (refactor) | `fetchPublicApiList` / `fetchPublicApiSafe` |
+
+**Resolver chain** (`lib/server-api.ts`): `API_INTERNAL_URL` → `http://127.0.0.1:4000/api/v1` (production) → `getApiBaseUrl()` (`api.dntech.id`).
+
+**Tetap client-side (OK):** `/faq` page, `/about` — browser fetch via `getApiUrl()`.
+
+### Deploy
+
+```bash
+cd frontend && npm ci && npm run build && pm2 restart dntech-web
+```
 
 ---
 

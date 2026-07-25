@@ -1,17 +1,13 @@
 import type { Metadata } from 'next';
+import { fetchPublicApiSafe } from '@/lib/server-api';
 
 export const metadata: Metadata = { title: 'Kebijakan Privasi' };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const FALLBACK = '<h1>Kebijakan Privasi</h1><p>Konten segera hadir.</p>';
 
 async function getPrivacy() {
-  try {
-    const res = await fetch(`${API_URL}/settings/legal/privacy`, { next: { revalidate: 3600 } });
-    if (!res.ok) return '';
-    return (await res.json()).data.content as string;
-  } catch {
-    return '<h1>Kebijakan Privasi</h1><p>Konten segera hadir.</p>';
-  }
+  const data = await fetchPublicApiSafe<{ content: string }>('/settings/legal/privacy', 3600);
+  return data?.content || FALLBACK;
 }
 
 export default async function PrivacyPage() {

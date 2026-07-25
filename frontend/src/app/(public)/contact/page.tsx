@@ -2,7 +2,7 @@ import { MultiStepForm } from '@/components/forms/MultiStepForm';
 import { CalendlyEmbed } from '@/components/interactive/CalendlyEmbed';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { getPublicSettings } from '@/lib/settings';
-import { asArray } from '@/lib/api';
+import { fetchPublicApiList } from '@/lib/server-api';
 import type { Service } from '@/types';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -14,21 +14,12 @@ export const metadata: Metadata = buildMetadata({
   keywords: PAGE_SEO.contact.keywords,
 });
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
 async function getContactData() {
-  try {
-    const [settings, servicesRes] = await Promise.all([
-      getPublicSettings(),
-      fetch(`${API_URL}/services`, { next: { revalidate: 60 } }),
-    ]);
-    const services = servicesRes.ok
-      ? asArray<Service>((await servicesRes.json()).data)
-      : [];
-    return { settings, services };
-  } catch {
-    return { settings: {}, services: [] };
-  }
+  const [settings, services] = await Promise.all([
+    getPublicSettings(),
+    fetchPublicApiList<Service>('/services', 60),
+  ]);
+  return { settings, services };
 }
 
 export default async function ContactPage({

@@ -2,20 +2,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FolderOpen } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { fetchPublicApiSafe } from '@/lib/server-api';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
 async function getItem(slug: string) {
-  try {
-    const res = await fetch(`${API_URL}/portfolio/${slug}`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    return (await res.json()).data as PortfolioItem;
-  } catch {
-    return null;
-  }
+  return fetchPublicApiSafe<PortfolioItem>(`/portfolio/${slug}`, 60);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

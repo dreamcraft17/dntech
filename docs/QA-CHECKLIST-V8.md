@@ -45,3 +45,6 @@ Reference: [PRD V8](../dntech/PRD/DN-TECH-PRD-V8.md) · [SDD V8](../dntech/PRD/D
 - [ ] Homepage "Apa yang Kami Tawarkan" shows active services from admin (not hardcoded defaults) — BF-018
 - [ ] Service cards on homepage have no per-item `Tech:` line
 - [ ] `/blog` lists published posts from admin; `/blog/[slug]` opens without 404 — BF-019
+- [ ] `/team`, `/careers`, `/portfolio`, `/case-studies`, `/testimonials`, `/contact` load CMS data in production — BF-020
+- [ ] `/terms` and `/privacy` load legal content from settings API — BF-020
+- [ ] Sitemap includes dynamic URLs from services, products, blog, case studies — BF-020

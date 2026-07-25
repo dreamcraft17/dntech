@@ -1,8 +1,7 @@
 import { cache } from 'react';
 import { asArray } from '@/lib/api';
+import { fetchPublicApiSafe } from '@/lib/server-api';
 import type { TeamMember, Testimonial } from '@/types';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 export interface BrandContent {
   tagline?: string;
@@ -32,58 +31,36 @@ export interface BrandStat {
   label: string;
 }
 
-async function fetchBranding<T>(endpoint: string): Promise<T> {
-  const res = await fetch(`${API_URL}/branding/${endpoint}`, { next: { revalidate: 300 } });
-  if (!res.ok) throw new Error(`Failed to fetch branding/${endpoint}`);
-  const json = await res.json();
-  return json.data as T;
+async function fetchBranding<T>(endpoint: string): Promise<T | null> {
+  return fetchPublicApiSafe<T>(`/branding/${endpoint}`, 300);
 }
 
 export const getBrandContent = cache(async () => {
-  try {
-    return await fetchBranding<BrandContent>('content');
-  } catch {
-    return {};
-  }
+  const data = await fetchBranding<BrandContent>('content');
+  return data ?? {};
 });
 
 export const getCoreValues = cache(async () => {
-  try {
-    return asArray(await fetchBranding<CoreValue[]>('values'));
-  } catch {
-    return [] as CoreValue[];
-  }
+  const data = await fetchBranding<CoreValue[]>('values');
+  return asArray(data);
 });
 
 export const getCompetitiveAdvantages = cache(async () => {
-  try {
-    return asArray(await fetchBranding<CompetitiveAdvantage[]>('advantages'));
-  } catch {
-    return [] as CompetitiveAdvantage[];
-  }
+  const data = await fetchBranding<CompetitiveAdvantage[]>('advantages');
+  return asArray(data);
 });
 
 export const getBrandStats = cache(async () => {
-  try {
-    const raw = asArray(await fetchBranding<BrandStat[]>('stats'));
-    return raw.filter((item) => item.value && item.label);
-  } catch {
-    return [] as BrandStat[];
-  }
+  const raw = asArray(await fetchBranding<BrandStat[]>('stats'));
+  return raw.filter((item) => item.value && item.label);
 });
 
 export const getBrandTeam = cache(async () => {
-  try {
-    return asArray(await fetchBranding<TeamMember[]>('team'));
-  } catch {
-    return [] as TeamMember[];
-  }
+  const data = await fetchBranding<TeamMember[]>('team');
+  return asArray(data);
 });
 
 export const getBrandTestimonials = cache(async () => {
-  try {
-    return asArray(await fetchBranding<Testimonial[]>('testimonials'));
-  } catch {
-    return [] as Testimonial[];
-  }
+  const data = await fetchBranding<Testimonial[]>('testimonials');
+  return asArray(data);
 });

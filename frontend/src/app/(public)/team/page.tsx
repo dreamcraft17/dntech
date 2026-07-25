@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Card } from '@/components/ui/Card';
 import { JsonLd, breadcrumbSchema, personSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
+import { fetchPublicApiList } from '@/lib/server-api';
 import type { TeamMember } from '@/types';
 import type { Metadata } from 'next';
 import { Globe } from 'lucide-react';
@@ -14,16 +15,8 @@ export const metadata: Metadata = buildMetadata({
   keywords: ['tim DN Tech', 'developer Indonesia', 'software engineer Jakarta'],
 });
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
 async function getTeam() {
-  try {
-    const res = await fetch(`${API_URL}/team`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    return (await res.json()).data as TeamMember[];
-  } catch {
-    return [];
-  }
+  return fetchPublicApiList<TeamMember>('/team', 60);
 }
 
 export default async function TeamPage() {

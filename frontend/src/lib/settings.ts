@@ -1,7 +1,6 @@
 import { cache } from 'react';
 import { asArray } from '@/lib/api';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+import { fetchPublicApiSafe } from '@/lib/server-api';
 
 export interface PublicSettings {
   companyName?: string;
@@ -26,14 +25,8 @@ export interface PublicSettings {
 }
 
 export const getPublicSettings = cache(async function getPublicSettings(): Promise<PublicSettings> {
-  try {
-    const res = await fetch(`${API_URL}/settings`, { next: { revalidate: 300 } });
-    if (!res.ok) return {};
-    const json = await res.json();
-    return (json.data ?? {}) as PublicSettings;
-  } catch {
-    return {};
-  }
+  const data = await fetchPublicApiSafe<PublicSettings>('/settings', 300);
+  return data ?? {};
 });
 
 export function getHomeStats(settings: PublicSettings) {

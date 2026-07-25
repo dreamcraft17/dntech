@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
-import { fetchPublicApi } from '@/lib/server-api';
+import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
 import type { Product } from '@/types';
 import type { Metadata } from 'next';
 import { ProductCatalog } from './ProductCatalog';
@@ -17,12 +17,7 @@ async function getProducts(searchParams: { category?: string; search?: string })
   const params = new URLSearchParams();
   if (searchParams.category) params.set('category', searchParams.category);
   if (searchParams.search) params.set('search', searchParams.search);
-  try {
-    return await fetchPublicApi<Product[]>(`/products?${params}`);
-  } catch (error) {
-    console.error('[products] Failed to load public products during SSR', error);
-    return [];
-  }
+  return fetchPublicApiList<Product>(`/products?${params}`, 60);
 }
 
 export default async function ProductsPage({

@@ -10,31 +10,19 @@ import { formatCurrencyIDR } from '@/lib/utils';
 import type { Product, ProductFeatureGroup, ProductFeatureItem, BlogPost, Faq } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { fetchPublicApi } from '@/lib/server-api';
+import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
 
 async function getProduct(slug: string) {
-  try {
-    return await fetchPublicApi<Product>(`/products/${slug}`);
-  } catch (error) {
-    console.error('[products] Failed to load product detail', { slug, error });
-    return null;
-  }
+  return fetchPublicApiSafe<Product>(`/products/${slug}`, 60);
 }
 
 async function getRelatedPosts(category: string) {
-  try {
-    return await fetchPublicApi<BlogPost[]>(`/blog?category=${encodeURIComponent(category)}&pageSize=3`);
-  } catch {
-    return [];
-  }
+  return fetchPublicApiList<BlogPost>(`/blog?category=${encodeURIComponent(category)}&pageSize=3`, 60);
 }
 
 async function getGlobalFaqs() {
-  try {
-    return (await fetchPublicApi<Faq[]>('/faq', 300)).slice(0, 6);
-  } catch {
-    return [];
-  }
+  const faqs = await fetchPublicApiList<Faq>('/faq', 300);
+  return faqs.slice(0, 6);
 }
 
 function isGroupedFeatures(features: Product['features']): features is ProductFeatureGroup[] {

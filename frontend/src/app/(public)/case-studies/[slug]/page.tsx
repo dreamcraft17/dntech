@@ -6,10 +6,9 @@ import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
+import { fetchPublicApiSafe } from '@/lib/server-api';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 interface CaseStudy {
   slug: string;
@@ -28,13 +27,7 @@ interface CaseStudy {
 }
 
 async function getCaseStudy(slug: string) {
-  try {
-    const res = await fetch(`${API_URL}/case-studies/${slug}`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    return (await res.json()).data as CaseStudy;
-  } catch {
-    return null;
-  }
+  return fetchPublicApiSafe<CaseStudy>(`/case-studies/${slug}`, 60);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

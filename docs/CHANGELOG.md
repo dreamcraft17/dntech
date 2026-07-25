@@ -2,6 +2,19 @@
 
 All notable changes to the DN Tech company profile website (`dntech.id`).
 
+## [0.8.4] — 2026-07-26
+
+### Fixed
+- **Public SSR API audit (BF-020)** — all remaining public pages and shared SSR libs migrated from raw `NEXT_PUBLIC_API_URL` fetch to `fetchPublicApi*` helpers with production resolver + internal fallback.
+
+**Migrated:** `settings.ts`, `branding.ts`, `sitemap.ts`, `/testimonials`, `/case-studies`, `/case-studies/[slug]`, `/portfolio`, `/portfolio/[slug]`, `/contact`, `/team`, `/careers`, `/terms`, `/privacy`, FAQ JSON-LD; products pages aligned to `fetchPublicApiList` / `fetchPublicApiSafe`.
+
+**Already on resolver (prior commits):** homepage, `/services`, `/blog`, `/products`.
+
+**Client-side (browser fetch via `getApiUrl`, OK):** `/faq` page, `/about` content.
+
+---
+
 ## [0.8.3] — 2026-07-26
 
 ### Fixed

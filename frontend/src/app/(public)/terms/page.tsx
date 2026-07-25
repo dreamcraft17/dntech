@@ -1,17 +1,13 @@
 import type { Metadata } from 'next';
+import { fetchPublicApiSafe } from '@/lib/server-api';
 
 export const metadata: Metadata = { title: 'Syarat & Ketentuan' };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const FALLBACK = '<h1>Syarat & Ketentuan</h1><p>Konten segera hadir.</p>';
 
 async function getTerms() {
-  try {
-    const res = await fetch(`${API_URL}/settings/legal/terms`, { next: { revalidate: 3600 } });
-    if (!res.ok) return '';
-    return (await res.json()).data.content as string;
-  } catch {
-    return '<h1>Syarat & Ketentuan</h1><p>Konten segera hadir.</p>';
-  }
+  const data = await fetchPublicApiSafe<{ content: string }>('/settings/legal/terms', 3600);
+  return data?.content || FALLBACK;
 }
 
 export default async function TermsPage() {

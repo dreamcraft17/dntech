@@ -1,21 +1,14 @@
 import Link from 'next/link';
 import { PortfolioCard } from '@/components/cards/PortfolioCard';
 import { Badge } from '@/components/ui/Badge';
+import { fetchPublicApiList } from '@/lib/server-api';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = { title: 'Portofolio' };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
 async function getPortfolio() {
-  try {
-    const res = await fetch(`${API_URL}/portfolio?pageSize=12`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    return (await res.json()).data as PortfolioItem[];
-  } catch {
-    return [];
-  }
+  return fetchPublicApiList<PortfolioItem>('/portfolio?pageSize=12', 60);
 }
 
 export default async function PortfolioPage() {
