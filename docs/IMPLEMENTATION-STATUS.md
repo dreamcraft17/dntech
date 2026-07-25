@@ -9,7 +9,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 
 **Terakhir diperbarui:** 26 Juli 2026  
 **Branch:** `main`  
-**Commit referensi terbaru:** (pending) — public SSR API audit BF-020 (Jul 26)  
+**Commit referensi terbaru:** `de173b0` — public SSR API audit BF-020 (Jul 26)  
 **Sebelumnya:** `d23d21d` — blog SSR BF-019 (Jul 26)  
 **Rentang Jul 9:** footer redesign, homepage PRD full, hide tech stack & tim di beranda, harga UMKM-friendly  
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9 / React 19.2.4)  
