@@ -9,7 +9,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 
 **Terakhir diperbarui:** 26 Juli 2026  
 **Branch:** `main`  
-**Commit referensi terbaru:** `34c91d7` — product page crash hotfix BF-017 (Jul 26)  
+**Commit referensi terbaru:** `bed5d5a` — product page crash hotfix BF-017 (Jul 26)  
 **Sebelumnya:** `f1c7dca` — dnPeople product seed copy (Jul 16); Loading UX + public product API hotfix (Jul 13)  
 **Rentang Jul 9:** footer redesign, homepage PRD full, hide tech stack & tim di beranda, harga UMKM-friendly  
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9 / React 19.2.4)  
