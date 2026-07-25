@@ -11,15 +11,13 @@ interface HomeServicesProps {
 }
 
 export function HomeServices({ services, defaults }: HomeServicesProps) {
-  const items =
-    services.length > 0
-      ? services.slice(0, 6).map((s) => ({
-          name: s.name,
-          description: s.description,
-          tech: s.category,
-          slug: s.slug,
-        }))
-      : defaults;
+  const apiItems = services.slice(0, 6).map((s) => ({
+    name: s.name,
+    description: s.description,
+    slug: s.slug,
+  }));
+
+  const items = apiItems.length > 0 ? apiItems : defaults;
 
   return (
     <section className="bg-gray-50 py-16">
@@ -34,9 +32,6 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
               <Card hover className="h-full">
                 <h3 className="font-semibold text-gray-900">{item.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.description}</p>
-                {item.tech && (
-                  <p className="mt-3 text-xs font-medium text-teal-600">Tech: {item.tech}</p>
-                )}
                 {item.slug && (
                   <span className="mt-4 inline-flex items-center text-sm font-medium text-blue-900">
                     Pelajari lebih lanjut <ArrowRight className="ml-1 h-4 w-4" />

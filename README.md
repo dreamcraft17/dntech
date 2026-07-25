@@ -32,12 +32,13 @@ Production-ready company profile website for DN Tech with a public marketing sit
 | Public product API hotfix (Jul 13) | Implemented | SSR product pages share the normalized API resolver; production localhost/misrouted URL falls back to `api.dntech.id` |
 | dnPeople seed copy (Jul 16) | Implemented | Seed script copy refresh (`f1c7dca`); production `db:seed-dnpeople` still pending |
 | Product page crash hotfix (Jul 26) | Fixed | Removed `ROICalculator` from `/products/[slug]`; see `docs/BUG_FIXES.md` BF-017 |
+| Homepage services API (Jul 26) | Fixed | `HomeServices` + `/services` use `fetchPublicApiList`; admin active services drive homepage; see BF-018 |
 | Frontend build | Passing | `npm run build` succeeds without Google Fonts network dependency (Next.js 16.2.9, React 19.2.4) |
 | Backend build | Passing | `npm run build` succeeds |
 | Full lint | Passing | Frontend lint succeeds with 0 errors/warnings |
 | Performance | Optimized | See `docs/IMPLEMENTATION-STATUS.md` for V4 details and remaining Lighthouse verification |
 
-Latest implementation reference: Jul 26 — product page crash hotfix (BF-017); prior Jul 16 dnPeople seed copy (`f1c7dca`).
+Latest implementation reference: Jul 26 — homepage services API hotfix (BF-018) + product page crash hotfix (BF-017); prior Jul 16 dnPeople seed copy (`f1c7dca`).
 
 **Docs:** [`docs/CHANGELOG.md`](docs/CHANGELOG.md) · [`docs/BUG_FIXES.md`](docs/BUG_FIXES.md) · [`docs/IMPLEMENTATION-STATUS.md`](docs/IMPLEMENTATION-STATUS.md)
 

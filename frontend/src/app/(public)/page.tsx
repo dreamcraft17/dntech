@@ -1,7 +1,7 @@
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
-import { asArray } from '@/lib/api';
 import { getPublicSettings } from '@/lib/settings';
 import { resolveHomeContent, DEFAULT_FAQ } from '@/lib/homepage-content';
+import { fetchPublicApiList } from '@/lib/server-api';
 import type { Service, Faq } from '@/types';
 import type { Metadata } from 'next';
 import { HomeHero } from '@/components/homepage/HomeHero';
@@ -21,19 +21,6 @@ export const metadata: Metadata = buildMetadata({
   keywords: PAGE_SEO.home.keywords,
 });
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
-async function fetchJson<T>(path: string): Promise<T[]> {
-  try {
-    const res = await fetch(`${API_URL}${path}`, { next: { revalidate: 300 } });
-    if (!res.ok) return [];
-    const json = await res.json();
-    return asArray<T>(json.data);
-  } catch {
-    return [];
-  }
-}
-
 interface CaseStudyPreview {
   id: string;
   slug: string;
@@ -52,11 +39,12 @@ export default async function HomePage() {
   const content = resolveHomeContent(settings);
 
   const [services, caseStudies, faqs, testimonials] = await Promise.all([
-    fetchJson<Service>('/services?pageSize=6'),
-    fetchJson<CaseStudyPreview>('/case-studies?pageSize=3'),
-    fetchJson<Faq>('/faq'),
-    fetchJson<{ id: string; quote: string; author: string; title?: string; company?: string }>(
-      '/branding/testimonials'
+    fetchPublicApiList<Service>('/services', 300),
+    fetchPublicApiList<CaseStudyPreview>('/case-studies?pageSize=3', 300),
+    fetchPublicApiList<Faq>('/faq', 300),
+    fetchPublicApiList<{ id: string; quote: string; author: string; title?: string; company?: string }>(
+      '/branding/testimonials',
+      300
     ),
   ]);
 

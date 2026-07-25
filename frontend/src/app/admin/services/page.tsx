@@ -71,6 +71,9 @@ export default function AdminServicesPage() {
             <Input label="Kategori" value={editing.category || ''} onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
             <Select label="Status" value={editing.status} onChange={(e) => setEditing({ ...editing, status: e.target.value })}
               options={[{ value: 'draft', label: 'Draf' }, { value: 'active', label: 'Aktif' }, { value: 'archived', label: 'Arsip' }]} />
+            <p className="text-xs text-gray-500 md:col-span-2 -mt-2">
+              Hanya layanan berstatus <strong>Aktif</strong> yang tampil di homepage dan halaman /services.
+            </p>
             <Input label="Urutan Tampilan" type="number" value={editing.displayOrder} onChange={(e) => setEditing({ ...editing, displayOrder: parseInt(e.target.value) })} />
           </div>
           <Textarea label="Deskripsi" rows={4} value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} className="mt-4" required />

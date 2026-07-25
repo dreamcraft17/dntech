@@ -26,7 +26,6 @@ export interface HomePricingPlan {
 export interface HomeServiceCard {
   name: string;
   description: string;
-  tech?: string;
   slug?: string;
 }
 
@@ -57,32 +56,26 @@ export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
   {
     name: 'Web App Development',
     description: 'Dashboard, portal, dan web application modern untuk operasional bisnis Anda.',
-    tech: 'React, Next.js, Node.js, PostgreSQL',
   },
   {
     name: 'Mobile App Development',
     description: 'Aplikasi iOS & Android untuk menjangkau pelanggan di mana saja.',
-    tech: 'React Native, Flutter',
   },
   {
     name: 'Custom Software',
     description: 'Solusi sesuai kebutuhan unik bisnis Anda — dari MVP hingga sistem enterprise.',
-    tech: 'Sesuai kebutuhan proyek',
   },
   {
     name: 'Maintenance & Support',
     description: 'Update berkala, perbaikan bug, dan optimasi performa setelah go live.',
-    tech: 'Paket bulanan atau per-project',
   },
   {
     name: 'Technical Consulting',
     description: 'Diskusi arsitektur, strategi teknologi, dan feasibility sebelum development.',
-    tech: 'Per-jam atau per-project',
   },
   {
     name: 'Integration & API Development',
     description: 'Integrasi dengan sistem existing, custom API, dan koneksi third-party.',
-    tech: 'REST, webhook, payment gateway',
   },
 ];
 

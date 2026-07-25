@@ -9,11 +9,11 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 
 **Terakhir diperbarui:** 26 Juli 2026  
 **Branch:** `main`  
-**Commit referensi terbaru:** `bed5d5a` — product page crash hotfix BF-017 (Jul 26)  
-**Sebelumnya:** `f1c7dca` — dnPeople product seed copy (Jul 16); Loading UX + public product API hotfix (Jul 13)  
+**Commit referensi terbaru:** `5cd4b14` — homepage services API hotfix BF-018 + UX layanan (Jul 26)  
+**Sebelumnya:** `bed5d5a` — product page crash hotfix BF-017 (Jul 26)  
 **Rentang Jul 9:** footer redesign, homepage PRD full, hide tech stack & tim di beranda, harga UMKM-friendly  
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9 / React 19.2.4)  
-**Status working tree:** ✅ Sync dengan `origin/main` (HEAD `f1c7dca`)
+**Status working tree:** ✅ Sync dengan `origin/main` (HEAD `5cd4b14`)
 
 ---
 
@@ -40,6 +40,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 19. [Loading UX Global](#19-loading-ux-global)
 20. [Referensi Dokumen](#20-referensi-dokumen)
 21. [Hotfix — Product Page Crash (Jul 26)](#21-hotfix--product-page-crash-jul-26)
+22. [Hotfix — Homepage Services API (Jul 26)](#22-hotfix--homepage-services-api-jul-26)
 
 ---
 
@@ -78,6 +79,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 | Public products API hotfix (Jul 13) | ✅ | Listing/detail SSR memakai resolver bersama; production menolak localhost dan log fetch failure |
 | dnPeople seed copy (Jul 16) | ✅ | Refresh copy di `scripts/seed-dnpeople-product.ts` (`f1c7dca`); jalankan `db:seed-dnpeople` di production masih pending |
 | Product page crash hotfix (Jul 26) | ✅ | BF-017: hapus `ROICalculator` dari `/products/[slug]`; fallback rates di komponen; lihat `docs/BUG_FIXES.md` |
+| Homepage services API (Jul 26) | ✅ | BF-018: `HomeServices` + `/services` memakai `fetchPublicApiList`; kartu tanpa baris `Tech:`; admin hint status Aktif |
 
 ---
 
@@ -230,7 +232,7 @@ Implementasi penuh per `company-wiki/.../DN-TECH-HOMEPAGE-REDESIGN-PRD-INDONESIA
 | Area | Implementasi |
 |------|--------------|
 | Hero | `HomeHero` — CTA 30 menit + portfolio; copy dari settings / `homeContent` |
-| Layanan | `HomeServices` — max 6 dari API atau default PRD |
+| Layanan | `HomeServices` — max 6 layanan **aktif** dari API (`displayOrder`); fallback default PRD hanya jika DB kosong |
 | Proses kerja | `HomeProcess` — 6 langkah bernomor |
 | Kenapa pilih kami | `HomeAdvantages` — 6 kartu |
 | Portfolio | `HomePortfolio` — case studies API atau coming soon |
@@ -287,7 +289,7 @@ Halaman `/quiz`, `/case-studies`, `/testimonials`, `/resources`, `/team`, `/care
 | Section | Status | Implementasi |
 |---------|--------|--------------|
 | Hero | ✅ | `HomeHero` — PRD Indonesia Edition |
-| Layanan | ✅ | `HomeServices` — API atau default 6 kartu |
+| Layanan | ✅ | `HomeServices` — API via `fetchPublicApiList` (BF-018); tanpa baris tech per kartu |
 | Proses kerja | ✅ | `HomeProcess` |
 | Kenapa pilih kami | ✅ | `HomeAdvantages` |
 | Tech stack | 🔒 Hidden | `HomeTechStack` — tidak dirender di `page.tsx` |
@@ -1233,6 +1235,39 @@ cd frontend && npm ci && npm run build && pm2 restart dntech-web
 ```
 
 Verifikasi: buka `/products/dnpeople` — tidak ada error console; semua section V7 ter-render.
+
+---
+
+## 22. Hotfix — Homepage Services API (Jul 26)
+
+**ID:** BF-018 · **Changelog:** `0.8.2`
+
+### Gejala
+
+- Homepage section **Apa yang Kami Tawarkan** menampilkan 6 kartu hardcoded (Web App Development, dll.) meskipun admin sudah punya layanan di `/admin/services`.
+- Halaman `/services` bisa kosong atau tidak konsisten dengan admin di production SSR.
+
+### Root cause
+
+- `page.tsx` homepage mem-fetch `/services` dengan URL mentah `NEXT_PUBLIC_API_URL || localhost` — gagal di production SSR (pattern sama dengan BF-016 untuk produk).
+- `HomeServices` fallback ke `DEFAULT_HOME_SERVICES` ketika API mengembalikan array kosong.
+- Kartu default menampilkan baris `Tech: …` yang tidak diinginkan di UI marketing.
+
+### Perbaikan
+
+| Perubahan | File |
+|-----------|------|
+| `fetchPublicApiList` — resolver production + `API_INTERNAL_URL` + localhost fallback | `frontend/src/lib/server-api.ts` |
+| Homepage fetch layanan via helper SSR | `frontend/src/app/(public)/page.tsx` |
+| Public `/services` listing via helper yang sama | `frontend/src/app/(public)/services/page.tsx` |
+| Hapus baris `Tech:` per kartu; prioritas data API | `HomeServices.tsx`, `homepage-content.ts` |
+| Hint admin: hanya status **Aktif** yang publik | `frontend/src/app/admin/services/page.tsx` |
+
+### Verifikasi
+
+1. Buat/ubah layanan di admin → set **Aktif** → set **Urutan Tampilan**.
+2. Rebuild frontend → homepage menampilkan nama/deskripsi/slug dari DB (max 6).
+3. Kartu tidak menampilkan baris `Tech:`.
 
 ---
 

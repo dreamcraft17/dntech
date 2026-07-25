@@ -2,6 +2,21 @@
 
 All notable changes to the DN Tech company profile website (`dntech.id`).
 
+## [0.8.2] — 2026-07-26
+
+### Fixed
+- **Homepage layanan tidak sinkron dengan admin** — section "Apa yang Kami Tawarkan" memakai `fetchPublicApiList('/services')` (resolver API production + fallback internal), bukan fetch URL mentah yang gagal di SSR. Lihat `docs/BUG_FIXES.md` **BF-018**.
+- **`/services`** — public listing memakai helper SSR yang sama.
+
+### Changed
+- **Kartu layanan homepage** — baris `Tech: …` per item dihapus (judul + deskripsi saja).
+- **Admin `/admin/services`** — catatan bahwa hanya status **Aktif** yang tampil di website.
+
+### Docs
+- Updated `CHANGELOG.md`, `BUG_FIXES.md`, `IMPLEMENTATION-STATUS.md`, `README.md`, `QA-CHECKLIST-V8.md`, `PROJECT-OVERVIEW.md`.
+
+---
+
 ## [0.8.1] — 2026-07-26
 
 ### Fixed

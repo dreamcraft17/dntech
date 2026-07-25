@@ -53,7 +53,7 @@ Dokumentasi lengkap website company profile **DN Tech** (`dntech.id`): arsitektu
 Proyek ini dirancang untuk **production dengan data real**:
 
 - Tidak ada konten demo hardcoded di frontend
-- Semua konten (layanan, blog, tim, testimoni, dll.) diisi via **Admin Dashboard**
+- Semua konten (layanan, blog, tim, testimoni, dll.) diisi via **Admin Dashboard** — homepage layanan memakai `/services` API (status **active**, max 6 by `displayOrder`; fallback default hanya jika DB kosong)
 - Seed database hanya membuat **admin user** + **site settings kosong**
 - Script `db:clear-content` tersedia untuk menghapus konten demo lama
 
@@ -155,7 +155,7 @@ Semua halaman berada di `frontend/src/app/(public)/`.
 
 | Route | Deskripsi |
 |-------|-----------|
-| `/` | Beranda Indonesia Edition — hero, layanan, proses, keunggulan, portfolio, testimoni, FAQ, harga, CTA (tech stack & tim hidden) |
+| `/` | Beranda Indonesia Edition — hero, layanan (max 6 aktif dari admin via API), proses, keunggulan, portfolio, testimoni, FAQ, harga, CTA (tech stack & tim hidden) |
 | `/services` | Daftar layanan |
 | `/services/[slug]` | Detail layanan + artikel terkait |
 | `/products` | Daftar produk (V6, terpisah dari Layanan) |

@@ -42,4 +42,6 @@ Reference: [PRD V8](../dntech/PRD/DN-TECH-PRD-V8.md) · [SDD V8](../dntech/PRD/D
 - [ ] Mobile responsiveness: 320px, 640px, 1024px, 1440px — no horizontal scroll, buttons ≥48px
 - [ ] Form accessibility: Tab through all inputs, labels + error states announced
 - [ ] No errors in browser console / server logs during golden-path walkthrough
-- [ ] Homepage, contact form, product page, admin login/CRUD all smoke-tested
+- [ ] Homepage "Apa yang Kami Tawarkan" shows active services from admin (not hardcoded defaults) — BF-018
+- [ ] Service cards on homepage have no per-item `Tech:` line
+- [ ] `/services` listing matches active rows in `/admin/services`

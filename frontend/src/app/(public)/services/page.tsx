@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
+import { fetchPublicApiList } from '@/lib/server-api';
 import type { Service } from '@/types';
 import type { Metadata } from 'next';
 
@@ -13,19 +14,11 @@ export const metadata: Metadata = buildMetadata({
   keywords: PAGE_SEO.services.keywords,
 });
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
-
 async function getServices(searchParams: { category?: string; search?: string }) {
   const params = new URLSearchParams();
   if (searchParams.category) params.set('category', searchParams.category);
   if (searchParams.search) params.set('search', searchParams.search);
-  try {
-    const res = await fetch(`${API_URL}/services?${params}`, { next: { revalidate: 60 } });
-    if (!res.ok) return [];
-    return (await res.json()).data as Service[];
-  } catch {
-    return [];
-  }
+  return fetchPublicApiList<Service>(`/services?${params}`, 60);
 }
 
 export default async function ServicesPage({

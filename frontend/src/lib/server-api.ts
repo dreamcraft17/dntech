@@ -32,3 +32,14 @@ export async function fetchPublicApi<T>(endpoint: string, revalidate = 60): Prom
 
   throw new Error(`All API endpoints failed (${errors.join('; ')})`);
 }
+
+/** SSR-safe list fetch — returns [] when API is unreachable or payload is not an array. */
+export async function fetchPublicApiList<T>(endpoint: string, revalidate = 60): Promise<T[]> {
+  try {
+    const data = await fetchPublicApi<T[] | null | undefined>(endpoint, revalidate);
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error(`[public-api] Failed to fetch ${endpoint}`, error);
+    return [];
+  }
+}
