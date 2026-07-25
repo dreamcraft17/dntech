@@ -9,11 +9,11 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 
 **Terakhir diperbarui:** 26 Juli 2026  
 **Branch:** `main`  
-**Commit referensi terbaru:** `5cd4b14` — homepage services API hotfix BF-018 + UX layanan (Jul 26)  
+**Commit referensi terbaru:** `35bd6d3` — homepage services API hotfix BF-018 + UX layanan (Jul 26)  
 **Sebelumnya:** `bed5d5a` — product page crash hotfix BF-017 (Jul 26)  
 **Rentang Jul 9:** footer redesign, homepage PRD full, hide tech stack & tim di beranda, harga UMKM-friendly  
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9 / React 19.2.4)  
-**Status working tree:** ✅ Sync dengan `origin/main` (HEAD `5cd4b14`)
+**Status working tree:** ✅ Sync dengan `origin/main` (HEAD `35bd6d3`)
 
 ---
 
