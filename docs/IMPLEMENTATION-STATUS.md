@@ -9,8 +9,8 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 
 **Terakhir diperbarui:** 26 Juli 2026  
 **Branch:** `main`  
-**Commit referensi terbaru:** `35bd6d3` — homepage services API hotfix BF-018 + UX layanan (Jul 26)  
-**Sebelumnya:** `bed5d5a` — product page crash hotfix BF-017 (Jul 26)  
+**Commit referensi terbaru:** `217cbf5` — service detail SSR fix BF-018 (Jul 26)  
+**Sebelumnya:** `35bd6d3` — homepage services API hotfix BF-018 (Jul 26)  
 **Rentang Jul 9:** footer redesign, homepage PRD full, hide tech stack & tim di beranda, harga UMKM-friendly  
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9 / React 19.2.4)  
 **Status working tree:** ✅ Sync dengan `origin/main` (HEAD `35bd6d3`)
@@ -1245,6 +1245,7 @@ Verifikasi: buka `/products/dnpeople` — tidak ada error console; semua section
 ### Gejala
 
 - Homepage section **Apa yang Kami Tawarkan** menampilkan 6 kartu hardcoded (Web App Development, dll.) meskipun admin sudah punya layanan di `/admin/services`.
+- Klik layanan dari homepage → `/services/[slug]` **404** di production (contoh: `/services/enterprise-software`).
 - Halaman `/services` bisa kosong atau tidak konsisten dengan admin di production SSR.
 
 ### Root cause
