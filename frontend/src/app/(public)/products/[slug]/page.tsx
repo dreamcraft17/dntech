@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { JsonLd, breadcrumbSchema, productSchema, faqSchema } from '@/components/seo/JsonLd';
 import { InternalLinks } from '@/components/seo/InternalLinks';
-import { ROICalculator } from '@/components/interactive/ROICalculator';
 import { BookDemoSection } from '@/components/interactive/BookDemoSection';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { formatCurrencyIDR } from '@/lib/utils';
@@ -275,12 +274,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   <Link href={product.pricingCalcUrl} className="text-blue-900 font-medium hover:underline">Hitung estimasi harga Anda</Link>
                 </p>
               )}
-            </div>
-          )}
-
-          {product.pricingTiers && product.pricingTiers.length > 0 && (
-            <div className="mt-20">
-              <ROICalculator />
             </div>
           )}
 

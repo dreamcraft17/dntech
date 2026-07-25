@@ -190,7 +190,7 @@ Semua halaman berada di `frontend/src/app/(public)/`.
 | `HomeTestimonials` | Testimoni homepage dari `/branding/testimonials` |
 | `StickyCTA` | CTA mobile di bagian bawah |
 
-> Catatan: `ROICalculator` / `BookDemoSection` masih ada di source tapi **tidak di-mount** di halaman live.
+> Catatan: `ROICalculator` ada di source untuk estimasi proyek jasa, **tidak** di-mount di halaman produk (hotfix Jul 26, BF-017). `BookDemoSection` di-mount di `/products/[slug]` bila produk punya `demoUrl`.
 
 ### Konten Dinamis dari Settings
 

@@ -134,7 +134,7 @@ CRUD lengkap: services, **products**, portfolio, blog, team, testimonials, FAQ, 
 | ID | Gap | Detail |
 |----|-----|--------|
 | PRD-01 | Satu produk flagship | dnPeople seeded; produk DN Tech lain (DOVA, dll.) belum di CMS |
-| PRD-02 | Komponen idle | `ROICalculator`, `BookDemoSection` ada di codebase, **tidak dipasang** |
+| PRD-02 | Komponen konversi | `BookDemoSection` di `/products/[slug]`; `ROICalculator` sengaja **tidak** di halaman produk SaaS (BF-017, Jul 26) |
 | PRD-03 | Product admin UX | JSON textarea — sulit untuk tim non-tech; PRD V7 sengaja skip WYSIWYG |
 | PRD-04 | Media produk | `heroImage`/`logoUrl` masih URL text — tidak pakai media library upload |
 | PRD-05 | Portfolio/konten kosong | Empty state by design — butuh operasi konten marketing |
@@ -238,7 +238,7 @@ PRD V8 final bisa dipecah menjadi **tiga track** yang bisa dijadwalkan paralel a
 | C1 | Multi-product playbook | Template seed + panduan admin untuk produk ke-2 (mis. DOVA, ERP) |
 | C2 | Product media upload | Hero/logo/screenshot via media library, bukan URL manual saja |
 | C3 | Guided product editor | Minimal: form terstruktur untuk pricing tiers & FAQ (bukan raw JSON wajib) |
-| C4 | Mount conversion widgets | Evaluasi & pasang `ROICalculator` / `BookDemoSection` di halaman relevan |
+| C4 | Mount conversion widgets | `BookDemoSection` on product pages; **do not** mount `ROICalculator` on SaaS product pages (see BF-017) |
 | C5 | Homepage API aggregate (opsional) | Satu endpoint `/homepage` atau BFF — kurangi SSR latency |
 | C6 | Product listing polish | Featured products di homepage atau cross-link dnPeople ↔ layanan |
 | C7 | Analytics events | Event names standar untuk product CTA clicks (GA4) |

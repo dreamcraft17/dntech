@@ -5,12 +5,12 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 **Owner:** Dozer (CEO + Tech Lead)  
 **Company:** DN Tech (PT. Dozer Napitupulu Technology)  
 **Brand:** DN Tech (DN Tech.id)  
-**UpdatedAt:** July 18, 2026  
+**UpdatedAt:** July 26, 2026  
 
-**Terakhir diperbarui:** 18 Juli 2026  
+**Terakhir diperbarui:** 26 Juli 2026  
 **Branch:** `main`  
-**Commit referensi terbaru:** `f1c7dca` — dnPeople product seed copy (Jul 16)  
-**Sebelumnya:** Loading UX global + public product API hotfix (Jul 13); Product Section PRD V7 (Jul 12)  
+**Commit referensi terbaru:** `34c91d7` — product page crash hotfix BF-017 (Jul 26)  
+**Sebelumnya:** `f1c7dca` — dnPeople product seed copy (Jul 16); Loading UX + public product API hotfix (Jul 13)  
 **Rentang Jul 9:** footer redesign, homepage PRD full, hide tech stack & tim di beranda, harga UMKM-friendly  
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9 / React 19.2.4)  
 **Status working tree:** ✅ Sync dengan `origin/main` (HEAD `f1c7dca`)
@@ -39,6 +39,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 18. [Checklist Verifikasi Cepat](#18-checklist-verifikasi-cepat)
 19. [Loading UX Global](#19-loading-ux-global)
 20. [Referensi Dokumen](#20-referensi-dokumen)
+21. [Hotfix — Product Page Crash (Jul 26)](#21-hotfix--product-page-crash-jul-26)
 
 ---
 
@@ -76,6 +77,7 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 | Loading UX global (Jul 13) | ✅ | Route fallback public/admin/root, overlay request API concurrency-safe, indikator sesi dan initial CRUD |
 | Public products API hotfix (Jul 13) | ✅ | Listing/detail SSR memakai resolver bersama; production menolak localhost dan log fetch failure |
 | dnPeople seed copy (Jul 16) | ✅ | Refresh copy di `scripts/seed-dnpeople-product.ts` (`f1c7dca`); jalankan `db:seed-dnpeople` di production masih pending |
+| Product page crash hotfix (Jul 26) | ✅ | BF-017: hapus `ROICalculator` dari `/products/[slug]`; fallback rates di komponen; lihat `docs/BUG_FIXES.md` |
 
 ---
 
@@ -405,7 +407,8 @@ File: `frontend/src/components/forms/MultiStepForm.tsx`
 | NewsletterForm | ✅ Subscribe ke DB |
 | SolutionQuiz | ✅ Rekomendasi dari layanan DB |
 | ExitIntentModal | ✅ Desktop only, trigger top-edge exit, max 1x/session |
-| ROICalculator | ✅ Masih ada (halaman terpisah, tidak di homepage) |
+| ROICalculator | ✅ | Komponen tersedia; **tidak** di-mount di halaman produk (Jul 26). Cocok untuk estimasi proyek jasa, bukan halaman SaaS |
+| BookDemoSection | ✅ | Di-mount di `/products/[slug]` (Calendly dari `demoUrl`) |
 | CalendlyEmbed | ✅ Dari `SiteSettings.calendlyUrl` |
 | CrispChatLoader | ✅ Dari `SiteSettings.crispWebsiteId` |
 | PageTracker | ✅ Analytics events |
@@ -1190,6 +1193,46 @@ Deployment frontend wajib menjalankan build ulang karena `NEXT_PUBLIC_*` dibake 
 | [`design/DN-TECH-DESIGN-V2.1-PRD.md`](../design/DN-TECH-DESIGN-V2.1-PRD.md) | PRD remediation V2.1 |
 | [`design/DN-TECH-DESIGN-V2.1-SDD.md`](../design/DN-TECH-DESIGN-V2.1-SDD.md) | SDD implementasi V2.1 |
 | [`design/DN-TECH-DESIGN-V2.1-ACTION-PLAN.md`](../design/DN-TECH-DESIGN-V2.1-ACTION-PLAN.md) | Quick action plan V2.1 |
+| [`docs/CHANGELOG.md`](./CHANGELOG.md) | Release changelog |
+| [`docs/BUG_FIXES.md`](./BUG_FIXES.md) | Bug fix register |
+
+---
+
+## 21. Hotfix — Product Page Crash (Jul 26)
+
+**ID:** BF-017 · **Changelog:** `0.8.1`
+
+### Gejala production
+
+- URL: `https://dntech.id/products/dnpeople`
+- UI: halaman hitam "This page couldn't load"
+- Console: `Uncaught TypeError: Cannot read properties of undefined (reading 'junior')`
+
+### Root cause
+
+- `products/[slug]/page.tsx` me-render `<ROICalculator />` ketika produk punya `pricingTiers` (dnPeople punya 5 tier).
+- `ROICalculator` membangun opsi select dengan `DEV_RATES_IDR.junior` saat render awal.
+- Di bundle production, `DEV_RATES_IDR` dari `@/lib/currency` bisa `undefined` → crash seluruh halaman.
+
+### Perbaikan
+
+| Perubahan | File |
+|-----------|------|
+| Hapus section `ROICalculator` dari halaman produk | `frontend/src/app/(public)/products/[slug]/page.tsx` |
+| Fallback `DEFAULT_DEV_RATES_IDR` + opsi senioritas aman | `frontend/src/components/interactive/ROICalculator.tsx` |
+
+### Keputusan produk
+
+- Kalkulator estimasi **proyek custom dev** (tim × seniority × bulan) tidak relevan di halaman produk SaaS dnPeople.
+- Halaman produk tetap punya: pricing tiers, link `pricingCalcUrl`, `BookDemoSection`, FAQ, comparison, roadmap.
+
+### Deploy
+
+```bash
+cd frontend && npm ci && npm run build && pm2 restart dntech-web
+```
+
+Verifikasi: buka `/products/dnpeople` — tidak ada error console; semua section V7 ter-render.
 
 ---
 
@@ -1200,6 +1243,6 @@ Deployment frontend wajib menjalankan build ulang karena `NEXT_PUBLIC_*` dibake 
 | Owner | Dozer (CEO + Tech Lead) |
 | Company | DN Tech (PT. Dozer Napitupulu Technology) |
 | Brand | DN Tech (DN Tech.id) |
-| UpdatedAt | July 18, 2026 |
+| UpdatedAt | July 26, 2026 |
 
 Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

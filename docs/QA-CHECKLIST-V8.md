@@ -7,7 +7,7 @@ Reference: [PRD V8](../dntech/PRD/DN-TECH-PRD-V8.md) · [SDD V8](../dntech/PRD/D
 - [ ] DB migration successful (production) — `npx prisma db push --skip-generate`
 - [ ] Backup taken before production push (`pg_dump` timestamped file)
 - [ ] dnPeople product published + featured (`status='launched'`, `featured=true`)
-- [ ] `/products/dnpeople` renders all sections, no SSR errors in console
+- [ ] `/products/dnpeople` renders all sections, no SSR errors in console (verify BF-017 fix deployed)
 - [ ] Contact form → admin email (verify in info@dntech.id inbox, within 2 minutes)
 - [ ] Newsletter signup → opt-in email (verify activation link works)
 - [ ] Career form → email to applicant + admin notification
@@ -32,8 +32,8 @@ Reference: [PRD V8](../dntech/PRD/DN-TECH-PRD-V8.md) · [SDD V8](../dntech/PRD/D
 - [ ] Uploaded media appears in shared library at `/admin/media`
 - [ ] Pricing tier guided form (add/edit/delete tier) saves correctly, no raw JSON needed
 - [ ] FAQ guided form (add/edit/delete Q&A) saves correctly, renders in accordion on product page
-- [ ] ROI Calculator visible and functional on `/products/dnpeople`
 - [ ] Book Demo section visible on `/products/dnpeople`, embeds Calendly when `demoUrl` is set
+- [ ] Product page does **not** show project ROI calculator (removed Jul 26 — BF-017)
 - [ ] 2nd product seeded and published (DOVA or dummy) — see `docs/MULTI-PRODUCT-PLAYBOOK.md`
 
 ## General

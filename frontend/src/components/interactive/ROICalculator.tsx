@@ -14,11 +14,30 @@ import {
   formatIDRRange,
 } from '@/lib/currency';
 
+const DEFAULT_DEV_RATES_IDR = {
+  junior: 150_000,
+  mid: 250_000,
+  senior: 400_000,
+  lead: 550_000,
+} as const;
+
 const COMPLEXITY: Record<string, number> = {
   simple: 1, moderate: 1.5, complex: 2.5, enterprise: 4,
 };
 
+const SENIORITY_OPTIONS = [
+  { value: 'junior', label: 'Junior' },
+  { value: 'mid', label: 'Menengah' },
+  { value: 'senior', label: 'Senior' },
+  { value: 'lead', label: 'Lead/Arsitek' },
+] as const;
+
 export function ROICalculator() {
+  const rates = DEV_RATES_IDR ?? DEFAULT_DEV_RATES_IDR;
+  const seniorityOptions = SENIORITY_OPTIONS.map((option) => ({
+    value: option.value,
+    label: `${option.label} (${formatIDRPerHour(rates[option.value])})`,
+  }));
   const [teamSize, setTeamSize] = useState('3');
   const [seniority, setSeniority] = useState('mid');
   const [complexity, setComplexity] = useState('moderate');
@@ -27,7 +46,7 @@ export function ROICalculator() {
 
   function calculate() {
     const size = parseInt(teamSize);
-    const rate = DEV_RATES_IDR[seniority as keyof typeof DEV_RATES_IDR] || DEV_RATES_IDR.mid;
+    const rate = rates[seniority as keyof typeof rates] || rates.mid;
     const mult = COMPLEXITY[complexity] || 1.5;
     const duration = parseInt(months);
     const hoursPerMonth = 160;
@@ -54,12 +73,7 @@ export function ROICalculator() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input label="Ukuran Tim" type="number" min="1" max="20" value={teamSize} onChange={(e) => setTeamSize(e.target.value)} />
         <Select label="Level Senioritas" value={seniority} onChange={(e) => setSeniority(e.target.value)}
-          options={[
-            { value: 'junior', label: `Junior (${formatIDRPerHour(DEV_RATES_IDR.junior)})` },
-            { value: 'mid', label: `Menengah (${formatIDRPerHour(DEV_RATES_IDR.mid)})` },
-            { value: 'senior', label: `Senior (${formatIDRPerHour(DEV_RATES_IDR.senior)})` },
-            { value: 'lead', label: `Lead/Arsitek (${formatIDRPerHour(DEV_RATES_IDR.lead)})` },
-          ]} />
+          options={seniorityOptions} />
         <Select label="Kompleksitas Proyek" value={complexity} onChange={(e) => setComplexity(e.target.value)}
           options={[
             { value: 'simple', label: 'Sederhana (landing page, CRUD)' },
