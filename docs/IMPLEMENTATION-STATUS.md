@@ -15,6 +15,24 @@ Dokumen ini mencatat **semua yang sudah diimplementasikan di codebase** untuk we
 **Status build terakhir:** ✅ `npm run build` frontend sukses (Next.js 16.2.9 / React 19.2.4)  
 **Status working tree:** ✅ Sync dengan `origin/main` (HEAD `217cbf5`)
 
+## Update Testing Framework (Jul 2026)
+
+Status implementasi testing codebase DN Tech:
+
+| Area | Status | Lokasi |
+|------|--------|--------|
+| Backend unit tests (Jest + ts-jest) | ✅ Complete (45 passing total backend tests) | `backend/src/__tests__/utils`, `backend/src/__tests__/services`, `backend/src/__tests__/templates` |
+| Backend integration tests (Supertest) | ✅ Complete (17+ integration scenarios) | `backend/src/__tests__/integration` |
+| Frontend unit tests (Jest + RTL) | ✅ Complete (36 passing frontend tests) | `frontend/src/__tests__` |
+| E2E critical-path tests (Playwright) | ✅ Complete (5 scenarios x 2 projects) | `frontend/e2e/tests` |
+| Performance scripts (k6) | ✅ Implemented | `backend/performance/k6` |
+| CI test pipeline | ✅ Implemented | `.github/workflows/ci.yml` |
+| Testing playbook docs | ✅ Implemented | `docs/TESTING.md` |
+
+Coverage snapshot (Jul 28, 2026):
+- Backend (`npm run test:coverage`): statements **76.17%**, lines **77.28%**
+- Frontend (`npm run test:coverage`): statements **67.33%**, functions **78.00%**, lines **69.36%**
+
 ---
 
 ## Daftar Isi

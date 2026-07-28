@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/ensure-tests-before-push.sh",
+        "matcher": "^\\s*git\\s+push\\b",
+        "failClosed": true
+      }
+    ]
+  }
+}

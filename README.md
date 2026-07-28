@@ -35,6 +35,7 @@ Production-ready company profile website for DN Tech with a public marketing sit
 | Homepage services API (Jul 26) | Fixed | Homepage + `/services` wired to admin; see BF-018 |
 | Blog SSR (Jul 26) | Fixed | `/blog` listing + detail use production SSR resolver; see BF-019 |
 | Public SSR audit (Jul 26) | Fixed | All public SSR pages + settings/branding/sitemap migrated; see BF-020 |
+| Testing framework (Jul 28) | Complete | 81 automated tests passing (`45` backend + `36` frontend), 5 E2E scenarios (desktop+mobile matrix), CI test jobs wired |
 | Frontend build | Passing | `npm run build` succeeds without Google Fonts network dependency (Next.js 16.2.9, React 19.2.4) |
 | Backend build | Passing | `npm run build` succeeds |
 | Full lint | Passing | Frontend lint succeeds with 0 errors/warnings |
@@ -364,6 +365,7 @@ Implemented items:
 | `docs/v4/` | V4 performance PRD, summary, and implementation guide |
 | `docs/v5/` | V5 email system PRD, roadmap, summary, and implementation guide |
 | `docs/DNTECH-COMPANY-PROFILE.md` | Company profile content reference |
+| `docs/TESTING.md` | Test strategy, commands, and CI flow |
 
 ## License
 

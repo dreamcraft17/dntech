@@ -65,21 +65,22 @@ export const emailTemplates = {
     source?: string;
   }) {
     const project = lead.serviceType || lead.projectType || 'Umum';
+    const escapedEmail = escapeHtml(lead.email);
     return {
-      subject: `Lead Baru: ${lead.name} - ${project}`,
+      subject: `Lead Baru: ${escapeHtml(lead.name)} - ${escapeHtml(project)}`,
       html: shell('Lead Baru dari Website', `
         <p>Lead baru diterima. Segera follow up agar peluang tidak dingin.</p>
         <table style="border-collapse:collapse;width:100%;margin:16px 0;">
           ${[
-            ['Nama', lead.name],
-            ['Email', `<a href="mailto:${escapeHtml(lead.email)}" style="color:#1e3a8a;">${escapeHtml(lead.email)}</a>`],
-            ['Telepon', lead.phone || '-'],
-            ['Perusahaan', lead.companyName || '-'],
-            ['Jenis Proyek', project],
-            ['Anggaran', lead.budgetRange || '-'],
-            ['Timeline', lead.timeline || '-'],
-            ['Sumber', lead.source || '-'],
-            ['Pesan', lead.message || '-'],
+            ['Nama', escapeHtml(lead.name)],
+            ['Email', `<a href="mailto:${escapedEmail}" style="color:#1e3a8a;">${escapedEmail}</a>`],
+            ['Telepon', escapeHtml(lead.phone || '-')],
+            ['Perusahaan', escapeHtml(lead.companyName || '-')],
+            ['Jenis Proyek', escapeHtml(project)],
+            ['Anggaran', escapeHtml(lead.budgetRange || '-')],
+            ['Timeline', escapeHtml(lead.timeline || '-')],
+            ['Sumber', escapeHtml(lead.source || '-')],
+            ['Pesan', escapeHtml(lead.message || '-')],
           ].map(([key, val]) => `
             <tr>
               <td style="padding:10px;border-bottom:1px solid #e5e7eb;background:#f9fafb;font-weight:600;width:150px;">${key}</td>

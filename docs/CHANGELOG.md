@@ -2,6 +2,32 @@
 
 All notable changes to the DN Tech company profile website (`dntech.id`).
 
+## [0.9.0] — 2026-07-28
+
+### Added
+- **Testing framework baseline end-to-end** berdasarkan `docs/test/*`: Jest backend, Jest+RTL frontend, Supertest integration tests, Playwright E2E smoke, dan k6 performance scripts.
+- **Test infra files**: `backend/jest.config.js`, `frontend/jest.config.js`, `frontend/playwright.config.ts`, test setup files, serta struktur `__tests__` di backend/frontend.
+- **Testing documentation**: `docs/TESTING.md` sebagai panduan operasional test lokal + CI.
+
+### Changed
+- **CI workflow** (`.github/workflows/ci.yml`) sekarang menjalankan backend unit/integration tests, frontend unit tests, dan Playwright smoke tests.
+- **Backend server bootstrap**: `backend/src/index.ts` hanya `listen()` saat dijalankan langsung, sehingga aman di-import saat testing.
+
+## [0.9.1] — 2026-07-28
+
+### Added
+- Expanded suites to exceed target deliverables: **50+ unit tests**, **15+ integration tests**, **5 E2E scenarios**.
+- New backend coverage suites for `helpers`, `cache`, `email templates`, `products route`, and `auth route`.
+- New frontend suites for `Alert`, `Badge`, `Card`, `ContactForm`, `utils`, `currency`, `read-time`, and `content pillars`.
+
+### Fixed
+- Sanitized dynamic fields in admin lead email template to prevent raw HTML injection in notification content.
+
+### Docs
+- Updated `docs/TESTING.md`, testing PRD/SRS/SDD docs, and status docs with actual pass/coverage metrics.
+
+---
+
 ## [0.8.4] — 2026-07-26
 
 ### Fixed
