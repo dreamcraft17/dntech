@@ -235,7 +235,7 @@ const PRIMARY_CTA = { label: 'Coba Gratis Sekarang', url: 'https://hris.dntech.i
 const SECONDARY_CTAS = [
   { label: 'Lihat Pricing', url: '#pricing', type: 'link' },
   { label: 'Lihat Demo (5 menit)', url: 'https://calendly.com/dntech/demo', type: 'demo' },
-  { label: 'Baca Dokumentasi', url: 'https://docs.dnpeople.id', type: 'documentation' },
+  { label: 'Baca Dokumentasi', url: 'https://hris.dntech.id/docs', type: 'documentation' },
 ];
 
 const FAQ = [
