@@ -1,6 +1,25 @@
 # Multi-Product Playbook (V8 — C4)
 
-Panduan untuk menambahkan produk baru (mis. DOVA, ERP, atau produk ke-3+) ke `/products` mengikuti pola yang sudah dipakai dnPeople.
+Panduan untuk menambahkan produk baru ke `/products` mengikuti pola yang sudah dipakai dnPeople.
+
+## Produk DN Tech saat ini (Agustus 2026)
+
+| Produk | Slug | Script | Status |
+|--------|------|--------|--------|
+| dnPeople HRIS | `dnpeople` | `db:seed-dnpeople` | Launched · flagship |
+| dnCore ERP | `dncore` | `db:seed-dncore` | Beta |
+| dnShop Finance | `dnshop-finance` | `db:seed-dnshop` | Launched |
+| Nearwork | `nearwork` | `db:seed-nearwork` | Beta |
+| DuaVulnScanner | `duavulnscanner` | `db:seed-dvs` | Beta |
+| Threads Automation | `threads-automation` | `db:seed-threads-automation` | Launched (internal) |
+| Trusted Jurist | `trusted-jurist` | `db:seed-trusted-jurist` | Launched (client showcase) |
+
+**Seed semua sekaligus (kecuali DOVA):**
+
+```bash
+cd backend
+npm run db:seed-products
+```
 
 ## 1. Siapkan konten
 
@@ -51,7 +70,7 @@ Field lain (fitur per kategori, use cases, integrasi, comparison table, roadmap,
 1. Set `status: 'active'`, `launchStatus` (`launched`/`beta`/`coming_soon`), dan centang `featured` bila perlu di tab "Status & Publishing".
 2. Isi SEO (meta title, description, keywords, canonical).
 3. Simpan, lalu buka `/products/<slug>` di browser — pastikan semua section render tanpa error, cek console browser untuk error SSR.
-4. Verifikasi minimal 2 produk published tampil di `/products` (dnPeople + produk baru).
+4. Verifikasi minimal 2 produk published tampil di `/products` (dnPeople + produk lain).
 5. Jalankan checklist mobile responsiveness (320px/640px/1024px/1440px) — lihat `docs/QA-CHECKLIST-V8.md`.
 
 ## 6. Checklist ringkas

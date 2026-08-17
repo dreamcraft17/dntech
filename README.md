@@ -27,10 +27,8 @@ Production-ready company profile website for DN Tech with a public marketing sit
 | V4 performance | Implemented | Debounce search, deferred scripts, cached settings/API, parallel homepage fetch, Next Image, font/build fix |
 | V5 email system | Implemented | SMTP via `mx8.mailspace.id:465`, email templates, retry/logging, newsletter confirmation, admin email logs |
 | V6 Produk module (Jul 12) | Implemented | New `Product` content type parallel to Services — public `/products` + `/products/[slug]`, admin CRUD `/admin/products`, sitewide search, sitemap; DB push to production pending |
-| V7 Product Section PRD (Jul 12) | Implemented | dnPeople flagship product page — pricing tiers, features by category, use cases, integrations, comparison table, testimonials, roadmap, multi-CTA; seed via `db:seed-dnpeople`; DB push + seed to production pending |
-| Loading UX (Jul 13) | Implemented | Route-level loading fallback, global API overlay, admin session/CRUD loading; concurrency-safe and accessible |
-| Public product API hotfix (Jul 13) | Implemented | SSR product pages share the normalized API resolver; production localhost/misrouted URL falls back to `api.dntech.id` |
-| dnPeople seed copy (Jul 16) | Implemented | Seed script copy refresh (`f1c7dca`); production `db:seed-dnpeople` still pending |
+| V7 Product Section PRD (Jul 12) | Implemented | dnPeople flagship + 6 produk lain (dnCore, dnShop, Nearwork, DVS, Threads Automation, Trusted Jurist); seed via `db:seed-products` |
+| Multi-product seeds (Aug 17) | Implemented | 7 produk DN Tech (kecuali DOVA) · `npm run db:seed-products` · production seed pending |
 | Product page crash hotfix (Jul 26) | Fixed | Removed `ROICalculator` from `/products/[slug]`; see `docs/BUG_FIXES.md` BF-017 |
 | Homepage services API (Jul 26) | Fixed | Homepage + `/services` wired to admin; see BF-018 |
 | Blog SSR (Jul 26) | Fixed | `/blog` listing + detail use production SSR resolver; see BF-019 |
@@ -154,6 +152,7 @@ cp .env.example .env
 npm install
 npx prisma db push
 npm run db:seed
+npm run db:seed-products   # seed 7 produk (dnPeople, dnCore, dnShop, Nearwork, DVS, Threads, TJ)
 npm run dev
 ```
 

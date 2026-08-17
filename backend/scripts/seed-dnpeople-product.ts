@@ -2,17 +2,16 @@
  * Seed the dnPeople flagship product page — pricing tiers, features, integrations,
  * use cases, testimonials, comparison table, roadmap, FAQ, and CTAs.
  * Source copy: company-wiki/docs/products/dnPeople/copywriting/dnpeople-website-copywriting-id_2.md.
+ * Updated: Agustus 2026 — tier limits (FREE 30, STARTER 50), Xendit payment.
  * Run from backend/: npx tsx scripts/seed-dnpeople-product.ts
  */
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma, upsertProduct } from './product-seed-shared';
 
 const PRICING_TIERS = [
   {
     id: 'free', name: 'Gratis', icon: 'gift', tagline: 'Forever free untuk startup',
     popular: false, featured: false,
-    pricing: { amount: 0, currency: 'IDR', billingPeriod: 'forever', description: 'Sampai 100 karyawan' },
+    pricing: { amount: 0, currency: 'IDR', billingPeriod: 'forever', description: 'Sampai 30 karyawan · fitur core penuh' },
     features: [
       'Employee database unlimited',
       'Org chart & reporting',
@@ -25,7 +24,7 @@ const PRICING_TIERS = [
   {
     id: 'starter', name: 'Starter', icon: 'rocket', tagline: 'Untuk 1-50 karyawan',
     popular: false, featured: false,
-    pricing: { amount: 20000, currency: 'IDR', billingPeriod: 'per karyawan per bulan', description: '30 karyawan = IDR 600K/bulan = IDR 7.2M/tahun (Vendor enterprise: IDR 4.5M/bulan = IDR 54M/tahun)' },
+    pricing: { amount: 20000, currency: 'IDR', billingPeriod: 'per karyawan per bulan', description: 'Hard limit 50 karyawan · 30 karyawan = IDR 600K/bulan' },
     features: [
       'Payroll otomatis',
       'Attendance & leave',
@@ -36,7 +35,7 @@ const PRICING_TIERS = [
     cta: { label: 'Coba Sekarang', url: 'https://hris.dntech.id/', type: 'trial' },
   },
   {
-    id: 'professional', name: 'Professional', icon: 'star', tagline: 'Recommended untuk 50-300 karyawan',
+    id: 'professional', name: 'Professional', icon: 'star', tagline: 'Recommended · hard limit 300 karyawan',
     popular: true, featured: true,
     pricing: { amount: 25000, currency: 'IDR', billingPeriod: 'per karyawan per bulan', description: '150 karyawan = IDR 3.75M/bulan = IDR 45M/tahun. Hemat IDR 225M/tahun dibanding Vendor enterprise' },
     features: [
@@ -136,7 +135,8 @@ const FEATURES = [
 
 const INTEGRATIONS = [
   { name: 'Jurnal', logo: 'https://cdn.dntech.id/integrations/jurnal.png', category: 'Accounting', description: 'Sync payroll ke Jurnal untuk accurate financial reporting', status: 'available', url: 'https://dnpeople.id/integrations/jurnal' },
-  { name: 'Xendit', logo: 'https://cdn.dntech.id/integrations/xendit.png', category: 'Payments', description: 'Proses pembayaran gaji via Xendit API', status: 'available', url: 'https://dnpeople.id/integrations/xendit' },
+  { name: 'Xendit', logo: 'https://cdn.dntech.id/integrations/xendit.png', category: 'Payments', description: 'Subscription billing & hosted checkout via Xendit Invoice v2', status: 'available', url: 'https://hris.dntech.id/billing' },
+  { name: 'Midtrans', logo: 'https://cdn.dntech.id/integrations/midtrans.png', category: 'Payments', description: 'Payment gateway alternatif (sandbox→live)', status: 'available', url: 'https://hris.dntech.id/billing' },
   { name: 'BCA API', logo: 'https://cdn.dntech.id/integrations/bca.png', category: 'Banking', description: 'Direct bank transfer ke rekening karyawan', status: 'available', url: 'https://dnpeople.id/integrations/bca' },
   { name: 'Mandiri API', logo: 'https://cdn.dntech.id/integrations/mandiri.png', category: 'Banking', description: 'Direct bank transfer via Mandiri', status: 'available', url: 'https://dnpeople.id/integrations/mandiri' },
   { name: 'Slack', logo: 'https://cdn.dntech.id/integrations/slack.png', category: 'Communication', description: 'Get payroll alerts & notifications di Slack', status: 'coming_soon', url: 'https://dnpeople.id/integrations/slack' },
@@ -163,7 +163,7 @@ const USE_CASES = [
   {
     id: 'startup', segment: 'Startup & Tech', icon: 'rocket',
     description: 'HRIS untuk startup — gratis untuk 100 orang, bayar hanya saat scale. Modern, mobile-friendly, developer-friendly.',
-    uniqueFeatures: ['Free tier generous (100 employees)', 'API-first architecture', 'Webhooks & integrations', 'Mobile browser-responsive', 'Flexible payment (month-to-month)'],
+    uniqueFeatures: ['Free tier (30 employees)', 'API-first architecture', 'Webhooks & integrations', 'Mobile browser-responsive', 'Flexible payment (month-to-month)'],
     testimonial: { quote: 'Coba free tier dulu, terus upgrade ke Professional. Harganya terjangkau, fiturnya lengkap.', author: 'CEO', company: 'Tech Startup 50 orang', location: 'Bandung' },
     stats: { savings: 'IDR 25M/tahun (vs Vendor enterprise)', timeToPayroll: '10 menit', setupTime: '30 menit' },
     cta: { label: 'Mulai Gratis Sekarang', url: 'https://hris.dntech.id/' },
@@ -245,7 +245,7 @@ const FAQ = [
   },
   {
     question: 'Bisa trial dulu sebelum bayar?',
-    answer: 'Ya! Dua cara: (1) Free tier — gratis selamanya untuk sampai 100 karyawan, full access ke semua fitur core (payroll, leave, attendance, talent dev). (2) Paid tier trial — 30 hari free di tier manapun, tanpa credit card, coba Professional tier dengan full features.',
+    answer: 'Ya! Dua cara: (1) Free tier — gratis selamanya untuk sampai 30 karyawan, full access ke fitur core (payroll, leave, attendance, talent dev). (2) Paid tier trial — 30 hari free di tier manapun, bayar kapan saja via Xendit hosted checkout.',
   },
   {
     question: 'Bisakah migrate dari Vendor enterprise?',
@@ -300,9 +300,10 @@ async function main() {
     featured: true,
     launchStatus: 'launched',
     freemiumEnabled: true,
-    freeLimit: '100 karyawan',
+    freeLimit: '30 karyawan',
     trialDays: 30,
-    customerCount: '200+',
+    customerCount: 'Soft launch',
+    displayOrder: 1,
     pricingTiers: PRICING_TIERS,
     features: FEATURES,
     integrations: INTEGRATIONS,
@@ -320,10 +321,15 @@ async function main() {
     keywords: 'HRIS Indonesia, payroll software, talent development, aplikasi HR SME, HRIS harga terjangkau',
   };
 
-  const product = await prisma.product.upsert({
-    where: { slug: 'dnpeople' },
-    create: { name: 'dnPeople', slug: 'dnpeople', category: 'HRIS', ...data },
-    update: data,
+  const { description, displayOrder, ...productData } = data;
+
+  const product = await upsertProduct({
+    name: 'dnPeople',
+    slug: 'dnpeople',
+    category: 'HRIS',
+    displayOrder,
+    description,
+    data: productData,
   });
 
   console.log(`dnPeople product seeded: ${product.id}`);
