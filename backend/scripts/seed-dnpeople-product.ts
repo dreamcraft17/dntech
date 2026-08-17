@@ -298,6 +298,7 @@ async function main() {
     ].join('\n'),
     status: 'active' as const,
     featured: true,
+    showOnHomepage: true,
     launchStatus: 'launched',
     freemiumEnabled: true,
     freeLimit: '30 karyawan',

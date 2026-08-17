@@ -124,6 +124,7 @@ export interface Product {
   keywords?: string;
   canonical?: string;
   featured?: boolean;
+  showOnHomepage?: boolean;
   publishedAt?: string;
   launchStatus?: string;
   freemiumEnabled?: boolean;

@@ -2,9 +2,10 @@ import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { getPublicSettings } from '@/lib/settings';
 import { resolveHomeContent, DEFAULT_FAQ } from '@/lib/homepage-content';
 import { fetchPublicApiList } from '@/lib/server-api';
-import type { Service, Faq } from '@/types';
+import type { Service, Faq, Product } from '@/types';
 import type { Metadata } from 'next';
 import { HomeHero } from '@/components/homepage/HomeHero';
+import { HomeProducts } from '@/components/homepage/HomeProducts';
 import { HomeServices } from '@/components/homepage/HomeServices';
 import { HomeProcess } from '@/components/homepage/HomeProcess';
 import { HomeAdvantages } from '@/components/homepage/HomeAdvantages';
@@ -38,8 +39,9 @@ export default async function HomePage() {
   const settings = await getPublicSettings();
   const content = resolveHomeContent(settings);
 
-  const [services, caseStudies, faqs, testimonials] = await Promise.all([
+  const [services, homepageProducts, caseStudies, faqs, testimonials] = await Promise.all([
     fetchPublicApiList<Service>('/services', 300),
+    fetchPublicApiList<Product>('/products?homepage=true', 300),
     fetchPublicApiList<CaseStudyPreview>('/case-studies?pageSize=3', 300),
     fetchPublicApiList<Faq>('/faq', 300),
     fetchPublicApiList<{ id: string; quote: string; author: string; title?: string; company?: string }>(
@@ -60,6 +62,7 @@ export default async function HomePage() {
   return (
     <>
       <HomeHero content={content} />
+      <HomeProducts products={homepageProducts.slice(0, 6)} />
       <HomeServices services={services} defaults={content.defaultServices} />
       <HomeProcess steps={content.processSteps} />
       <HomeAdvantages advantages={content.advantages} />

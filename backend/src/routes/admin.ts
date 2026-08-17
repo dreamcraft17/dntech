@@ -126,6 +126,7 @@ const productSchema = z.object({
   keywords: z.string().optional(),
   canonical: z.string().optional(),
   featured: z.boolean().optional(),
+  showOnHomepage: z.boolean().optional(),
   publishedAt: z.string().optional(),
   launchStatus: z.enum(['launched', 'beta', 'coming_soon']).optional(),
   freemiumEnabled: z.boolean().optional(),

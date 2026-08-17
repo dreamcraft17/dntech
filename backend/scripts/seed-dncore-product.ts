@@ -132,6 +132,7 @@ async function main() {
       ].join('\n'),
       status: 'active',
       featured: true,
+      showOnHomepage: true,
       launchStatus: 'beta',
       freemiumEnabled: true,
       freeLimit: '100 karyawan',

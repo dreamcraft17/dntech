@@ -23,7 +23,7 @@ const emptyForm = {
   integrations: '[]', comparisonTable: '{}',
   testimonials: '[]', caseStudies: '[]', customerCount: '',
   roadmap: '[]', faq: [] as ProductFaqItem[],
-  status: 'draft' as string, featured: false, launchStatus: '', displayOrder: 0, publishedAt: '',
+  status: 'draft' as string, featured: false, showOnHomepage: false, launchStatus: '', displayOrder: 0, publishedAt: '',
 };
 
 type EditingForm = typeof emptyForm & { id?: string };
@@ -105,6 +105,7 @@ export default function AdminProductsPage() {
       faq: item.faq || [],
       status: item.status || 'draft',
       featured: item.featured || false,
+      showOnHomepage: item.showOnHomepage || false,
       launchStatus: item.launchStatus || '',
       displayOrder: item.displayOrder || 0,
       publishedAt: item.publishedAt ? item.publishedAt.slice(0, 10) : '',
@@ -151,6 +152,7 @@ export default function AdminProductsPage() {
         faq: editing.faq,
         status: editing.status,
         featured: editing.featured,
+        showOnHomepage: editing.showOnHomepage,
         launchStatus: editing.launchStatus || undefined,
         displayOrder: Number(editing.displayOrder) || 0,
         publishedAt: editing.publishedAt || undefined,
@@ -177,6 +179,25 @@ export default function AdminProductsPage() {
     if (!confirm('Hapus produk ini?')) return;
     await apiFetch(`/admin/products/${id}`, { method: 'DELETE' });
     await load();
+  }
+
+  async function toggleShowOnHomepage(item: Product, next: boolean) {
+    try {
+      await apiFetch(`/admin/products/${item.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ showOnHomepage: next }),
+      });
+      setItems((prev) =>
+        prev.map((p) => (p.id === item.id ? { ...p, showOnHomepage: next } : p))
+      );
+      showToast(
+        next ? `${item.name} ditampilkan di landing page` : `${item.name} disembunyikan dari landing page`,
+        'success'
+      );
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Gagal mengubah tampilan landing page';
+      showToast(message, 'error');
+    }
   }
 
   return (
@@ -286,7 +307,14 @@ export default function AdminProductsPage() {
                 <input type="checkbox" checked={editing.featured} onChange={(e) => setEditing({ ...editing, featured: e.target.checked })} />
                 Featured (tampil menonjol di listing)
               </label>
+              <label className="flex items-center gap-2 text-sm text-gray-800">
+                <input type="checkbox" checked={editing.showOnHomepage} onChange={(e) => setEditing({ ...editing, showOnHomepage: e.target.checked })} />
+                Tampilkan di landing page (homepage)
+              </label>
             </div>
+            <p className="mt-2 text-xs text-gray-500">
+              Hanya produk berstatus <strong>Aktif</strong> dengan opsi landing page aktif yang muncul di beranda. Maks. 6 produk ditampilkan (urut berdasarkan Urutan Tampilan).
+            </p>
           </Card>
 
           <div className="sticky bottom-4 z-10 flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
@@ -307,6 +335,7 @@ export default function AdminProductsPage() {
             <tr>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Nama</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Kategori</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Landing Page</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
               <th className="text-right px-4 py-3 font-medium text-gray-600">Aksi</th>
             </tr>
@@ -316,6 +345,20 @@ export default function AdminProductsPage() {
               <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium text-gray-900">{item.name}{item.featured && <span className="ml-2 text-xs text-blue-900">★</span>}</td>
                 <td className="px-4 py-3 text-gray-600">{item.category}</td>
+                <td className="px-4 py-3">
+                  <label className="inline-flex cursor-pointer items-center gap-2" title="Tampilkan di landing page">
+                    <input
+                      type="checkbox"
+                      checked={!!item.showOnHomepage}
+                      disabled={item.status !== 'active'}
+                      onChange={(e) => toggleShowOnHomepage(item, e.target.checked)}
+                      className="h-4 w-4 rounded border-gray-300 text-blue-900 focus:ring-blue-900 disabled:cursor-not-allowed disabled:opacity-40"
+                    />
+                    <span className={`text-xs ${item.showOnHomepage ? 'text-green-700 font-medium' : 'text-gray-400'}`}>
+                      {item.status !== 'active' ? '—' : item.showOnHomepage ? 'Ya' : 'Tidak'}
+                    </span>
+                  </label>
+                </td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2 py-0.5 rounded-full ${item.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
                     {item.status || 'active'}

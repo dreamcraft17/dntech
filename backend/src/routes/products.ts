@@ -8,8 +8,9 @@ const router = Router();
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const { category, search } = req.query;
-    const cacheKey = `products:list:${category || 'all'}`;
+    const { category, search, homepage } = req.query;
+    const homepageOnly = homepage === 'true' || homepage === '1';
+    const cacheKey = `products:list:${category || 'all'}:homepage:${homepageOnly ? '1' : '0'}`;
     if (!search) {
       const cached = cacheService.get<unknown[]>(cacheKey);
       if (cached) return successResponse(res, cached);
@@ -17,6 +18,7 @@ router.get(
 
     const where: Record<string, unknown> = { status: 'active', deletedAt: null };
 
+    if (homepageOnly) where.showOnHomepage = true;
     if (category) where.category = String(category);
     if (search) {
       where.OR = [
@@ -43,6 +45,7 @@ router.get(
         heroImage: true,
         logoUrl: true,
         featured: true,
+        showOnHomepage: true,
         launchStatus: true,
         customerCount: true,
         pricingTiers: true,

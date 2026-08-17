@@ -138,6 +138,7 @@ async function main() {
       ].join('\n'),
       status: 'active',
       featured: true,
+      showOnHomepage: true,
       launchStatus: 'launched',
       freemiumEnabled: true,
       freeLimit: '100 transaksi lifetime',

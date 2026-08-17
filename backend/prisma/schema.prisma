@@ -157,6 +157,7 @@ model Product {
   keywords        String?
   canonical       String?
   featured        Boolean       @default(false)
+  showOnHomepage  Boolean       @default(false) @map("show_on_homepage")
   publishedAt     DateTime?     @map("published_at")
   launchStatus    String?       @map("launch_status")
   freemiumEnabled Boolean       @default(false) @map("freemium_enabled")
