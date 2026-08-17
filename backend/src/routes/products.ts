@@ -8,17 +8,19 @@ const router = Router();
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const { category, search, homepage } = req.query;
-    const homepageOnly = homepage === 'true' || homepage === '1';
-    const cacheKey = `products:list:${category || 'all'}:homepage:${homepageOnly ? '1' : '0'}`;
+    const { category, search } = req.query;
+    const cacheKey = `products:list:${category || 'all'}:public`;
     if (!search) {
       const cached = cacheService.get<unknown[]>(cacheKey);
       if (cached) return successResponse(res, cached);
     }
 
-    const where: Record<string, unknown> = { status: 'active', deletedAt: null };
+    const where: Record<string, unknown> = {
+      status: 'active',
+      deletedAt: null,
+      showOnHomepage: true,
+    };
 
-    if (homepageOnly) where.showOnHomepage = true;
     if (category) where.category = String(category);
     if (search) {
       where.OR = [
@@ -61,7 +63,12 @@ router.get(
   '/:slug',
   asyncHandler(async (req, res) => {
     const product = await prisma.product.findFirst({
-      where: { slug: param(req.params.slug), status: 'active', deletedAt: null },
+      where: {
+        slug: param(req.params.slug),
+        status: 'active',
+        deletedAt: null,
+        showOnHomepage: true,
+      },
     });
 
     if (!product) {
@@ -75,6 +82,7 @@ router.get(
       where: {
         status: 'active',
         deletedAt: null,
+        showOnHomepage: true,
         category: product.category,
         id: { not: product.id },
       },

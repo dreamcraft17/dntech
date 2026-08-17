@@ -191,7 +191,7 @@ export default function AdminProductsPage() {
         prev.map((p) => (p.id === item.id ? { ...p, showOnHomepage: next } : p))
       );
       showToast(
-        next ? `${item.name} ditampilkan di landing page` : `${item.name} disembunyikan dari landing page`,
+        next ? `${item.name} ditampilkan di website publik` : `${item.name} disembunyikan dari website publik`,
         'success'
       );
     } catch (err) {
@@ -309,11 +309,11 @@ export default function AdminProductsPage() {
               </label>
               <label className="flex items-center gap-2 text-sm text-gray-800">
                 <input type="checkbox" checked={editing.showOnHomepage} onChange={(e) => setEditing({ ...editing, showOnHomepage: e.target.checked })} />
-                Tampilkan di landing page (homepage)
+                Tampilkan di website publik (homepage & /products)
               </label>
             </div>
             <p className="mt-2 text-xs text-gray-500">
-              Hanya produk berstatus <strong>Aktif</strong> dengan opsi landing page aktif yang muncul di beranda. Maks. 6 produk ditampilkan (urut berdasarkan Urutan Tampilan).
+              Hanya produk berstatus <strong>Aktif</strong> dengan opsi ini aktif yang muncul di beranda dan halaman <code>/products</code>. Maks. 6 produk di homepage (urut berdasarkan Urutan Tampilan).
             </p>
           </Card>
 
@@ -335,7 +335,7 @@ export default function AdminProductsPage() {
             <tr>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Nama</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Kategori</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Landing Page</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Website Publik</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
               <th className="text-right px-4 py-3 font-medium text-gray-600">Aksi</th>
             </tr>
@@ -346,7 +346,7 @@ export default function AdminProductsPage() {
                 <td className="px-4 py-3 font-medium text-gray-900">{item.name}{item.featured && <span className="ml-2 text-xs text-blue-900">★</span>}</td>
                 <td className="px-4 py-3 text-gray-600">{item.category}</td>
                 <td className="px-4 py-3">
-                  <label className="inline-flex cursor-pointer items-center gap-2" title="Tampilkan di landing page">
+                  <label className="inline-flex cursor-pointer items-center gap-2" title="Tampilkan di homepage & halaman /products">
                     <input
                       type="checkbox"
                       checked={!!item.showOnHomepage}
