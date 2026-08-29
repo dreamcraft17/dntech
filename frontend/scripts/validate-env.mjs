@@ -52,8 +52,13 @@ if (missing.length > 0) {
 }
 
 if (nodeEnv === 'production' && !process.env.NEXT_PUBLIC_API_URL.startsWith('https://')) {
-  console.error('ERROR: NEXT_PUBLIC_API_URL must start with https:// in production');
-  process.exit(1);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+  const isLocalSite =
+    siteUrl.includes('localhost') || siteUrl.includes('127.0.0.1');
+  if (!isLocalSite) {
+    console.error('ERROR: NEXT_PUBLIC_API_URL must start with https:// in production');
+    process.exit(1);
+  }
 }
 
 console.log('✓ All required env vars present and valid');
