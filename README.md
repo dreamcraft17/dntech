@@ -18,7 +18,7 @@ Production company profile for **DN Tech** (PT. Dozer Napitupulu Technology): pu
 - **Leads & email** — Contact form, newsletter, transactional SMTP (nodemailer), retry/logging.
 - **SEO** — Sitemap, robots, canonical metadata, JSON-LD, Indonesian copy.
 
-Detailed history: [`docs/CHANGELOG.md`](docs/CHANGELOG.md) · bug register: [`docs/BUG_FIXES.md`](docs/BUG_FIXES.md)
+Detailed history: [`CHANGELOG.md`](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/CHANGELOG.md) · bug register: [`BUG_FIXES.md`](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/BUG_FIXES.md) · **all docs:** [`DOCS.md`](./DOCS.md)
 
 ## Current status
 
@@ -31,7 +31,7 @@ Detailed history: [`docs/CHANGELOG.md`](docs/CHANGELOG.md) · bug register: [`do
 | Unit tests | **99 passing** (50 backend + 49 frontend) |
 | CI | Lint + test + build on `main` (`.github/workflows/ci.yml`) |
 | Frontend build | Passing (Next.js 16.2.9, React 19.2.4, standalone output) |
-| Lighthouse baseline | Recorded — see [`docs/frontend/LIGHTHOUSE-BASELINE.md`](docs/frontend/LIGHTHOUSE-BASELINE.md) |
+| Lighthouse baseline | Recorded — see [wiki LIGHTHOUSE-BASELINE](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/frontend/LIGHTHOUSE-BASELINE.md) |
 
 ## Tech stack
 
@@ -195,9 +195,10 @@ dntech/
 │   ├── src/app/(public)/   # Marketing pages
 │   ├── src/app/admin/      # CMS
 │   ├── src/components/
+│   ├── lighthouse-reports/ # Lighthouse JSON (local/CI artifact)
 │   └── e2e/                # Playwright
-├── docs/              # PRDs, deployment, testing, launch checklists
 ├── scripts/           # VPS DB helpers
+├── DOCS.md            # Pointer → company-wiki (no docs/ in this repo)
 ├── docker-compose.yml
 └── README.md
 ```
@@ -215,12 +216,12 @@ cd frontend && npm run test
 cd frontend && npm run test:e2e
 ```
 
-CI runs backend lint/test/build, frontend lint/test/build, and Playwright smoke tests. See [`docs/TESTING.md`](docs/TESTING.md).
+CI runs backend lint/test/build, frontend lint/test/build, and Playwright smoke tests. See [TESTING.md (wiki)](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/TESTING.md).
 
 ## Deployment
 
-**Full guide:** [`docs/DEPLOYMENT-PRODUCTION.md`](docs/DEPLOYMENT-PRODUCTION.md)  
-**VPS Postgres seed:** [`docs/runbooks/vps-postgres-seed.md`](docs/runbooks/vps-postgres-seed.md)
+**Full guide:** [DEPLOYMENT-PRODUCTION.md (wiki)](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/DEPLOYMENT-PRODUCTION.md)  
+**VPS Postgres seed:** [vps-postgres-seed.md (wiki)](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/runbooks/vps-postgres-seed.md)
 
 PM2-style update on VPS:
 
@@ -266,15 +267,17 @@ Admin routes: `/admin/*` (Bearer token required).
 
 ## Documentation
 
+All product documentation lives in **[company-wiki](https://github.com/dreamcraft17/company-wiki/tree/main/docs/products/dntech)** — see [`DOCS.md`](./DOCS.md).
+
 | Document | Purpose |
 |----------|---------|
-| [`docs/PROJECT-OVERVIEW.md`](docs/PROJECT-OVERVIEW.md) | Technical overview |
-| [`docs/DEPLOYMENT-PRODUCTION.md`](docs/DEPLOYMENT-PRODUCTION.md) | VPS deploy steps |
-| [`docs/TESTING.md`](docs/TESTING.md) | Test layers and CI |
-| [`docs/IMPLEMENTATION-STATUS.md`](docs/IMPLEMENTATION-STATUS.md) | Feature status |
-| [`docs/frontend/LIGHTHOUSE-BASELINE.md`](docs/frontend/LIGHTHOUSE-BASELINE.md) | Perf/a11y baseline |
-| [`docs/launch/`](docs/launch/) | Relaunch checklists and plans |
-| [`docs/QA-CHECKLIST-V8.md`](docs/QA-CHECKLIST-V8.md) | Pre/post deploy QA |
+| [00_INDEX](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/00_INDEX.md) | Wiki doc index |
+| [PROJECT-OVERVIEW](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/PROJECT-OVERVIEW.md) | Technical overview |
+| [DEPLOYMENT-PRODUCTION](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/DEPLOYMENT-PRODUCTION.md) | VPS deploy steps |
+| [TESTING](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/TESTING.md) | Test layers and CI |
+| [CURRENT-IMPLEMENTATION](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/CURRENT-IMPLEMENTATION.md) | Living snapshot |
+| [LIGHTHOUSE-BASELINE](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/frontend/LIGHTHOUSE-BASELINE.md) | Perf/a11y baseline |
+| [launch/](https://github.com/dreamcraft17/company-wiki/tree/main/docs/products/dntech/docs/launch) | Relaunch checklists and plans |
 
 ## License
 

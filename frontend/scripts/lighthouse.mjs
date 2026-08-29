@@ -4,15 +4,32 @@
  * Usage:
  *   LIGHTHOUSE_URL=https://www.dntech.id node scripts/lighthouse.mjs
  *   LIGHTHOUSE_URL=http://localhost:3000 node scripts/lighthouse.mjs
+ *
+ * Output (priority):
+ *   1) LIGHTHOUSE_OUT_DIR env
+ *   2) company-wiki mirror (monorepo): company-wiki/docs/products/dntech/docs/frontend/lighthouse
+ *   3) frontend/lighthouse-reports/ (standalone clone)
  */
 import { execSync } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const baseUrl = (process.env.LIGHTHOUSE_URL || 'https://www.dntech.id').replace(/\/$/, '');
-const outDir = resolve(rootDir, '../docs/frontend/lighthouse');
+
+const monorepoWikiOut = resolve(
+  rootDir,
+  '../../../company-wiki/docs/products/dntech/docs/frontend/lighthouse',
+);
+const localOut = resolve(rootDir, 'lighthouse-reports');
+
+const outDir = process.env.LIGHTHOUSE_OUT_DIR
+  ? resolve(process.env.LIGHTHOUSE_OUT_DIR)
+  : existsSync(resolve(rootDir, '../../../company-wiki'))
+    ? monorepoWikiOut
+    : localOut;
+
 const routes = ['/', '/products/dnpeople', '/contact'];
 
 mkdirSync(outDir, { recursive: true });
@@ -31,7 +48,7 @@ for (const route of routes) {
   console.log(`\n→ Lighthouse ${url}`);
   execSync(
     `npx --yes lighthouse "${url}" --quiet --chrome-flags="--headless=new --no-sandbox" --only-categories=performance,accessibility,best-practices,seo --output=json --output-path="${jsonPath}"`,
-    { stdio: 'inherit' }
+    { stdio: 'inherit' },
   );
 
   const report = JSON.parse(readFileSync(jsonPath, 'utf-8'));
