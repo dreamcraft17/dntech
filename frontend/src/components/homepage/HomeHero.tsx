@@ -33,8 +33,8 @@ export function HomeHero({ content }: HomeHeroProps) {
             <Button href="/contact" size="lg" variant="inverse">
               Konsultasi Gratis — 30 Menit <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button href="/case-studies" size="lg" variant="outline-on-dark">
-              Lihat Portfolio
+            <Button href="/products" size="lg" variant="outline-on-dark">
+              Lihat Produk
             </Button>
           </div>
         </div>

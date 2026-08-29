@@ -12,12 +12,10 @@ const primaryLinks = [
 ];
 
 const secondaryLinks = [
-  { href: '/case-studies', label: 'Studi Kasus' },
-  { href: '/quiz', label: 'Temukan Solusi' },
-  { href: '/resources', label: 'Sumber Daya' },
-  { href: '/team', label: 'Tim' },
-  { href: '/careers', label: 'Karier' },
   { href: '/faq', label: 'FAQ' },
+  { href: '/quiz', label: 'Temukan Solusi' },
+  { href: '/team', label: 'Tim' },
+  { href: '/resources', label: 'Sumber Daya' },
 ];
 
 const legalLinks = [

@@ -63,7 +63,7 @@ export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
   },
   {
     name: 'Custom Software',
-    description: 'Solusi sesuai kebutuhan unik bisnis Anda — dari MVP hingga sistem enterprise.',
+    description: 'Solusi sesuai kebutuhan bisnis Anda — dari MVP sampai sistem operasional.',
   },
   {
     name: 'Maintenance & Support',
@@ -132,7 +132,8 @@ export const DEFAULT_ADVANTAGES: HomeAdvantage[] = [
   },
   {
     title: 'Tech Stack Modern',
-    description: 'Teknologi terbaru, scalable, dan maintainable. Siap grow dari ratusan ke jutaan user.',
+    description:
+      'React, Next.js, PostgreSQL — stack yang kami pakai di produk first-party. Dirancang untuk skala produk SaaS, bukan demo sekali pakai.',
   },
   {
     title: 'Support Sesudah Launch',

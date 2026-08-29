@@ -1,5 +1,6 @@
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
+import { SkipToContent } from '@/components/common/SkipToContent';
 import { PageTracker } from '@/components/common/PageTracker';
 import { StickyCTA } from '@/components/layout/StickyCTA';
 import { CrispChatLoader } from '@/components/interactive/CrispChatLoader';
@@ -21,9 +22,12 @@ export default async function PublicLayout({ children }: { children: React.React
       <JsonLd data={buildOrganizationSchema(settings)} />
       <JsonLd data={buildLocalBusinessSchema(settings)} />
       <JsonLd data={buildWebsiteSchema(settings)} />
+      <SkipToContent />
       <PageTracker />
       <Header />
-      <main className="flex-1 pb-16 md:pb-0">{children}</main>
+      <main id="main-content" className="flex-1 pb-16 md:pb-0">
+        {children}
+      </main>
       <Footer
         companyName={settings.companyName}
         tagline={settings.tagline}

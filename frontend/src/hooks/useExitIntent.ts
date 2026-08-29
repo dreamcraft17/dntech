@@ -7,6 +7,8 @@ interface UseExitIntentOptions {
   enableMobile?: boolean;
   debug?: boolean;
   sessionKey?: string;
+  /** Skip attaching mouseleave listener (modal shown programmatically). */
+  skipListener?: boolean;
 }
 
 const DEFAULT_SESSION_KEY = 'exitIntentModalShown';
@@ -17,6 +19,7 @@ export function useExitIntent(options: UseExitIntentOptions = {}) {
     enableMobile = false,
     debug = false,
     sessionKey = DEFAULT_SESSION_KEY,
+    skipListener = false,
   } = options;
   const [showModal, setShowModal] = useState(false);
   const lastFocusedElementRef = useRef<HTMLElement | null>(null);
@@ -36,6 +39,7 @@ export function useExitIntent(options: UseExitIntentOptions = {}) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (skipListener) return;
     if (process.env.NEXT_PUBLIC_ENABLE_EXIT_MODAL === 'false') return;
 
     const isMobile =
@@ -94,7 +98,7 @@ export function useExitIntent(options: UseExitIntentOptions = {}) {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [debug, enableMobile, sessionKey]);
+  }, [debug, enableMobile, sessionKey, skipListener]);
 
   return {
     showModal,

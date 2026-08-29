@@ -1,10 +1,6 @@
-'use client';
-
-import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { SectionHeading } from '@/components/homepage/SectionHeading';
 import Link from 'next/link';
+import { ChevronDown } from 'lucide-react';
+import { SectionHeading } from '@/components/homepage/SectionHeading';
 
 interface FaqItem {
   id: string;
@@ -17,36 +13,25 @@ interface HomeFaqProps {
 }
 
 export function HomeFaq({ items }: HomeFaqProps) {
-  const [openId, setOpenId] = useState<string | null>(items[0]?.id ?? null);
-
   return (
     <section className="bg-white py-16" id="faq">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <SectionHeading title="Pertanyaan yang Sering Ditanyakan" />
         <div className="space-y-3">
-          {items.map((faq) => {
-            const open = openId === faq.id;
-            return (
-              <div key={faq.id} className="rounded-lg border border-gray-200">
-                <button
-                  type="button"
-                  onClick={() => setOpenId(open ? null : faq.id)}
-                  className="flex w-full items-center justify-between gap-4 px-4 py-4 text-left min-h-[48px]"
-                  aria-expanded={open}
-                >
-                  <span className="font-medium text-gray-900">{faq.question}</span>
-                  <ChevronDown
-                    className={cn('h-5 w-5 shrink-0 text-gray-500 transition-transform', open && 'rotate-180')}
-                  />
-                </button>
-                {open && (
-                  <div className="border-t border-gray-100 px-4 py-4 text-sm leading-relaxed text-gray-600">
-                    {faq.answer}
-                  </div>
-                )}
+          {items.map((faq) => (
+            <details
+              key={faq.id}
+              className="group rounded-lg border border-gray-200 open:border-blue-100"
+            >
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-4 text-left min-h-[48px] marker:content-none [&::-webkit-details-marker]:hidden">
+                <span className="font-medium text-gray-900">{faq.question}</span>
+                <ChevronDown className="h-5 w-5 shrink-0 text-gray-500 transition-transform group-open:rotate-180" />
+              </summary>
+              <div className="border-t border-gray-100 px-4 py-4 text-sm leading-relaxed text-gray-600">
+                {faq.answer}
               </div>
-            );
-          })}
+            </details>
+          ))}
         </div>
         <p className="mt-8 text-center text-sm text-gray-600">
           Masih ada pertanyaan?{' '}

@@ -1,13 +1,17 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Menu, X, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { apiFetch } from '@/lib/api';
 import { LogoLight } from '@/components/branding/LogoLight';
-import type { SearchResult } from '@/types';
+
+const HeaderSearch = dynamic(
+  () => import('@/components/common/HeaderSearch').then((mod) => mod.HeaderSearch),
+  { ssr: false }
+);
 
 const navLinks = [
   { href: '/', label: 'Beranda' },
@@ -21,63 +25,54 @@ const navLinks = [
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [searchLoading, setSearchLoading] = useState(false);
-  const [searchError, setSearchError] = useState('');
-  const [searchSearched, setSearchSearched] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
   const pathname = usePathname();
-  const router = useRouter();
-
-  const handleSearch = useCallback((q: string) => {
-    setSearchQuery(q);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    abortRef.current?.abort();
-
-    if (q.length < 2) {
-      setSearchResults([]);
-      setSearchLoading(false);
-      setSearchError('');
-      setSearchSearched(false);
-      return;
-    }
-
-    debounceRef.current = setTimeout(async () => {
-      try {
-        setSearchLoading(true);
-        setSearchError('');
-        const controller = new AbortController();
-        abortRef.current = controller;
-        const results = await apiFetch<SearchResult[]>(
-          `/search?q=${encodeURIComponent(q)}`,
-          { signal: controller.signal }
-        );
-        setSearchResults(results);
-        setSearchSearched(true);
-      } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') return;
-        setSearchError(err instanceof Error ? err.message : 'Pencarian gagal');
-        setSearchResults([]);
-        setSearchSearched(true);
-      } finally {
-        setSearchLoading(false);
-      }
-    }, 300);
-  }, []);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      abortRef.current?.abort();
-    };
-  }, []);
+    if (!mobileOpen) return;
+
+    const menu = mobileMenuRef.current;
+    if (!menu) return;
+
+    const focusables = Array.from(
+      menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+    );
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    first?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMobileOpen(false);
+        menuButtonRef.current?.focus();
+        return;
+      }
+
+      if (event.key !== 'Tab' || focusables.length === 0) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileOpen]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="inline-flex shrink-0 items-center hover:opacity-80 transition-opacity" aria-label="Beranda DN Tech">
+        <Link
+          href="/"
+          className="inline-flex shrink-0 items-center hover:opacity-80 transition-opacity"
+          aria-label="Beranda DN Tech"
+        >
           <LogoLight />
         </Link>
 
@@ -100,9 +95,14 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setSearchOpen(!searchOpen)}
+            type="button"
+            onClick={() => {
+              setSearchOpen((open) => !open);
+              setMobileOpen(false);
+            }}
             className="p-2 text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 min-h-[48px] min-w-[48px] flex items-center justify-center"
-            aria-label="Cari"
+            aria-label={searchOpen ? 'Tutup pencarian' : 'Buka pencarian'}
+            aria-expanded={searchOpen}
           >
             <Search className="h-5 w-5" />
           </button>
@@ -113,58 +113,31 @@ export function Header() {
             Konsultasi Gratis
           </Link>
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
+            ref={menuButtonRef}
+            type="button"
+            onClick={() => {
+              setMobileOpen((open) => !open);
+              setSearchOpen(false);
+            }}
             className="md:hidden p-2 text-gray-600 rounded-lg hover:bg-gray-50 min-h-[48px] min-w-[48px] flex items-center justify-center"
             aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {searchOpen && (
-        <div className="border-t border-gray-200 bg-white px-4 py-3">
-          <div className="mx-auto max-w-7xl">
-            <input
-              type="search"
-              placeholder="Cari layanan, blog..."
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-base focus:border-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20"
-              autoFocus
-            />
-            {searchResults.length > 0 && (
-              <div className="mt-2 rounded-lg border border-gray-200 bg-white">
-                {searchResults.map((result, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      router.push(result.url);
-                      setSearchOpen(false);
-                      setSearchQuery('');
-                      setSearchResults([]);
-                    }}
-                    className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-0"
-                  >
-                    <div className="text-sm font-medium text-gray-900">{result.title}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">{result.type} · {result.snippet}</div>
-                  </button>
-                ))}
-              </div>
-            )}
-            {(searchLoading || searchError || (searchSearched && searchQuery.length >= 2 && searchResults.length === 0)) && (
-              <div className="mt-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-600">
-                {searchLoading && 'Mencari...'}
-                {!searchLoading && searchError && `Search error: ${searchError}`}
-                {!searchLoading && !searchError && `Belum ada hasil untuk “${searchQuery}”. Coba kata lain seperti “software”, “web”, “produk”, atau “kontak”.`}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {searchOpen && <HeaderSearch open={searchOpen} onClose={() => setSearchOpen(false)} />}
 
       {mobileOpen && (
-        <nav className="md:hidden border-t border-gray-200 bg-white px-4 py-3" aria-label="Navigasi mobile">
+        <nav
+          id="mobile-nav"
+          ref={mobileMenuRef}
+          className="md:hidden border-t border-gray-200 bg-white px-4 py-3"
+          aria-label="Navigasi mobile"
+        >
           {navLinks.map((link) => (
             <Link
               key={link.href}

@@ -66,8 +66,17 @@ export default async function CaseStudiesPage() {
               <p className="text-gray-600 max-w-md mx-auto">
                 Studi kasus akan dipublikasikan setelah proyek nyata selesai dan klien memberikan izin.
               </p>
-              <p className="mt-2 text-sm text-gray-500">Sementara itu, baca artikel blog kami untuk insight teknologi startup.</p>
-              <Link href="/blog" className="inline-block mt-6 text-blue-900 font-medium hover:underline">Baca Blog</Link>
+              <p className="mt-2 text-sm text-gray-500">
+                Sementara itu, lihat produk first-party atau artikel blog kami.
+              </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                <Link href="/products" className="inline-flex items-center justify-center rounded-lg border-2 border-teal-600 px-5 py-2.5 text-sm font-semibold text-teal-600 hover:bg-teal-50 min-h-[44px]">
+                  Lihat Produk
+                </Link>
+                <Link href="/blog" className="inline-flex items-center justify-center rounded-lg bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 min-h-[44px]">
+                  Baca Blog
+                </Link>
+              </div>
             </div>
           )}
 

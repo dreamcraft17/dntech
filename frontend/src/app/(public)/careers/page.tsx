@@ -5,7 +5,11 @@ import { fetchPublicApiList } from '@/lib/server-api';
 import type { Career } from '@/types';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Karier' };
+export const metadata: Metadata = {
+  title: 'Karier',
+  description:
+    'Lowongan di DN Tech. Saat ini belum ada posisi terbuka — hubungi kami jika ingin memperkenalkan diri.',
+};
 
 async function getCareers() {
   return fetchPublicApiList<Career>('/careers', 60);
@@ -52,7 +56,17 @@ export default async function CareersPage() {
           ))}
 
           {careers.length === 0 && (
-            <p className="text-center text-gray-500 py-12">Tidak ada posisi terbuka saat ini. Periksa kembali nanti!</p>
+            <div className="text-center py-16 rounded-lg border border-dashed border-gray-200 bg-gray-50">
+              <p className="text-gray-600 max-w-md mx-auto">
+                Belum ada posisi terbuka saat ini. Kami akan update halaman ini saat ada rekrutmen.
+              </p>
+              <Link
+                href="/contact?subject=Karier"
+                className="inline-flex mt-6 items-center justify-center rounded-lg bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 min-h-[44px]"
+              >
+                Kirim CV / Perkenalan
+              </Link>
+            </div>
           )}
         </div>
       </div>

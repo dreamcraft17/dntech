@@ -35,4 +35,18 @@ describe('useExitIntent', () => {
     });
     expect(result.current.showModal).toBe(false);
   });
+
+  it('skips mouseleave listener when skipListener is true', () => {
+    const onExit = jest.fn();
+    const { result } = renderHook(() =>
+      useExitIntent({ onExit, enableMobile: true, sessionKey: 'test-skip', skipListener: true })
+    );
+
+    act(() => {
+      document.dispatchEvent(new MouseEvent('mouseleave', { clientY: 0 }));
+    });
+
+    expect(result.current.showModal).toBe(false);
+    expect(onExit).not.toHaveBeenCalled();
+  });
 });

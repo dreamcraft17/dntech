@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: item.title,
     description: item.description || '',
     path: `/case-studies/${slug}`,
-    keywords: [...(item.industries || []), 'case study', 'enterprise software'],
+    keywords: [...(item.industries || []), 'case study', 'software Indonesia'],
     image: item.heroImage,
   });
 }

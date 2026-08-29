@@ -5,7 +5,11 @@ import { fetchPublicApiList } from '@/lib/server-api';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Portofolio' };
+export const metadata: Metadata = {
+  title: 'Portofolio',
+  description:
+    'Portofolio proyek DN Tech — dipublikasikan hanya dengan izin klien. Saat ini belum ada item publik.',
+};
 
 async function getPortfolio() {
   return fetchPublicApiList<PortfolioItem>('/portfolio?pageSize=12', 60);
@@ -53,7 +57,25 @@ export default async function PortfolioPage() {
         </div>
 
         {items.length === 0 && (
-          <p className="py-12 text-center text-gray-500">Belum ada item portofolio.</p>
+          <div className="text-center py-16 rounded-lg border border-dashed border-gray-200 bg-gray-50">
+            <p className="text-gray-600 max-w-md mx-auto">
+              Item portofolio akan muncul setelah proyek klien selesai dan klien memberi izin publikasi.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-teal-600 px-5 py-2.5 text-sm font-semibold text-teal-600 hover:bg-teal-50 min-h-[44px]"
+              >
+                Lihat Produk Kami
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-lg bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 min-h-[44px]"
+              >
+                Konsultasi Gratis
+              </Link>
+            </div>
+          </div>
         )}
       </div>
     </div>

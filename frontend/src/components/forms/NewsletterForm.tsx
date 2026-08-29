@@ -54,7 +54,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         <Mail className="h-5 w-5 text-blue-900" />
         <h3 className="font-semibold text-gray-900">Langganan newsletter</h3>
       </div>
-      <p className="text-sm text-gray-600">Dapatkan insight teknologi enterprise, studi kasus, dan tren industri.</p>
+      <p className="text-sm text-gray-600">Update produk first-party dan catatan rilis. Tanpa janji “insight enterprise” palsu.</p>
       <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
       <Select label="Industri (opsional)" value={industry} onChange={(e) => setIndustry(e.target.value)}
         options={[

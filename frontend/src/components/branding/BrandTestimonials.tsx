@@ -33,8 +33,8 @@ export function BrandTestimonials() {
     <section className="py-16 bg-gray-50">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Apa Kata Klien</h2>
-          <p className="mt-2 text-gray-600">Social proof dari partner yang sudah bekerja sama dengan DN Tech.</p>
+          <h2 className="text-3xl font-bold text-gray-900">Testimoni</h2>
+          <p className="mt-2 text-gray-600">Kutipan yang kami publikasikan dengan izin tertulis.</p>
         </div>
 
         <Card className="h-full border-l-4 border-l-teal-600">

@@ -83,11 +83,11 @@ export function HomePortfolio({ projects, comingSoonMessage }: HomePortfolioProp
         ) : (
           <Card className="mx-auto max-w-2xl text-center">
             <p className="text-gray-700 leading-relaxed">{comingSoonMessage}</p>
-            <p className="mt-3 text-sm text-gray-600">
-              Tertarik menjadi founding client kami?
-            </p>
-            <div className="mt-6">
-              <Button href="/contact">Hubungi Kami untuk Konsultasi</Button>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Button href="/products" variant="secondary">
+                Lihat Produk Kami
+              </Button>
+              <Button href="/contact">Hubungi Kami</Button>
             </div>
           </Card>
         )}
