@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { TeamSpotlight } from '@/components/layout/TeamSpotlight';
-import type { AboutContent } from '@/lib/about-content';
+import { hasAboutCopy, type AboutContent } from '@/lib/about-content';
 import type { TeamMember } from '@/types';
 
 export type { AboutContent } from '@/lib/about-content';
@@ -11,6 +12,8 @@ interface AboutPageContentProps {
 }
 
 export function AboutPageContent({ about, team }: AboutPageContentProps) {
+  const hasCopy = hasAboutCopy(about);
+
   return (
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -18,6 +21,15 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
           <h1 className="text-4xl font-bold text-gray-900">Tentang DN Tech</h1>
           {about.story && (
             <p className="mx-auto mt-4 max-w-3xl text-lg text-gray-600 whitespace-pre-line">{about.story}</p>
+          )}
+          {!hasCopy && (
+            <p className="mx-auto mt-4 max-w-2xl text-gray-600">
+              Profil studio belum ter-load. Lihat produk first-party di{' '}
+              <Link href="/products" className="font-medium text-blue-900 underline">
+                halaman Produk
+              </Link>
+              .
+            </p>
           )}
         </div>
 
@@ -41,9 +53,9 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
         {about.values && about.values.length > 0 && (
           <div className="mb-16">
             <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">Nilai-Nilai Kami</h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {about.values.map((v) => (
-                <Card key={v.title}>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {about.values.map((v, index) => (
+                <Card key={`${v.title}-${index}`}>
                   <h3 className="font-semibold text-gray-900">{v.title}</h3>
                   <p className="mt-2 text-sm text-gray-600">{v.description}</p>
                 </Card>

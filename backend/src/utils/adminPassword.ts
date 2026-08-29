@@ -8,6 +8,11 @@ export const FORBIDDEN_ADMIN_PASSWORDS = new Set([
 /** Local-only fallback. Never accepted when NODE_ENV=production. */
 export const LOCAL_DEV_ADMIN_PASSWORD = 'DevOnly-LocalBootstrap-ChangeMe!';
 
+/** Only rotate an existing admin hash when the operator opts in. */
+export function shouldRotateAdminPassword(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.ROTATE_ADMIN === '1';
+}
+
 export function resolveAdminPassword(env: NodeJS.ProcessEnv = process.env): string {
   const password = env.ADMIN_PASSWORD?.trim();
   const isProd = env.NODE_ENV === 'production';

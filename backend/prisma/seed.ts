@@ -1,29 +1,44 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { resolveAdminPassword } from '../src/utils/adminPassword';
+import { resolveAdminPassword, shouldRotateAdminPassword } from '../src/utils/adminPassword';
 
 const prisma = new PrismaClient();
 
 /**
  * Production bootstrap seed — creates admin user and empty site settings only.
+ * Existing admin hashes are left alone unless ROTATE_ADMIN=1 (db-vps.sh seed sets this).
  * All content (services, blog, team, etc.) must be added via Admin Dashboard.
  */
 async function main() {
   console.log('Bootstrapping production database...');
 
-  const passwordHash = await bcrypt.hash(resolveAdminPassword(), 12);
   const adminEmail = process.env.ADMIN_EMAIL || 'admin@dntech.id';
+  const rotate = shouldRotateAdminPassword();
+  const existing = await prisma.user.findUnique({ where: { email: adminEmail } });
 
-  await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: { passwordHash, isActive: true },
-    create: {
-      email: adminEmail,
-      passwordHash,
-      name: 'Administrator',
-      role: 'SuperAdmin',
-    },
-  });
+  if (!existing) {
+    const passwordHash = await bcrypt.hash(resolveAdminPassword(), 12);
+    await prisma.user.create({
+      data: {
+        email: adminEmail,
+        passwordHash,
+        name: 'Administrator',
+        role: 'SuperAdmin',
+      },
+    });
+  } else if (rotate) {
+    const passwordHash = await bcrypt.hash(resolveAdminPassword(), 12);
+    await prisma.user.update({
+      where: { email: adminEmail },
+      data: { passwordHash, isActive: true },
+    });
+  } else {
+    await prisma.user.update({
+      where: { email: adminEmail },
+      data: { isActive: true },
+    });
+    console.log('Admin exists; hash unchanged (set ROTATE_ADMIN=1 to rotate).');
+  }
 
   await prisma.siteSettings.upsert({
     where: { id: 1 },

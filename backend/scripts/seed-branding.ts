@@ -63,10 +63,8 @@ async function seedBranding() {
   })));
 
   const stats = [
-    { label: 'Produk First-Party', value: 6, iconName: 'Package', order: 0 },
-    { label: 'Produk Live / Beta', value: 4, iconName: 'Rocket', order: 1 },
-    { label: 'Tahun Membangun', value: 3, iconName: 'Calendar', order: 2 },
-    { label: 'Automated Tests', value: 81, iconName: 'CheckCircle', order: 3 },
+    { label: 'Produk First-Party', value: 7, iconName: 'Package', order: 0 },
+    { label: 'Tahun Membangun', value: 3, iconName: 'Calendar', order: 1 },
   ];
 
   await Promise.all(stats.map((item) => prisma.stat.create({ data: item })));

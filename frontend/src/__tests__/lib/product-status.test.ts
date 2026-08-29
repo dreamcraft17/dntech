@@ -8,8 +8,10 @@ describe('formatProductStatusBadge', () => {
   });
 
   it('phrases numeric counts as pelanggan', () => {
+    expect(formatProductStatusBadge('0')).toBe('0 pelanggan');
     expect(formatProductStatusBadge('1')).toBe('1 pelanggan');
     expect(formatProductStatusBadge('12')).toBe('12 pelanggan');
+    expect(formatProductStatusBadge('1.5')).toBe('1.5 pelanggan');
   });
 
   it('leaves launch status strings unchanged', () => {
@@ -17,5 +19,6 @@ describe('formatProductStatusBadge', () => {
     expect(formatProductStatusBadge('Beta')).toBe('Beta');
     expect(formatProductStatusBadge('Beta UAT')).toBe('Beta UAT');
     expect(formatProductStatusBadge('1 client')).toBe('1 client');
+    expect(formatProductStatusBadge('50+')).toBe('50+');
   });
 });

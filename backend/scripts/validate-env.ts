@@ -44,13 +44,19 @@ function validateEnv() {
   }
 
   const adminPassword = process.env.ADMIN_PASSWORD?.trim();
-  if (
-    process.env.NODE_ENV === 'production' &&
-    adminPassword &&
-    (adminPassword.length < 12 || FORBIDDEN_ADMIN_PASSWORDS.has(adminPassword))
-  ) {
-    console.error('❌ ADMIN_PASSWORD in production must be min 12 chars and not a documented default');
-    process.exit(1);
+  if (process.env.NODE_ENV === 'production') {
+    if (
+      adminPassword &&
+      (adminPassword.length < 12 || FORBIDDEN_ADMIN_PASSWORDS.has(adminPassword))
+    ) {
+      console.error('❌ ADMIN_PASSWORD in production must be min 12 chars and not a documented default');
+      process.exit(1);
+    }
+    if (!adminPassword) {
+      console.warn(
+        '⚠ ADMIN_PASSWORD unset — API login uses the DB hash, not this env. Required only for db:seed with ROTATE_ADMIN=1.',
+      );
+    }
   }
 
   console.log('✓ All required env vars present and valid');

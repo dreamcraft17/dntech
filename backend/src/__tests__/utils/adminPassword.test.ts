@@ -2,7 +2,16 @@ import {
   FORBIDDEN_ADMIN_PASSWORDS,
   LOCAL_DEV_ADMIN_PASSWORD,
   resolveAdminPassword,
+  shouldRotateAdminPassword,
 } from '../../utils/adminPassword';
+
+describe('shouldRotateAdminPassword', () => {
+  it('is opt-in via ROTATE_ADMIN=1', () => {
+    expect(shouldRotateAdminPassword({})).toBe(false);
+    expect(shouldRotateAdminPassword({ ROTATE_ADMIN: 'true' })).toBe(false);
+    expect(shouldRotateAdminPassword({ ROTATE_ADMIN: '1' })).toBe(true);
+  });
+});
 
 describe('resolveAdminPassword', () => {
   it('returns a valid ADMIN_PASSWORD', () => {

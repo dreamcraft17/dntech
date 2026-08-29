@@ -6,5 +6,6 @@ dist/
 uploads/
 .env
 .env.local
+.env.vps
 *.log
 .DS_Store

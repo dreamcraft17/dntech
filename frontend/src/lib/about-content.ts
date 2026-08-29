@@ -17,21 +17,65 @@ export interface CoreValueSource {
   description: string;
 }
 
+function asTrimmedString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function parseValues(raw: unknown): AboutContent['values'] {
+  if (!Array.isArray(raw)) return undefined;
+  const values = raw.flatMap((item) => {
+    if (!item || typeof item !== 'object') return [];
+    const rec = item as Record<string, unknown>;
+    const title = asTrimmedString(rec.title);
+    const description = asTrimmedString(rec.description);
+    if (!title || !description) return [];
+    return [{ title, description }];
+  });
+  return values.length > 0 ? values : undefined;
+}
+
+function parseAchievements(raw: unknown): string[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const items = raw
+    .filter((item): item is string => typeof item === 'string')
+    .map((item) => item.trim())
+    .filter(Boolean);
+  return items.length > 0 ? items : undefined;
+}
+
 /**
  * About page reads SiteSettings.aboutContent; honest copy is seeded into
  * BrandContent. Merge so /about is not empty after `db:seed-branding`.
  */
 export function parseAboutContent(raw: unknown): AboutContent {
   if (!raw) return {};
-  if (typeof raw === 'string') {
+
+  let obj: unknown = raw;
+  if (typeof obj === 'string') {
     try {
-      return JSON.parse(raw) as AboutContent;
+      obj = JSON.parse(obj) as unknown;
     } catch {
       return {};
     }
   }
-  if (typeof raw === 'object') return raw as AboutContent;
-  return {};
+
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return {};
+
+  const rec = obj as Record<string, unknown>;
+  const parsed: AboutContent = {};
+  const story = asTrimmedString(rec.story);
+  const mission = asTrimmedString(rec.mission);
+  const vision = asTrimmedString(rec.vision);
+  const values = parseValues(rec.values);
+  const achievements = parseAchievements(rec.achievements);
+  if (story) parsed.story = story;
+  if (mission) parsed.mission = mission;
+  if (vision) parsed.vision = vision;
+  if (values) parsed.values = values;
+  if (achievements) parsed.achievements = achievements;
+  return parsed;
 }
 
 export function resolveAboutContent(
@@ -51,4 +95,14 @@ export function resolveAboutContent(
     values: values.length > 0 ? values : undefined,
     achievements: fromSettings.achievements,
   };
+}
+
+export function hasAboutCopy(about: AboutContent): boolean {
+  return Boolean(
+    about.story ||
+      about.mission ||
+      about.vision ||
+      (about.values && about.values.length > 0) ||
+      (about.achievements && about.achievements.length > 0),
+  );
 }
