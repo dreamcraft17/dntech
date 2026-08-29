@@ -27,9 +27,17 @@ export const PAGE_SEO: Record<string, { title: string; description: string; keyw
     keywords: ['layanan pengembangan software', 'konsultasi IT Jakarta', 'custom app development Indonesia'],
   },
   products: {
-    title: 'Produk Digital Siap Pakai untuk Bisnis Anda',
-    description: 'Produk software siap pakai dari DN Tech untuk mempercepat operasional startup dan UMKM di Indonesia.',
-    keywords: ['produk digital Indonesia', 'software siap pakai', 'produk teknologi UMKM'],
+    title: 'HRIS, ERP & Pembukuan untuk Bisnis Indonesia',
+    description:
+      'Software HRIS, ERP, dan pembukuan Shopee dari DN Tech untuk startup & UKM. Fitur, harga, dan status rilis di setiap halaman produk.',
+    keywords: [
+      'HRIS Indonesia',
+      'ERP software Indonesia',
+      'pembukuan Shopee',
+      'software UKM Indonesia',
+      'dnPeople',
+      'dnCore',
+    ],
   },
   blog: {
     title: 'Blog Teknologi untuk Founder & Tim Produk',

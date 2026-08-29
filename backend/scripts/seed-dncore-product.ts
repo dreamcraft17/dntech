@@ -120,7 +120,7 @@ async function main() {
     description:
       'ERP terintegrasi untuk SME Indonesia — finance, supply chain, manufacturing, CRM, dan workflow dalam satu platform. Komplementer dengan dnPeople HRIS: dnPeople untuk people, dnCore untuk business operations.',
     data: {
-      tagline: 'Core of Your Business. Modular. Transparan.',
+      tagline: 'ERP keuangan, stok, dan proyek dalam satu platform.',
       longFormContent: [
         '## dnPeople untuk People · dnCore untuk Business',
         '',
@@ -172,13 +172,13 @@ async function main() {
           cta: { label: 'Demo Services', url: 'https://calendly.com/dntech/demo' },
         },
       ],
-      primaryCta: { label: 'Book Demo', url: 'https://calendly.com/dntech/demo', type: 'demo', color: 'blue', size: 'lg' },
+      primaryCta: { label: 'Jadwalkan Demo', url: 'https://calendly.com/dntech/demo', type: 'demo', color: 'blue', size: 'lg' },
       secondaryCtas: [
         { label: 'Lihat Pricing', url: '#pricing', type: 'link' },
         { label: 'Hubungi Sales', url: '/contact?product=dncore', type: 'contact' },
       ],
       demoUrl: 'https://calendly.com/dntech/demo',
-      seoTitle: 'dnCore — ERP Terintegrasi untuk SME Indonesia',
+      seoTitle: 'dnCore — ERP Keuangan & Operasional untuk UKM',
       seoDescription: 'Finance, supply chain, manufacturing, CRM & workflow dalam satu platform. Komplementer dnPeople HRIS. Harga transparan, compliance Indonesia built-in.',
       keywords: 'ERP Indonesia, software ERP SME, dnCore, ERP UMKM, sistem keuangan terintegrasi',
       faq: [

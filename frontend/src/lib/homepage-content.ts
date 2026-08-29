@@ -41,6 +41,8 @@ export interface HomeContent {
   heroSupporting?: string;
   heroPrimaryCta?: HomeCta;
   heroSecondaryCta?: HomeCta;
+  productsTitle?: string;
+  productsSubtitle?: string;
   processSteps?: HomeStep[];
   advantages?: HomeAdvantage[];
   techStack?: HomeTechCategory[];
@@ -67,6 +69,12 @@ export const DEFAULT_HERO_PRIMARY_CTA: HomeCta = {
 export const DEFAULT_HERO_SECONDARY_CTA: HomeCta = {
   label: 'Lihat Produk',
   href: '/products',
+};
+
+export const DEFAULT_PRODUCTS_SECTION = {
+  title: 'Produk software siap pakai',
+  subtitle:
+    'HRIS, ERP, dan pembukuan yang kami bangun dan jalankan sendiri. Setiap halaman mencantumkan fitur, harga, dan status rilis.',
 };
 
 export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
@@ -266,6 +274,8 @@ export function resolveHomeContent(settings: PublicSettings): Required<
     | 'heroSupporting'
     | 'heroPrimaryCta'
     | 'heroSecondaryCta'
+    | 'productsTitle'
+    | 'productsSubtitle'
     | 'processSteps'
     | 'advantages'
     | 'techStack'
@@ -286,6 +296,8 @@ export function resolveHomeContent(settings: PublicSettings): Required<
     heroSupporting: cms.heroSupporting || settings.heroDescription || DEFAULT_HERO.supporting,
     heroPrimaryCta: asCta(cms.heroPrimaryCta, DEFAULT_HERO_PRIMARY_CTA),
     heroSecondaryCta: asCta(cms.heroSecondaryCta, DEFAULT_HERO_SECONDARY_CTA),
+    productsTitle: cms.productsTitle || DEFAULT_PRODUCTS_SECTION.title,
+    productsSubtitle: cms.productsSubtitle || DEFAULT_PRODUCTS_SECTION.subtitle,
     processSteps: cms.processSteps?.length ? cms.processSteps : DEFAULT_PROCESS_STEPS,
     advantages: cms.advantages?.length ? cms.advantages : DEFAULT_ADVANTAGES,
     techStack: cms.techStack?.length ? cms.techStack : DEFAULT_TECH_STACK,

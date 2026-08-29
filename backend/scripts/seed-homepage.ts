@@ -62,6 +62,9 @@ async function main() {
     heroSupporting: DEFAULT_HERO.supporting,
     heroPrimaryCta: { label: 'Konsultasi Gratis — 30 Menit', href: '/contact' },
     heroSecondaryCta: { label: 'Lihat Produk', href: '/products' },
+    productsTitle: 'Produk software siap pakai',
+    productsSubtitle:
+      'HRIS, ERP, dan pembukuan yang kami bangun dan jalankan sendiri. Setiap halaman mencantumkan fitur, harga, dan status rilis.',
     hiringEmail: 'careers@dntech.id',
   };
 

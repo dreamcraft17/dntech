@@ -47,7 +47,7 @@ async function main() {
     description:
       'Website company profile firma hukum Trusted Jurist (Jakarta Timur) — 7 halaman, design system editorial, form kontak Resend, SEO-ready. Contoh deliverable DN Tech untuk klien professional services.',
     data: {
-      tagline: 'Law Firm Company Profile. Editorial Design.',
+      tagline: 'Website firma hukum — desain editorial.',
       longFormContent: [
         '## Showcase: Professional Services Website',
         '',
@@ -77,7 +77,7 @@ async function main() {
       secondaryCtas: [
         { label: 'Minta Project Serupa', url: '/contact?intent=company-profile', type: 'contact' },
       ],
-      seoTitle: 'Trusted Jurist — Law Firm Website by DN Tech',
+      seoTitle: 'Trusted Jurist — Website Firma Hukum',
       seoDescription: 'Showcase website company profile firma hukum. Design editorial, 7 halaman, form kontak, SEO-ready. Live: trustedjurist.co.id',
       keywords: 'website firma hukum, company profile law firm, jasa website profesional, Trusted Jurist',
       faq: [

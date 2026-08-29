@@ -126,7 +126,7 @@ async function main() {
     description:
       'Financial dashboard & pembukuan untuk seller Shopee Indonesia. Sync order, settlement, dan pajak otomatis — plus bonus pembukuan SAK EMKM tanpa aplikasi akuntansi terpisah.',
     data: {
-      tagline: 'Dashboard Shopee + Pembukuan. Satu Platform.',
+      tagline: 'Pembukuan Shopee seller — sync order, pajak, SAK EMKM.',
       longFormContent: [
         '## Financial Dashboard untuk Seller Shopee',
         '',
@@ -183,9 +183,10 @@ async function main() {
         { label: 'Book Demo', url: 'https://calendly.com/dntech/demo', type: 'demo' },
       ],
       demoUrl: 'https://calendly.com/dntech/demo',
-      seoTitle: 'dnShop Finance — Dashboard Shopee + Pembukuan untuk Seller Indonesia',
-      seoDescription: 'Sync order Shopee, settlement, pajak, dan pembukuan SAK EMKM dalam satu platform. Free tier tersedia. Prod: shop.dntech.id',
-      keywords: 'dashboard shopee, pembukuan seller, software akuntansi shopee, dnShop Finance, laporan penjualan shopee',
+      seoTitle: 'dnShop Finance — Pembukuan Shopee & SAK EMKM',
+      seoDescription:
+        'Sync penjualan Shopee, pajak PPN/PPh, dan pembukuan SAK EMKM dalam satu dashboard. Free tier tersedia di shop.dntech.id.',
+      keywords: 'pembukuan Shopee, SAK EMKM, pajak seller Shopee, dashboard Shopee, dnShop Finance',
       faq: [
         {
           question: 'Apakah ini aplikasi akuntansi terpisah?',

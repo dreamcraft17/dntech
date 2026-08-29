@@ -43,9 +43,10 @@ export default async function ProductsPage({
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900">Produk Kami</h1>
+            <h1 className="text-4xl font-bold text-gray-900">Produk software siap pakai</h1>
             <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-              Produk digital siap pakai untuk mempercepat operasional bisnis Anda
+              dnPeople (HRIS), dnCore (ERP), dnShop Finance (pembukuan Shopee), dan tool operasional
+              yang kami bangun sendiri. Fitur, harga, dan status rilis ada di halaman masing-masing.
             </p>
           </div>
 

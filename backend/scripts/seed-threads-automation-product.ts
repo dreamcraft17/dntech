@@ -88,7 +88,7 @@ async function main() {
     description:
       'Buat caption dengan AI, jadwalkan, dan auto-publish ke Meta Threads — supaya content creator tidak harus online di jam tayang. v3.0 AI Content + v2.0 live publish.',
     data: {
-      tagline: 'AI Caption. Schedule. Auto-Publish.',
+      tagline: 'Caption AI, jadwal, dan auto-publish ke Meta Threads.',
       longFormContent: [
         '## Content Automation untuk Meta Threads',
         '',
@@ -125,7 +125,7 @@ async function main() {
       ],
       primaryCta: { label: 'Join Waitlist', url: '/contact?product=threads-automation', type: 'contact', color: 'blue', size: 'lg' },
       secondaryCtas: [{ label: 'Lihat Fitur', url: '#features', type: 'link' }],
-      seoTitle: 'Threads Automation — AI Caption & Auto-Publish untuk Meta Threads',
+      seoTitle: 'Threads Automation — Caption AI & Auto-Publish Meta Threads',
       seoDescription: 'Generate caption AI, schedule posting, auto-publish ke Threads. Retry otomatis, publish history, dry-run mode. Internal: ai.dntech.id',
       keywords: 'threads automation, auto post threads, AI caption generator, social media scheduler Indonesia',
       faq: [

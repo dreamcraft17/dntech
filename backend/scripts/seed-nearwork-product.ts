@@ -97,7 +97,7 @@ async function main() {
     description:
       'Marketplace freelance untuk merekrut — klien post job, freelancer kirim proposal, dan percakapan tetap terikat pada lowongan. Remote maupun on-site, untuk berbagai jenis pekerjaan.',
     data: {
-      tagline: 'Rekrut Freelancer. Remote & On-site.',
+      tagline: 'Marketplace freelance Indonesia — job, proposal, kontrak.',
       longFormContent: [
         '## Marketplace Hiring yang Terstruktur',
         '',
@@ -135,7 +135,8 @@ async function main() {
       secondaryCtas: [{ label: 'Lihat Pricing', url: '#pricing', type: 'link' }],
       demoUrl: 'https://calendly.com/dntech/demo',
       seoTitle: 'Nearwork — Marketplace Freelance Remote & On-site',
-      seoDescription: 'Platform hiring freelancer terstruktur. Job posting, proposal, kontrak — remote maupun on-site. Early access tersedia.',
+      seoDescription:
+        'Post job, terima proposal, kelola kontrak — remote atau on-site. Early access; join waitlist untuk beta.',
       keywords: 'marketplace freelance Indonesia, rekrut freelancer, platform hiring, Nearwork',
       faq: [
         {

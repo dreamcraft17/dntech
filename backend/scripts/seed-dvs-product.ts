@@ -98,7 +98,7 @@ async function main() {
     description:
       'All-in-one penetration testing platform — Scanner + Reporting + Tracking dalam satu platform self-hosted. Compliance-aware (UU PDP / OWASP), API-first untuk CI/CD.',
     data: {
-      tagline: 'Scan. Report. Track. All-in-One.',
+      tagline: 'Scanner web pasif, laporan temuan, dan tracking pentest.',
       longFormContent: [
         '## Pentest Platform untuk Security Team',
         '',
@@ -136,7 +136,7 @@ async function main() {
       primaryCta: { label: 'Book Demo', url: 'https://calendly.com/dntech/demo', type: 'demo', color: 'blue', size: 'lg' },
       secondaryCtas: [{ label: 'Lihat Pricing', url: '#pricing', type: 'link' }],
       demoUrl: 'https://calendly.com/dntech/demo',
-      seoTitle: 'DuaVulnScanner — Platform Pentest All-in-One',
+      seoTitle: 'DuaVulnScanner — Scanner Web & Laporan Pentest',
       seoDescription: 'Passive web scanner + findings tracking + report export. Self-hosted, compliance-aware (UU PDP/OWASP), API-first untuk DevSecOps.',
       keywords: 'penetration testing platform, vulnerability scanner Indonesia, DVS, pentest tool, DevSecOps',
       faq: [

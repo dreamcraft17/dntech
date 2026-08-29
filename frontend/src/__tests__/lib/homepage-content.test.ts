@@ -27,4 +27,22 @@ describe('homepage-content', () => {
     expect(cms.heroPrimaryCta).toEqual({ label: 'Jadwalkan Demo', href: '/quiz' });
     expect(cms.heroSecondaryCta.href).toBe('/products');
   });
+
+  it('resolves products section copy without first-party jargon or unproven trial claims', () => {
+    const defaults = resolveHomeContent({});
+    expect(defaults.productsTitle).toBe('Produk software siap pakai');
+    expect(defaults.productsSubtitle).toMatch(/HRIS/);
+    expect(defaults.productsSubtitle).toMatch(/ERP/);
+    expect(defaults.productsTitle).not.toMatch(/first-party/i);
+    expect(defaults.productsSubtitle).not.toMatch(/kartu kredit|10x/i);
+
+    const cms = resolveHomeContent({
+      homeContent: {
+        productsTitle: 'Katalog produk',
+        productsSubtitle: 'HRIS dan ERP dari operasional kami.',
+      },
+    });
+    expect(cms.productsTitle).toBe('Katalog produk');
+    expect(cms.productsSubtitle).toBe('HRIS dan ERP dari operasional kami.');
+  });
 });

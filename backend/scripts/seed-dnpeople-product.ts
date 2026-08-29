@@ -264,7 +264,7 @@ async function main() {
   console.log('Seeding dnPeople product...');
 
   const data = {
-    tagline: 'Payroll & HR Jadi Mudah. Harga Terjangkau.',
+    tagline: 'HRIS & payroll untuk UKM — gaji, absensi, cuti di satu dashboard.',
     description: 'Capek manual payroll tiap bulan? dnPeople otomasi payroll, cuti, absensi, dan talent development dalam satu dashboard. Soft launch — tier gratis sampai 30 karyawan, billing via Xendit di hris.dntech.id.',
     longFormContent: [
       '## Kenapa HR Teams Milih dnPeople?',
@@ -296,9 +296,10 @@ async function main() {
     faq: FAQ,
     demoUrl: 'https://calendly.com/dntech/demo',
     pricingCalcUrl: '/contact?product=dnpeople&intent=pricing-calculator',
-    seoTitle: 'dnPeople — Payroll & HR Jadi Mudah, Harga Terjangkau',
-    seoDescription: 'Solusi HRIS untuk SME Indonesia. Kelola karyawan, payroll, dan talent development di satu platform. Harga 1/4 dari Vendor enterprise, tanpa biaya tersembunyi.',
-    keywords: 'HRIS Indonesia, payroll software, talent development, aplikasi HR SME, HRIS harga terjangkau',
+    seoTitle: 'dnPeople — HRIS & Payroll untuk UKM',
+    seoDescription:
+      'Kelola gaji, absensi, cuti, dan payroll Indonesia di satu dashboard. Soft launch — tier gratis sampai 30 karyawan di hris.dntech.id.',
+    keywords: 'HRIS Indonesia, payroll software, absensi karyawan, aplikasi HR UKM, dnPeople',
   };
 
   const { description, displayOrder, ...productData } = data;
@@ -306,7 +307,7 @@ async function main() {
   const product = await upsertProduct({
     name: 'dnPeople',
     slug: 'dnpeople',
-    category: 'HRIS',
+    category: 'HRIS / Payroll',
     displayOrder,
     description,
     data: productData,

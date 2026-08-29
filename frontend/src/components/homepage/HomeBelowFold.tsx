@@ -47,7 +47,11 @@ export async function HomeBelowFold({
 
   return (
     <>
-      <HomeProducts products={homepageProducts.slice(0, 6)} />
+      <HomeProducts
+        products={homepageProducts.slice(0, 6)}
+        title={content.productsTitle}
+        subtitle={content.productsSubtitle}
+      />
       <HomeServices services={services} defaults={content.defaultServices} />
       <HomeProcess steps={content.processSteps} />
       <HomeAdvantages advantages={content.advantages} />
