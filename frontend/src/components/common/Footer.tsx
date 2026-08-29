@@ -2,16 +2,18 @@ import Link from 'next/link';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { FooterBrand } from '@/components/layout/FooterBrand';
 
-const primaryLinks = [
+const siteLinks = [
   { href: '/', label: 'Beranda' },
-  { href: '/products', label: 'Produk' },
-  { href: '/services', label: 'Layanan' },
   { href: '/about', label: 'Tentang' },
   { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Kontak' },
 ];
 
-const secondaryLinks = [
+const offerLinks = [
+  { href: '/products', label: 'Produk' },
+  { href: '/services', label: 'Layanan' },
+];
+
+const helpLinks = [
   { href: '/faq', label: 'FAQ' },
   { href: '/quiz', label: 'Temukan Solusi' },
   { href: '/team', label: 'Tim' },
@@ -35,10 +37,25 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   return (
     <Link
       href={href}
-      className="text-sm text-gray-600 transition-colors hover:text-blue-900"
+      className="inline-flex min-h-11 items-center text-sm text-gray-600 transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2 rounded-sm"
     >
       {children}
     </Link>
+  );
+}
+
+function FooterColumn({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
+      {children}
+    </div>
   );
 }
 
@@ -79,46 +96,64 @@ export function Footer({
         </div>
 
         <nav
-          className="mt-8 border-t border-gray-100 pt-8"
+          className="mt-8 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-gray-100 pt-8 lg:grid-cols-4"
           aria-label="Navigasi footer"
         >
-          <ul className="flex flex-wrap gap-x-6 gap-y-3">
-            {primaryLinks.map((link) => (
-              <li key={link.href}>
-                <FooterLink href={link.href}>{link.label}</FooterLink>
-              </li>
-            ))}
-          </ul>
-          <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
-            {secondaryLinks.map((link) => (
-              <li key={link.href}>
-                <FooterLink href={link.href}>{link.label}</FooterLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <FooterColumn title="Situs">
+            <ul className="mt-2 flex flex-col">
+              {siteLinks.map((link) => (
+                <li key={link.href}>
+                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                </li>
+              ))}
+            </ul>
+          </FooterColumn>
 
-        {contactItems.length > 0 && (
-          <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
-            {contactItems.map(({ icon: Icon, value, href }, index) => (
-              <div key={value} className="flex items-center gap-2 text-sm text-gray-500">
-                {index > 0 && (
-                  <span className="hidden sm:inline text-gray-300" aria-hidden="true">
-                    ·
-                  </span>
-                )}
-                <Icon className="h-4 w-4 shrink-0 text-blue-900" />
-                {href ? (
-                  <a href={href} className="transition-colors hover:text-blue-900">
-                    {value}
-                  </a>
-                ) : (
-                  <span>{value}</span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+          <FooterColumn title="Produk & layanan">
+            <ul className="mt-2 flex flex-col">
+              {offerLinks.map((link) => (
+                <li key={link.href}>
+                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                </li>
+              ))}
+            </ul>
+          </FooterColumn>
+
+          <FooterColumn title="Bantuan">
+            <ul className="mt-2 flex flex-col">
+              {helpLinks.map((link) => (
+                <li key={link.href}>
+                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                </li>
+              ))}
+            </ul>
+          </FooterColumn>
+
+          <FooterColumn title="Hubungi">
+            <ul className="mt-2 flex flex-col">
+              <li>
+                <FooterLink href="/contact">Form kontak</FooterLink>
+              </li>
+              {contactItems.map(({ icon: Icon, value, href }) => (
+                <li key={value}>
+                  <div className="flex min-h-11 items-center gap-2 text-sm text-gray-600">
+                    <Icon className="h-4 w-4 shrink-0 text-blue-900" aria-hidden="true" />
+                    {href ? (
+                      <a
+                        href={href}
+                        className="transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2 rounded-sm"
+                      >
+                        {value}
+                      </a>
+                    ) : (
+                      <span>{value}</span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </FooterColumn>
+        </nav>
 
         <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:items-center">
           <p className="text-sm text-gray-500">
