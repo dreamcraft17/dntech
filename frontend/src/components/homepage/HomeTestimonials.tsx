@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { SectionHeading } from '@/components/homepage/SectionHeading';
 
@@ -16,33 +15,12 @@ interface TestimonialItem {
 
 interface HomeTestimonialsProps {
   testimonials: TestimonialItem[];
-  comingSoonMessage: string;
 }
 
-export function HomeTestimonials({ testimonials, comingSoonMessage }: HomeTestimonialsProps) {
+export function HomeTestimonials({ testimonials }: HomeTestimonialsProps) {
   const [current, setCurrent] = useState(0);
 
-  if (!testimonials.length) {
-    return (
-      <section className="bg-gray-50 py-16" id="testimonials">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <SectionHeading
-            title="Testimoni Publik"
-            subtitle="Belum ada testimoni yang kami publikasikan"
-          />
-          <Card>
-            <p className="text-gray-700 leading-relaxed">{comingSoonMessage}</p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Button href="/products" variant="secondary">
-                Lihat Produk Kami
-              </Button>
-              <Button href="/contact">Konsultasi Gratis</Button>
-            </div>
-          </Card>
-        </div>
-      </section>
-    );
-  }
+  if (!testimonials.length) return null;
 
   const item = testimonials[current];
 

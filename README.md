@@ -9,7 +9,7 @@ Production company profile for **DN Tech** (PT. Dozer Napitupulu Technology): pu
 |---|---|
 | Live | https://www.dntech.id · https://api.dntech.id |
 | Repo | [github.com/dreamcraft17/dntech](https://github.com/dreamcraft17/dntech) |
-| Latest | `e4500bd` |
+| Latest | `1da8191` |
 
 ## What it does
 
@@ -28,7 +28,7 @@ Detailed history: [`docs/CHANGELOG.md`](docs/CHANGELOG.md) · bug register: [`do
 | Public SSR API resolver | Implemented (`server-api.ts`, BF-016–BF-020) |
 | Product module (V6/V7) | Implemented; production seed may still be pending on VPS |
 | Relaunch anti-slop pass | Implemented (Aug 2026) — honest copy, skip link, CSP headers, deferred third-party JS |
-| Unit tests | **98 passing** (50 backend + 48 frontend) |
+| Unit tests | **99 passing** (50 backend + 49 frontend) |
 | CI | Lint + test + build on `main` (`.github/workflows/ci.yml`) |
 | Frontend build | Passing (Next.js 16.2.9, React 19.2.4, standalone output) |
 | Lighthouse baseline | Recorded — see [`docs/frontend/LIGHTHOUSE-BASELINE.md`](docs/frontend/LIGHTHOUSE-BASELINE.md) |
