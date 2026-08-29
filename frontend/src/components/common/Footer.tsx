@@ -60,7 +60,6 @@ function FooterColumn({
 }
 
 export function Footer({
-  companyName,
   tagline,
   companyEmail,
   companyPhone,
@@ -79,7 +78,7 @@ export function Footer({
   return (
     <footer className="border-t border-gray-200 bg-white">
       <div className="mx-auto max-w-9xl px-8 py-10 sm:px-8 lg:px-8">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-md">
             <FooterBrand />
             <p className="mt-3 text-sm leading-relaxed text-gray-600">
@@ -157,7 +156,7 @@ export function Footer({
 
         <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:items-center">
           <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} {companyName || 'DN Tech'}. Hak cipta dilindungi.
+            &copy; {new Date().getFullYear()} PT. Dozer Napitupulu Technology. Hak cipta dilindungi.
           </p>
           <div className="flex flex-wrap gap-4">
             {legalLinks.map((link) => (

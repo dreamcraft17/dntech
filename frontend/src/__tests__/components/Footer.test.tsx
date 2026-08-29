@@ -29,5 +29,8 @@ describe('Footer', () => {
     );
     expect(screen.queryByRole('link', { name: 'Karier' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Studi Kasus' })).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/© \d{4} PT\. Dozer Napitupulu Technology\. Hak cipta dilindungi\./),
+    ).toBeInTheDocument();
   });
 });
