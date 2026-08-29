@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { FolderOpen } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { fetchPublicApiSafe } from '@/lib/server-api';
+import { buildMetadata } from '@/lib/seo';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -14,7 +15,13 @@ async function getItem(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const item = await getItem(slug);
-  return { title: item?.title || 'Studi Kasus' };
+  if (!item) return { title: 'Studi Kasus' };
+  return buildMetadata({
+    title: item.seoTitle || item.title,
+    description: item.seoDescription || item.description || '',
+    path: `/portfolio/${slug}`,
+    keywords: ['portfolio DN Tech', item.clientName || '', item.title].filter(Boolean),
+  });
 }
 
 export default async function PortfolioDetailPage({ params }: { params: Promise<{ slug: string }> }) {

@@ -60,6 +60,8 @@ async function main() {
     heroTitle: DEFAULT_HERO.title,
     heroBadges: DEFAULT_HERO.badges,
     heroSupporting: DEFAULT_HERO.supporting,
+    heroPrimaryCta: { label: 'Konsultasi Gratis — 30 Menit', href: '/contact' },
+    heroSecondaryCta: { label: 'Lihat Produk', href: '/products' },
     hiringEmail: 'careers@dntech.id',
   };
 

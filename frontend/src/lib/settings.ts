@@ -22,6 +22,8 @@ export interface PublicSettings {
   googleAnalyticsId?: string;
   socialLinks?: Record<string, string>;
   primaryColor?: string;
+  seoTitleTemplate?: string;
+  seoDescriptionTemplate?: string;
 }
 
 export const getPublicSettings = cache(async function getPublicSettings(): Promise<PublicSettings> {

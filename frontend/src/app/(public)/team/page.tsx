@@ -2,17 +2,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card } from '@/components/ui/Card';
 import { JsonLd, breadcrumbSchema, personSchema } from '@/components/seo/JsonLd';
-import { buildMetadata, SITE_URL } from '@/lib/seo';
+import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
 import { fetchPublicApiList } from '@/lib/server-api';
 import type { TeamMember } from '@/types';
 import type { Metadata } from 'next';
 import { Globe } from 'lucide-react';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Tim Kami',
-  description: 'Kenali tim DN Tech — developer dan konsultan teknologi di balik proyek Anda.',
+  title: PAGE_SEO.team.title,
+  description: PAGE_SEO.team.description,
   path: '/team',
-  keywords: ['tim DN Tech', 'developer Indonesia', 'software engineer Jakarta'],
+  keywords: PAGE_SEO.team.keywords,
 });
 
 async function getTeam() {

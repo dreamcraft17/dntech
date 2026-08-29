@@ -29,11 +29,18 @@ export interface HomeServiceCard {
   slug?: string;
 }
 
+export interface HomeCta {
+  label: string;
+  href: string;
+}
+
 export interface HomeContent {
   heroTitle?: string;
   heroSubtitle?: string;
   heroBadges?: string[];
   heroSupporting?: string;
+  heroPrimaryCta?: HomeCta;
+  heroSecondaryCta?: HomeCta;
   processSteps?: HomeStep[];
   advantages?: HomeAdvantage[];
   techStack?: HomeTechCategory[];
@@ -50,6 +57,16 @@ export const DEFAULT_HERO = {
   badges: ['Web Apps', 'Mobile Apps', 'Custom Solutions'],
   supporting:
     'Kami software house lokal yang build custom software untuk startup dan UMKM. Proses jelas, harga transparan, timeline yang pasti.',
+};
+
+export const DEFAULT_HERO_PRIMARY_CTA: HomeCta = {
+  label: 'Konsultasi Gratis — 30 Menit',
+  href: '/contact',
+};
+
+export const DEFAULT_HERO_SECONDARY_CTA: HomeCta = {
+  label: 'Lihat Produk',
+  href: '/products',
 };
 
 export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
@@ -226,6 +243,20 @@ function asHomeContent(raw: unknown): HomeContent {
   return raw as HomeContent;
 }
 
+function asCta(raw: unknown, fallback: HomeCta): HomeCta {
+  if (!raw || typeof raw !== 'object') return fallback;
+  const candidate = raw as Record<string, unknown>;
+  const label =
+    typeof candidate.label === 'string' && candidate.label.trim()
+      ? candidate.label.trim()
+      : fallback.label;
+  const href =
+    typeof candidate.href === 'string' && candidate.href.trim()
+      ? candidate.href.trim()
+      : fallback.href;
+  return { label, href };
+}
+
 export function resolveHomeContent(settings: PublicSettings): Required<
   Pick<
     HomeContent,
@@ -233,6 +264,8 @@ export function resolveHomeContent(settings: PublicSettings): Required<
     | 'heroSubtitle'
     | 'heroBadges'
     | 'heroSupporting'
+    | 'heroPrimaryCta'
+    | 'heroSecondaryCta'
     | 'processSteps'
     | 'advantages'
     | 'techStack'
@@ -251,6 +284,8 @@ export function resolveHomeContent(settings: PublicSettings): Required<
     heroSubtitle: cms.heroSubtitle || 'DN Tech.id',
     heroBadges: cms.heroBadges?.length ? cms.heroBadges : DEFAULT_HERO.badges,
     heroSupporting: cms.heroSupporting || settings.heroDescription || DEFAULT_HERO.supporting,
+    heroPrimaryCta: asCta(cms.heroPrimaryCta, DEFAULT_HERO_PRIMARY_CTA),
+    heroSecondaryCta: asCta(cms.heroSecondaryCta, DEFAULT_HERO_SECONDARY_CTA),
     processSteps: cms.processSteps?.length ? cms.processSteps : DEFAULT_PROCESS_STEPS,
     advantages: cms.advantages?.length ? cms.advantages : DEFAULT_ADVANTAGES,
     techStack: cms.techStack?.length ? cms.techStack : DEFAULT_TECH_STACK,

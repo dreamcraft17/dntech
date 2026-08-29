@@ -46,6 +46,8 @@ router.get(
       leadMagnetUrl: settings.leadMagnetUrl,
       crispWebsiteId: settings.crispWebsiteId,
       isMaintenanceMode: settings.isMaintenanceMode,
+      seoTitleTemplate: settings.seoTitleTemplate,
+      seoDescriptionTemplate: settings.seoDescriptionTemplate,
     };
 
     cacheService.set('settings:public', publicSettings, 300);

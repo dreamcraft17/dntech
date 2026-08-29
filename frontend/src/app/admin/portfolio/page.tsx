@@ -8,7 +8,7 @@ export default function AdminPortfolioPage() {
       defaultItem={{
         title: '', description: '', clientName: '', challenge: '', solution: '',
         testimonial: '', clientLogoUrl: '', status: 'draft', displayOrder: 0,
-        metrics: {},
+        metrics: {}, seoTitle: '', seoDescription: '',
       }}
       fields={[
         { key: 'title', label: 'Judul', required: true },
@@ -20,6 +20,8 @@ export default function AdminPortfolioPage() {
         { key: 'testimonial', label: 'Kutipan Klien', type: 'textarea' },
         { key: 'clientLogoUrl', label: 'URL Logo Klien' },
         { key: 'metrics', label: 'Metrik (JSON)', type: 'json', placeholder: '{"efficiency":"+40%","uptime":"99.9%"}' },
+        { key: 'seoTitle', label: 'Meta Title' },
+        { key: 'seoDescription', label: 'Meta Description', type: 'textarea' },
         { key: 'status', label: 'Status', type: 'select', options: [
           { value: 'draft', label: 'Draf' },
           { value: 'active', label: 'Diterbitkan' },

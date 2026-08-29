@@ -51,6 +51,9 @@ export default function AdminSettingsPage() {
         homeContent: JSON.stringify(data.homeContent || {}, null, 2),
         resources: JSON.stringify(data.resources || [], null, 2),
         aboutContent: JSON.stringify(data.aboutContent || {}, null, 2),
+        socialLinks: JSON.stringify(data.socialLinks || {}, null, 2),
+        seoTitleTemplate: String(data.seoTitleTemplate || '%s | DN Tech'),
+        seoDescriptionTemplate: String(data.seoDescriptionTemplate || ''),
         termsContent: String(data.termsContent || ''),
         privacyContent: String(data.privacyContent || ''),
       });
@@ -68,6 +71,7 @@ export default function AdminSettingsPage() {
       const homeContent = parseJsonField(settings.homeContent || '{}', 'Konten Beranda (PRD)', {});
       const resources = parseJsonField(settings.resources || '[]', 'Sumber Daya', []);
       const aboutContent = parseJsonField(settings.aboutContent || '{}', 'Konten About', {});
+      const socialLinks = parseJsonField(settings.socialLinks || '{}', 'Tautan Sosial', {});
 
       await apiFetch('/admin/settings', {
         method: 'PATCH',
@@ -90,6 +94,9 @@ export default function AdminSettingsPage() {
           homeContent,
           resources,
           aboutContent,
+          socialLinks,
+          seoTitleTemplate: settings.seoTitleTemplate,
+          seoDescriptionTemplate: settings.seoDescriptionTemplate,
           termsContent: settings.termsContent,
           privacyContent: settings.privacyContent,
         }),
@@ -103,7 +110,7 @@ export default function AdminSettingsPage() {
             'Content-Type': 'application/json',
             'x-revalidate-secret': revalidateSecret,
           },
-          body: JSON.stringify({ paths: ['/', '/about'] }),
+          body: JSON.stringify({ paths: ['/', '/about', '/resources', '/team'] }),
         }).catch(() => undefined);
       }
 
@@ -151,7 +158,7 @@ export default function AdminSettingsPage() {
               value={settings.homeContent}
               onChange={(e) => setSettings({ ...settings, homeContent: e.target.value })}
               className="font-mono text-xs"
-              placeholder={'{\n  "heroTitle": "...",\n  "processSteps": [],\n  "advantages": [],\n  "techStack": [],\n  "pricing": []\n}'}
+              placeholder={'{\n  "heroTitle": "...",\n  "heroPrimaryCta": { "label": "Konsultasi Gratis — 30 Menit", "href": "/contact" },\n  "heroSecondaryCta": { "label": "Lihat Produk", "href": "/products" },\n  "processSteps": [],\n  "advantages": [],\n  "pricing": []\n}'}
             />
             <p className="text-xs text-gray-500">
               Override section homepage per PRD Indonesia Edition. Kosongkan field untuk pakai default di kode.
@@ -201,7 +208,38 @@ export default function AdminSettingsPage() {
         </Card>
 
         <Card title="SEO">
-          <Input label="ID Google Analytics" value={settings.googleAnalyticsId} onChange={(e) => setSettings({ ...settings, googleAnalyticsId: e.target.value })} />
+          <div className="space-y-4">
+            <Input
+              label="Template Judul (title template)"
+              value={settings.seoTitleTemplate}
+              onChange={(e) => setSettings({ ...settings, seoTitleTemplate: e.target.value })}
+              placeholder="%s | DN Tech"
+            />
+            <p className="text-xs text-gray-500">
+              Pakai <code className="rounded bg-gray-100 px-1">%s</code> untuk judul halaman. Contoh:{' '}
+              <code className="rounded bg-gray-100 px-1">%s | DN Tech</code>
+            </p>
+            <Textarea
+              label="Deskripsi default situs"
+              rows={2}
+              value={settings.seoDescriptionTemplate}
+              onChange={(e) => setSettings({ ...settings, seoDescriptionTemplate: e.target.value })}
+              placeholder="DN Tech — software house Indonesia untuk pengembangan aplikasi kustom..."
+            />
+            <Textarea
+              label="Tautan Sosial (JSON)"
+              rows={5}
+              value={settings.socialLinks}
+              onChange={(e) => setSettings({ ...settings, socialLinks: e.target.value })}
+              className="font-mono text-xs"
+              placeholder={'{\n  "linkedin": "https://...",\n  "github": "https://..."\n}'}
+            />
+            <Input
+              label="ID Google Analytics"
+              value={settings.googleAnalyticsId}
+              onChange={(e) => setSettings({ ...settings, googleAnalyticsId: e.target.value })}
+            />
+          </div>
         </Card>
 
         <Card title="Hukum">

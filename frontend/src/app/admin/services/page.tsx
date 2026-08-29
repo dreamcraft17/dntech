@@ -10,6 +10,7 @@ import type { Service } from '@/types';
 
 const emptyForm = {
   name: '', description: '', category: '', status: 'draft' as string, displayOrder: 0,
+  seoTitle: '', seoDescription: '',
   features: [] as { title: string; description?: string }[],
 };
 
@@ -77,6 +78,19 @@ export default function AdminServicesPage() {
             <Input label="Urutan Tampilan" type="number" value={editing.displayOrder} onChange={(e) => setEditing({ ...editing, displayOrder: parseInt(e.target.value) })} />
           </div>
           <Textarea label="Deskripsi" rows={4} value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} className="mt-4" required />
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <Input
+              label="Meta Title"
+              value={editing.seoTitle || ''}
+              onChange={(e) => setEditing({ ...editing, seoTitle: e.target.value })}
+            />
+            <Textarea
+              label="Meta Description"
+              rows={2}
+              value={editing.seoDescription || ''}
+              onChange={(e) => setEditing({ ...editing, seoDescription: e.target.value })}
+            />
+          </div>
           <div className="mt-4 flex gap-2">
             <Button onClick={save} loading={loading}>Simpan</Button>
             <Button variant="secondary" onClick={() => setEditing(null)}>Batal</Button>

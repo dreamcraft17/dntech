@@ -43,8 +43,8 @@ async function seedBranding() {
     { name: 'Pragmatik', description: 'Solusi yang kerja, bukan fancy tapi useless', iconName: 'Wrench' },
     { name: 'Jujur', description: 'Pricing transparan, timeline realistis, status produk jelas', iconName: 'Handshake' },
     { name: 'Fokus Produk', description: 'Platform internal kami adalah bukti teknis, bukan logo klien fiktif', iconName: 'Target' },
-    { name: 'Quality First', description: 'Code bersih, tested, documented', iconName: 'CheckCircle' },
-    { name: 'Growth Mindset', description: 'Terus belajar dan improve', iconName: 'TrendingUp' },
+    { name: 'Kualitas dulu', description: 'Code bersih, tested, documented', iconName: 'CheckCircle' },
+    { name: 'Pola pikir tumbuh', description: 'Terus belajar dan improve', iconName: 'TrendingUp' },
   ];
 
   await Promise.all(values.map((value, index) => prisma.coreValue.create({
@@ -52,10 +52,10 @@ async function seedBranding() {
   })));
 
   const advantages = [
-    { title: 'Local + expert', description: 'Tim Indonesia paham bisnis lokal', iconName: 'MapPin' },
-    { title: 'Transparent', description: 'Fixed price, jelas timeline, no hidden fees', iconName: 'ShieldCheck' },
-    { title: 'Hands-on', description: 'Founder involved di setiap project', iconName: 'Users' },
-    { title: 'Long-term support', description: 'Maintenance + training included', iconName: 'LifeBuoy' },
+    { title: 'Lokal dan ahli', description: 'Tim Indonesia paham bisnis lokal', iconName: 'MapPin' },
+    { title: 'Transparan', description: 'Harga tetap, timeline jelas, tanpa biaya tersembunyi', iconName: 'ShieldCheck' },
+    { title: 'Langsung ke founder', description: 'Founder terlibat di setiap project', iconName: 'Users' },
+    { title: 'Dukungan jangka panjang', description: 'Maintenance dan training termasuk', iconName: 'LifeBuoy' },
   ];
 
   await Promise.all(advantages.map((item, index) => prisma.competitiveAdvantage.create({

@@ -2,14 +2,16 @@ import Link from 'next/link';
 import { PortfolioCard } from '@/components/cards/PortfolioCard';
 import { Badge } from '@/components/ui/Badge';
 import { fetchPublicApiList } from '@/lib/server-api';
+import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Portofolio',
-  description:
-    'Portofolio proyek DN Tech — dipublikasikan hanya dengan izin klien. Saat ini belum ada item publik.',
-};
+export const metadata: Metadata = buildMetadata({
+  title: PAGE_SEO.portfolio.title,
+  description: PAGE_SEO.portfolio.description,
+  path: '/portfolio',
+  keywords: PAGE_SEO.portfolio.keywords,
+});
 
 async function getPortfolio() {
   return fetchPublicApiList<PortfolioItem>('/portfolio?pageSize=12', 60);

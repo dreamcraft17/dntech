@@ -3,12 +3,15 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { getPublicSettings, getResources } from '@/lib/settings';
+import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Sumber Daya',
-  description: 'Panduan, whitepaper, dan wawasan dari DN Tech.',
-};
+export const metadata: Metadata = buildMetadata({
+  title: PAGE_SEO.resources.title,
+  description: PAGE_SEO.resources.description,
+  path: '/resources',
+  keywords: PAGE_SEO.resources.keywords,
+});
 
 export default async function ResourcesPage() {
   const settings = await getPublicSettings();

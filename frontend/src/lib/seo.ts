@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dntech.id';
 export const SITE_NAME = 'DN Tech';
+export const DEFAULT_TITLE_TEMPLATE = `%s | ${SITE_NAME}`;
+export const DEFAULT_SITE_DESCRIPTION =
+  'DN Tech — software house Indonesia untuk pengembangan aplikasi kustom dan konsultasi teknologi startup.';
 
 export const DEFAULT_KEYWORDS = [
   'software development Indonesia',
@@ -62,6 +65,17 @@ export const PAGE_SEO: Record<string, { title: string; description: string; keyw
     title: 'Sumber Daya & Panduan',
     description: 'Panduan dan checklist gratis dari DN Tech.',
     keywords: ['panduan transformasi digital', 'checklist development startup'],
+  },
+  team: {
+    title: 'Tim Kami',
+    description: 'Kenali tim DN Tech — developer dan konsultan teknologi di balik proyek Anda.',
+    keywords: ['tim DN Tech', 'developer Indonesia', 'software engineer Jakarta'],
+  },
+  portfolio: {
+    title: 'Portofolio',
+    description:
+      'Portofolio proyek DN Tech — dipublikasikan hanya dengan izin klien. Saat ini belum ada item publik.',
+    keywords: ['portfolio software development', 'studi kasus aplikasi Indonesia'],
   },
 };
 
