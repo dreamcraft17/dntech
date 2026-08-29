@@ -2,6 +2,17 @@
 
 Known issues found during MVP / production work, and their status.
 
+## Fixed — 2026-08-29 (relaunch honesty)
+
+| ID | Area | Issue | Fix |
+|----|------|-------|-----|
+| BF-021 | About / branding | Honest `seed-branding` wrote `BrandContent`; `/about` read empty `SiteSettings.aboutContent` | About merges branding + settings; seed dual-writes `aboutContent` |
+| BF-024 | Product page | `Dipercaya {Soft launch} pelanggan` | `formatProductStatusBadge` — numeric count vs status string |
+| BF-027 | Auth seed | Default `Admin@123456`; upsert `update: {}` left old hash | `resolveAdminPassword`; rotate hash on seed; docker-compose local-only password |
+| BF-023 / portfolio | Empty social pages | Case studies / portfolio claimed real clients when empty | Honest empty-state copy |
+
+---
+
 ## Fixed — 2026-07-26
 
 | ID | Area | Issue | Fix |
@@ -48,6 +59,6 @@ Known issues found during MVP / production work, and their status.
 | | |
 |---|---|
 | Owner | Dozer (CEO + Tech Lead) |
-| UpdatedAt | July 26, 2026 |
+| UpdatedAt | August 29, 2026 |
 
 Property of DN Tech - PT. Dozer Napitupulu Technology . 2026

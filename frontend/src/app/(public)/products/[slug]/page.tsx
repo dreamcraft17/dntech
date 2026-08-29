@@ -10,6 +10,7 @@ import { formatCurrencyIDR } from '@/lib/utils';
 import type { Product, ProductFeatureGroup, ProductFeatureItem, BlogPost, Faq } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { formatProductStatusBadge } from '@/lib/product-status';
 import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
 
 async function getProduct(slug: string) {
@@ -51,13 +52,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     path: `/products/${slug}`,
     keywords: (product.keywords ? product.keywords.split(',').map((k) => k.trim()) : [product.category || '', product.name, 'produk digital Indonesia', 'Jakarta']).filter(Boolean),
   });
-}
-
-function formatProductStatusBadge(customerCount?: string | null): string | null {
-  if (!customerCount?.trim()) return null;
-  const trimmed = customerCount.trim();
-  if (/^\d+([.,]\d+)?$/.test(trimmed)) return `${trimmed} pelanggan`;
-  return trimmed;
 }
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {

@@ -40,7 +40,8 @@ JWT_REFRESH_EXPIRES_IN="7d"
 FRONTEND_URL="https://www.dntech.id,https://dntech.id"
 UPLOAD_DIR=./uploads
 ADMIN_EMAIL=admin@dntech.id
-ADMIN_PASSWORD=Admin@123456
+# Min 12 chars. Seed refuses Admin@123456 and other defaults in production.
+ADMIN_PASSWORD=GANTI_PASSWORD_KUAT_MIN_12_KARAKTER
 SMTP_HOST=mx8.mailspace.id
 SMTP_PORT=465
 SMTP_SECURE=true

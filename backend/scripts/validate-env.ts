@@ -3,6 +3,7 @@
  * Run: npx tsx scripts/validate-env.ts
  */
 import 'dotenv/config';
+import { FORBIDDEN_ADMIN_PASSWORDS } from '../src/utils/adminPassword';
 
 const requiredEnvs = [
   'DATABASE_URL',
@@ -39,6 +40,16 @@ function validateEnv() {
 
   if (process.env.NODE_ENV === 'production' && process.env.JWT_SECRET === 'dev-secret-change-me') {
     console.error('❌ JWT_SECRET must not use the development default in production');
+    process.exit(1);
+  }
+
+  const adminPassword = process.env.ADMIN_PASSWORD?.trim();
+  if (
+    process.env.NODE_ENV === 'production' &&
+    adminPassword &&
+    (adminPassword.length < 12 || FORBIDDEN_ADMIN_PASSWORDS.has(adminPassword))
+  ) {
+    console.error('❌ ADMIN_PASSWORD in production must be min 12 chars and not a documented default');
     process.exit(1);
   }
 

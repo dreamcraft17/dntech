@@ -28,9 +28,11 @@ export default async function PortfolioPage() {
         </div>
 
         <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-gray-900">Portofolio Kami</h1>
+          <h1 className="text-4xl font-bold text-gray-900">Portofolio</h1>
           <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-            Menampilkan proyek sukses dan transformasi klien
+            {items.length > 0
+              ? 'Proyek yang kami izinkan tampil publik.'
+              : 'Belum ada item portofolio publik. Lihat produk first-party di halaman Produk.'}
           </p>
         </div>
 

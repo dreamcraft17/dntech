@@ -27,7 +27,10 @@ export function HomePortfolio({ projects, comingSoonMessage }: HomePortfolioProp
   return (
     <section className="bg-gray-50 py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading title="Portfolio Kami" />
+        <SectionHeading
+          title={projects.length > 0 ? 'Portfolio' : 'Portfolio publik'}
+          subtitle={projects.length > 0 ? undefined : 'Belum ada studi kasus yang kami publikasikan'}
+        />
 
         {projects.length > 0 ? (
           <>

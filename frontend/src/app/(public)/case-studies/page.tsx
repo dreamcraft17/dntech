@@ -41,7 +41,9 @@ export default async function CaseStudiesPage() {
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900">Studi Kasus</h1>
             <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-              Hasil nyata dari klien nyata. Lihat bagaimana kami membantu perusahaan bertransformasi dengan teknologi.
+              {items.length > 0
+                ? 'Studi kasus dipublikasikan hanya dengan izin klien.'
+                : 'Belum ada studi kasus publik. Produk first-party kami ada di halaman Produk.'}
             </p>
           </div>
 

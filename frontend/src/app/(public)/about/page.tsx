@@ -1,4 +1,6 @@
-import { AboutPageContent, type AboutContent } from '@/components/content/AboutPageContent';
+import { AboutPageContent } from '@/components/content/AboutPageContent';
+import { parseAboutContent, resolveAboutContent } from '@/lib/about-content';
+import { getBrandContent, getCoreValues } from '@/lib/branding';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { getPublicSettings } from '@/lib/settings';
 import { fetchPublicApiList } from '@/lib/server-api';
@@ -12,26 +14,22 @@ export const metadata: Metadata = buildMetadata({
   keywords: PAGE_SEO.about.keywords,
 });
 
-function parseAboutContent(raw: unknown): AboutContent {
-  if (!raw) return {};
-  if (typeof raw === 'string') {
-    try {
-      return JSON.parse(raw) as AboutContent;
-    } catch {
-      return {};
-    }
-  }
-  if (typeof raw === 'object') return raw as AboutContent;
-  return {};
-}
-
 async function getTeam() {
   return fetchPublicApiList<TeamMember>('/team', 60);
 }
 
 export default async function AboutPage() {
-  const [settings, team] = await Promise.all([getPublicSettings(), getTeam()]);
-  const about = parseAboutContent(settings.aboutContent);
+  const [settings, team, brand, coreValues] = await Promise.all([
+    getPublicSettings(),
+    getTeam(),
+    getBrandContent(),
+    getCoreValues(),
+  ]);
+  const about = resolveAboutContent(
+    parseAboutContent(settings.aboutContent),
+    brand,
+    coreValues,
+  );
 
   return <AboutPageContent about={about} team={team} />;
 }

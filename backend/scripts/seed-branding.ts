@@ -1,5 +1,17 @@
 import prisma from '../src/config/database';
 
+const MISSION =
+  'Kami membangun software yang memberdayakan bisnis Indonesia — HRIS, ERP, dan tools operasional — dengan harga transparan untuk startup dan UMKM.';
+
+const STORY = `DN Tech adalah studio produk digital Indonesia. Kami membangun dan mengoperasikan platform first-party seperti dnPeople (HRIS), dnCore (ERP), dan dnShop Finance.
+
+Didirikan oleh Dozer Napitupulu, fokus kami bukan angka klien di slide deck — melainkan produk yang bisa dicoba, di-deploy, dan dipertanggungjawabkan. Beberapa produk masih beta atau soft launch; yang sudah live ditandai jelas di halaman Produk.
+
+Butuh custom development atau integrasi? Hubungi kami — setiap proyek dimulai dari conversation, bukan template pitch deck.`;
+
+const VISION =
+  'Produk first-party yang bisa dicoba publik, plus custom development dengan harga dan timeline yang ditulis di depan.';
+
 async function seedBranding() {
   await prisma.brandContent.deleteMany();
   await prisma.coreValue.deleteMany();
@@ -9,12 +21,21 @@ async function seedBranding() {
   await prisma.brandContent.create({
     data: {
       tagline: 'Tentang DN Tech',
-      mission: 'Kami membangun software yang memberdayakan bisnis Indonesia — HRIS, ERP, dan tools operasional — dengan harga transparan untuk startup dan UMKM.',
-      story: `DN Tech adalah studio produk digital Indonesia. Kami membangun dan mengoperasikan platform first-party seperti dnPeople (HRIS), dnCore (ERP), dan dnShop Finance.
+      mission: MISSION,
+      story: STORY,
+    },
+  });
 
-Didirikan oleh Dozer Napitupulu, fokus kami bukan angka klien di slide deck — melainkan produk yang bisa dicoba, di-deploy, dan dipertanggungjawabkan. Beberapa produk masih beta atau soft launch; yang sudah live ditandai jelas di halaman Produk.
-
-Butuh custom development atau integrasi? Hubungi kami — setiap proyek dimulai dari conversation, bukan template pitch deck.`,
+  // /about reads SiteSettings.aboutContent, not BrandContent — keep both in sync.
+  await prisma.siteSettings.upsert({
+    where: { id: 1 },
+    update: {
+      aboutContent: { story: STORY, mission: MISSION, vision: VISION },
+    },
+    create: {
+      id: 1,
+      companyName: 'DN Tech',
+      aboutContent: { story: STORY, mission: MISSION, vision: VISION },
     },
   });
 

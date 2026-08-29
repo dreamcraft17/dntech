@@ -1,14 +1,9 @@
 import { Card } from '@/components/ui/Card';
 import { TeamSpotlight } from '@/components/layout/TeamSpotlight';
+import type { AboutContent } from '@/lib/about-content';
 import type { TeamMember } from '@/types';
 
-export interface AboutContent {
-  story?: string;
-  mission?: string;
-  vision?: string;
-  values?: { title: string; description: string }[];
-  achievements?: string[];
-}
+export type { AboutContent } from '@/lib/about-content';
 
 interface AboutPageContentProps {
   about: AboutContent;
@@ -26,16 +21,22 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
           )}
         </div>
 
-        <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2">
-          <Card>
-            <h2 className="mb-3 text-xl font-semibold text-blue-900">Misi Kami</h2>
-            <p className="text-gray-600">{about.mission}</p>
-          </Card>
-          <Card>
-            <h2 className="mb-3 text-xl font-semibold text-blue-900">Visi Kami</h2>
-            <p className="text-gray-600">{about.vision}</p>
-          </Card>
-        </div>
+        {(about.mission || about.vision) && (
+          <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2">
+            {about.mission && (
+              <Card>
+                <h2 className="mb-3 text-xl font-semibold text-blue-900">Misi Kami</h2>
+                <p className="text-gray-600">{about.mission}</p>
+              </Card>
+            )}
+            {about.vision && (
+              <Card>
+                <h2 className="mb-3 text-xl font-semibold text-blue-900">Visi Kami</h2>
+                <p className="text-gray-600">{about.vision}</p>
+              </Card>
+            )}
+          </div>
+        )}
 
         {about.values && about.values.length > 0 && (
           <div className="mb-16">

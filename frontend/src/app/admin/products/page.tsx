@@ -282,7 +282,7 @@ export default function AdminProductsPage() {
           </Card>
 
           <Card title="Sosial Proof">
-            <Input label="Jumlah Customer" value={editing.customerCount} onChange={(e) => setEditing({ ...editing, customerCount: e.target.value })} placeholder="500+" />
+            <Input label="Status / jumlah customer" value={editing.customerCount} onChange={(e) => setEditing({ ...editing, customerCount: e.target.value })} placeholder="Soft launch" />
             <Textarea label="Testimoni (JSON array)" rows={10} value={editing.testimonials} onChange={(e) => setEditing({ ...editing, testimonials: e.target.value })} className="mt-4 font-mono text-xs" placeholder={'[\n  { "id": "t1", "quote": "...", "author": "...", "company": "...", "rating": 5 }\n]'} />
             <Textarea label="Studi Kasus (JSON array, opsional)" rows={4} value={editing.caseStudies} onChange={(e) => setEditing({ ...editing, caseStudies: e.target.value })} className="mt-4 font-mono text-xs" />
           </Card>

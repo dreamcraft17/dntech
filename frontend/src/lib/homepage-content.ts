@@ -259,9 +259,9 @@ export function resolveHomeContent(settings: PublicSettings): Required<
     hiringEmail: cms.hiringEmail || settings.companyEmail || 'careers@dntech.id',
     portfolioMessage:
       cms.portfolioMessage ||
-      'Kami sedang mengerjakan beberapa project untuk founding clients. Case studies akan diupdate setelah launch.',
+      'Studi kasus publik akan muncul di sini setelah klien memberi izin. Sementara itu, lihat produk first-party di halaman Produk.',
     testimonialsMessage:
       cms.testimonialsMessage ||
-      'Testimoni dari founding clients kami akan ditampilkan di sini. Jadilah client pertama dan dapatkan special rate.',
+      'Belum ada testimoni publik. Kami hanya mempublikasikan kutipan dengan izin tertulis.',
   };
 }
