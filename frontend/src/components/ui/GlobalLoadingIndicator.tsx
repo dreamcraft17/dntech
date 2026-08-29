@@ -36,8 +36,8 @@ export function GlobalLoadingIndicator() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/70 backdrop-blur-[2px]" role="status" aria-live="assertive" aria-label="Sedang memuat data">
-      <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-xl">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/90" role="status" aria-live="assertive" aria-label="Sedang memuat data">
+      <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-md">
         <LoaderCircle className="h-6 w-6 animate-spin text-blue-900" aria-hidden="true" />
         <div>
           <p className="text-sm font-semibold text-gray-900">Memuat data...</p>

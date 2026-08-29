@@ -148,7 +148,6 @@ const USE_CASES = [
     id: 'manufacturing', segment: 'Manufaktur & Pabrik', icon: 'factory',
     description: 'HR Management untuk pabrik dengan shift kompleks & multi-branch UMR. Harga 1/5 dari Vendor enterprise. Payroll jadi 10 menit.',
     uniqueFeatures: ['Shift scheduling (rotation, swap)', 'Night shift premium calculation', 'Production incentives', 'Safety incident tracking', 'Multi-branch differential UMR setup'],
-    testimonial: { quote: 'Hemat IDR 200 juta per tahun dari Vendor enterprise. Setup multi-branch dengan UMR berbeda jadi simple.', author: 'HR Director', company: 'Manufaktur 500 orang', location: 'Jakarta' },
     stats: { savings: 'IDR 200M/tahun', timeToPayroll: '10 menit', setupTime: '1 hari' },
     cta: { label: 'Lihat Demo untuk Manufaktur', url: 'https://calendly.com/dntech/demo-manufacturing' },
   },
@@ -156,40 +155,20 @@ const USE_CASES = [
     id: 'retail', segment: 'Retail & F&B', icon: 'shopping-bag',
     description: 'HRIS untuk retail & F&B — crew scheduling, tip pooling, high-volume hiring, semua otomatis. Hemat IDR 50M/bulan dari Vendor enterprise.',
     uniqueFeatures: ['Crew scheduling dashboard', 'Tip pooling & distribution', 'High-volume bulk hiring', 'Quick onboarding/offboarding', 'Shift flexibility'],
-    testimonial: { quote: 'Crew scheduling jadi automated. Tidak lagi conflict antar shift. Crew happy, we happy.', author: 'People Manager', company: 'Retail Chain 300 orang', location: 'Surabaya' },
     stats: { savings: 'IDR 90M/tahun', timeToPayroll: '10 menit', setupTime: '3 hari' },
     cta: { label: 'Lihat Demo untuk Retail', url: 'https://calendly.com/dntech/demo-retail' },
   },
   {
     id: 'startup', segment: 'Startup & Tech', icon: 'rocket',
-    description: 'HRIS untuk startup — gratis untuk 100 orang, bayar hanya saat scale. Modern, mobile-friendly, developer-friendly.',
+    description: 'HRIS untuk startup — gratis sampai 30 karyawan, bayar hanya saat scale. Modern, mobile-friendly, developer-friendly.',
     uniqueFeatures: ['Free tier (30 employees)', 'API-first architecture', 'Webhooks & integrations', 'Mobile browser-responsive', 'Flexible payment (month-to-month)'],
-    testimonial: { quote: 'Coba free tier dulu, terus upgrade ke Professional. Harganya terjangkau, fiturnya lengkap.', author: 'CEO', company: 'Tech Startup 50 orang', location: 'Bandung' },
     stats: { savings: 'IDR 25M/tahun (vs Vendor enterprise)', timeToPayroll: '10 menit', setupTime: '30 menit' },
     cta: { label: 'Mulai Gratis Sekarang', url: 'https://hris.dntech.id/' },
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    id: 'testimonial-1',
-    quote: 'Hemat IDR 200 juta per tahun dari Vendor enterprise. Talent development yang included sangat membantu untuk succession planning kami.',
-    author: 'HR Director', company: 'Perusahaan Manufaktur', employeeCount: '500 karyawan', location: 'Jakarta', industry: 'Manufacturing',
-    avatar: 'https://cdn.dntech.id/testimonials/avatar-1.jpg', rating: 5, videoUrl: null, segment: 'manufacturing',
-  },
-  {
-    id: 'testimonial-2',
-    quote: 'Setup payroll yang complicated dengan multiple branches jadi simple. Support team mereka sangat responsif.',
-    author: 'People Manager', company: 'Retail Chain', employeeCount: '300 karyawan', location: 'Surabaya', industry: 'Retail',
-    avatar: 'https://cdn.dntech.id/testimonials/avatar-2.jpg', rating: 5, videoUrl: null, segment: 'retail',
-  },
-  {
-    id: 'testimonial-3',
-    quote: 'Coba free tier dulu, terus upgrade ke Professional. Harganya terjangkau, fiturnya lengkap. Tidak perlu cari system lain.',
-    author: 'CEO', company: 'Tech Startup', employeeCount: '50 karyawan', location: 'Bandung', industry: 'Technology',
-    avatar: 'https://cdn.dnpeople.id/testimonials/avatar-3.jpg', rating: 5, videoUrl: null, segment: 'startup',
-  },
-];
+/** No public testimonials until real quotes with consent (relaunch honesty gate). */
+const TESTIMONIALS: never[] = [];
 
 const COMPARISON_TABLE = {
   title: 'Perbandingan Fitur: dnPeople vs Industry Standard',
@@ -286,7 +265,7 @@ async function main() {
 
   const data = {
     tagline: 'Payroll & HR Jadi Mudah. Harga Terjangkau.',
-    description: 'Capek manual payroll tiap bulan? Coding cuti sama absent di Excel? dnPeople otomasi semua itu — payroll, leave, attendance, talent development, semua dalam satu dashboard yang simpel. Ratusan perusahaan manufaktur, retail, dan startup sudah pakai dnPeople, mulai dari startup 10 orang sampai perusahaan 5000+ karyawan.',
+    description: 'Capek manual payroll tiap bulan? dnPeople otomasi payroll, cuti, absensi, dan talent development dalam satu dashboard. Soft launch — tier gratis sampai 30 karyawan, billing via Xendit di hris.dntech.id.',
     longFormContent: [
       '## Kenapa HR Teams Milih dnPeople?',
       '',

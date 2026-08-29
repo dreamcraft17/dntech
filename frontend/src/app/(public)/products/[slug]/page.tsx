@@ -53,6 +53,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   });
 }
 
+function formatProductStatusBadge(customerCount?: string | null): string | null {
+  if (!customerCount?.trim()) return null;
+  const trimmed = customerCount.trim();
+  if (/^\d+([.,]\d+)?$/.test(trimmed)) return `${trimmed} pelanggan`;
+  return trimmed;
+}
+
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [product, globalFaqs] = await Promise.all([
@@ -60,6 +67,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     getGlobalFaqs(),
   ]);
   if (!product) notFound();
+
+  const statusBadge = formatProductStatusBadge(product.customerCount);
 
   const faqs = product.faq && product.faq.length ? product.faq.map((f, i) => ({ id: String(i), ...f })) : globalFaqs;
   const relatedPosts = product.category ? await getRelatedPosts(product.category) : [];
@@ -154,8 +163,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <div>
               <div className="sticky top-24 rounded-lg border border-gray-200 bg-white p-6">
                 <h3 className="font-semibold text-gray-900 mb-4">Tertarik dengan produk ini?</h3>
+                {statusBadge && (
+                  <span className="mb-3 inline-block rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-900">
+                    {statusBadge}
+                  </span>
+                )}
                 <p className="text-sm text-gray-600 mb-6">
-                  {product.customerCount ? `Dipercaya ${product.customerCount} pelanggan. ` : ''}
                   Hubungi kami — respons dalam 24 jam.
                 </p>
                 <Button href={product.demoUrl || `/contact?product=${encodeURIComponent(product.slug)}`} className="w-full">

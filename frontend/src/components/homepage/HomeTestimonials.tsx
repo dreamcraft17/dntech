@@ -26,7 +26,7 @@ export function HomeTestimonials({ testimonials, comingSoonMessage }: HomeTestim
     return (
       <section className="bg-gray-50 py-16" id="testimonials">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <SectionHeading title="Apa Kata Klien Kami" />
+          <SectionHeading title="Testimoni Publik" subtitle="Belum ada testimoni yang kami publikasikan" />
           <Card>
             <p className="text-sm font-semibold uppercase tracking-wide text-teal-600">
               Coming Soon

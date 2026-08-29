@@ -9,21 +9,19 @@ async function seedBranding() {
   await prisma.brandContent.create({
     data: {
       tagline: 'Tentang DN Tech',
-      mission: 'Kami membangun software yang memberdayakan bisnis Indonesia untuk berkembang dan berinovasi.',
-      story: `DN Tech adalah software house Indonesia yang fokus pada solusi custom untuk startup dan perusahaan menengah.
+      mission: 'Kami membangun software yang memberdayakan bisnis Indonesia — HRIS, ERP, dan tools operasional — dengan harga transparan untuk startup dan UMKM.',
+      story: `DN Tech adalah studio produk digital Indonesia. Kami membangun dan mengoperasikan platform first-party seperti dnPeople (HRIS), dnCore (ERP), dan dnShop Finance.
 
-Didirikan oleh Dozer Napitupulu, kami memulai dengan visi sederhana: membuat teknologi yang accessible tapi profesional untuk bisnis lokal.
+Didirikan oleh Dozer Napitupulu, fokus kami bukan angka klien di slide deck — melainkan produk yang bisa dicoba, di-deploy, dan dipertanggungjawabkan. Beberapa produk masih beta atau soft launch; yang sudah live ditandai jelas di halaman Produk.
 
-Kami percaya bahwa teknologi seharusnya mempermudah, bukan memperumit. Setiap project adalah partnership, bukan transaksi.
-
-Sampai hari ini, kami sudah bantu 50+ perusahaan Indonesia transform business mereka dengan software yang tepat.`,
+Butuh custom development atau integrasi? Hubungi kami — setiap proyek dimulai dari conversation, bukan template pitch deck.`,
     },
   });
 
   const values = [
     { name: 'Pragmatik', description: 'Solusi yang kerja, bukan fancy tapi useless', iconName: 'Wrench' },
-    { name: 'Jujur', description: 'Transparent pricing, realistic timelines', iconName: 'Handshake' },
-    { name: 'Fokus Klien', description: 'Success klien = success kami', iconName: 'Target' },
+    { name: 'Jujur', description: 'Pricing transparan, timeline realistis, status produk jelas', iconName: 'Handshake' },
+    { name: 'Fokus Produk', description: 'Platform internal kami adalah bukti teknis, bukan logo klien fiktif', iconName: 'Target' },
     { name: 'Quality First', description: 'Code bersih, tested, documented', iconName: 'CheckCircle' },
     { name: 'Growth Mindset', description: 'Terus belajar dan improve', iconName: 'TrendingUp' },
   ];
@@ -44,10 +42,10 @@ Sampai hari ini, kami sudah bantu 50+ perusahaan Indonesia transform business me
   })));
 
   const stats = [
-    { label: 'Proyek Selesai', value: 50, iconName: 'CheckCircle', order: 0 },
-    { label: 'Klien Puas', value: 30, iconName: 'Smile', order: 1 },
-    { label: 'Tahun di Industri', value: 5, iconName: 'Calendar', order: 2 },
-    { label: 'On-time Delivery', value: 100, iconName: 'Zap', order: 3 },
+    { label: 'Produk First-Party', value: 6, iconName: 'Package', order: 0 },
+    { label: 'Produk Live / Beta', value: 4, iconName: 'Rocket', order: 1 },
+    { label: 'Tahun Membangun', value: 3, iconName: 'Calendar', order: 2 },
+    { label: 'Automated Tests', value: 81, iconName: 'CheckCircle', order: 3 },
   ];
 
   await Promise.all(stats.map((item) => prisma.stat.create({ data: item })));

@@ -56,7 +56,7 @@ export async function createLead(data: LeadInput, meta?: { ip?: string; userAgen
       source: data.source || 'contact-form',
       pageSource: data.pageSource,
       leadCategory,
-      status: isDuplicate ? 'new' : 'new',
+      status: 'new',
       notes: isDuplicate ? '[System] Possible duplicate submission within 30 days' : undefined,
       ipAddress: meta?.ip,
       userAgent: meta?.userAgent,

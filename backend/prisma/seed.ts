@@ -7,10 +7,27 @@ const prisma = new PrismaClient();
  * Production bootstrap seed — creates admin user and empty site settings only.
  * All content (services, blog, team, etc.) must be added via Admin Dashboard.
  */
+function resolveAdminPassword(): string {
+  const password = process.env.ADMIN_PASSWORD?.trim();
+  const forbidden = new Set(['Admin@123456', 'admin@123456', 'password', 'changeme']);
+
+  if (!password || password.length < 12 || forbidden.has(password)) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'ADMIN_PASSWORD must be set (min 12 chars, not a default) before bootstrap seed in production.',
+      );
+    }
+    console.warn('WARNING: Set ADMIN_PASSWORD (min 12 chars) before production deploy.');
+    return 'DevOnly-LocalBootstrap-ChangeMe!';
+  }
+
+  return password;
+}
+
 async function main() {
   console.log('Bootstrapping production database...');
 
-  const passwordHash = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'Admin@123456', 12);
+  const passwordHash = await bcrypt.hash(resolveAdminPassword(), 12);
 
   await prisma.user.upsert({
     where: { email: process.env.ADMIN_EMAIL || 'admin@dntech.id' },

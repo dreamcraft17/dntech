@@ -4,6 +4,7 @@ import { FooterBrand } from '@/components/layout/FooterBrand';
 
 const primaryLinks = [
   { href: '/', label: 'Beranda' },
+  { href: '/products', label: 'Produk' },
   { href: '/services', label: 'Layanan' },
   { href: '/about', label: 'Tentang' },
   { href: '/blog', label: 'Blog' },
