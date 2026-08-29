@@ -4,7 +4,9 @@ jest.mock('next/image', () => ({
   __esModule: true,
   default: (props: Record<string, unknown>) => {
     const React = require('react');
-    return React.createElement('img', { alt: '', ...props });
+    const { fill, priority, loader, quality, placeholder, blurDataURL, unoptimized, ...imgProps } =
+      props;
+    return React.createElement('img', { alt: '', ...imgProps });
   },
 }));
 

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import type { resolveHomeContent } from '@/lib/homepage-content';
@@ -10,8 +11,18 @@ interface HomeHeroProps {
 
 export function HomeHero({ content }: HomeHeroProps) {
   return (
-    <section className="bg-[var(--primary)] text-white">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+    <section className="relative overflow-hidden bg-[var(--primary)] text-white">
+      <Image
+        src="/hero_bg.png"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
+        aria-hidden="true"
+      />
+      <div className="absolute inset-0 z-[1] bg-[var(--primary)]/55" aria-hidden="true" />
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="max-w-3xl">
           <p className="mb-4 text-sm font-semibold tracking-wide text-blue-100">
             DN Tech<span className="text-white">.id</span>
