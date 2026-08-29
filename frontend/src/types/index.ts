@@ -159,6 +159,8 @@ export interface PortfolioItem {
   solution?: string;
   metrics?: Record<string, string>;
   testimonial?: string;
+  seoTitle?: string;
+  seoDescription?: string;
   featuredImage?: { url: string; altText?: string };
   status?: string;
 }
