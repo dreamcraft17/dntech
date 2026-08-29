@@ -30,11 +30,11 @@ Founder or ops lead landing on `dntech.id` must understand in one screen that DN
 
 | ID | Change | Priority |
 |----|--------|----------|
-| H1 | Solid `--primary` hero; drop CSS `hero_bg.png` from LCP path (or `next/image` priority + tiny file) | P0 |
-| H2 | Omit homepage Portfolio + Testimonials **sections** when lists are empty (routes stay) | P0 |
-| H3 | `SectionHeading` left-aligned, sentence case; 8pt section rhythm (`py-16` → token) | P1 |
-| H4 | Products: one featured + compact list, not six identical cards | P1 |
-| H5 | Stream below-fold via `Suspense` so hero paints without waiting for all five APIs | P2 |
+| H1 | Solid `--primary` hero; drop CSS `hero_bg.png` from LCP path (or `next/image` priority + tiny file) | P0 **done** |
+| H2 | Omit homepage Portfolio + Testimonials **sections** when lists are empty (routes stay) | P0 **done** (homepage skips those fetches entirely until there is real public proof) |
+| H3 | `SectionHeading` left-aligned, sentence case; 8pt section rhythm (`py-16` → token) | P1 **done** (`py-section`, `--space-section: 4rem`) |
+| H4 | Products: one featured + compact list, not six identical cards | P1 **done** |
+| H5 | Stream below-fold via `Suspense` so hero paints without waiting for all five APIs | P2 **done** (hero after settings; lists stream in `HomeBelowFold`) |
 
 ## Out of scope
 

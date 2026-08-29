@@ -25,7 +25,7 @@ export function HomeTestimonials({ testimonials }: HomeTestimonialsProps) {
   const item = testimonials[current];
 
   return (
-    <section className="bg-gray-50 py-16" id="testimonials">
+    <section className="bg-surface py-section" id="testimonials">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <SectionHeading title="Testimoni" />
         <Card className="border-l-4 border-l-teal-600">

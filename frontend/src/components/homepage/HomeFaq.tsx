@@ -14,7 +14,7 @@ interface HomeFaqProps {
 
 export function HomeFaq({ items }: HomeFaqProps) {
   return (
-    <section className="bg-white py-16" id="faq">
+    <section className="bg-white py-section" id="faq">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <SectionHeading title="Pertanyaan yang Sering Ditanyakan" />
         <div className="space-y-3">
@@ -33,7 +33,7 @@ export function HomeFaq({ items }: HomeFaqProps) {
             </details>
           ))}
         </div>
-        <p className="mt-8 text-center text-sm text-gray-600">
+        <p className="mt-8 text-sm text-gray-600">
           Masih ada pertanyaan?{' '}
           <Link href="/faq" className="font-medium text-blue-900 hover:underline">
             Lihat semua FAQ

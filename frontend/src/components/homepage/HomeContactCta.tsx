@@ -14,7 +14,7 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
   const calendly = settings.calendlyUrl;
 
   return (
-    <section className="bg-blue-900 py-16 text-white">
+    <section className="bg-[var(--primary)] py-section text-white">
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold">Siap untuk Diskusi?</h2>
         <p className="mx-auto mt-4 max-w-2xl text-blue-100">

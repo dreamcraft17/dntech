@@ -26,7 +26,7 @@ export function HomeTeam({ members, careers, hiringRoles, hiringEmail }: HomeTea
   const openRoles = careers.length > 0 ? careers.slice(0, 3).map((c) => c.title) : hiringRoles;
 
   return (
-    <section className="bg-white py-16">
+    <section className="bg-white py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Siapa yang Handle Project Anda"

@@ -20,7 +20,7 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
   const items = apiItems.length > 0 ? apiItems : defaults;
 
   return (
-    <section className="bg-gray-50 py-16">
+    <section className="bg-surface py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Apa yang Kami Tawarkan"
@@ -49,7 +49,7 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
             );
           })}
         </div>
-        <div className="mt-10 text-center">
+        <div className="mt-10">
           <Link
             href="/services"
             className="text-sm font-semibold text-blue-900 hover:underline"

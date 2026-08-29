@@ -7,7 +7,7 @@ interface HomeProcessProps {
 
 export function HomeProcess({ steps }: HomeProcessProps) {
   return (
-    <section className="bg-white py-16">
+    <section className="bg-white py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Gimana Cara Kerjanya?"
@@ -17,7 +17,7 @@ export function HomeProcess({ steps }: HomeProcessProps) {
           {steps.map((step) => (
             <li
               key={step.step}
-              className="rounded-lg border border-gray-200 bg-gray-50 p-6"
+              className="rounded-lg border border-gray-200 bg-surface p-6"
             >
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-900 text-sm font-bold text-white">
                 {step.step}

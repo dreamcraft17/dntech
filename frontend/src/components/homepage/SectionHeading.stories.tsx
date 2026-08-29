@@ -17,7 +17,7 @@ export const TitleOnly: Story = {
 
 export const WithSubtitle: Story = {
   args: {
-    title: 'Testimoni Publik',
-    subtitle: 'Belum ada testimoni yang kami publikasikan',
+    title: 'Produk first-party',
+    subtitle: 'Produk yang kami operasikan sendiri.',
   },
 };

@@ -9,7 +9,7 @@ interface HomePricingProps {
 
 export function HomePricing({ plans }: HomePricingProps) {
   return (
-    <section className="bg-gray-50 py-16">
+    <section className="bg-surface py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Paket Layanan Kami"
@@ -31,7 +31,7 @@ export function HomePricing({ plans }: HomePricingProps) {
             </Card>
           ))}
         </div>
-        <div className="mt-10 text-center">
+        <div className="mt-10">
           <Button href="/contact">Konsultasi untuk Quote Akurat</Button>
         </div>
       </div>
