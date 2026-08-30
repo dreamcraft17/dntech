@@ -23,6 +23,7 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
     <section className="bg-blue-50 py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
+          kicker="Layanan"
           title="Apa yang Kami Tawarkan"
           subtitle="Layanan pengembangan software dan konsultasi teknologi untuk startup & UMKM"
         />
