@@ -185,7 +185,7 @@ export const DEFAULT_TECH_STACK: HomeTechCategory[] = [
 export const DEFAULT_PRICING: HomePricingPlan[] = [
   {
     name: 'Custom Project',
-    price: 'Mulai Rp 25 juta',
+    price: 'Tergantung Scope',
     timeline: '1–4 bulan (sesuai scope)',
     included: ['Design', 'Development', 'Testing', '30 hari support pasca-launch'],
   },
