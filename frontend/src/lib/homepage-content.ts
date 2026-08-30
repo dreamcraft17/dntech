@@ -55,10 +55,10 @@ export interface HomeContent {
 }
 
 export const DEFAULT_HERO = {
-  title: 'Jasa Custom Software Development untuk Startup & UMKM Indonesia',
+  title: 'Custom Software yang Selesai Tepat Waktu — Harga Jelas dari Awal',
   badges: ['Web Apps', 'Mobile Apps', 'Custom Solutions'],
   supporting:
-    'Kami software house lokal yang build custom software untuk startup dan UMKM. Proses jelas, harga transparan, timeline yang pasti.',
+    'Software house lokal untuk startup dan UMKM. Anda bicara langsung dengan tim yang mengerjakan project — bukan account manager — dan tahu biaya pastinya sebelum kerja dimulai.',
 };
 
 export const DEFAULT_HERO_PRIMARY_CTA: HomeCta = {
@@ -74,33 +74,33 @@ export const DEFAULT_HERO_SECONDARY_CTA: HomeCta = {
 export const DEFAULT_PRODUCTS_SECTION = {
   title: 'Produk software siap pakai',
   subtitle:
-    'HRIS, ERP, dan pembukuan yang kami bangun dan jalankan sendiri. Setiap halaman mencantumkan fitur, harga, dan status rilis.',
+    'HRIS, ERP, dan pembukuan yang kami pakai sendiri setiap hari — bukan sekadar demo. Fitur, harga, dan status rilis tercantum di setiap halaman produk.',
 };
 
 export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
   {
     name: 'Web App Development',
-    description: 'Dashboard, portal, dan web application modern untuk operasional bisnis Anda.',
+    description: 'Dashboard dan portal yang benar-benar dipakai tim Anda tiap hari untuk kerja, bukan sekadar demo.',
   },
   {
     name: 'Mobile App Development',
-    description: 'Aplikasi iOS & Android untuk menjangkau pelanggan di mana saja.',
+    description: 'Aplikasi iOS & Android yang pelanggan Anda buka setiap hari — cepat, stabil, siap App Store & Play Store.',
   },
   {
     name: 'Custom Software',
-    description: 'Solusi sesuai kebutuhan bisnis Anda — dari MVP sampai sistem operasional.',
+    description: 'Dari MVP untuk validasi ide sampai sistem operasional harian — dibangun sesuai proses bisnis Anda, bukan template generik.',
   },
   {
     name: 'Maintenance & Support',
-    description: 'Update berkala, perbaikan bug, dan optimasi performa setelah go live.',
+    description: 'Setelah go live kami tetap ada: update berkala, perbaikan bug cepat, dan pemantauan performa.',
   },
   {
     name: 'Technical Consulting',
-    description: 'Diskusi arsitektur, strategi teknologi, dan feasibility sebelum development.',
+    description: 'Sebelum development dimulai, kami bantu cek arsitektur dan feasibility teknis — supaya uang Anda tidak terbuang di jalan yang salah.',
   },
   {
     name: 'Integration & API Development',
-    description: 'Integrasi dengan sistem existing, custom API, dan koneksi third-party.',
+    description: 'Sambungkan sistem yang sudah Anda pakai lewat custom API dan integrasi pihak ketiga, tanpa mengganti semuanya dari nol.',
   },
 ];
 
@@ -109,51 +109,51 @@ export const DEFAULT_PROCESS_STEPS: HomeStep[] = [
     step: 1,
     title: 'Hubungi Kami',
     description:
-      'WA, email, atau form. Konsultasi awal gratis 30 menit. Kita diskusikan apa yang Anda butuhkan.',
+      'WA, email, atau form — pilih yang paling nyaman. Konsultasi awal 30 menit, gratis, tanpa sales pitch panjang.',
   },
   {
     step: 2,
     title: 'Scope & Quote',
     description:
-      'Kami buat proposal: apa yang akan dibangun, berapa lama, dan berapa harganya — tanpa hidden fees.',
+      'Kami tulis proposal konkret: apa yang dibangun, berapa lama, dan berapa biayanya — angka final, bukan estimasi kasar.',
   },
   {
     step: 3,
     title: 'Kick-off',
-    description: 'Setelah approval, development dimulai dengan timeline jelas: kapan mulai, kapan selesai.',
+    description: 'Setelah Anda approve, development langsung mulai dengan tanggal selesai yang sudah disepakati bersama.',
   },
   {
     step: 4,
     title: 'Development + Check-in',
     description:
-      'Kerja dalam sprint 2 minggu. Update mingguan untuk Anda. Perubahan dalam scope bisa didiskusikan.',
+      'Kerja dalam sprint 2 minggu, update progres tiap minggu ke Anda. Ada perubahan scope? Kita bahas sebelum jalan, bukan sesudah.',
   },
   {
     step: 5,
     title: 'QA & Testing',
     description:
-      'Sebelum launch, semua ditest (fungsi, keamanan, mobile). Anda approve sebelum go live.',
+      'Sebelum launch, kami test fungsi, keamanan, dan tampilan mobile. Anda yang kasih lampu hijau terakhir sebelum go live.',
   },
   {
     step: 6,
     title: 'Launch & Support',
     description:
-      'Deploy ke production. Termasuk training, 30 hari free bug fix, dan paket support berkelanjutan.',
+      'Deploy ke production, training untuk tim Anda, 30 hari bug fix gratis, lalu lanjut ke paket support kalau dibutuhkan.',
   },
 ];
 
 export const DEFAULT_ADVANTAGES: HomeAdvantage[] = [
   {
     title: 'Harga Transparan',
-    description: 'Tidak ada hidden fees. Anda tahu biaya pasti dari awal — tanpa surprise billing.',
+    description: 'Biaya pasti disepakati di awal, tertulis di proposal — tidak ada hidden fees atau surprise billing di tengah jalan.',
   },
   {
     title: 'Timeline Jelas',
-    description: 'Kami sampaikan kapan selesai dan berusaha tepat waktu agar Anda bisa planning dengan pasti.',
+    description: 'Tanggal mulai dan selesai disampaikan sebelum kick-off, supaya Anda bisa planning launch dengan pasti — bukan "insya Allah minggu depan".',
   },
   {
     title: 'Bisa Hubungi Langsung',
-    description: 'Kerja langsung dengan tim. Dozer (founder) terlibat di project penting — tanpa middleman.',
+    description: 'Anda kerja langsung dengan tim yang menulis kodenya. Dozer (founder) turun tangan di project penting — tanpa lapisan account manager.',
   },
   {
     title: 'Tech Stack Modern',
@@ -162,11 +162,11 @@ export const DEFAULT_ADVANTAGES: HomeAdvantage[] = [
   },
   {
     title: 'Support Sesudah Launch',
-    description: 'Kami tidak hilang setelah go live. Ada paket maintenance untuk dukungan berkelanjutan.',
+    description: 'Kami tidak hilang setelah invoice terakhir cair. Ada paket maintenance untuk dukungan yang berkelanjutan.',
   },
   {
     title: 'Lokal, Paham Konteks',
-    description: 'Berkantor di Indonesia. Timezone sama, bahasa sama, paham konteks bisnis lokal.',
+    description: 'Berkantor di Indonesia — timezone sama, bahasa sama, dan paham kenapa proses bisnis Anda berjalan seperti itu.',
   },
 ];
 
