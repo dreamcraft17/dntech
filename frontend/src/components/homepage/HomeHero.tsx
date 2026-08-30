@@ -57,6 +57,16 @@ export function HomeHero({ content }: HomeHeroProps) {
             </Button>
           </div>
         </div>
+
+        {content.advantages.length > 0 && (
+          <div className="mt-14 flex max-w-4xl flex-col gap-6 border-t border-white/15 pt-8 sm:flex-row sm:flex-wrap sm:items-start sm:gap-0 sm:divide-x sm:divide-white/15">
+            {content.advantages.slice(0, 3).map((advantage) => (
+              <div key={advantage.title} className="sm:px-8 sm:first:pl-0">
+                <p className="text-base font-semibold text-white">{advantage.title}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

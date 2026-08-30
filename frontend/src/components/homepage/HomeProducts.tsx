@@ -65,7 +65,7 @@ export function HomeProducts({
   return (
     <section className="bg-white py-section" aria-label={title}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading title={title} subtitle={subtitle} />
+        <SectionHeading kicker="Produk" title={title} subtitle={subtitle} />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6 lg:items-stretch">
           <Link
