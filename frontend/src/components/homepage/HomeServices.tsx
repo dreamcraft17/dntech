@@ -20,20 +20,28 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
   const items = apiItems.length > 0 ? apiItems : defaults;
 
   return (
-    <section className="bg-surface py-section">
+    <section className="bg-blue-50 py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Apa yang Kami Tawarkan"
           subtitle="Layanan pengembangan software dan konsultasi teknologi untuk startup & UMKM"
         />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {items.map((item) => {
+          {items.map((item, index) => {
             const inner = (
-              <Card hover className="h-full">
-                <h3 className="font-semibold text-gray-900">{item.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.description}</p>
+              <Card hover className="relative h-full overflow-hidden border-t-2 border-t-blue-900">
+                <span
+                  className="pointer-events-none absolute -right-1 -top-3 text-5xl font-bold text-gray-100 select-none"
+                  aria-hidden="true"
+                >
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <h3 className="relative font-semibold text-gray-900">{item.name}</h3>
+                <p className="relative mt-2 text-sm leading-relaxed text-gray-600">
+                  {item.description}
+                </p>
                 {item.slug && (
-                  <span className="mt-4 inline-flex items-center text-sm font-medium text-blue-900">
+                  <span className="relative mt-4 inline-flex items-center text-sm font-medium text-blue-900">
                     Pelajari lebih lanjut <ArrowRight className="ml-1 h-4 w-4" />
                   </span>
                 )}
