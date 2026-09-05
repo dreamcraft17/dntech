@@ -223,7 +223,9 @@ CI runs backend lint/test/build, frontend lint/test/build, and Playwright smoke 
 **Full guide:** [DEPLOYMENT-PRODUCTION.md (wiki)](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/DEPLOYMENT-PRODUCTION.md)  
 **VPS Postgres seed:** [vps-postgres-seed.md (wiki)](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/runbooks/vps-postgres-seed.md)
 
-PM2-style update on VPS:
+**Recommended:** on the VPS, run `./scripts/deploy.sh` — it does `git pull`, rebuilds backend + frontend, and restarts both PM2 processes, aborting on the first failure.
+
+Under the hood (what `scripts/deploy.sh` runs), for reference / manual fallback:
 
 ```bash
 git pull --rebase origin main

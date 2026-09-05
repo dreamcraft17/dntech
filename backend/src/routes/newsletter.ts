@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import prisma from '../config/database';
 import { asyncHandler, successResponse } from '../utils/helpers';
 import { sendNewsletterConfirmation, sendNewsletterWelcome } from '../services/EmailService';
+import logger from '../config/logger';
 
 const router = Router();
 
@@ -49,7 +50,7 @@ router.post(
       },
     });
 
-    sendNewsletterConfirmation(data.email, confirmToken).catch(console.error);
+    sendNewsletterConfirmation(data.email, confirmToken).catch((err) => logger.error({ err }, "Background email send failed"));
 
     successResponse(res, { message: 'Email konfirmasi telah dikirim. Silakan cek inbox Anda.' }, 201);
   })
@@ -77,7 +78,7 @@ router.get(
       },
     });
 
-    sendNewsletterWelcome(updated.email, unsubToken).catch(console.error);
+    sendNewsletterWelcome(updated.email, unsubToken).catch((err) => logger.error({ err }, "Background email send failed"));
     successResponse(res, { message: 'Newsletter berhasil dikonfirmasi.' });
   })
 );

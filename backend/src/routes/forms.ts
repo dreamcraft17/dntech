@@ -9,6 +9,7 @@ import {
   sendLeadNotification,
   sendWelcomeEmail,
 } from '../services/EmailService';
+import logger from '../config/logger';
 
 const router = Router();
 
@@ -93,7 +94,7 @@ router.post(
       req
     );
 
-    sendWelcomeEmail(data.email, data.name, data.subject || 'Pertanyaan Umum').catch(console.error);
+    sendWelcomeEmail(data.email, data.name, data.subject || 'Pertanyaan Umum').catch((err) => logger.error({ err }, "Background email send failed"));
     sendLeadNotification({
       name: data.name,
       email: data.email,
@@ -101,7 +102,7 @@ router.post(
       projectType: data.subject || 'Pertanyaan Umum',
       message: data.message,
       source: 'contact-form',
-    }).catch(console.error);
+    }).catch((err) => logger.error({ err }, "Background email send failed"));
 
     successResponse(res, { id: submission.id, message: 'Terima kasih! Kami akan segera menghubungi Anda.' }, 201);
   })
@@ -131,7 +132,7 @@ router.post(
       req
     );
 
-    sendWelcomeEmail(data.email, data.name, data.serviceInterested).catch(console.error);
+    sendWelcomeEmail(data.email, data.name, data.serviceInterested).catch((err) => logger.error({ err }, "Background email send failed"));
     sendLeadNotification({
       name: data.name,
       email: data.email,
@@ -142,7 +143,7 @@ router.post(
       timeline: data.timeline,
       message: data.message,
       source: 'service-request',
-    }).catch(console.error);
+    }).catch((err) => logger.error({ err }, "Background email send failed"));
 
     successResponse(res, { id: submission.id, message: 'Terima kasih! Kami akan segera menghubungi Anda.' }, 201);
   })
@@ -177,8 +178,8 @@ router.post(
       position: data.position,
       message: data.message,
       resumeUrl: data.resumeUrl,
-    }).catch(console.error);
-    sendCareerConfirmation(data.email, data.name, data.position).catch(console.error);
+    }).catch((err) => logger.error({ err }, "Background email send failed"));
+    sendCareerConfirmation(data.email, data.name, data.position).catch((err) => logger.error({ err }, "Background email send failed"));
 
     successResponse(res, { id: submission.id, message: 'Terima kasih telah melamar! Kami akan meninjau lamaran Anda.' }, 201);
   })

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import prisma from '../config/database';
 import { asyncHandler, successResponse } from '../utils/helpers';
 import { sendQuizFollowUp } from '../services/EmailService';
+import logger from '../config/logger';
 
 const router = Router();
 
@@ -41,7 +42,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const data = z.object({
       sessionId: z.string().optional(),
-      answers: z.record(z.string()),
+      answers: z.record(z.string(), z.string()),
       email: z.string().email().optional(),
       name: z.string().optional(),
     }).parse(req.body);
@@ -76,7 +77,7 @@ router.post(
     });
 
     if (data.email) {
-      sendQuizFollowUp(data.email, data.name || 'Anda', recommendation.service).catch(console.error);
+      sendQuizFollowUp(data.email, data.name || 'Anda', recommendation.service).catch((err) => logger.error({ err }, "Background email send failed"));
     }
 
     successResponse(res, {

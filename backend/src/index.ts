@@ -7,6 +7,7 @@ import path from 'path';
 import rateLimit from 'express-rate-limit';
 
 import prisma from './config/database';
+import logger from './config/logger';
 import authRoutes from './routes/auth';
 import servicesRoutes from './routes/services';
 import productsRoutes from './routes/products';
@@ -144,7 +145,7 @@ app.use(errorHandler);
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`DN Tech API running on http://localhost:${PORT}`);
+    logger.info(`DN Tech API running on http://localhost:${PORT}`);
   });
 }
 

@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import prisma from '../config/database';
 import { emailTemplates } from '../templates/emailTemplates';
+import logger from '../config/logger';
 
 export interface SendEmailOptions {
   cc?: string[];
@@ -46,7 +47,7 @@ class EmailService {
     const pass = process.env.SMTP_PASSWORD;
 
     if (!user || !pass) {
-      console.warn('[Email] SMTP credentials are not configured. Emails will be logged as skipped.');
+      logger.warn('[Email] SMTP credentials are not configured. Emails will be logged as skipped.');
       return;
     }
 
@@ -70,10 +71,10 @@ class EmailService {
 
     this.transporter?.verify((error) => {
       if (error) {
-        console.error('[Email] SMTP connection failed:', error);
+        logger.error({ err: error }, '[Email] SMTP connection failed');
         return;
       }
-      console.log('[Email] SMTP server ready for info@dntech.id');
+      logger.info('[Email] SMTP server ready for info@dntech.id');
     });
   }
 
@@ -95,7 +96,7 @@ class EmailService {
     });
 
     if (!this.transporter) {
-      console.log(`[Email:skipped] ${subject} -> ${to}`);
+      logger.info(`[Email:skipped] ${subject} -> ${to}`);
       return { success: false, error: 'SMTP credentials are not configured' };
     }
 
@@ -123,7 +124,7 @@ class EmailService {
         where: { id: log.id },
         data: { status: 'failed', error: message },
       });
-      console.error(`[Email] Failed sending ${subject} -> ${to}:`, error);
+      logger.error({ err: error }, `[Email] Failed sending ${subject} -> ${to}`);
       return { success: false, error: message };
     }
   }

@@ -66,6 +66,21 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dntech
+          POSTGRES_PASSWORD: dntech123
+          POSTGRES_DB: dntech_smoke
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     defaults:
       run:
         working-directory: frontend
@@ -74,6 +89,14 @@ jobs:
       NEXT_PUBLIC_API_URL: https://api.dntech.id/api/v1
       NEXT_PUBLIC_SITE_URL: https://www.dntech.id
       NODE_ENV: production
+      # Backend-under-test env for the SSR smoke stage below (a throwaway local
+      # Postgres + API, never the real production database/API).
+      DATABASE_URL: postgresql://dntech:dntech123@localhost:5432/dntech_smoke?schema=public
+      JWT_SECRET: ci-smoke-secret
+      JWT_REFRESH_SECRET: ci-smoke-refresh-secret
+      ADMIN_EMAIL: admin@dntech.id
+      ADMIN_PASSWORD: Ci-Smoke-Only-Not-Real-Prod-1
+      PORT: 4000
 
     steps:
       - uses: actions/checkout@v4
@@ -96,6 +119,142 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # Regression guard for the recurring class of "production-only SSR crash" bug that keeps slipping
+      # past this pipeline (see: git log --oneline -i --grep=SSR -- "migrate all public SSR pages to
+      # fetchPublicApi helpers", "resolve 404 on /services/[slug] in production SSR", "wire homepage
+      # services to admin API", "fix home page build crash when API returns null arrays"). `next build`
+      # alone never boots a server or exercises real SSR data-fetch paths, so these bugs weren't caught
+      # here. This step boots the actual production artifact (`npm start` -> node
+      # .next/standalone/server.js, the same output a real deploy ships, produced by the `build` step's
+      # `postbuild` copy of public/ and .next/static/ into .next/standalone/) and hits real dynamic
+      # routes over HTTP the way production traffic would.
+      #
+      # Deliberately hermetic: this spins up its OWN throwaway backend + Postgres (see the `postgres`
+      # service and the steps below) and seeds one real product + one real service into it, rather than
+      # depending on the live production API (api.dntech.id) being up — CI must not be coupled to prod
+      # uptime/data. frontend/src/lib/server-api.ts's `apiCandidates()` already tries
+      # `http://127.0.0.1:4000/api/v1` as a fallback whenever NODE_ENV=production, with no extra
+      # wiring needed, so booting a real backend on port 4000 here is picked up automatically by the
+      # already-built frontend artifact.
+      #
+      # NOTE: this step should run before any deploy step. This repo's CI has no deploy job today -- if
+      # one is added, this smoke test belongs immediately before it.
+      - name: Install backend dependencies (for SSR smoke test)
+        working-directory: backend
+        run: npm ci
+
+      - name: Push Prisma schema to smoke-test DB
+        working-directory: backend
+        run: npx prisma db push --skip-generate
+
+      - name: Seed one real product for the smoke test
+        working-directory: backend
+        run: npm run db:seed-dnpeople
+
+      - name: Seed one real service for the smoke test
+        working-directory: backend
+        run: |
+          cat > ./ci-smoke-seed-service.ts <<'EOF'
+          import prisma from './src/config/database';
+
+          async function main() {
+            await prisma.service.upsert({
+              where: { slug: 'software-development' },
+              create: {
+                name: 'Software Development',
+                slug: 'software-development',
+                description: 'End-to-end software development services for CI smoke testing.',
+                status: 'active',
+                displayOrder: 0,
+              },
+              update: { status: 'active' },
+            });
+          }
+
+          main()
+            .catch((err) => {
+              console.error(err);
+              process.exit(1);
+            })
+            .finally(() => prisma.$disconnect());
+          EOF
+          npx tsx ./ci-smoke-seed-service.ts
+          rm -f ./ci-smoke-seed-service.ts
+
+      - name: Build backend
+        working-directory: backend
+        run: npm run build
+
+      - name: Start backend server (smoke-test API on 127.0.0.1:4000)
+        working-directory: backend
+        run: |
+          node dist/index.js &
+          echo $! > /tmp/backend-smoke.pid
+
+          echo "Waiting for backend to boot..."
+          for i in {1..30}; do
+            if curl -sSf http://127.0.0.1:4000/api/v1/services > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Backend smoke-test server failed to boot"
+          exit 1
+
+      - name: Production SSR smoke test
+        run: |
+          npm start &
+          SERVER_PID=$!
+
+          echo "Waiting for production server to boot..."
+          BOOTED=0
+          for i in {1..30}; do
+            if curl -sSf http://localhost:3000 > /dev/null; then
+              BOOTED=1
+              break
+            fi
+            sleep 2
+          done
+
+          cleanup() {
+            kill "$SERVER_PID" 2>/dev/null || true
+            [ -f /tmp/backend-smoke.pid ] && kill "$(cat /tmp/backend-smoke.pid)" 2>/dev/null || true
+          }
+
+          if [ "$BOOTED" -ne 1 ]; then
+            echo "Frontend production server failed to boot"
+            cleanup
+            exit 1
+          fi
+
+          fail() {
+            echo "FAIL: $1"
+            cleanup
+            exit 1
+          }
+
+          check_route() {
+            path="$1"
+            url="http://localhost:3000${path}"
+            status=$(curl -sS -o /tmp/smoke-body.html -w "%{http_code}" "$url")
+            body=$(cat /tmp/smoke-body.html)
+
+            echo "GET ${path} -> ${status}"
+
+            if echo "$body" | grep -qi "Application error"; then
+              fail "${path} rendered a Next.js error page (Application error)"
+            fi
+
+            if [ "$status" != "200" ]; then
+              fail "${path} expected HTTP 200 (seeded real data via the local smoke-test backend), got ${status}"
+            fi
+          }
+
+          check_route "/products/dnpeople"
+          check_route "/services/software-development"
+
+          cleanup
 
   frontend-e2e:
     runs-on: ubuntu-latest

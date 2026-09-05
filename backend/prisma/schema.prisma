@@ -54,16 +54,16 @@ model User {
   createdById      String?   @map("created_by")
   deletedAt        DateTime? @map("deleted_at")
 
-  createdBy        User?     @relation("UserCreatedBy", fields: [createdById], references: [id])
-  createdUsers     User[]    @relation("UserCreatedBy")
-  activityLogs     ActivityLog[]
-  services         Service[]
-  products         Product[]
-  portfolioItems   PortfolioItem[]
-  blogPosts        BlogPost[]
-  testimonials     Testimonial[]
-  media            Media[]
-  assignedLeads    FormSubmission[] @relation("AssignedLeads")
+  createdBy      User?            @relation("UserCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdUsers   User[]           @relation("UserCreatedBy")
+  activityLogs   ActivityLog[]
+  services       Service[]
+  products       Product[]
+  portfolioItems PortfolioItem[]
+  blogPosts      BlogPost[]
+  testimonials   Testimonial[]
+  media          Media[]
+  assignedLeads  FormSubmission[] @relation("AssignedLeads")
 
   @@map("users")
 }
@@ -78,7 +78,7 @@ model ActivityLog {
   ipAddress  String?  @map("ip_address")
   createdAt  DateTime @default(now()) @map("created_at")
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@index([userId])
   @@index([entityType, entityId])
@@ -98,13 +98,13 @@ model Media {
   uploadedById     String?  @map("uploaded_by")
   createdAt        DateTime @default(now()) @map("created_at")
 
-  uploadedBy       User?    @relation(fields: [uploadedById], references: [id])
+  uploadedBy        User?           @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
   portfolioFeatured PortfolioItem[] @relation("PortfolioFeaturedImage")
-  blogFeatured     BlogPost[] @relation("BlogFeaturedImage")
-  teamPhotos       TeamMember[] @relation("TeamPhoto")
-  testimonialPhotos Testimonial[] @relation("TestimonialPhoto")
-  siteLogo         SiteSettings[] @relation("SiteLogo")
-  siteFavicon      SiteSettings[] @relation("SiteFavicon")
+  blogFeatured      BlogPost[]      @relation("BlogFeaturedImage")
+  teamPhotos        TeamMember[]    @relation("TeamPhoto")
+  testimonialPhotos Testimonial[]   @relation("TestimonialPhoto")
+  siteLogo          SiteSettings[]  @relation("SiteLogo")
+  siteFavicon       SiteSettings[]  @relation("SiteFavicon")
 
   @@index([uploadedById])
   @@index([createdAt])
@@ -128,7 +128,7 @@ model Service {
   createdById    String?       @map("created_by")
   deletedAt      DateTime?     @map("deleted_at")
 
-  createdBy User? @relation(fields: [createdById], references: [id])
+  createdBy User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   @@index([slug])
   @@index([status])
@@ -137,54 +137,54 @@ model Service {
 }
 
 model Product {
-  id              String        @id @default(uuid())
-  name            String
-  slug            String        @unique
-  description     String
-  features        Json?
-  iconUrl         String?       @map("icon_url")
-  category        String?
-  status          ContentStatus @default(draft)
-  displayOrder    Int           @default(0) @map("display_order")
-  seoTitle        String?       @map("seo_title")
-  seoDescription  String?       @map("seo_description")
+  id             String        @id @default(uuid())
+  name           String
+  slug           String        @unique
+  description    String
+  features       Json?
+  iconUrl        String?       @map("icon_url")
+  category       String?
+  status         ContentStatus @default(draft)
+  displayOrder   Int           @default(0) @map("display_order")
+  seoTitle       String?       @map("seo_title")
+  seoDescription String?       @map("seo_description")
 
   tagline         String?
-  heroImage       String?       @map("hero_image")
-  heroAlt         String?       @map("hero_alt")
-  logoUrl         String?       @map("logo_url")
-  screenshotUrls  Json?         @map("screenshot_urls")
+  heroImage       String?   @map("hero_image")
+  heroAlt         String?   @map("hero_alt")
+  logoUrl         String?   @map("logo_url")
+  screenshotUrls  Json?     @map("screenshot_urls")
   keywords        String?
   canonical       String?
-  featured        Boolean       @default(false)
-  showOnHomepage  Boolean       @default(false) @map("show_on_homepage")
-  publishedAt     DateTime?     @map("published_at")
-  launchStatus    String?       @map("launch_status")
-  freemiumEnabled Boolean       @default(false) @map("freemium_enabled")
-  freeLimit       String?       @map("free_limit")
-  trialDays       Int?          @map("trial_days")
-  customerCount   String?       @map("customer_count")
-  techStack       Json?         @map("tech_stack")
-  pricingTiers    Json?         @map("pricing_tiers")
+  featured        Boolean   @default(false)
+  showOnHomepage  Boolean   @default(false) @map("show_on_homepage")
+  publishedAt     DateTime? @map("published_at")
+  launchStatus    String?   @map("launch_status")
+  freemiumEnabled Boolean   @default(false) @map("freemium_enabled")
+  freeLimit       String?   @map("free_limit")
+  trialDays       Int?      @map("trial_days")
+  customerCount   String?   @map("customer_count")
+  techStack       Json?     @map("tech_stack")
+  pricingTiers    Json?     @map("pricing_tiers")
   integrations    Json?
-  useCases        Json?         @map("use_cases")
+  useCases        Json?     @map("use_cases")
   testimonials    Json?
-  caseStudies     Json?         @map("case_studies")
-  comparisonTable Json?         @map("comparison_table")
+  caseStudies     Json?     @map("case_studies")
+  comparisonTable Json?     @map("comparison_table")
   roadmap         Json?
-  primaryCta      Json?         @map("primary_cta")
-  secondaryCtas   Json?         @map("secondary_ctas")
-  pricingCalcUrl  String?       @map("pricing_calc_url")
-  demoUrl         String?       @map("demo_url")
-  longFormContent String?       @map("long_form_content") @db.Text
+  primaryCta      Json?     @map("primary_cta")
+  secondaryCtas   Json?     @map("secondary_ctas")
+  pricingCalcUrl  String?   @map("pricing_calc_url")
+  demoUrl         String?   @map("demo_url")
+  longFormContent String?   @map("long_form_content") @db.Text
   faq             Json?
 
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
-  createdById    String?       @map("created_by")
-  deletedAt      DateTime?     @map("deleted_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  createdById String?   @map("created_by")
+  deletedAt   DateTime? @map("deleted_at")
 
-  createdBy User? @relation(fields: [createdById], references: [id])
+  createdBy User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   @@index([slug])
   @@index([status])
@@ -193,35 +193,35 @@ model Product {
 }
 
 model PortfolioItem {
-  id               String        @id @default(uuid())
-  title            String
-  slug             String        @unique
-  description      String?
-  clientName       String?       @map("client_name")
-  industries       Json?
-  serviceIds       Json?         @map("service_ids")
-  startDate        DateTime?     @map("start_date")
-  endDate          DateTime?     @map("end_date")
-  budget           Float?
-  outcomes         String?
-  challenge        String?
-  solution         String?
-  metrics          Json?
-  clientLogoUrl    String?       @map("client_logo_url")
-  testimonial      String?
-  featuredImageId  String?       @map("featured_image_id")
-  imageIds         Json?         @map("image_ids")
-  status           ContentStatus @default(draft)
-  displayOrder     Int           @default(0) @map("display_order")
-  seoTitle         String?       @map("seo_title")
-  seoDescription   String?       @map("seo_description")
-  createdAt        DateTime      @default(now()) @map("created_at")
-  updatedAt        DateTime      @updatedAt @map("updated_at")
-  createdById      String?       @map("created_by")
-  deletedAt        DateTime?     @map("deleted_at")
+  id              String        @id @default(uuid())
+  title           String
+  slug            String        @unique
+  description     String?
+  clientName      String?       @map("client_name")
+  industries      Json?
+  serviceIds      Json?         @map("service_ids")
+  startDate       DateTime?     @map("start_date")
+  endDate         DateTime?     @map("end_date")
+  budget          Float?
+  outcomes        String?
+  challenge       String?
+  solution        String?
+  metrics         Json?
+  clientLogoUrl   String?       @map("client_logo_url")
+  testimonial     String?
+  featuredImageId String?       @map("featured_image_id")
+  imageIds        Json?         @map("image_ids")
+  status          ContentStatus @default(draft)
+  displayOrder    Int           @default(0) @map("display_order")
+  seoTitle        String?       @map("seo_title")
+  seoDescription  String?       @map("seo_description")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  createdById     String?       @map("created_by")
+  deletedAt       DateTime?     @map("deleted_at")
 
-  featuredImage Media? @relation("PortfolioFeaturedImage", fields: [featuredImageId], references: [id])
-  createdBy     User?  @relation(fields: [createdById], references: [id])
+  featuredImage Media? @relation("PortfolioFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
+  createdBy     User?  @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   @@index([slug])
   @@index([status])
@@ -229,27 +229,27 @@ model PortfolioItem {
 }
 
 model BlogPost {
-  id               String     @id @default(uuid())
-  title            String
-  slug             String     @unique
-  content          String
-  excerpt          String?
-  featuredImageId  String?    @map("featured_image_id")
-  category         String?
-  tags             Json?
-  authorId         String?    @map("author_id")
-  status           BlogStatus @default(draft)
-  publishedAt      DateTime?  @map("published_at")
-  scheduledAt      DateTime?  @map("scheduled_at")
-  seoTitle         String?    @map("seo_title")
-  seoDescription   String?    @map("seo_description")
-  viewCount        Int        @default(0) @map("view_count")
-  createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime   @updatedAt @map("updated_at")
-  deletedAt        DateTime?  @map("deleted_at")
+  id              String     @id @default(uuid())
+  title           String
+  slug            String     @unique
+  content         String
+  excerpt         String?
+  featuredImageId String?    @map("featured_image_id")
+  category        String?
+  tags            Json?
+  authorId        String?    @map("author_id")
+  status          BlogStatus @default(draft)
+  publishedAt     DateTime?  @map("published_at")
+  scheduledAt     DateTime?  @map("scheduled_at")
+  seoTitle        String?    @map("seo_title")
+  seoDescription  String?    @map("seo_description")
+  viewCount       Int        @default(0) @map("view_count")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+  deletedAt       DateTime?  @map("deleted_at")
 
-  featuredImage Media? @relation("BlogFeaturedImage", fields: [featuredImageId], references: [id])
-  author        User?  @relation(fields: [authorId], references: [id])
+  featuredImage Media? @relation("BlogFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
+  author        User?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
 
   @@index([slug])
   @@index([status])
@@ -285,7 +285,7 @@ model FormSubmission {
   createdAt         DateTime   @default(now()) @map("created_at")
   updatedAt         DateTime   @updatedAt @map("updated_at")
 
-  assignedTo User? @relation("AssignedLeads", fields: [assignedToId], references: [id])
+  assignedTo User? @relation("AssignedLeads", fields: [assignedToId], references: [id], onDelete: SetNull)
 
   @@index([email])
   @@index([status])
@@ -309,7 +309,7 @@ model TeamMember {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  photo Media? @relation("TeamPhoto", fields: [photoId], references: [id])
+  photo Media? @relation("TeamPhoto", fields: [photoId], references: [id], onDelete: SetNull)
 
   @@index([isActive])
   @@index([displayOrder])
@@ -332,8 +332,8 @@ model Testimonial {
   updatedAt   DateTime @updatedAt @map("updated_at")
   createdById String?  @map("created_by")
 
-  photo     Media? @relation("TestimonialPhoto", fields: [photoId], references: [id])
-  createdBy User?  @relation(fields: [createdById], references: [id])
+  photo     Media? @relation("TestimonialPhoto", fields: [photoId], references: [id], onDelete: SetNull)
+  createdBy User?  @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   @@index([isApproved])
   @@map("testimonials")
@@ -426,20 +426,20 @@ model Career {
 }
 
 model AnalyticsEvent {
-  id         String   @id @default(uuid())
-  eventType  String   @map("event_type")
-  pageUrl    String?  @map("page_url")
-  pageTitle  String?  @map("page_title")
-  userId     String?  @map("user_id")
-  sessionId  String?  @map("session_id")
-  referrer   String?
-  userAgent  String?  @map("user_agent")
-  deviceType String?  @map("device_type")
-  leadSource String?  @map("lead_source")
-  conversionStatus String? @map("conversion_status")
-  country    String?
-  city       String?
-  createdAt  DateTime @default(now()) @map("created_at")
+  id               String   @id @default(uuid())
+  eventType        String   @map("event_type")
+  pageUrl          String?  @map("page_url")
+  pageTitle        String?  @map("page_title")
+  userId           String?  @map("user_id")
+  sessionId        String?  @map("session_id")
+  referrer         String?
+  userAgent        String?  @map("user_agent")
+  deviceType       String?  @map("device_type")
+  leadSource       String?  @map("lead_source")
+  conversionStatus String?  @map("conversion_status")
+  country          String?
+  city             String?
+  createdAt        DateTime @default(now()) @map("created_at")
 
   @@index([eventType])
   @@index([createdAt])
@@ -448,38 +448,38 @@ model AnalyticsEvent {
 }
 
 model SiteSettings {
-  id                    Int      @id @default(1)
-  companyName           String?  @map("company_name")
-  tagline               String?
-  companyEmail          String?  @map("company_email")
-  companyPhone          String?  @map("company_phone")
-  companyAddress        String?  @map("company_address")
-  logoId                String?  @map("logo_id")
-  faviconId             String?  @map("favicon_id")
-  primaryColor          String?  @default("#1E3A8A") @map("primary_color")
-  socialLinks           Json?    @map("social_links")
-  seoTitleTemplate      String?  @map("seo_title_template")
-  seoDescriptionTemplate String? @map("seo_description_template")
-  googleAnalyticsId     String?  @map("google_analytics_id")
-  smtpConfig            Json?    @map("smtp_config")
-  termsContent          String?  @map("terms_content")
-  privacyContent        String?  @map("privacy_content")
-  aboutContent          Json?    @map("about_content")
-  trustBadges           Json?    @map("trust_badges")
-  clientLogos           Json?    @map("client_logos")
-  homeStats             Json?    @map("home_stats")
-  homeContent           Json?    @map("home_content")
-  resources             Json?    @map("resources")
-  heroDescription       String?  @map("hero_description")
-  businessHours         String?  @map("business_hours")
-  calendlyUrl           String?  @map("calendly_url")
-  leadMagnetUrl         String?  @map("lead_magnet_url")
-  crispWebsiteId        String?  @map("crisp_website_id")
-  isMaintenanceMode     Boolean  @default(false) @map("is_maintenance_mode")
-  updatedAt             DateTime @updatedAt @map("updated_at")
+  id                     Int      @id @default(1)
+  companyName            String?  @map("company_name")
+  tagline                String?
+  companyEmail           String?  @map("company_email")
+  companyPhone           String?  @map("company_phone")
+  companyAddress         String?  @map("company_address")
+  logoId                 String?  @map("logo_id")
+  faviconId              String?  @map("favicon_id")
+  primaryColor           String?  @default("#1E3A8A") @map("primary_color")
+  socialLinks            Json?    @map("social_links")
+  seoTitleTemplate       String?  @map("seo_title_template")
+  seoDescriptionTemplate String?  @map("seo_description_template")
+  googleAnalyticsId      String?  @map("google_analytics_id")
+  smtpConfig             Json?    @map("smtp_config")
+  termsContent           String?  @map("terms_content")
+  privacyContent         String?  @map("privacy_content")
+  aboutContent           Json?    @map("about_content")
+  trustBadges            Json?    @map("trust_badges")
+  clientLogos            Json?    @map("client_logos")
+  homeStats              Json?    @map("home_stats")
+  homeContent            Json?    @map("home_content")
+  resources              Json?    @map("resources")
+  heroDescription        String?  @map("hero_description")
+  businessHours          String?  @map("business_hours")
+  calendlyUrl            String?  @map("calendly_url")
+  leadMagnetUrl          String?  @map("lead_magnet_url")
+  crispWebsiteId         String?  @map("crisp_website_id")
+  isMaintenanceMode      Boolean  @default(false) @map("is_maintenance_mode")
+  updatedAt              DateTime @updatedAt @map("updated_at")
 
-  logo    Media? @relation("SiteLogo", fields: [logoId], references: [id])
-  favicon Media? @relation("SiteFavicon", fields: [faviconId], references: [id])
+  logo    Media? @relation("SiteLogo", fields: [logoId], references: [id], onDelete: SetNull)
+  favicon Media? @relation("SiteFavicon", fields: [faviconId], references: [id], onDelete: SetNull)
 
   @@map("site_settings")
 }
@@ -548,14 +548,14 @@ model NewsletterSubscriber {
 }
 
 model QuizSubmission {
-  id          String   @id @default(uuid())
-  sessionId   String?  @map("session_id")
-  answers     Json
-  result      String
-  recommendedService String? @map("recommended_service")
-  email       String?
-  name        String?
-  createdAt   DateTime @default(now()) @map("created_at")
+  id                 String   @id @default(uuid())
+  sessionId          String?  @map("session_id")
+  answers            Json
+  result             String
+  recommendedService String?  @map("recommended_service")
+  email              String?
+  name               String?
+  createdAt          DateTime @default(now()) @map("created_at")
 
   @@map("quiz_submissions")
 }

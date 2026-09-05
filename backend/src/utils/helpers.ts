@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
+import logger from '../config/logger';
 
 export class AppError extends Error {
   constructor(
@@ -62,7 +63,7 @@ export function errorHandler(
       error: {
         code: 'VALIDATION_ERROR',
         message: 'Validation failed',
-        details: err.errors.map((e) => ({
+        details: err.issues.map((e) => ({
           field: e.path.join('.'),
           message: e.message,
         })),
@@ -94,7 +95,7 @@ export function errorHandler(
     }
   }
 
-  console.error('Unhandled error:', err);
+  logger.error({ err }, 'Unhandled error');
   return res.status(500).json({
     success: false,
     error: {

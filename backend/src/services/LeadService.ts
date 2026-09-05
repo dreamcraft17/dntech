@@ -1,6 +1,9 @@
 import prisma from '../config/database';
 import { LeadStatus } from '@prisma/client';
 import { sendWelcomeEmail, sendLeadNotification } from './EmailService';
+import logger from '../config/logger';
+import { getPagination, param, AppError } from '../utils/helpers';
+import { z } from 'zod';
 
 export interface LeadInput {
   name: string;
@@ -84,8 +87,8 @@ export async function createLead(data: LeadInput, meta?: { ip?: string; userAgen
     },
   });
 
-  sendWelcomeEmail(data.email, data.name, data.serviceType || data.projectType).catch(console.error);
-  sendLeadNotification(data).catch(console.error);
+  sendWelcomeEmail(data.email, data.name, data.serviceType || data.projectType).catch((err) => logger.error({ err }, "Background email send failed"));
+  sendLeadNotification(data).catch((err) => logger.error({ err }, "Background email send failed"));
 
   return { submission, isDuplicate, leadCategory };
 }
@@ -197,6 +200,98 @@ export async function getDashboardMetrics() {
     funnel: await getFunnelMetrics(30),
     leadsByStatus: byStatus,
   };
+}
+
+// --- Admin lead-management operations ---
+// Extracted from backend/src/routes/admin.ts (the "/leads" admin endpoints).
+// Behavior preserved 1:1.
+
+export async function listLeadsAdmin(query: Record<string, unknown>) {
+  const { status, formType, search } = query;
+  const { page, pageSize, skip } = getPagination(query);
+  const where: Record<string, unknown> = {};
+  if (status) where.status = String(status);
+  if (formType) where.formType = String(formType);
+  if (search) {
+    where.OR = [
+      { name: { contains: String(search) } },
+      { email: { contains: String(search) } },
+    ];
+  }
+
+  const [leads, total] = await Promise.all([
+    prisma.formSubmission.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: pageSize,
+      include: { assignedTo: { select: { id: true, name: true } } },
+    }),
+    prisma.formSubmission.count({ where }),
+  ]);
+
+  return { leads, page, pageSize, total };
+}
+
+export async function getLeadByIdAdmin(id: string) {
+  const lead = await prisma.formSubmission.findUnique({
+    where: { id: param(id) },
+    include: { assignedTo: { select: { id: true, name: true, email: true } } },
+  });
+  if (!lead) throw new AppError(404, 'NOT_FOUND', 'Lead not found');
+  await prisma.formSubmission.update({ where: { id: lead.id }, data: { isRead: true } });
+  return lead;
+}
+
+export async function updateLeadStatus(id: string, body: unknown) {
+  const { status } = z.object({
+    status: z.enum(['new', 'contacted', 'qualified', 'converted', 'rejected']),
+  }).parse(body);
+  return prisma.formSubmission.update({
+    where: { id: param(id) },
+    data: { status },
+  });
+}
+
+export async function assignLead(id: string, body: unknown) {
+  const { assignedToId } = z.object({ assignedToId: z.string() }).parse(body);
+  return prisma.formSubmission.update({
+    where: { id: param(id) },
+    data: { assignedToId },
+    include: { assignedTo: { select: { name: true, email: true } } },
+  });
+}
+
+export async function addLeadNote(id: string, body: unknown) {
+  const { note } = z.object({ note: z.string().min(1) }).parse(body);
+  const existing = await prisma.formSubmission.findUnique({ where: { id: param(id) } });
+  const notes = existing?.notes ? `${existing.notes}\n\n[${new Date().toISOString()}] ${note}` : note;
+  return prisma.formSubmission.update({
+    where: { id: param(id) },
+    data: { notes },
+  });
+}
+
+export async function exportLeadsCsv(body: { status?: string; formType?: string } | undefined) {
+  const { status, formType } = body || {};
+  const where: Record<string, unknown> = {};
+  if (status) where.status = status;
+  if (formType) where.formType = formType;
+
+  const leads = await prisma.formSubmission.findMany({ where, orderBy: { createdAt: 'desc' } });
+
+  return [
+    'id,form_type,name,email,phone,subject,status,created_at',
+    ...leads.map((l) =>
+      [l.id, l.formType, l.name, l.email, l.phone || '', l.subject || '', l.status, l.createdAt.toISOString()]
+        .map((v) => `"${String(v).replace(/"/g, '""')}"`)
+        .join(',')
+    ),
+  ].join('\n');
+}
+
+export async function deleteLeadAdmin(id: string) {
+  await prisma.formSubmission.delete({ where: { id: param(id) } });
 }
 
 function detectLeadSource(referrer?: string): string {
