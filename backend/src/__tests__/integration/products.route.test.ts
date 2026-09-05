@@ -8,6 +8,7 @@ jest.mock('../../config/database', () => ({
     product: {
       findMany: jest.fn(),
       findFirst: jest.fn(),
+      count: jest.fn(),
     },
   },
 }));
@@ -21,7 +22,7 @@ jest.mock('../../services/CacheService', () => ({
 
 const productsRouter = require('../../routes/products').default;
 const prisma = require('../../config/database').default as {
-  product: { findMany: jest.Mock; findFirst: jest.Mock };
+  product: { findMany: jest.Mock; findFirst: jest.Mock; count: jest.Mock };
 };
 const cacheService = require('../../services/CacheService').cacheService as {
   get: jest.Mock;
@@ -42,7 +43,7 @@ describe('products route integration', () => {
   });
 
   it('returns cached list when available', async () => {
-    cacheService.get.mockReturnValueOnce([{ id: 'p1', slug: 'dnpeople' }]);
+    cacheService.get.mockReturnValueOnce({ products: [{ id: 'p1', slug: 'dnpeople' }], total: 1 });
     const res = await request(buildApp()).get('/api/v1/products');
     expect(res.status).toBe(200);
     expect(res.body.data).toHaveLength(1);
@@ -52,6 +53,7 @@ describe('products route integration', () => {
   it('queries prisma list and caches when not searching', async () => {
     cacheService.get.mockReturnValueOnce(null);
     prisma.product.findMany.mockResolvedValueOnce([{ id: 'p1', slug: 'dnpeople' }]);
+    prisma.product.count.mockResolvedValueOnce(1);
     const res = await request(buildApp()).get('/api/v1/products');
     expect(res.status).toBe(200);
     expect(prisma.product.findMany).toHaveBeenCalled();
@@ -60,6 +62,7 @@ describe('products route integration', () => {
 
   it('does not use cache for search queries', async () => {
     prisma.product.findMany.mockResolvedValueOnce([{ id: 'p2', slug: 'search-hit' }]);
+    prisma.product.count.mockResolvedValueOnce(1);
     const res = await request(buildApp()).get('/api/v1/products?search=dn');
     expect(res.status).toBe(200);
     expect(cacheService.get).not.toHaveBeenCalled();

@@ -2,6 +2,20 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserRole } from '@prisma/client';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+if (isProduction && !process.env.JWT_SECRET) {
+  throw new Error(
+    'JWT_SECRET must be set in production. Refusing to start with an insecure default secret.'
+  );
+}
+
+if (isProduction && !process.env.JWT_REFRESH_SECRET) {
+  throw new Error(
+    'JWT_REFRESH_SECRET must be set in production. Refusing to start with an insecure default secret.'
+  );
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '15m';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || `${JWT_SECRET}-refresh`;
@@ -45,6 +59,27 @@ export function verifyRefreshToken(token: string): RefreshTokenPayload {
     throw new Error('Not a refresh token');
   }
   return payload;
+}
+
+export const AUTH_COOKIE_NAME = 'token';
+
+/** Parses simple "15m" / "7d" / "1h" durations (as used by JWT_EXPIRES_IN) into milliseconds. */
+function parseDurationMs(duration: string, fallbackMs: number): number {
+  const match = /^(\d+)\s*(s|m|h|d)$/.exec(duration.trim());
+  if (!match) return fallbackMs;
+  const value = Number(match[1]);
+  const unitMs = { s: 1000, m: 60 * 1000, h: 60 * 60 * 1000, d: 24 * 60 * 60 * 1000 }[match[2]] as number;
+  return value * unitMs;
+}
+
+export function getAuthCookieOptions() {
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'lax' as const,
+    path: '/',
+    maxAge: parseDurationMs(JWT_EXPIRES_IN, 15 * 60 * 1000),
+  };
 }
 
 export function validatePassword(password: string): boolean {

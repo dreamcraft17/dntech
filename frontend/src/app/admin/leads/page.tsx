@@ -53,11 +53,11 @@ export default function AdminLeadsPage() {
   }
 
   async function exportCsv() {
-    const token = localStorage.getItem('token');
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1'}/admin/leads/export`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({}),
+      credentials: 'include',
     });
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);

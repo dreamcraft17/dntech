@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { withSentryConfig } from '@sentry/nextjs/config';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -64,4 +65,16 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Wrapped unconditionally (safe to do so): withSentryConfig only adds build
+// instrumentation and source-map upload, and the upload step itself no-ops
+// (with a console notice) whenever SENTRY_AUTH_TOKEN/org/project aren't set —
+// which is the expected state in local dev and CI.
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+  },
+});

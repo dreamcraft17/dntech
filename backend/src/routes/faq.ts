@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import prisma from '../config/database';
-import { asyncHandler, successResponse } from '../utils/helpers';
+import { asyncHandler, getPagination, paginatedResponse } from '../utils/helpers';
 
 const router = Router();
 
@@ -8,6 +8,7 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const { category, search } = req.query;
+    const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>, 100);
     const where: Record<string, unknown> = { isActive: true };
 
     if (category) where.category = String(category);
@@ -18,12 +19,17 @@ router.get(
       ];
     }
 
-    const faqs = await prisma.faq.findMany({
-      where,
-      orderBy: [{ category: 'asc' }, { displayOrder: 'asc' }],
-    });
+    const [faqs, total] = await Promise.all([
+      prisma.faq.findMany({
+        where,
+        orderBy: [{ category: 'asc' }, { displayOrder: 'asc' }],
+        skip,
+        take: pageSize,
+      }),
+      prisma.faq.count({ where }),
+    ]);
 
-    successResponse(res, faqs);
+    paginatedResponse(res, faqs, { page, pageSize, total });
   })
 );
 

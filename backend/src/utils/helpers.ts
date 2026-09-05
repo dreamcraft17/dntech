@@ -128,9 +128,12 @@ export function slugify(text: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-export function getPagination(query: Record<string, unknown>) {
+export function getPagination(query: Record<string, unknown>, defaultPageSize = 20) {
   const page = Math.max(1, parseInt(String(query.page || '1'), 10));
-  const pageSize = Math.min(100, Math.max(1, parseInt(String(query.pageSize || '20'), 10)));
+  const pageSize = Math.min(
+    100,
+    Math.max(1, parseInt(String(query.pageSize || defaultPageSize), 10))
+  );
   const skip = (page - 1) * pageSize;
   return { page, pageSize, skip };
 }

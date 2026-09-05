@@ -4,11 +4,26 @@ interface JsonLdProps {
   data: Record<string, unknown>;
 }
 
+/**
+ * Escape sequences that could break out of the surrounding <script> tag when
+ * JSON.stringify output is embedded via dangerouslySetInnerHTML. This is JSON
+ * injection hardening, not HTML sanitization — DOMPurify must NOT be used here
+ * since it would corrupt valid JSON-LD.
+ */
+function escapeJsonLd(json: string): string {
+  return json
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
 export function JsonLd({ data }: JsonLdProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: escapeJsonLd(JSON.stringify(data)) }}
     />
   );
 }

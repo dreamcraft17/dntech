@@ -9,7 +9,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -21,16 +21,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const fetchUser = useCallback(async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+    // The auth token lives in an httpOnly cookie now — there's nothing to
+    // check client-side before asking the API who's logged in. A 401 here
+    // just means there's no valid session.
     try {
       const data = await apiFetch<User>('/auth/me');
       setUser(data);
     } catch {
-      localStorage.removeItem('token');
       setUser(null);
     } finally {
       setLoading(false);
@@ -52,17 +49,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [loading, user, pathname, router]);
 
   async function login(email: string, password: string) {
-    const data = await apiFetch<{ access_token: string; user: User }>('/auth/login', {
+    // Backend sets the auth token as an httpOnly cookie on this response —
+    // nothing to store client-side.
+    const data = await apiFetch<{ user: User }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    localStorage.setItem('token', data.access_token);
     setUser(data.user);
     router.push('/admin/dashboard');
   }
 
-  function logout() {
-    localStorage.removeItem('token');
+  async function logout() {
+    try {
+      await apiFetch('/auth/logout', { method: 'POST' });
+    } catch {
+      // Even if the request fails, drop client-side state below.
+    }
     setUser(null);
     router.push('/admin/login');
   }

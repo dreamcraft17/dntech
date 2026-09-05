@@ -84,22 +84,13 @@ describe('apiFetch', () => {
     expect(mockedEnd).toHaveBeenCalledTimes(1);
   });
 
-  it('attaches an Authorization header when a token is present in localStorage', async () => {
-    localStorage.setItem('token', 'my-jwt-token');
+  it('sends credentials: include so the httpOnly auth cookie is attached', async () => {
     (global.fetch as jest.Mock).mockResolvedValue(jsonResponse({ success: true, data: {} }));
 
     await apiFetch('/protected');
 
     const [, options] = (global.fetch as jest.Mock).mock.calls[0];
-    expect(options.headers.Authorization).toBe('Bearer my-jwt-token');
-  });
-
-  it('omits the Authorization header when no token is present', async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(jsonResponse({ success: true, data: {} }));
-
-    await apiFetch('/public');
-
-    const [, options] = (global.fetch as jest.Mock).mock.calls[0];
+    expect(options.credentials).toBe('include');
     expect(options.headers.Authorization).toBeUndefined();
   });
 });
@@ -150,22 +141,13 @@ describe('apiUpload', () => {
     await expect(apiUpload('/uploads', file)).rejects.toThrow('File terlalu besar');
   });
 
-  it('attaches an Authorization header when a token is present', async () => {
-    localStorage.setItem('token', 'upload-token');
+  it('sends credentials: include so the httpOnly auth cookie is attached', async () => {
     (global.fetch as jest.Mock).mockResolvedValue(jsonResponse({ success: true, data: {} }));
 
     await apiUpload('/uploads', file);
 
     const [, options] = (global.fetch as jest.Mock).mock.calls[0];
-    expect(options.headers.Authorization).toBe('Bearer upload-token');
-  });
-
-  it('sends undefined headers when no token is present', async () => {
-    (global.fetch as jest.Mock).mockResolvedValue(jsonResponse({ success: true, data: {} }));
-
-    await apiUpload('/uploads', file);
-
-    const [, options] = (global.fetch as jest.Mock).mock.calls[0];
+    expect(options.credentials).toBe('include');
     expect(options.headers).toBeUndefined();
   });
 });
@@ -221,7 +203,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
   }
 
   it('falls back to the localhost default outside production', () => {
-    process.env.NODE_ENV = 'development';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'development';
     delete process.env.NEXT_PUBLIC_API_URL;
 
     const { getApiBaseUrl } = loadApi();
@@ -230,7 +212,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
   });
 
   it('falls back to the production default when unconfigured', () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
     delete process.env.NEXT_PUBLIC_API_URL;
 
     const { getApiBaseUrl } = loadApi();
@@ -239,7 +221,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
   });
 
   it('overrides a localhost configuration in production', () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
     process.env.NEXT_PUBLIC_API_URL = 'http://localhost:5000/api/v1';
 
     const { getApiBaseUrl } = loadApi();
@@ -248,7 +230,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
   });
 
   it('overrides a 127.0.0.1 configuration in production', () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
     process.env.NEXT_PUBLIC_API_URL = 'http://127.0.0.1:5000/api/v1';
 
     const { getApiBaseUrl } = loadApi();
@@ -257,7 +239,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
   });
 
   it('overrides the marketing domain (dntech.id, not the api subdomain) in production', () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
     process.env.NEXT_PUBLIC_API_URL = 'https://dntech.id/api/v1';
 
     const { getApiBaseUrl } = loadApi();
@@ -266,7 +248,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
   });
 
   it('overrides the www marketing domain in production', () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
     process.env.NEXT_PUBLIC_API_URL = 'https://www.dntech.id/api/v1';
 
     const { getApiBaseUrl } = loadApi();
@@ -275,7 +257,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
   });
 
   it('respects a valid configured URL in production', () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
     process.env.NEXT_PUBLIC_API_URL = 'https://api.dntech.id/api/v1';
 
     const { getApiBaseUrl } = loadApi();
@@ -284,7 +266,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
   });
 
   it('respects a different, valid custom domain in production', () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
     process.env.NEXT_PUBLIC_API_URL = 'https://staging-api.dntech.id/api/v1';
 
     const { getApiBaseUrl } = loadApi();
@@ -293,7 +275,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
   });
 
   it('getApiUrl builds a URL against the resolved base (baked in at module load)', () => {
-    process.env.NODE_ENV = 'development';
+    (process.env as { NODE_ENV: string }).NODE_ENV = 'development';
     delete process.env.NEXT_PUBLIC_API_URL;
 
     const { getApiUrl } = loadApi();

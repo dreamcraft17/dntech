@@ -43,21 +43,23 @@ export interface ApiResponse<T> {
   };
 }
 
+// Auth no longer relies on localStorage: the backend issues the JWT as an
+// httpOnly cookie on login, which the browser attaches automatically to
+// same-site requests made with credentials: 'include'. There is nothing for
+// client JS to read or attach as an Authorization header any more.
+
 export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   };
 
   startGlobalLoading();
   try {
-    const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+    const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers, credentials: 'include' });
     const json: ApiResponse<T> = await res.json();
 
     if (!res.ok || !json.success) {
@@ -71,7 +73,6 @@ export async function apiFetch<T>(
 }
 
 export async function apiUpload<T>(endpoint: string, file: File): Promise<T> {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   const formData = new FormData();
   formData.append('file', file);
 
@@ -79,8 +80,8 @@ export async function apiUpload<T>(endpoint: string, file: File): Promise<T> {
   try {
     const res = await fetch(`${API_URL}${endpoint}`, {
       method: 'POST',
-      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       body: formData,
+      credentials: 'include',
     });
     const json: ApiResponse<T> = await res.json();
 
@@ -98,17 +99,14 @@ export async function apiFetchPaginated<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<{ data: T; pagination: ApiResponse<T>['pagination'] }> {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   };
 
   startGlobalLoading();
   try {
-    const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+    const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers, credentials: 'include' });
     const json = await res.json();
 
     if (!res.ok || !json.success) {

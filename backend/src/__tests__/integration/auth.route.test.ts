@@ -26,6 +26,14 @@ jest.mock('../../utils/auth', () => ({
   verifyRefreshToken: jest.fn(),
   validatePassword: jest.fn().mockReturnValue(true),
   hashPassword: jest.fn().mockResolvedValue('hash'),
+  AUTH_COOKIE_NAME: 'token',
+  getAuthCookieOptions: jest.fn().mockReturnValue({
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 900000,
+  }),
 }));
 
 jest.mock('../../middleware/auth', () => ({

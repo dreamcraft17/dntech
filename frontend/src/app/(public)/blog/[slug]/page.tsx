@@ -7,6 +7,7 @@ import { InternalLinks } from '@/components/seo/InternalLinks';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { getPillarForCategory, getRelatedServiceLinks } from '@/lib/content-pillars';
 import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 import type { BlogPost, Service } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -101,7 +102,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
               />
             )}
 
-            <div className="mt-8 prose max-w-none" itemProp="articleBody" dangerouslySetInnerHTML={{ __html: post.content || '' }} />
+            <div className="mt-8 prose max-w-none" itemProp="articleBody" dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} />
           </article>
 
           <div className="mt-10">

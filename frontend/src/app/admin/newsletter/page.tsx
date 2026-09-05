@@ -17,10 +17,8 @@ export default function AdminNewsletterPage() {
   useEffect(() => {
     async function load() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1'}/admin/newsletter-subscribers?pageSize=100`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
       });
       const json = await res.json();
       if (json.success) {

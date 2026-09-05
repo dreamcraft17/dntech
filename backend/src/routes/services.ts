@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import prisma from '../config/database';
-import { asyncHandler, successResponse, param } from '../utils/helpers';
+import { asyncHandler, successResponse, getPagination, paginatedResponse, param } from '../utils/helpers';
 import { cacheService } from '../services/CacheService';
 
 const router = Router();
@@ -9,10 +9,11 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const { category, search } = req.query;
-    const cacheKey = `services:list:${category || 'all'}`;
+    const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>, 100);
+    const cacheKey = `services:list:${category || 'all'}:${page}:${pageSize}`;
     if (!search) {
-      const cached = cacheService.get<unknown[]>(cacheKey);
-      if (cached) return successResponse(res, cached);
+      const cached = cacheService.get<{ services: unknown[]; total: number }>(cacheKey);
+      if (cached) return paginatedResponse(res, cached.services, { page, pageSize, total: cached.total });
     }
 
     const where: Record<string, unknown> = { status: 'active', deletedAt: null };
@@ -25,25 +26,30 @@ router.get(
       ];
     }
 
-    const services = await prisma.service.findMany({
-      where,
-      orderBy: { displayOrder: 'asc' },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        description: true,
-        features: true,
-        iconUrl: true,
-        category: true,
-        displayOrder: true,
-        seoTitle: true,
-        seoDescription: true,
-      },
-    });
+    const [services, total] = await Promise.all([
+      prisma.service.findMany({
+        where,
+        orderBy: { displayOrder: 'asc' },
+        skip,
+        take: pageSize,
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          features: true,
+          iconUrl: true,
+          category: true,
+          displayOrder: true,
+          seoTitle: true,
+          seoDescription: true,
+        },
+      }),
+      prisma.service.count({ where }),
+    ]);
 
-    if (!search) cacheService.set(cacheKey, services, 3600);
-    successResponse(res, services);
+    if (!search) cacheService.set(cacheKey, { services, total }, 3600);
+    paginatedResponse(res, services, { page, pageSize, total });
   })
 );
 

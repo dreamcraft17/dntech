@@ -1,17 +1,26 @@
 import { Router } from 'express';
 import prisma from '../config/database';
-import { asyncHandler, successResponse } from '../utils/helpers';
+import { asyncHandler, getPagination, paginatedResponse } from '../utils/helpers';
 
 const router = Router();
 
 router.get(
   '/',
-  asyncHandler(async (_req, res) => {
-    const careers = await prisma.career.findMany({
-      where: { status: 'active' },
-      orderBy: { createdAt: 'desc' },
-    });
-    successResponse(res, careers);
+  asyncHandler(async (req, res) => {
+    const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>, 100);
+    const where = { status: 'active' as const };
+
+    const [careers, total] = await Promise.all([
+      prisma.career.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: pageSize,
+      }),
+      prisma.career.count({ where }),
+    ]);
+
+    paginatedResponse(res, careers, { page, pageSize, total });
   })
 );
 

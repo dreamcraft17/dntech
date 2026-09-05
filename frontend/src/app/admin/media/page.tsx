@@ -39,14 +39,13 @@ export default function AdminMediaPage() {
     if (!files?.length) return;
     setUploading(true);
     try {
-      const token = localStorage.getItem('token');
       for (const file of Array.from(files)) {
         const form = new FormData();
         form.append('file', file);
         await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1'}/admin/media`, {
           method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
           body: form,
+          credentials: 'include',
         });
       }
       load();

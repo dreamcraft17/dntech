@@ -10,6 +10,8 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
   validatePassword,
+  AUTH_COOKIE_NAME,
+  getAuthCookieOptions,
 } from '../utils/auth';
 import { sendPasswordResetEmail } from '../services/EmailService';
 import { asyncHandler, successResponse, AppError } from '../utils/helpers';
@@ -55,6 +57,12 @@ router.post(
     const token = generateToken({ sub: user.id, email: user.email, role: user.role });
     const refreshToken = generateRefreshToken(user.id);
 
+    // Primary auth mechanism: httpOnly cookie (immune to XSS token theft).
+    res.cookie(AUTH_COOKIE_NAME, token, getAuthCookieOptions());
+
+    // access_token/refresh_token are also returned in the body for backward
+    // compatibility during the transition away from localStorage-based auth;
+    // clients should prefer the cookie and stop reading these fields.
     successResponse(res, {
       access_token: token,
       refresh_token: refreshToken,
@@ -84,6 +92,7 @@ router.post(
     }
 
     const accessToken = generateToken({ sub: user.id, email: user.email, role: user.role });
+    res.cookie(AUTH_COOKIE_NAME, accessToken, getAuthCookieOptions());
 
     successResponse(res, { access_token: accessToken });
   })
@@ -96,6 +105,8 @@ router.post(
     if (req.user) {
       await logActivity(req.user.id, 'logout', 'user', req.user.id, undefined, req.ip);
     }
+    const { maxAge: _maxAge, ...cookieOptions } = getAuthCookieOptions();
+    res.clearCookie(AUTH_COOKIE_NAME, cookieOptions);
     successResponse(res, { message: 'Logged out successfully' });
   })
 );

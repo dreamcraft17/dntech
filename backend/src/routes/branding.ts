@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import prisma from '../config/database';
-import { asyncHandler, successResponse } from '../utils/helpers';
+import { asyncHandler, successResponse, getPagination, paginatedResponse } from '../utils/helpers';
 import { cacheService } from '../services/CacheService';
 
 const router = Router();
@@ -20,41 +20,59 @@ router.get(
 
 router.get(
   '/values',
-  asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown[]>('branding:values:v2');
-    if (cached) return successResponse(res, cached);
+  asyncHandler(async (req, res) => {
+    const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>, 100);
+    const cacheKey = `branding:values:v2:${page}:${pageSize}`;
+    const cached = cacheService.get<{ values: unknown[]; total: number }>(cacheKey);
+    if (cached) return paginatedResponse(res, cached.values, { page, pageSize, total: cached.total });
 
-    const values = await prisma.coreValue.findMany({ orderBy: { order: 'asc' } });
+    const [values, total] = await Promise.all([
+      prisma.coreValue.findMany({ orderBy: { order: 'asc' }, skip, take: pageSize }),
+      prisma.coreValue.count(),
+    ]);
 
-    cacheService.set('branding:values:v2', values, 300);
-    successResponse(res, values);
+    cacheService.set(cacheKey, { values, total }, 300);
+    paginatedResponse(res, values, { page, pageSize, total });
   })
 );
 
 router.get(
   '/advantages',
-  asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown[]>('branding:advantages:v2');
-    if (cached) return successResponse(res, cached);
+  asyncHandler(async (req, res) => {
+    const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>, 100);
+    const cacheKey = `branding:advantages:v2:${page}:${pageSize}`;
+    const cached = cacheService.get<{ advantages: unknown[]; total: number }>(cacheKey);
+    if (cached) return paginatedResponse(res, cached.advantages, { page, pageSize, total: cached.total });
 
-    const advantages = await prisma.competitiveAdvantage.findMany({ orderBy: { order: 'asc' } });
+    const [advantages, total] = await Promise.all([
+      prisma.competitiveAdvantage.findMany({ orderBy: { order: 'asc' }, skip, take: pageSize }),
+      prisma.competitiveAdvantage.count(),
+    ]);
 
-    cacheService.set('branding:advantages:v2', advantages, 300);
-    successResponse(res, advantages);
+    cacheService.set(cacheKey, { advantages, total }, 300);
+    paginatedResponse(res, advantages, { page, pageSize, total });
   })
 );
 
 router.get(
   '/team',
-  asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown[]>('branding:team:v2');
-    if (cached) return successResponse(res, cached);
+  asyncHandler(async (req, res) => {
+    const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>, 100);
+    const cacheKey = `branding:team:v2:${page}:${pageSize}`;
+    const cached = cacheService.get<{ team: unknown[]; total: number }>(cacheKey);
+    if (cached) return paginatedResponse(res, cached.team, { page, pageSize, total: cached.total });
 
-    const team = await prisma.teamMember.findMany({
-      where: { isActive: true },
-      orderBy: { displayOrder: 'asc' },
-      include: { photo: true },
-    });
+    const teamWhere = { isActive: true };
+    const [team, total] = await Promise.all([
+      prisma.teamMember.findMany({
+        where: teamWhere,
+        orderBy: { displayOrder: 'asc' },
+        skip,
+        take: pageSize,
+        include: { photo: true },
+      }),
+      prisma.teamMember.count({ where: teamWhere }),
+    ]);
 
     const mapped = team.map((member) => ({
       id: member.id,
@@ -72,8 +90,8 @@ router.get(
       published: member.isActive,
     }));
 
-    cacheService.set('branding:team:v2', mapped, 300);
-    successResponse(res, mapped);
+    cacheService.set(cacheKey, { team: mapped, total }, 300);
+    paginatedResponse(res, mapped, { page, pageSize, total });
   })
 );
 
@@ -108,14 +126,19 @@ router.get(
 
 router.get(
   '/stats',
-  asyncHandler(async (_req, res) => {
-    const cached = cacheService.get<unknown[]>('branding:stats:v2');
-    if (cached) return successResponse(res, cached);
+  asyncHandler(async (req, res) => {
+    const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>, 100);
+    const cacheKey = `branding:stats:v2:${page}:${pageSize}`;
+    const cached = cacheService.get<{ stats: unknown[]; total: number }>(cacheKey);
+    if (cached) return paginatedResponse(res, cached.stats, { page, pageSize, total: cached.total });
 
-    const stats = await prisma.stat.findMany({ orderBy: { order: 'asc' } });
+    const [stats, total] = await Promise.all([
+      prisma.stat.findMany({ orderBy: { order: 'asc' }, skip, take: pageSize }),
+      prisma.stat.count(),
+    ]);
 
-    cacheService.set('branding:stats:v2', stats as unknown[], 300);
-    successResponse(res, stats as unknown[]);
+    cacheService.set(cacheKey, { stats: stats as unknown[], total }, 300);
+    paginatedResponse(res, stats as unknown[], { page, pageSize, total });
   })
 );
 

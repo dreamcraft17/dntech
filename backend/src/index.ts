@@ -1,13 +1,19 @@
 import 'dotenv/config';
+import { initSentry, Sentry, sentryEnabled } from './config/sentry';
+
+initSentry();
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 import rateLimit from 'express-rate-limit';
 
 import prisma from './config/database';
 import logger from './config/logger';
+import requestLogger from './middleware/requestLogger';
 import authRoutes from './routes/auth';
 import servicesRoutes from './routes/services';
 import productsRoutes from './routes/products';
@@ -65,6 +71,7 @@ if (process.env.TRUST_PROXY !== 'false') {
   app.set('trust proxy', Number(process.env.TRUST_PROXY) || 1);
 }
 
+app.use(requestLogger);
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 const allowedOrigins = buildAllowedOrigins();
 
@@ -81,6 +88,7 @@ app.use(cors({
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 const apiLimiter = rateLimit({
   windowMs: 60 * 1000,
@@ -140,6 +148,10 @@ app.use((_req, res) => {
     error: { code: 'NOT_FOUND', message: 'Endpoint not found' },
   });
 });
+
+if (sentryEnabled) {
+  Sentry.setupExpressErrorHandler(app);
+}
 
 app.use(errorHandler);
 

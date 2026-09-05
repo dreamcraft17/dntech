@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../config/database';
-import { verifyToken, hasPermission, canWrite } from '../utils/auth';
+import { verifyToken, hasPermission, canWrite, AUTH_COOKIE_NAME } from '../utils/auth';
 import { AppError } from '../utils/helpers';
 import { UserRole } from '@prisma/client';
 
@@ -12,14 +12,27 @@ export interface AuthRequest extends Request {
   };
 }
 
+/**
+ * Reads the access token from the Authorization header (legacy clients still
+ * sending Bearer tokens) or, preferably, from the httpOnly auth cookie set on
+ * login.
+ */
+function extractToken(req: Request): string | null {
+  const authHeader = req.headers.authorization;
+  if (authHeader?.startsWith('Bearer ')) {
+    return authHeader.split(' ')[1];
+  }
+  const cookieToken = (req as Request & { cookies?: Record<string, string> }).cookies?.[AUTH_COOKIE_NAME];
+  return cookieToken || null;
+}
+
 export async function authenticate(req: AuthRequest, _res: Response, next: NextFunction) {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
+    const token = extractToken(req);
+    if (!token) {
       throw new AppError(401, 'UNAUTHORIZED', 'Authentication required');
     }
 
-    const token = authHeader.split(' ')[1];
     const payload = verifyToken(token);
 
     const user = await prisma.user.findUnique({
