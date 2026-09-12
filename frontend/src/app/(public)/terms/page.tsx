@@ -1,14 +1,13 @@
 import type { Metadata } from 'next';
 import { fetchPublicApiSafe } from '@/lib/server-api';
 import { sanitizeHtml } from '@/lib/sanitize-html';
+import { TERMS_OF_SERVICE_HTML } from '@/lib/legal-content';
 
 export const metadata: Metadata = { title: 'Syarat & Ketentuan' };
 
-const FALLBACK = '<h1>Syarat & Ketentuan</h1><p>Konten segera hadir.</p>';
-
 async function getTerms() {
   const data = await fetchPublicApiSafe<{ content: string }>('/settings/legal/terms', 3600);
-  return data?.content || FALLBACK;
+  return data?.content?.trim() || TERMS_OF_SERVICE_HTML;
 }
 
 export default async function TermsPage() {

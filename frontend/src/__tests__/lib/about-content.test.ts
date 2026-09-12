@@ -1,4 +1,10 @@
-import { hasAboutCopy, parseAboutContent, resolveAboutContent } from '@/lib/about-content';
+import {
+  DEFAULT_FOUNDER,
+  hasAboutCopy,
+  parseAboutContent,
+  resolveAboutContent,
+  resolveFounder,
+} from '@/lib/about-content';
 
 describe('parseAboutContent', () => {
   it('returns empty object for missing or invalid input', () => {
@@ -11,6 +17,13 @@ describe('parseAboutContent', () => {
   it('parses JSON strings and objects', () => {
     expect(parseAboutContent('{"mission":"Build"}')).toEqual({ mission: 'Build' });
     expect(parseAboutContent({ story: 'Hello' })).toEqual({ story: 'Hello' });
+    expect(
+      parseAboutContent({
+        founder: { name: 'Dozer Napitupulu', role: 'Founder', bio: 'Studio lead.' },
+      }),
+    ).toEqual({
+      founder: { name: 'Dozer Napitupulu', role: 'Founder', bio: 'Studio lead.' },
+    });
   });
 
   it('keeps only well-shaped values and achievements', () => {
@@ -36,6 +49,7 @@ describe('resolveAboutContent', () => {
     );
     expect(resolved.story).toBe('Studio story');
     expect(resolved.mission).toBe('Honest mission');
+    expect(resolved.founder).toEqual(DEFAULT_FOUNDER);
     expect(resolved.values).toEqual([{ title: 'Jujur', description: 'No fake clients' }]);
   });
 
@@ -48,6 +62,20 @@ describe('resolveAboutContent', () => {
     expect(resolved.story).toBe('CMS story');
     expect(resolved.mission).toBe('CMS mission');
     expect(resolved.values).toEqual([{ title: 'A', description: 'B' }]);
+  });
+});
+
+describe('resolveFounder', () => {
+  it('falls back to Dozer Napitupulu when CMS founder is missing', () => {
+    expect(resolveFounder()).toEqual(DEFAULT_FOUNDER);
+  });
+
+  it('keeps a provided name and fills missing role or bio from the default', () => {
+    expect(resolveFounder({ name: 'Dozer Napitupulu' })).toEqual({
+      name: 'Dozer Napitupulu',
+      role: DEFAULT_FOUNDER.role,
+      bio: DEFAULT_FOUNDER.bio,
+    });
   });
 });
 

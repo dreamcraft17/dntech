@@ -182,7 +182,7 @@ export default function AdminSettingsPage() {
             value={settings.aboutContent}
             onChange={(e) => setSettings({ ...settings, aboutContent: e.target.value })}
             className="font-mono text-xs"
-            placeholder={'{\n  "story": "...",\n  "mission": "...",\n  "vision": "...",\n  "values": [{ "title": "...", "description": "..." }],\n  "achievements": ["..."]\n}'}
+            placeholder={'{\n  "story": "...",\n  "mission": "...",\n  "vision": "...",\n  "founder": { "name": "Dozer Napitupulu", "role": "Founder & Tech Lead", "bio": "..." },\n  "values": [{ "title": "...", "description": "..." }],\n  "achievements": ["..."]\n}'}
           />
         </Card>
 
@@ -243,8 +243,8 @@ export default function AdminSettingsPage() {
         </Card>
 
         <Card title="Hukum">
-          <Textarea label="Syarat Layanan (HTML)" rows={6} value={settings.termsContent} onChange={(e) => setSettings({ ...settings, termsContent: e.target.value })} />
-          <Textarea label="Kebijakan Privasi (HTML)" rows={6} value={settings.privacyContent} onChange={(e) => setSettings({ ...settings, privacyContent: e.target.value })} className="mt-4" />
+          <Textarea label="Syarat & Ketentuan (HTML)" rows={16} value={settings.termsContent} onChange={(e) => setSettings({ ...settings, termsContent: e.target.value })} />
+          <Textarea label="Kebijakan Privasi (HTML)" rows={16} value={settings.privacyContent} onChange={(e) => setSettings({ ...settings, privacyContent: e.target.value })} className="mt-4" />
         </Card>
 
         <div className="sticky bottom-4 z-10 flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">

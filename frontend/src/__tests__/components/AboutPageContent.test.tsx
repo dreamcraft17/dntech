@@ -63,4 +63,33 @@ describe('AboutPageContent', () => {
     expect(screen.getByText('Dozer')).toBeInTheDocument();
     expect(screen.getByText('Founder')).toBeInTheDocument();
   });
+
+  it('always shows Founded by Dozer Napitupulu when founder is not overridden', () => {
+    render(<AboutPageContent about={fullAbout} team={team} />);
+
+    expect(screen.getByText('Founded by')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Dozer Napitupulu' })).toBeInTheDocument();
+    expect(screen.getByText('Founder & Tech Lead')).toBeInTheDocument();
+    expect(screen.getByText(/kerja langsung dengan orang yang nulis kodenya/)).toBeInTheDocument();
+  });
+
+  it('uses CMS founder copy when provided', () => {
+    render(
+      <AboutPageContent
+        about={{
+          ...fullAbout,
+          founder: {
+            name: 'Dozer Napitupulu',
+            role: 'Founder',
+            bio: 'Salinan founder dari CMS.',
+          },
+        }}
+        team={team}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Dozer Napitupulu' })).toBeInTheDocument();
+    expect(screen.getByText('Salinan founder dari CMS.')).toBeInTheDocument();
+    expect(screen.queryByText(/kerja langsung dengan orang yang nulis kodenya/)).not.toBeInTheDocument();
+  });
 });

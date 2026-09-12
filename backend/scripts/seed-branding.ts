@@ -12,6 +12,14 @@ Butuh custom development atau integrasi? Hubungi kami — setiap proyek dimulai 
 const VISION =
   'Produk first-party yang bisa dicoba publik, plus custom development dengan harga dan timeline yang ditulis di depan.';
 
+const FOUNDER = {
+  name: 'Dozer Napitupulu',
+  role: 'Founder & Tech Lead',
+  bio: `Dozer mendirikan DN Tech supaya klien kerja langsung dengan orang yang nulis kodenya — bukan lewat lapisan account manager. Lima belas tahun lebih develop software: HRIS, ERP, tools operasional. Di project penting dia masih masuk ke arsitektur, review, dan keputusan yang tidak bisa dilimpahkan.
+
+PT. Dozer Napitupulu Technology adalah badan hukum di belakang studio ini. Produk first-party kami jadi bukti teknis — yang sudah live ditandai jelas, yang masih beta tidak dikamuflase jadi case study.`,
+};
+
 async function seedBranding() {
   await prisma.brandContent.deleteMany();
   await prisma.coreValue.deleteMany();
@@ -30,12 +38,12 @@ async function seedBranding() {
   await prisma.siteSettings.upsert({
     where: { id: 1 },
     update: {
-      aboutContent: { story: STORY, mission: MISSION, vision: VISION },
+      aboutContent: { story: STORY, mission: MISSION, vision: VISION, founder: FOUNDER },
     },
     create: {
       id: 1,
       companyName: 'DN Tech',
-      aboutContent: { story: STORY, mission: MISSION, vision: VISION },
+      aboutContent: { story: STORY, mission: MISSION, vision: VISION, founder: FOUNDER },
     },
   });
 

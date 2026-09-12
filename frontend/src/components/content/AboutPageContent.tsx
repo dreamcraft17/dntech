@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { TeamSpotlight } from '@/components/layout/TeamSpotlight';
-import { hasAboutCopy, type AboutContent } from '@/lib/about-content';
+import { hasAboutCopy, resolveFounder, type AboutContent } from '@/lib/about-content';
 import { cn } from '@/lib/utils';
 import type { TeamMember } from '@/types';
 
@@ -13,6 +13,7 @@ interface AboutPageContentProps {
 
 export function AboutPageContent({ about, team }: AboutPageContentProps) {
   const hasCopy = hasAboutCopy(about);
+  const founder = resolveFounder(about.founder);
 
   return (
     <div className="py-16">
@@ -32,6 +33,25 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
             </p>
           )}
         </div>
+
+        <section className="mb-16 border-t border-gray-200 pt-12" aria-labelledby="founded-by-heading">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-12">
+            <div className="lg:col-span-2">
+              <p className="text-sm font-semibold uppercase tracking-wider text-teal-600">Founded by</p>
+              <h2 id="founded-by-heading" className="mt-3 text-3xl font-bold text-gray-900">
+                {founder.name}
+              </h2>
+              {founder.role && (
+                <p className="mt-1 text-sm font-medium text-teal-600">{founder.role}</p>
+              )}
+            </div>
+            {founder.bio && (
+              <p className="lg:col-span-3 text-lg leading-relaxed text-gray-600 whitespace-pre-line">
+                {founder.bio}
+              </p>
+            )}
+          </div>
+        </section>
 
         {(about.mission || about.vision) && (
           <div className="mb-16 grid grid-cols-1 gap-10 lg:grid-cols-5 lg:gap-8">

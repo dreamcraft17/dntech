@@ -239,6 +239,7 @@ export interface SiteSettings {
     story?: string;
     mission?: string;
     vision?: string;
+    founder?: { name: string; role?: string; bio?: string };
     values?: { title: string; description: string }[];
     achievements?: string[];
   };

@@ -112,6 +112,7 @@ npm run dev
 | `npm run lint` | ESLint |
 | `npm run db:push` | Push Prisma schema |
 | `npm run db:seed` | Base seed |
+| `npm run db:seed-legal` | Kebijakan Privasi + Syarat & Ketentuan (UU PDP / UU ITE) |
 | `npm run db:seed-products` | Seed 7 first-party products |
 | `npm run db:vps:seed` | VPS seed helper (see runbook) |
 | `npm run validate:env` | Check required env vars |
