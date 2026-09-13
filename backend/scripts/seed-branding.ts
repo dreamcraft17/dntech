@@ -15,9 +15,9 @@ const VISION =
 const FOUNDER = {
   name: 'Dozer Napitupulu',
   role: 'Founder & Tech Lead',
-  bio: `Dozer mendirikan DN Tech supaya klien kerja langsung dengan orang yang nulis kodenya — bukan lewat lapisan account manager. Lima belas tahun lebih develop software: HRIS, ERP, tools operasional. Di project penting dia masih masuk ke arsitektur, review, dan keputusan yang tidak bisa dilimpahkan.
+  bio: `Dozer Napitupulu mendirikan DN Tech agar klien dapat bekerja langsung dengan penulis kodenya, bukan melalui perantara account manager. Beliau mengembangkan aplikasi dan situs web sejak 2017, meliputi HRIS, ERP, dan perangkat lunak operasional. Pada proyek yang bersifat menentukan, beliau tetap terlibat dalam arsitektur, peninjauan kode, dan keputusan yang tidak dapat didelegasikan.
 
-PT. Dozer Napitupulu Technology adalah badan hukum di belakang studio ini. Produk first-party kami jadi bukti teknis — yang sudah live ditandai jelas, yang masih beta tidak dikamuflase jadi case study.`,
+PT. Dozer Napitupulu Technology merupakan badan hukum yang menaungi studio ini. Produk first-party kami adalah bukti kerja teknis: yang telah tayang ditandai secara jelas; yang masih dalam tahap beta tidak disajikan sebagai studi kasus.`,
 };
 
 async function seedBranding() {

@@ -79,7 +79,7 @@ export function HomeTeam({ members, careers, hiringRoles, hiringEmail }: HomeTea
             <h3 className="font-semibold text-gray-900">Dozer Napitupulu</h3>
             <p className="text-sm font-medium text-teal-600">Founder & Tech Lead</p>
             <p className="mt-2 text-sm leading-relaxed text-gray-600">
-              15+ tahun develop software. Langsung involved di project strategy & code review.
+              Mengembangkan aplikasi dan situs web sejak 2017. Terlibat langsung dalam strategi proyek dan peninjauan kode.
             </p>
           </Card>
         )}

@@ -70,7 +70,7 @@ describe('AboutPageContent', () => {
     expect(screen.getByText('Founded by')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Dozer Napitupulu' })).toBeInTheDocument();
     expect(screen.getByText('Founder & Tech Lead')).toBeInTheDocument();
-    expect(screen.getByText(/kerja langsung dengan orang yang nulis kodenya/)).toBeInTheDocument();
+    expect(screen.getByText(/bekerja langsung dengan penulis kodenya/)).toBeInTheDocument();
   });
 
   it('uses CMS founder copy when provided', () => {
@@ -90,6 +90,6 @@ describe('AboutPageContent', () => {
 
     expect(screen.getByRole('heading', { name: 'Dozer Napitupulu' })).toBeInTheDocument();
     expect(screen.getByText('Salinan founder dari CMS.')).toBeInTheDocument();
-    expect(screen.queryByText(/kerja langsung dengan orang yang nulis kodenya/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/bekerja langsung dengan penulis kodenya/)).not.toBeInTheDocument();
   });
 });

@@ -1,3 +1,6 @@
+> **Author:** Dozer  
+> Next.js app for [dntech.id](https://www.dntech.id). Commands, env, and deploy: **[../README.md](../README.md)**.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
