@@ -1,0 +1,24 @@
+{
+  "segments": [
+    {
+      "name": "Startup Indonesia yang butuh MVP atau product engineering",
+      "scores": {"measurable": 72, "substantial": 68, "accessible": 78, "differentiable": 76, "actionable": 88}
+    },
+    {
+      "name": "UMKM yang butuh aplikasi operasional sederhana",
+      "scores": {"measurable": 82, "substantial": 58, "accessible": 72, "differentiable": 52, "actionable": 78}
+    },
+    {
+      "name": "Perusahaan multi-cabang dengan workflow HR/payroll kompleks",
+      "scores": {"measurable": 68, "substantial": 76, "accessible": 62, "differentiable": 86, "actionable": 82}
+    },
+    {
+      "name": "Perusahaan yang membutuhkan integrasi dan modernisasi sistem legacy",
+      "scores": {"measurable": 60, "substantial": 78, "accessible": 52, "differentiable": 80, "actionable": 72}
+    },
+    {
+      "name": "Klien umum yang mencari developer murah tanpa kebutuhan spesifik",
+      "scores": {"measurable": 70, "substantial": 70, "accessible": 80, "differentiable": 25, "actionable": 60}
+    }
+  ]
+}

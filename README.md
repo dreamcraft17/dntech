@@ -248,7 +248,7 @@ Production frontend env (in `frontend/.env.local` on server):
 
 ```env
 NEXT_PUBLIC_API_URL=https://api.dntech.id/api/v1
-NEXT_PUBLIC_SITE_URL=https://www.dntech.id
+NEXT_PUBLIC_SITE_URL=https://dntech.id
 API_INTERNAL_URL=http://127.0.0.1:4000/api/v1
 ```
 

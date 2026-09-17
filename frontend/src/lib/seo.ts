@@ -4,7 +4,7 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dntech.id';
 export const SITE_NAME = 'DN Tech';
 export const DEFAULT_TITLE_TEMPLATE = `%s | ${SITE_NAME}`;
 export const DEFAULT_SITE_DESCRIPTION =
-  'DN Tech — software house Indonesia untuk pengembangan aplikasi kustom dan konsultasi teknologi startup.';
+  'DN Tech membangun aplikasi kustom, integrasi sistem, dan software operasional untuk startup dan bisnis Indonesia—dengan scope, timeline, dan harga yang jelas.';
 
 export const DEFAULT_KEYWORDS = [
   'software development Indonesia',
@@ -17,8 +17,9 @@ export const DEFAULT_KEYWORDS = [
 
 export const PAGE_SEO: Record<string, { title: string; description: string; keywords: string[] }> = {
   home: {
-    title: 'Software Development Indonesia untuk Startup & UMKM',
-    description: 'DN Tech — partner pengembangan aplikasi kustom dan konsultasi teknologi untuk startup & bisnis di Indonesia.',
+    title: 'Software Development Indonesia untuk Bisnis',
+    description:
+      'DN Tech membangun aplikasi kustom, integrasi sistem, dan software operasional untuk startup dan bisnis Indonesia—dengan scope, timeline, dan harga yang jelas.',
     keywords: ['software development Indonesia', 'custom app development Jakarta', 'startup tech consultant'],
   },
   services: {

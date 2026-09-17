@@ -4,12 +4,14 @@ import { Card } from '@/components/ui/Card';
 import { fetchPublicApiList } from '@/lib/server-api';
 import type { Career } from '@/types';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Karier',
+export const metadata: Metadata = buildMetadata({
+  title: 'Karier di DN Tech',
   description:
-    'Lowongan di DN Tech. Saat ini belum ada posisi terbuka — hubungi kami jika ingin memperkenalkan diri.',
-};
+    'Temukan peluang karier di DN Tech dan kenali cara kami membangun aplikasi kustom, produk digital, serta software operasional untuk bisnis Indonesia.',
+  path: '/careers',
+});
 
 async function getCareers() {
   return fetchPublicApiList<Career>('/careers', 60);

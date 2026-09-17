@@ -2,8 +2,13 @@ import type { Metadata } from 'next';
 import { fetchPublicApiSafe } from '@/lib/server-api';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { TERMS_OF_SERVICE_HTML } from '@/lib/legal-content';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = { title: 'Syarat & Ketentuan' };
+export const metadata: Metadata = buildMetadata({
+  title: 'Syarat dan Ketentuan DN Tech',
+  description: 'Syarat dan ketentuan penggunaan situs, formulir, konten, produk, dan layanan DN Tech.',
+  path: '/terms',
+});
 
 async function getTerms() {
   const data = await fetchPublicApiSafe<{ content: string }>('/settings/legal/terms', 3600);

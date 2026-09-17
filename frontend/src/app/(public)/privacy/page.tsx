@@ -2,8 +2,13 @@ import type { Metadata } from 'next';
 import { fetchPublicApiSafe } from '@/lib/server-api';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { PRIVACY_POLICY_HTML } from '@/lib/legal-content';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = { title: 'Kebijakan Privasi' };
+export const metadata: Metadata = buildMetadata({
+  title: 'Kebijakan Privasi DN Tech',
+  description: 'Kebijakan privasi DN Tech tentang pengumpulan, penggunaan, penyimpanan, dan perlindungan data pribadi di situs kami.',
+  path: '/privacy',
+});
 
 async function getPrivacy() {
   const data = await fetchPublicApiSafe<{ content: string }>('/settings/legal/privacy', 3600);

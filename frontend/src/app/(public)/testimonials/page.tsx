@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/Button';
 import { fetchPublicApiList } from '@/lib/server-api';
 import type { Testimonial } from '@/types';
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: 'Testimoni',
   description: 'Testimoni klien DN Tech — dipublikasikan hanya setelah izin tertulis. Saat ini belum ada testimoni publik.',
-};
+  path: '/testimonials',
+});
 
 async function getTestimonials() {
   return fetchPublicApiList<Testimonial>('/testimonials', 60);

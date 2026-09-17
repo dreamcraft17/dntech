@@ -1,0 +1,6 @@
+id,title,url,type,credibility,recency,bias,used_for
+01,SEO Starter Guide,https://developers.google.com/search/docs/fundamentals/seo-starter-guide,primary,high,high,low,titles snippets URLs indexing
+02,Google Search documentation,https://developers.google.com/search/docs,primary,high,high,low,SEO fundamentals Search Console
+03,Structured data overview,https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data,primary,high,high,low,JSON-LD and rich result guidance
+04,Site names,https://developers.google.com/search/docs/appearance/site-names,primary,high,high,low,entity consistency
+05,Build and submit sitemap,https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap,primary,high,high,low,sitemap rules

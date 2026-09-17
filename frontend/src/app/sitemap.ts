@@ -1,7 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { fetchPublicApiList } from '@/lib/server-api';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+import { SITE_URL } from '@/lib/seo';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
@@ -11,7 +10,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticEntries = staticPages.map((path) => ({
     url: `${SITE_URL}${path}`,
-    lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: path === '' ? 1 : 0.8,
   }));
@@ -20,32 +18,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     fetchPublicApiList<{ slug: string; updatedAt?: string }>('/services', 3600),
     fetchPublicApiList<{ slug: string; updatedAt?: string }>('/products', 3600),
     fetchPublicApiList<{ slug: string; publishedAt?: string }>('/blog?pageSize=100', 3600),
-    fetchPublicApiList<{ slug: string }>('/case-studies?pageSize=100', 3600),
+    fetchPublicApiList<{ slug: string; publishedAt?: string }>('/case-studies?pageSize=100', 3600),
   ]);
 
   return [
     ...staticEntries,
-    ...services.map((s) => ({
+    ...services.filter((s) => s.slug?.trim()).map((s) => ({
       url: `${SITE_URL}/services/${s.slug}`,
-      lastModified: s.updatedAt ? new Date(s.updatedAt) : new Date(),
+      ...(s.updatedAt ? { lastModified: new Date(s.updatedAt) } : {}),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
-    ...products.map((p) => ({
+    ...products.filter((p) => p.slug?.trim()).map((p) => ({
       url: `${SITE_URL}/products/${p.slug}`,
-      lastModified: p.updatedAt ? new Date(p.updatedAt) : new Date(),
+      ...(p.updatedAt ? { lastModified: new Date(p.updatedAt) } : {}),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
-    ...blog.map((b) => ({
+    ...blog.filter((b) => b.slug?.trim()).map((b) => ({
       url: `${SITE_URL}/blog/${b.slug}`,
-      lastModified: b.publishedAt ? new Date(b.publishedAt) : new Date(),
+      ...(b.publishedAt ? { lastModified: new Date(b.publishedAt) } : {}),
       changeFrequency: 'weekly' as const,
       priority: 0.6,
     })),
-    ...caseStudies.map((p) => ({
+    ...caseStudies.filter((p) => p.slug?.trim()).map((p) => ({
       url: `${SITE_URL}/case-studies/${p.slug}`,
-      lastModified: new Date(),
+      ...(p.publishedAt ? { lastModified: new Date(p.publishedAt) } : {}),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
