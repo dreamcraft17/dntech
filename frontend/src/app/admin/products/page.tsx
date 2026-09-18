@@ -13,6 +13,19 @@ import { ImageListUploadField } from '@/components/admin/ImageListUploadField';
 import { PricingTiersEditor } from '@/components/admin/PricingTiersEditor';
 import { FaqEditor } from '@/components/admin/FaqEditor';
 
+async function revalidateHomepage() {
+  const revalidateSecret = process.env.NEXT_PUBLIC_REVALIDATE_SECRET;
+  if (!revalidateSecret) return;
+  await fetch('/api/revalidate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-revalidate-secret': revalidateSecret,
+    },
+    body: JSON.stringify({ paths: ['/', '/products'] }),
+  }).catch(() => undefined);
+}
+
 const emptyForm = {
   name: '', slug: '', description: '', tagline: '', category: '', longFormContent: '',
   seoTitle: '', seoDescription: '', keywords: '', canonical: '',
@@ -166,6 +179,7 @@ export default function AdminProductsPage() {
       setEditing(null);
       showToast('Produk berhasil disimpan!', 'success');
       await load();
+      await revalidateHomepage();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Gagal menyimpan produk';
       setError(message);
@@ -179,6 +193,7 @@ export default function AdminProductsPage() {
     if (!confirm('Hapus produk ini?')) return;
     await apiFetch(`/admin/products/${id}`, { method: 'DELETE' });
     await load();
+    await revalidateHomepage();
   }
 
   async function toggleShowOnHomepage(item: Product, next: boolean) {
@@ -190,6 +205,7 @@ export default function AdminProductsPage() {
       setItems((prev) =>
         prev.map((p) => (p.id === item.id ? { ...p, showOnHomepage: next } : p))
       );
+      await revalidateHomepage();
       showToast(
         next ? `${item.name} ditampilkan di website publik` : `${item.name} disembunyikan dari website publik`,
         'success'
