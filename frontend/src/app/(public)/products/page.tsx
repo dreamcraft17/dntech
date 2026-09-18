@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
-import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
+import { fetchPublicApiList } from '@/lib/server-api';
 import type { Product } from '@/types';
 import type { Metadata } from 'next';
 import { ProductCatalog } from './ProductCatalog';
@@ -43,10 +43,10 @@ export default async function ProductsPage({
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900">Produk software siap pakai</h1>
+            <h1 className="text-4xl font-bold text-gray-900">Produk yang Membuktikan Cara Kami Bekerja</h1>
             <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
               dnPeople (HRIS), dnCore (ERP), dnShop Finance (pembukuan Shopee), dan tool operasional
-              yang kami bangun sendiri. Fitur, harga, dan status rilis ada di halaman masing-masing.
+              yang kami bangun untuk workflow bisnis nyata. Fitur, harga, dan status rilis ada di halaman masing-masing.
             </p>
           </div>
 

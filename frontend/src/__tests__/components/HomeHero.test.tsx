@@ -14,6 +14,6 @@ describe('HomeHero', () => {
       '/contact',
     );
     expect(screen.getByRole('link', { name: 'Lihat Produk' })).toHaveAttribute('href', '/products');
-    expect(screen.getByText(/DN Tech/)).toBeInTheDocument();
+    expect(screen.getAllByText(/DN Tech/).length).toBeGreaterThan(0);
   });
 });

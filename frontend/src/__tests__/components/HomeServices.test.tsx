@@ -25,7 +25,7 @@ describe('HomeServices', () => {
     render(<HomeServices services={services} defaults={defaults} />);
 
     expect(
-      screen.getByRole('heading', { name: 'Apa yang Kami Tawarkan' }),
+      screen.getByRole('heading', { name: 'Bangun atau perbaiki workflow yang penting' }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: /Web App Development/ }),

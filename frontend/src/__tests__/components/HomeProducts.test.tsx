@@ -52,7 +52,7 @@ describe('HomeProducts', () => {
       />,
     );
 
-    expect(screen.getByRole('heading', { name: 'Produk software siap pakai' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Produk yang Membuktikan Cara Kami Bekerja' })).toBeInTheDocument();
     expect(screen.getByText('Unggulan')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Lihat dnPeople/ })).toHaveAttribute(
       'href',

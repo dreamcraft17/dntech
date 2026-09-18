@@ -30,7 +30,7 @@ describe('homepage-content', () => {
 
   it('resolves products section copy without first-party jargon or unproven trial claims', () => {
     const defaults = resolveHomeContent({});
-    expect(defaults.productsTitle).toBe('Produk software siap pakai');
+    expect(defaults.productsTitle).toBe('Produk yang Membuktikan Cara Kami Bekerja');
     expect(defaults.productsSubtitle).toMatch(/HRIS/);
     expect(defaults.productsSubtitle).toMatch(/ERP/);
     expect(defaults.productsTitle).not.toMatch(/first-party/i);

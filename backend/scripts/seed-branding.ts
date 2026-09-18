@@ -1,16 +1,16 @@
 import prisma from '../src/config/database';
 
 const MISSION =
-  'Kami membangun software yang memberdayakan bisnis Indonesia — HRIS, ERP, dan tools operasional — dengan harga transparan untuk startup dan UMKM.';
+  'Kami membantu bisnis Indonesia membangun dan menghubungkan software untuk workflow penting — dari MVP, HRIS, ERP, hingga tools operasional — dengan scope, timeline, dan harga yang jelas.';
 
-const STORY = `DN Tech adalah studio produk digital Indonesia. Kami membangun dan mengoperasikan platform first-party seperti dnPeople (HRIS), dnCore (ERP), dan dnShop Finance.
+const STORY = `DN Tech adalah studio produk digital Indonesia yang membangun software berdasarkan workflow yang benar-benar perlu berjalan. Kami mengembangkan dan mengoperasikan produk first-party seperti dnPeople (HRIS), dnCore (ERP), dan dnShop Finance.
 
-Didirikan oleh Dozer Napitupulu, fokus kami bukan angka klien di slide deck — melainkan produk yang bisa dicoba, di-deploy, dan dipertanggungjawabkan. Beberapa produk masih beta atau soft launch; yang sudah live ditandai jelas di halaman Produk.
+Didirikan oleh Dozer Napitupulu, fokus kami bukan daftar kemampuan yang panjang — melainkan produk dan sistem yang bisa dicoba, di-deploy, dan dipertanggungjawabkan. Beberapa produk masih beta atau soft launch; statusnya ditandai jelas di halaman Produk.
 
-Butuh custom development atau integrasi? Hubungi kami — setiap proyek dimulai dari conversation, bukan template pitch deck.`;
+Butuh MVP, custom development, atau integrasi? Hubungi kami — setiap proyek dimulai dari memahami workflow dan scope, bukan template pitch deck.`;
 
 const VISION =
-  'Produk first-party yang bisa dicoba publik, plus custom development dengan harga dan timeline yang ditulis di depan.';
+  'Membuat software yang bisa dipahami, dicoba, dan dipakai bisnis Indonesia — dengan custom development yang scope, harga, dan timeline-nya ditulis di depan.';
 
 const FOUNDER = {
   name: 'Dozer Napitupulu',
@@ -48,11 +48,11 @@ async function seedBranding() {
   });
 
   const values = [
-    { name: 'Pragmatik', description: 'Solusi yang kerja, bukan fancy tapi useless', iconName: 'Wrench' },
-    { name: 'Jujur', description: 'Pricing transparan, timeline realistis, status produk jelas', iconName: 'Handshake' },
-    { name: 'Fokus Produk', description: 'Platform internal kami adalah bukti teknis, bukan logo klien fiktif', iconName: 'Target' },
-    { name: 'Kualitas dulu', description: 'Code bersih, tested, documented', iconName: 'CheckCircle' },
-    { name: 'Pola pikir tumbuh', description: 'Terus belajar dan improve', iconName: 'TrendingUp' },
+    { name: 'Berangkat dari workflow', description: 'Kami mulai dari masalah kerja yang perlu dibuat lebih jelas dan terukur.', iconName: 'Wrench' },
+    { name: 'Transparan', description: 'Scope, harga, timeline, dan status produk dijelaskan tanpa klaim berlebihan.', iconName: 'Handshake' },
+    { name: 'Bukti lewat produk', description: 'Platform first-party kami menjadi bukti teknis yang bisa dilihat dan dicoba.', iconName: 'Target' },
+    { name: 'Kualitas yang bisa dirawat', description: 'Code, testing, dokumentasi, dan support dipikirkan sejak awal.', iconName: 'CheckCircle' },
+    { name: 'Terus memperbaiki', description: 'Kami belajar dari penggunaan nyata dan memperbaiki produk secara bertahap.', iconName: 'TrendingUp' },
   ];
 
   await Promise.all(values.map((value, index) => prisma.coreValue.create({

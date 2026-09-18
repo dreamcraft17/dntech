@@ -43,7 +43,7 @@ export default async function ContactPage({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900">Hubungi Kami</h1>
-          <p className="mt-4 text-gray-600">Ceritakan proyek Anda — kami akan merespons dalam 1 hari kerja.</p>
+          <p className="mt-4 text-gray-600">Ceritakan workflow atau sistem yang ingin diperbaiki — kami akan merespons dalam 1 hari kerja.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -65,7 +65,7 @@ export default async function ContactPage({
 
           <div className={contactItems.length > 0 ? 'lg:col-span-2' : 'lg:col-span-3'}>
             <div className="rounded-lg border border-gray-200 bg-white p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Mulai Konsultasi Gratis</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-6">Bahas Scope dan Workflow Anda</h2>
               <MultiStepForm
                 source="contact-form"
                 pageSource="/contact"

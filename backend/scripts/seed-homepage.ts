@@ -7,10 +7,10 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const DEFAULT_HERO = {
-  title: 'Jasa Custom Software Development untuk Startup & UMKM Indonesia',
+  title: 'Bangun Software untuk Workflow yang Penting',
   supporting:
-    'Kami software house lokal yang build custom software untuk startup dan UMKM. Proses jelas, harga transparan, timeline yang pasti.',
-  badges: ['Web Apps', 'Mobile Apps', 'Custom Solutions'],
+    'DN Tech membantu startup dan bisnis Indonesia membangun MVP, menghubungkan sistem, dan merapikan workflow operasional — dengan scope, timeline, dan harga yang jelas sejak awal.',
+  badges: ['MVP & Product Engineering', 'Workflow & Integrasi', 'Produk First-Party'],
 };
 
 const DEFAULT_FAQ = [
@@ -62,9 +62,9 @@ async function main() {
     heroSupporting: DEFAULT_HERO.supporting,
     heroPrimaryCta: { label: 'Konsultasi Gratis — 30 Menit', href: '/contact' },
     heroSecondaryCta: { label: 'Lihat Produk', href: '/products' },
-    productsTitle: 'Produk software siap pakai',
+    productsTitle: 'Produk yang Membuktikan Cara Kami Bekerja',
     productsSubtitle:
-      'HRIS, ERP, dan pembukuan yang kami bangun dan jalankan sendiri. Setiap halaman mencantumkan fitur, harga, dan status rilis.',
+      'dnPeople (HRIS), dnCore (ERP), dan dnShop kami bangun untuk workflow bisnis nyata. Lihat fitur, harga, status rilis, dan cara setiap produk membantu tim bekerja lebih rapi.',
     hiringEmail: 'careers@dntech.id',
   };
 

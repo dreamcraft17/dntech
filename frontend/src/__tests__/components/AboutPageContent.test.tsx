@@ -38,14 +38,14 @@ describe('AboutPageContent', () => {
     expect(screen.getByText('5 tahun beroperasi')).toBeInTheDocument();
 
     // No "not loaded" fallback copy when real content is present.
-    expect(screen.queryByText(/belum ter-load/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/belum tersedia/)).not.toBeInTheDocument();
   });
 
   it('shows the "belum ter-load" fallback when about content is empty', () => {
     const emptyAbout: AboutContent = {};
     render(<AboutPageContent about={emptyAbout} team={team} />);
 
-    expect(screen.getByText(/Profil studio belum ter-load/)).toBeInTheDocument();
+    expect(screen.getByText(/Profil studio belum tersedia/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'halaman Produk' })).toHaveAttribute(
       'href',
       '/products',
@@ -67,7 +67,7 @@ describe('AboutPageContent', () => {
   it('always shows Founded by Dozer Napitupulu when founder is not overridden', () => {
     render(<AboutPageContent about={fullAbout} team={team} />);
 
-    expect(screen.getByText('Founded by')).toBeInTheDocument();
+    expect(screen.getByText('Didirikan oleh')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Dozer Napitupulu' })).toBeInTheDocument();
     expect(screen.getByText('Founder & Tech Lead')).toBeInTheDocument();
     expect(screen.getByText(/bekerja langsung dengan penulis kodenya/)).toBeInTheDocument();

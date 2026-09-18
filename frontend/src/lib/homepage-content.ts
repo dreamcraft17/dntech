@@ -55,10 +55,10 @@ export interface HomeContent {
 }
 
 export const DEFAULT_HERO = {
-  title: 'Custom Software yang Selesai Tepat Waktu — Harga Jelas dari Awal',
-  badges: ['Web Apps', 'Mobile Apps', 'Custom Solutions'],
+  title: 'Bangun Software untuk Workflow yang Penting',
+  badges: ['MVP & Product Engineering', 'Workflow & Integrasi', 'Produk First-Party'],
   supporting:
-    'Software house lokal untuk startup dan UMKM. Anda bicara langsung dengan tim yang mengerjakan project — bukan account manager — dan tahu biaya pastinya sebelum kerja dimulai.',
+    'DN Tech membantu startup dan bisnis Indonesia membangun MVP, menghubungkan sistem, dan merapikan workflow operasional — dengan scope, timeline, dan harga yang jelas sejak awal.',
 };
 
 export const DEFAULT_HERO_PRIMARY_CTA: HomeCta = {
@@ -72,9 +72,9 @@ export const DEFAULT_HERO_SECONDARY_CTA: HomeCta = {
 };
 
 export const DEFAULT_PRODUCTS_SECTION = {
-  title: 'Produk software siap pakai',
+  title: 'Produk yang Membuktikan Cara Kami Bekerja',
   subtitle:
-    'HRIS, ERP, dan pembukuan yang kami pakai sendiri setiap hari — bukan sekadar demo. Fitur, harga, dan status rilis tercantum di setiap halaman produk.',
+    'dnPeople (HRIS), dnCore (ERP), dan dnShop kami bangun untuk workflow bisnis nyata. Lihat fitur, harga, status rilis, dan cara setiap produk membantu tim bekerja lebih rapi.',
 };
 
 export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
@@ -88,7 +88,7 @@ export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
   },
   {
     name: 'Custom Software',
-    description: 'Dari MVP untuk validasi ide sampai sistem operasional harian — dibangun sesuai proses bisnis Anda, bukan template generik.',
+    description: 'Dari MVP sampai sistem operasional harian — dibangun dari workflow dan kebutuhan bisnis Anda, bukan template generik.',
   },
   {
     name: 'Maintenance & Support',
@@ -96,11 +96,11 @@ export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
   },
   {
     name: 'Technical Consulting',
-    description: 'Sebelum development dimulai, kami bantu cek arsitektur dan feasibility teknis — supaya uang Anda tidak terbuang di jalan yang salah.',
+    description: 'Petakan masalah, arsitektur, dan feasibility sebelum development — supaya investasi Anda bergerak ke jalan yang tepat.',
   },
   {
     name: 'Integration & API Development',
-    description: 'Sambungkan sistem yang sudah Anda pakai lewat custom API dan integrasi pihak ketiga, tanpa mengganti semuanya dari nol.',
+    description: 'Hubungkan sistem yang sudah dipakai melalui API dan integrasi pihak ketiga, tanpa mengganti semuanya dari nol.',
   },
 ];
 

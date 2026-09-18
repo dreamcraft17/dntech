@@ -25,7 +25,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
           )}
           {!hasCopy && (
             <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-              Profil studio belum ter-load. Lihat produk first-party di{' '}
+              Profil studio belum tersedia. Lihat produk first-party di{' '}
               <Link href="/products" className="font-medium text-blue-900 underline">
                 halaman Produk
               </Link>
@@ -37,7 +37,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
         <section className="mb-16 border-t border-gray-200 pt-12" aria-labelledby="founded-by-heading">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-12">
             <div className="lg:col-span-2">
-              <p className="text-sm font-semibold uppercase tracking-wider text-teal-600">Founded by</p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-teal-600">Didirikan oleh</p>
               <h2 id="founded-by-heading" className="mt-3 text-3xl font-bold text-gray-900">
                 {founder.name}
               </h2>

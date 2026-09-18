@@ -17,15 +17,15 @@ export const DEFAULT_KEYWORDS = [
 
 export const PAGE_SEO: Record<string, { title: string; description: string; keywords: string[] }> = {
   home: {
-    title: 'Software Development Indonesia untuk Bisnis',
+    title: 'Software Development Indonesia untuk MVP & Workflow Bisnis',
     description:
-      'DN Tech membangun aplikasi kustom, integrasi sistem, dan software operasional untuk startup dan bisnis Indonesia—dengan scope, timeline, dan harga yang jelas.',
-    keywords: ['software development Indonesia', 'custom app development Jakarta', 'startup tech consultant'],
+      'DN Tech membantu startup dan bisnis Indonesia membangun MVP, menghubungkan sistem, dan merapikan workflow operasional dengan scope, timeline, dan harga yang jelas.',
+    keywords: ['software development Indonesia', 'MVP development Indonesia', 'integrasi API sistem bisnis'],
   },
   services: {
-    title: 'Layanan Pengembangan Software & Konsultasi IT',
-    description: 'Aplikasi kustom, konsultasi teknologi, dan pemeliharaan sistem untuk startup dan UMKM di Indonesia.',
-    keywords: ['layanan pengembangan software', 'konsultasi IT Jakarta', 'custom app development Indonesia'],
+    title: 'MVP, Integrasi Sistem & Software Operasional',
+    description: 'DN Tech membantu tim membangun MVP, menghubungkan sistem, dan memperbaiki workflow operasional di Indonesia.',
+    keywords: ['MVP development Indonesia', 'integrasi API sistem bisnis', 'software operasional Indonesia'],
   },
   products: {
     title: 'HRIS, ERP & Pembukuan untuk Bisnis Indonesia',
@@ -52,8 +52,8 @@ export const PAGE_SEO: Record<string, { title: string; description: string; keyw
   },
   about: {
     title: 'Tentang DN Tech',
-    description: 'Software house Indonesia yang fokus pada pengembangan aplikasi kustom dan konsultasi teknologi untuk startup.',
-    keywords: ['tentang DN Tech', 'software house Jakarta', 'tim developer Indonesia'],
+    description: 'DN Tech membangun dan menghubungkan software untuk workflow penting bisnis Indonesia.',
+    keywords: ['tentang DN Tech', 'software studio Indonesia', 'workflow bisnis', 'tim developer Indonesia'],
   },
   contact: {
     title: 'Hubungi Kami — Konsultasi Gratis',

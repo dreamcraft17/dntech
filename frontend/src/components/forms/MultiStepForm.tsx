@@ -215,7 +215,7 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
               label="Deskripsi Proyek"
               rows={5}
               {...register('message', {
-                required: 'Ceritakan proyek Anda (min. 50 karakter)',
+                required: 'Ceritakan workflow atau proyek Anda (min. 50 karakter)',
                 minLength: { value: 50, message: 'Minimal 50 karakter' },
                 maxLength: { value: 500, message: 'Maksimal 500 karakter' },
               })}

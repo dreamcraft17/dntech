@@ -16,10 +16,10 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
   return (
     <section className="bg-[var(--primary)] py-section text-white">
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold">Siap untuk Diskusi?</h2>
+        <h2 className="text-3xl font-bold">Bahas workflow yang ingin Anda perbaiki</h2>
         <p className="mx-auto mt-4 max-w-2xl text-blue-100">
-          Hubungi kami untuk konsultasi gratis 30 menit. Bahas kebutuhan, timeline, dan budget —
-          tanpa kewajiban.
+          Ceritakan masalah, target, dan sistem yang sudah dipakai. Kami bantu memetakan opsi,
+          scope, timeline, dan budget tanpa sales pitch panjang.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           {calendly ? (
@@ -34,7 +34,7 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
             </a>
           ) : (
             <Button href="/contact" size="lg" variant="inverse">
-              Konsultasi Gratis
+              Bahas Scope Anda
             </Button>
           )}
         </div>

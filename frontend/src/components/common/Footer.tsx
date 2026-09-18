@@ -82,7 +82,7 @@ export function Footer({
           <div className="max-w-md">
             <FooterBrand />
             <p className="mt-3 text-sm leading-relaxed text-gray-600">
-              {tagline || 'Software house Indonesia untuk startup & UMKM.'}
+              {tagline || 'Software untuk workflow penting bisnis Indonesia.'}
             </p>
           </div>
 
