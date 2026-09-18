@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Card } from '@/components/ui/Card';
 import { Globe } from 'lucide-react';
 import type { TeamMember } from '@/types';
+import { getUploadUrl } from '@/lib/api';
 
 interface TeamSpotlightProps {
   members: TeamMember[];
@@ -27,7 +28,7 @@ export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
           <Card key={member.id} className="text-center">
             {member.photo?.url ? (
               <Image
-                src={member.photo.url}
+                src={getUploadUrl(member.photo.url)}
                 alt={member.photo.altText || member.name}
                 width={80}
                 height={80}

@@ -124,8 +124,9 @@ export function getApiUrl(path: string) {
 }
 
 export function getUploadUrl(path: string) {
-  const base = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:4000';
-  return `${base}${path}`;
+  if (/^https?:\/\//i.test(path)) return path;
+  const base = getApiBaseUrl().replace(/\/api\/v1\/?$/, '');
+  return `${base}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
 /** Coerce API / JSON null to a safe array for .map() during SSR. */

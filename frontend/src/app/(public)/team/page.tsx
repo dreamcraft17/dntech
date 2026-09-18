@@ -7,6 +7,7 @@ import { fetchPublicApiList } from '@/lib/server-api';
 import type { TeamMember } from '@/types';
 import type { Metadata } from 'next';
 import { Globe } from 'lucide-react';
+import { getUploadUrl } from '@/lib/api';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.team.title,
@@ -36,7 +37,7 @@ export default async function TeamPage() {
             role: member.role,
             bio: member.bio,
             url: `${SITE_URL}/team`,
-            image: member.photo?.url,
+            image: member.photo?.url ? getUploadUrl(member.photo.url) : undefined,
             sameAs: member.socialLinks ? Object.values(member.socialLinks).filter(Boolean) : undefined,
           })}
         />
@@ -62,7 +63,7 @@ export default async function TeamPage() {
                 <Card key={member.id} className="text-center">
                   {member.photo?.url ? (
                     <Image
-                      src={member.photo.url}
+                      src={getUploadUrl(member.photo.url)}
                       alt={member.photo.altText || member.name}
                       width={96}
                       height={96}

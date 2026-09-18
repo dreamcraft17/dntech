@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { SectionHeading } from '@/components/homepage/SectionHeading';
 import type { TeamMember } from '@/types';
 import type { Career } from '@/types';
+import { getUploadUrl } from '@/lib/api';
 
 interface HomeTeamProps {
   members: TeamMember[];
@@ -40,7 +41,7 @@ export function HomeTeam({ members, careers, hiringRoles, hiringEmail }: HomeTea
                 <div className="flex items-start gap-4">
                   {member.photo?.url ? (
                     <Image
-                      src={member.photo.url}
+                      src={getUploadUrl(member.photo.url)}
                       alt={member.photo.altText || member.name}
                       width={64}
                       height={64}
