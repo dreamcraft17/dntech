@@ -55,12 +55,25 @@ body {
   font-size: 1.0625rem;
   line-height: 1.85;
 }
+.article-lead {
+  max-width: 68ch;
+  border-left: 4px solid #0d9488;
+  border-radius: 0 0.75rem 0.75rem 0;
+  background: #f0fdfa;
+  padding: 1rem 1.25rem;
+  color: #134e4a;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
 .article-body > * + * { margin-top: 1.25rem; }
 .article-body h2 {
   @apply border-l-4 border-teal-500 pl-4 text-2xl font-bold tracking-tight text-gray-950 sm:text-3xl;
   margin-top: 3.25rem;
   line-height: 1.25;
 }
+.article-body h1 { @apply text-3xl font-bold tracking-tight text-gray-950; }
 .article-body h2:first-child { margin-top: 0; }
 .article-body h3 {
   @apply text-xl font-semibold tracking-tight text-gray-900;

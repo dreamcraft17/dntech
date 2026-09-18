@@ -120,6 +120,9 @@ Aturan:
 - Jangan membuat klaim statistik, harga, studi kasus, atau nama klien tanpa sumber dari input.
 - Gunakan HTML sederhana yang aman: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, dan <a href="...">.
 - Jangan memakai markdown, script, style, iframe, atau atribut HTML selain href pada link.
+- Struktur wajib: mulai dengan satu paragraf pembuka, gunakan <h2> untuk setiap bagian utama, <h3> untuk subbagian, dan gunakan list bila membahas langkah atau beberapa poin.
+- Jangan menulis judul bagian sebagai paragraf biasa. Jangan memakai <strong> sebagai pengganti heading.
+- Jangan mengulang excerpt di paragraf pembuka.
 - Buat artikel sekitar 700-1000 kata dengan struktur yang nyaman dibaca.
 - Kembalikan JSON valid saja, tanpa markdown fence, dengan field: title, slug, excerpt, content, category, tags, seoTitle, seoDescription.
 - slug harus lowercase, singkat, dan memakai tanda hubung.
