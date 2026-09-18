@@ -20,7 +20,7 @@ export const metadata: Metadata = buildMetadata({
 });
 
 async function getPosts(page = 1, category?: string) {
-  const params = new URLSearchParams({ page: String(page), pageSize: '10' });
+  const params = new URLSearchParams({ page: String(page), pageSize: '9' });
   if (category) params.set('category', category);
   const { data, pagination } = await fetchPublicApiPaginated<BlogPost>(`/blog?${params}`, 60);
   return { posts: data, pages: pagination?.pages || 1 };
