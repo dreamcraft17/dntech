@@ -286,7 +286,11 @@ export async function createBlogPost(body: unknown, userId: string, ip?: string)
       ...data,
       slug,
       authorId: userId,
-      publishedAt: data.publishedAt ? new Date(data.publishedAt) : undefined,
+      publishedAt: data.publishedAt
+        ? new Date(data.publishedAt)
+        : data.status === 'published'
+          ? new Date()
+          : undefined,
       scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : undefined,
     },
     include: { featuredImage: true },
@@ -298,11 +302,21 @@ export async function createBlogPost(body: unknown, userId: string, ip?: string)
 
 export async function updateBlogPost(id: string, body: unknown) {
   const data = blogSchema.partial().parse(body);
+
+  let publishedAt = data.publishedAt ? new Date(data.publishedAt) : undefined;
+  if (data.status === 'published' && !data.publishedAt) {
+    const existing = await prisma.blogPost.findUnique({
+      where: { id: param(id) },
+      select: { publishedAt: true },
+    });
+    publishedAt = existing?.publishedAt ?? new Date();
+  }
+
   const post = await prisma.blogPost.update({
     where: { id: param(id) },
     data: {
       ...data,
-      publishedAt: data.publishedAt ? new Date(data.publishedAt) : undefined,
+      publishedAt,
       scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : undefined,
     },
     include: { featuredImage: true },
