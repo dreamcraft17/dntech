@@ -73,6 +73,24 @@ export async function reorderServices(body: unknown) {
   cacheService.clear();
 }
 
+export async function publishService(id: string) {
+  const service = await prisma.service.update({
+    where: { id: param(id) },
+    data: { status: 'active' },
+  });
+  cacheService.clear();
+  return service;
+}
+
+export async function unpublishService(id: string) {
+  const service = await prisma.service.update({
+    where: { id: param(id) },
+    data: { status: 'draft' },
+  });
+  cacheService.clear();
+  return service;
+}
+
 // --- Products ---
 export const productSchema = z.object({
   name: z.string().min(1).max(255),

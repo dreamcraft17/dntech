@@ -27,6 +27,14 @@ router.post('/services/generate', requireWrite('services'), asyncHandler(async (
   successResponse(res, await generateServiceDraft(req.body, req.user!.id));
 }));
 
+router.post('/services/:id/publish', requireWrite('services'), asyncHandler(async (req, res) => {
+  successResponse(res, await content.publishService(param(req.params.id)));
+}));
+
+router.post('/services/:id/unpublish', requireWrite('services'), asyncHandler(async (req, res) => {
+  successResponse(res, await content.unpublishService(param(req.params.id)));
+}));
+
 router.post('/services', requireWrite('services'), asyncHandler(async (req: AuthRequest, res) => {
   const service = await content.createService(req.body, req.user!.id, req.ip);
   successResponse(res, service, 201);

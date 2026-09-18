@@ -5,7 +5,7 @@ import { apiFetch } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
-import { Plus, Pencil, Trash2, X } from 'lucide-react';
+import { EyeOff, Globe, Plus, Pencil, Trash2, X } from 'lucide-react';
 import type { Service } from '@/types';
 import { ServiceGenerator, type GeneratedServiceDraft } from '@/components/admin/ServiceGenerator';
 
@@ -19,6 +19,7 @@ export default function AdminServicesPage() {
   const [items, setItems] = useState<Service[]>([]);
   const [editing, setEditing] = useState<(typeof emptyForm & { id?: string }) | null>(null);
   const [loading, setLoading] = useState(false);
+  const [publishingId, setPublishingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const data = await apiFetch<Service[]>('/admin/services');
@@ -53,6 +54,20 @@ export default function AdminServicesPage() {
     if (!confirm('Hapus layanan ini?')) return;
     await apiFetch(`/admin/services/${id}`, { method: 'DELETE' });
     load();
+  }
+
+  async function togglePublish(item: Service) {
+    const isPublished = item.status === 'active';
+    if (!confirm(isPublished ? 'Sembunyikan layanan ini dari halaman publik?' : 'Terbitkan layanan ini sekarang?')) return;
+    setPublishingId(item.id);
+    try {
+      await apiFetch(`/admin/services/${item.id}/${isPublished ? 'unpublish' : 'publish'}`, { method: 'POST' });
+      await load();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Gagal mengubah status layanan');
+    } finally {
+      setPublishingId(null);
+    }
   }
 
   function applyGeneratedDraft(draft: GeneratedServiceDraft) {
@@ -168,6 +183,15 @@ export default function AdminServicesPage() {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
+                  <button
+                    onClick={() => togglePublish(item)}
+                    disabled={publishingId === item.id}
+                    className={`p-1 disabled:opacity-50 ${item.status === 'active' ? 'text-amber-600 hover:text-amber-800' : 'text-green-600 hover:text-green-800'}`}
+                    aria-label={item.status === 'active' ? `Sembunyikan ${item.name}` : `Terbitkan ${item.name}`}
+                    title={item.status === 'active' ? 'Sembunyikan dari publik' : 'Terbitkan'}
+                  >
+                    {item.status === 'active' ? <EyeOff className="h-4 w-4" /> : <Globe className="h-4 w-4" />}
+                  </button>
                   <button onClick={() => setEditing({ ...emptyForm, ...item, id: item.id })} className="p-1 text-gray-400 hover:text-blue-900"><Pencil className="h-4 w-4" /></button>
                   <button onClick={() => remove(item.id)} className="p-1 text-gray-400 hover:text-red-600 ml-1"><Trash2 className="h-4 w-4" /></button>
                 </td>

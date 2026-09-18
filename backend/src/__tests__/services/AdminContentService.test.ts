@@ -38,6 +38,8 @@ const {
   updateService,
   deleteService,
   reorderServices,
+  publishService,
+  unpublishService,
   createProduct,
   createPortfolioItem,
   createBlogPost,
@@ -112,6 +114,23 @@ describe('AdminContentService', () => {
       expect(prisma.service.update).toHaveBeenNthCalledWith(1, { where: { id: 'a' }, data: { displayOrder: 0 } });
       expect(prisma.service.update).toHaveBeenNthCalledWith(3, { where: { id: 'c' }, data: { displayOrder: 2 } });
       expect(cacheService.clear).toHaveBeenCalledTimes(1);
+    });
+
+    it('publishes and unpublishes a service', async () => {
+      prisma.service.update.mockResolvedValue({ id: 'svc_1', status: 'active' });
+
+      await publishService('svc_1');
+      expect(prisma.service.update).toHaveBeenCalledWith({
+        where: { id: 'svc_1' },
+        data: { status: 'active' },
+      });
+
+      await unpublishService('svc_1');
+      expect(prisma.service.update).toHaveBeenLastCalledWith({
+        where: { id: 'svc_1' },
+        data: { status: 'draft' },
+      });
+      expect(cacheService.clear).toHaveBeenCalledTimes(2);
     });
   });
 
