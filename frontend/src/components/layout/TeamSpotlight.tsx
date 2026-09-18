@@ -23,9 +23,9 @@ export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
         </div>
         <Link href="/team" className="text-blue-900 text-sm font-medium hover:underline">Lihat semua</Link>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="flex flex-wrap gap-6">
         {team.map((member) => (
-          <Card key={member.id} className="text-center">
+          <Card key={member.id} className="text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]">
             {member.photo?.url ? (
               <Image
                 src={getUploadUrl(member.photo.url)}
