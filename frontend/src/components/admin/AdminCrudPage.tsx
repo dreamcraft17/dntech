@@ -5,6 +5,7 @@ import { apiFetch } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
+import { ImageUploadField } from '@/components/admin/ImageUploadField';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
 
 interface Item { id: string; title: string; slug?: string; status?: string; clientName?: string; category?: string; [key: string]: unknown }
@@ -12,7 +13,7 @@ interface Item { id: string; title: string; slug?: string; status?: string; clie
 type FieldDef = {
   key: string;
   label: string;
-  type?: 'text' | 'textarea' | 'select' | 'number' | 'json' | 'checkbox';
+  type?: 'text' | 'textarea' | 'select' | 'number' | 'json' | 'checkbox' | 'image';
   options?: { value: string; label: string }[];
   required?: boolean;
   placeholder?: string;
@@ -118,6 +119,10 @@ export default function AdminCrudPage({
         data[f.key] = JSON.stringify(data[f.key], null, 2);
       }
     });
+    fields.filter((f) => f.type === 'image').forEach((f) => {
+      const media = item[`${f.key.replace(/Id$/, '')}`] as { url?: string } | null | undefined;
+      data[`${f.key}Url`] = media?.url || '';
+    });
     setEditing(data);
   }
 
@@ -138,6 +143,24 @@ export default function AdminCrudPage({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {fields.map((f) => {
+              if (f.type === 'image') {
+                const urlKey = `${f.key}Url`;
+                return (
+                  <ImageUploadField
+                    key={f.key}
+                    label={f.label}
+                    value={String(editing[urlKey] ?? '')}
+                    allowUrl={false}
+                    onChange={() => setEditing({ ...editing, [f.key]: '', [urlKey]: '' })}
+                    onUploaded={(media) => setEditing({
+                      ...editing,
+                      [f.key]: media.id,
+                      [urlKey]: media.url,
+                    })}
+                    className="md:col-span-2"
+                  />
+                );
+              }
               if (f.type === 'textarea' || f.type === 'json') {
                 return (
                   <Textarea key={f.key} label={f.label} rows={f.type === 'json' ? 3 : 4}

@@ -29,7 +29,13 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900 px-4">
-      <div className="w-full max-w-md">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-10 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-gray-900"
+      >
+        Skip to main content
+      </a>
+      <main id="main" className="w-full max-w-md">
         <div className="mb-8 text-center">
           <div className="mb-4 flex justify-center">
             <Logo href={null} size="xl" priority />
@@ -59,14 +65,17 @@ export default function AdminLoginPage() {
             required
             autoComplete="current-password"
           />
-          <label className="flex items-center gap-2 text-sm text-gray-600">
-            <input type="checkbox" className="rounded" /> Ingat saya
-          </label>
+          <fieldset>
+            <legend className="sr-only">Preferensi masuk</legend>
+            <label className="flex items-center gap-2 text-sm text-gray-600">
+              <input type="checkbox" className="rounded" /> Ingat saya
+            </label>
+          </fieldset>
           <Button type="submit" loading={loading} className="w-full">
             Masuk
           </Button>
         </form>
-      </div>
+      </main>
     </div>
   );
 }

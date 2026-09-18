@@ -6,6 +6,7 @@ import { apiUpload, getUploadUrl } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 interface MediaUploadResult {
+  id: string;
   url: string;
 }
 
@@ -13,10 +14,19 @@ interface ImageUploadFieldProps {
   label: string;
   value: string;
   onChange: (url: string) => void;
+  onUploaded?: (media: MediaUploadResult) => void;
+  allowUrl?: boolean;
   className?: string;
 }
 
-export function ImageUploadField({ label, value, onChange, className }: ImageUploadFieldProps) {
+export function ImageUploadField({
+  label,
+  value,
+  onChange,
+  onUploaded,
+  allowUrl = true,
+  className,
+}: ImageUploadFieldProps) {
   const inputId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -29,7 +39,8 @@ export function ImageUploadField({ label, value, onChange, className }: ImageUpl
     setUploading(true);
     try {
       const media = await apiUpload<MediaUploadResult>('/admin/media', file);
-      onChange(media.url);
+      if (onUploaded) onUploaded(media);
+      else onChange(media.url);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload gagal');
     } finally {
@@ -66,14 +77,20 @@ export function ImageUploadField({ label, value, onChange, className }: ImageUpl
         )}
 
         <div className="flex-1 min-w-0">
-          <input
-            id={inputId}
-            type="text"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder="URL gambar atau upload file"
-            className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 focus:border-blue-900 focus:outline-none focus:ring-1 focus:ring-blue-900/20"
-          />
+          {allowUrl ? (
+            <input
+              id={inputId}
+              type="text"
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder="URL gambar atau upload file"
+              className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 focus:border-blue-900 focus:outline-none focus:ring-1 focus:ring-blue-900/20"
+            />
+          ) : (
+            <p id={inputId} className="text-sm text-gray-600">
+              {value ? 'Gambar sudah dipilih' : 'Belum ada gambar'}
+            </p>
+          )}
           <p className="mt-1 text-xs text-gray-500">Drag &amp; drop gambar ke sini, atau</p>
         </div>
 
