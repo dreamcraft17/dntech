@@ -7,6 +7,7 @@ import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 interface Item { id: string; title: string; slug?: string; status?: string; clientName?: string; category?: string; [key: string]: unknown }
 
@@ -20,12 +21,16 @@ type FieldDef = {
 };
 
 export default function AdminCrudPage({
-  title, endpoint, fields, defaultItem,
+  title, endpoint, fields, defaultItem, renderExtraActions,
 }: {
   title: string;
   endpoint: string;
   fields: FieldDef[];
   defaultItem: Record<string, unknown>;
+  renderExtraActions?: (context: {
+    setEditing: (item: Record<string, unknown>) => void;
+    defaultItem: Record<string, unknown>;
+  }) => ReactNode;
 }) {
   const [items, setItems] = useState<Item[]>([]);
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
@@ -132,7 +137,10 @@ export default function AdminCrudPage({
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-        <Button onClick={() => setEditing({ ...defaultItem, ...(fields.filter((f) => f.type === 'json').reduce((acc, f) => ({ ...acc, [f.key]: '{}' }), {})) })}><Plus className="h-4 w-4" /> Tambah</Button>
+        <div className="flex flex-wrap gap-2">
+          {renderExtraActions?.({ setEditing, defaultItem })}
+          <Button onClick={() => setEditing({ ...defaultItem, ...(fields.filter((f) => f.type === 'json').reduce((acc, f) => ({ ...acc, [f.key]: '{}' }), {})) })}><Plus className="h-4 w-4" /> Tambah</Button>
+        </div>
       </div>
 
       {editing && (

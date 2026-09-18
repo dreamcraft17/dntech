@@ -1,4 +1,5 @@
 import AdminCrudPage from '@/components/admin/AdminCrudPage';
+import { BlogGenerator } from '@/components/admin/BlogGenerator';
 
 export default function AdminBlogPage() {
   return (
@@ -15,6 +16,9 @@ export default function AdminBlogPage() {
         { key: 'seoTitle', label: 'Meta Title' },
         { key: 'seoDescription', label: 'Meta Description', type: 'textarea' },
       ]}
+      renderExtraActions={({ setEditing, defaultItem }) => (
+        <BlogGenerator onGenerated={(draft) => setEditing({ ...defaultItem, ...draft })} />
+      )}
     />
   );
 }

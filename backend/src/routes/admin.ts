@@ -13,6 +13,7 @@ import * as settings from '../services/AdminSettingsService';
 import * as users from '../services/AdminUserService';
 import * as analytics from '../services/AdminAnalyticsService';
 import * as leads from '../services/LeadService';
+import { generateBlogDraft } from '../services/GeminiContentService';
 
 const router = Router();
 router.use(authenticate);
@@ -90,6 +91,10 @@ router.delete('/portfolio/:id', requireWrite('portfolio'), asyncHandler(async (r
 // --- Blog ---
 router.get('/blog', asyncHandler(async (req, res) => {
   successResponse(res, await content.listBlogPosts(req.query as Record<string, unknown>));
+}));
+
+router.post('/blog/generate', requireWrite('blog'), asyncHandler(async (req, res) => {
+  successResponse(res, await generateBlogDraft(req.body));
 }));
 
 router.post('/blog', requireWrite('blog'), asyncHandler(async (req: AuthRequest, res) => {
