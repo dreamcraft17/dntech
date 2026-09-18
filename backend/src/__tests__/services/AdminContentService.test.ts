@@ -43,6 +43,7 @@ const {
   createBlogPost,
   updateBlogPost,
   publishBlogPost,
+  unpublishBlogPost,
   deleteBlogPost,
 } = require('../../services/AdminContentService');
 
@@ -177,6 +178,19 @@ describe('AdminContentService', () => {
       expect(prisma.blogPost.update).toHaveBeenCalledWith({
         where: { id: 'post_1' },
         data: { status: 'published', publishedAt: expect.any(Date) },
+      });
+      expect(cacheService.clear).toHaveBeenCalledTimes(1);
+    });
+
+    it('unpublishes a blog post without deleting its content', async () => {
+      prisma.blogPost.update.mockResolvedValueOnce({ id: 'post_1', status: 'draft' });
+
+      const result = await unpublishBlogPost('post_1');
+
+      expect(result.status).toBe('draft');
+      expect(prisma.blogPost.update).toHaveBeenCalledWith({
+        where: { id: 'post_1' },
+        data: { status: 'draft' },
       });
       expect(cacheService.clear).toHaveBeenCalledTimes(1);
     });

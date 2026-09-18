@@ -334,6 +334,15 @@ export async function publishBlogPost(id: string) {
   return post;
 }
 
+export async function unpublishBlogPost(id: string) {
+  const post = await prisma.blogPost.update({
+    where: { id: param(id) },
+    data: { status: 'draft' },
+  });
+  cacheService.clear();
+  return post;
+}
+
 export async function deleteBlogPost(id: string) {
   await prisma.blogPost.update({ where: { id: param(id) }, data: { deletedAt: new Date() } });
   cacheService.clear();

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
-import { Globe, Plus, Pencil, Trash2, X } from 'lucide-react';
+import { EyeOff, Globe, Plus, Pencil, Trash2, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 interface Item { id: string; title: string; slug?: string; status?: string; clientName?: string; category?: string; [key: string]: unknown }
@@ -125,6 +125,19 @@ export default function AdminCrudPage({
       await load();
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Gagal menerbitkan artikel');
+    } finally {
+      setPublishingId(null);
+    }
+  }
+
+  async function unpublish(id: string) {
+    if (!confirm('Sembunyikan artikel ini dari halaman publik?')) return;
+    setPublishingId(id);
+    try {
+      await apiFetch(`/admin/${endpoint}/${id}/unpublish`, { method: 'POST' });
+      await load();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Gagal menyembunyikan artikel');
     } finally {
       setPublishingId(null);
     }
@@ -262,6 +275,17 @@ export default function AdminCrudPage({
                       title="Terbitkan"
                     >
                       <Globe className="h-4 w-4" />
+                    </button>
+                  )}
+                  {publishable && item.status === 'published' && (
+                    <button
+                      onClick={() => unpublish(item.id)}
+                      disabled={publishingId === item.id}
+                      className="p-1 text-gray-400 hover:text-amber-700 disabled:opacity-50"
+                      aria-label={`Sembunyikan ${String(item[displayKey] || item.title || item.name)}`}
+                      title="Sembunyikan dari publik"
+                    >
+                      <EyeOff className="h-4 w-4" />
                     </button>
                   )}
                   <button onClick={() => startEdit(item)} className="p-1 text-gray-400 hover:text-blue-900"><Pencil className="h-4 w-4" /></button>

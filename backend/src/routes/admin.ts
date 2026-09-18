@@ -112,6 +112,11 @@ router.post('/blog/:id/publish', requireWrite('blog'), asyncHandler(async (req, 
   successResponse(res, post);
 }));
 
+router.post('/blog/:id/unpublish', requireWrite('blog'), asyncHandler(async (req, res) => {
+  const post = await content.unpublishBlogPost(param(req.params.id));
+  successResponse(res, post);
+}));
+
 router.delete('/blog/:id', requireWrite('blog'), asyncHandler(async (req, res) => {
   await content.deleteBlogPost(param(req.params.id));
   successResponse(res, { deleted: true });
