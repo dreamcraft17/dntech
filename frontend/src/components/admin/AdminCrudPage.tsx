@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
-import { Plus, Pencil, Trash2, X } from 'lucide-react';
+import { Globe, Plus, Pencil, Trash2, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 interface Item { id: string; title: string; slug?: string; status?: string; clientName?: string; category?: string; [key: string]: unknown }
@@ -21,7 +21,7 @@ type FieldDef = {
 };
 
 export default function AdminCrudPage({
-  title, endpoint, fields, defaultItem, renderExtraActions,
+  title, endpoint, fields, defaultItem, renderExtraActions, publishable = false,
 }: {
   title: string;
   endpoint: string;
@@ -31,11 +31,13 @@ export default function AdminCrudPage({
     setEditing: (item: Record<string, unknown>) => void;
     defaultItem: Record<string, unknown>;
   }) => ReactNode;
+  publishable?: boolean;
 }) {
   const [items, setItems] = useState<Item[]>([]);
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [publishingId, setPublishingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -91,15 +93,19 @@ export default function AdminCrudPage({
     return payload;
   }
 
-  async function save() {
+  async function save(publishAfterSave = false) {
     if (!editing) return;
     setLoading(true);
     try {
       const payload = preparePayload(editing);
+      let saved: Item;
       if (editing.id) {
-        await apiFetch(`/admin/${endpoint}/${editing.id}`, { method: 'PATCH', body: JSON.stringify(payload) });
+        saved = await apiFetch<Item>(`/admin/${endpoint}/${editing.id}`, { method: 'PATCH', body: JSON.stringify(payload) });
       } else {
-        await apiFetch(`/admin/${endpoint}`, { method: 'POST', body: JSON.stringify(payload) });
+        saved = await apiFetch<Item>(`/admin/${endpoint}`, { method: 'POST', body: JSON.stringify(payload) });
+      }
+      if (publishAfterSave && saved.id) {
+        await apiFetch(`/admin/${endpoint}/${saved.id}/publish`, { method: 'POST' });
       }
       setEditing(null);
       load();
@@ -108,6 +114,19 @@ export default function AdminCrudPage({
       alert(message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function publish(id: string) {
+    if (!confirm('Terbitkan artikel ini sekarang?')) return;
+    setPublishingId(id);
+    try {
+      await apiFetch(`/admin/${endpoint}/${id}/publish`, { method: 'POST' });
+      await load();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Gagal menerbitkan artikel');
+    } finally {
+      setPublishingId(null);
     }
   }
 
@@ -204,7 +223,12 @@ export default function AdminCrudPage({
             })}
           </div>
           <div className="mt-4 flex gap-2">
-            <Button onClick={save} loading={loading}>Simpan</Button>
+            <Button onClick={() => save()} loading={loading}>Simpan</Button>
+            {publishable && editing.status !== 'published' && (
+              <Button onClick={() => save(true)} loading={loading} variant="secondary">
+                <Globe className="h-4 w-4" /> Terbitkan
+              </Button>
+            )}
             <Button variant="secondary" onClick={() => setEditing(null)}>Batal</Button>
           </div>
         </Card>
@@ -229,6 +253,17 @@ export default function AdminCrudPage({
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
+                  {publishable && item.status !== 'published' && (
+                    <button
+                      onClick={() => publish(item.id)}
+                      disabled={publishingId === item.id}
+                      className="p-1 text-gray-400 hover:text-green-700 disabled:opacity-50"
+                      aria-label={`Terbitkan ${String(item[displayKey] || item.title || item.name)}`}
+                      title="Terbitkan"
+                    >
+                      <Globe className="h-4 w-4" />
+                    </button>
+                  )}
                   <button onClick={() => startEdit(item)} className="p-1 text-gray-400 hover:text-blue-900"><Pencil className="h-4 w-4" /></button>
                   <button onClick={() => remove(item.id)} className="p-1 text-gray-400 hover:text-red-600 ml-1"><Trash2 className="h-4 w-4" /></button>
                 </td>

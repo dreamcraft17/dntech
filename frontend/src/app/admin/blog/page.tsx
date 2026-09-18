@@ -21,6 +21,7 @@ export default function AdminBlogPage() {
       renderExtraActions={({ setEditing, defaultItem }) => (
         <BlogGenerator onGenerated={(draft) => setEditing({ ...defaultItem, ...draft })} />
       )}
+      publishable
     />
   );
 }
