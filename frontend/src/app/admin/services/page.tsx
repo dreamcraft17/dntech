@@ -7,6 +7,7 @@ import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import type { Service } from '@/types';
+import { ServiceGenerator, type GeneratedServiceDraft } from '@/components/admin/ServiceGenerator';
 
 const emptyForm = {
   name: '', description: '', category: '', status: 'draft' as string, displayOrder: 0,
@@ -54,11 +55,18 @@ export default function AdminServicesPage() {
     load();
   }
 
+  function applyGeneratedDraft(draft: GeneratedServiceDraft) {
+    setEditing({ ...emptyForm, ...draft, status: 'draft', displayOrder: 0 });
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Layanan</h1>
-        <Button onClick={() => setEditing({ ...emptyForm })}><Plus className="h-4 w-4" /> Tambah Layanan</Button>
+        <div className="flex flex-wrap gap-2">
+          <ServiceGenerator onGenerated={applyGeneratedDraft} />
+          <Button onClick={() => setEditing({ ...emptyForm })}><Plus className="h-4 w-4" /> Tambah Layanan</Button>
+        </div>
       </div>
 
       {editing && (
@@ -78,6 +86,47 @@ export default function AdminServicesPage() {
             <Input label="Urutan Tampilan" type="number" value={editing.displayOrder} onChange={(e) => setEditing({ ...editing, displayOrder: parseInt(e.target.value) })} />
           </div>
           <Textarea label="Deskripsi" rows={4} value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} className="mt-4" required />
+          <div className="mt-4">
+            <div className="mb-2 flex items-center justify-between">
+              <label className="text-sm font-medium text-gray-700">Fitur / cakupan layanan</label>
+              <button
+                type="button"
+                onClick={() => setEditing({ ...editing, features: [...editing.features, { title: '', description: '' }] })}
+                className="text-sm font-medium text-blue-900 hover:underline"
+              >
+                + Tambah fitur
+              </button>
+            </div>
+            <div className="space-y-3">
+              {editing.features.map((feature, index) => (
+                <div key={`${index}-${feature.title}`} className="rounded-lg border border-gray-200 p-3">
+                  <div className="flex gap-2">
+                    <Input
+                      label={`Fitur ${index + 1}`}
+                      value={feature.title}
+                      onChange={(e) => setEditing({ ...editing, features: editing.features.map((item, i) => i === index ? { ...item, title: e.target.value } : item) })}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setEditing({ ...editing, features: editing.features.filter((_, i) => i !== index) })}
+                      className="mt-7 rounded p-2 text-gray-400 hover:bg-red-50 hover:text-red-600"
+                      aria-label={`Hapus fitur ${index + 1}`}
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <Textarea
+                    label="Penjelasan"
+                    rows={2}
+                    value={feature.description || ''}
+                    onChange={(e) => setEditing({ ...editing, features: editing.features.map((item, i) => i === index ? { ...item, description: e.target.value } : item) })}
+                    className="mt-2"
+                  />
+                </div>
+              ))}
+              {editing.features.length === 0 && <p className="text-sm text-gray-500">Belum ada fitur. Tambahkan jika diperlukan.</p>}
+            </div>
+          </div>
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <Input
               label="Meta Title"

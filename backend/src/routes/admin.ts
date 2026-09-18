@@ -13,7 +13,7 @@ import * as settings from '../services/AdminSettingsService';
 import * as users from '../services/AdminUserService';
 import * as analytics from '../services/AdminAnalyticsService';
 import * as leads from '../services/LeadService';
-import { generateBlogDraft } from '../services/GeminiContentService';
+import { generateBlogDraft, generateServiceDraft } from '../services/GeminiContentService';
 
 const router = Router();
 router.use(authenticate);
@@ -21,6 +21,10 @@ router.use(authenticate);
 // --- Services ---
 router.get('/services', asyncHandler(async (req, res) => {
   successResponse(res, await content.listServices(req.query as Record<string, unknown>));
+}));
+
+router.post('/services/generate', requireWrite('services'), asyncHandler(async (req: AuthRequest, res) => {
+  successResponse(res, await generateServiceDraft(req.body, req.user!.id));
 }));
 
 router.post('/services', requireWrite('services'), asyncHandler(async (req: AuthRequest, res) => {

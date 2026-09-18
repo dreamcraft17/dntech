@@ -11,6 +11,13 @@ const generateBlogSchema = z.object({
   generateImage: z.boolean().optional().default(true),
 });
 
+const generateServiceSchema = z.object({
+  prompt: z.string().min(3).max(1200),
+  audience: z.string().max(160).optional(),
+  tone: z.string().max(100).optional(),
+  keywords: z.string().max(300).optional(),
+});
+
 const generatedBlogSchema = z.object({
   title: z.string().min(1),
   slug: z.string().min(1),
@@ -18,6 +25,16 @@ const generatedBlogSchema = z.object({
   content: z.string().min(100),
   category: z.string().optional().default(''),
   tags: z.array(z.string()).optional().default([]),
+  seoTitle: z.string().min(1),
+  seoDescription: z.string().min(1),
+});
+
+const generatedServiceSchema = z.object({
+  name: z.string().min(1),
+  slug: z.string().min(1),
+  description: z.string().min(10),
+  category: z.string().optional().default(''),
+  features: z.array(z.object({ title: z.string().min(1), description: z.string().optional() })).default([]),
   seoTitle: z.string().min(1),
   seoDescription: z.string().min(1),
 });
@@ -211,4 +228,60 @@ Aturan:
     featuredImageId: featuredImage?.id || '',
     featuredImageUrl: featuredImage?.url || '',
   };
+}
+
+export async function generateServiceDraft(input: unknown, _userId: string) {
+  const data = generateServiceSchema.parse(input);
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+  if (!apiKey) {
+    throw new AppError(503, 'AI_NOT_CONFIGURED', 'GEMINI_API_KEY belum dikonfigurasi di backend');
+  }
+
+  const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+  const prompt = `
+Anda adalah copywriter dan product marketer DN Tech, perusahaan software Indonesia. Buat DRAFT halaman layanan berdasarkan brief admin berikut.
+
+Brief layanan dari admin:
+${data.prompt}
+
+Target pembaca: ${data.audience || 'pemilik bisnis, founder startup, dan tim operasional di Indonesia'}
+Gaya bahasa: ${data.tone || 'jelas, hangat, profesional, praktis'}
+Keyword SEO (gunakan natural bila relevan): ${data.keywords || 'jasa software development Indonesia, aplikasi custom, transformasi digital'}
+
+Aturan:
+- Ikuti brief admin sebagai sumber utama. Jangan mengarang klien, angka, harga, sertifikasi, integrasi, atau hasil bisnis yang tidak disebutkan di brief.
+- Jelaskan nilai layanan secara konkret, bukan jargon kosong.
+- Description harus 2-4 paragraf singkat dalam plain text, tanpa HTML atau markdown.
+- Buat 3-6 fitur/cakupan layanan yang relevan. Setiap feature memiliki title dan description singkat.
+- Kembalikan JSON valid saja, tanpa markdown fence, dengan field: name, slug, description, category, features, seoTitle, seoDescription.
+- slug harus lowercase, singkat, dan memakai tanda hubung.
+- seoTitle maksimal 60 karakter; seoDescription sekitar 140-160 karakter.
+`.trim();
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.7,
+          responseMimeType: 'application/json',
+        },
+      }),
+    },
+  );
+
+  const result = await response.json() as GeminiResponse;
+  if (!response.ok) {
+    throw new AppError(502, 'AI_REQUEST_FAILED', result.error?.message || 'Permintaan ke Gemini gagal');
+  }
+
+  const text = extractText(result);
+  if (!text) throw new AppError(502, 'AI_EMPTY_RESPONSE', 'Gemini tidak mengembalikan draft layanan');
+  return generatedServiceSchema.parse(parseJson(text));
 }
