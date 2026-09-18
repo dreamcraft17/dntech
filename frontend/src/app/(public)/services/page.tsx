@@ -46,9 +46,9 @@ export default async function ServicesPage({
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900">Bangun atau perbaiki workflow yang penting</h1>
+            <h1 className="text-4xl font-bold text-gray-900">Dari website sampai sistem bisnis</h1>
             <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-              MVP, integrasi sistem, dan software operasional untuk tim yang ingin bekerja lebih jelas.
+              Website company profile, aplikasi custom, dan integrasi sistem untuk bisnis yang ingin tampil meyakinkan dan bekerja lebih rapi.
             </p>
           </div>
 

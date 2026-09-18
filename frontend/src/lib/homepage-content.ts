@@ -55,10 +55,10 @@ export interface HomeContent {
 }
 
 export const DEFAULT_HERO = {
-  title: 'Bangun Software untuk Workflow yang Penting',
-  badges: ['MVP & Product Engineering', 'Workflow & Integrasi', 'Produk First-Party'],
+  title: 'Bisnis Makin Tumbuh, Sistem Jangan Ikut Berantakan',
+  badges: ['Website & Company Profile', 'Aplikasi Custom', 'Integrasi Sistem'],
   supporting:
-    'DN Tech membantu startup dan bisnis Indonesia membangun MVP, menghubungkan sistem, dan merapikan workflow operasional — dengan scope, timeline, dan harga yang jelas sejak awal.',
+    'Kami bantu startup dan bisnis Indonesia membangun aplikasi, menghubungkan sistem, dan merapikan proses kerja — dengan scope, harga, dan timeline yang jelas dari awal.',
 };
 
 export const DEFAULT_HERO_PRIMARY_CTA: HomeCta = {
@@ -78,6 +78,10 @@ export const DEFAULT_PRODUCTS_SECTION = {
 };
 
 export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
+  {
+    name: 'Website & Company Profile',
+    description: 'Website profesional, landing page, dan company profile yang membuat bisnis Anda terlihat meyakinkan dan mudah ditemukan online.',
+  },
   {
     name: 'Web App Development',
     description: 'Dashboard dan portal yang benar-benar dipakai tim Anda tiap hari untuk kerja, bukan sekadar demo.',

@@ -24,8 +24,8 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           kicker="Layanan"
-          title="Bangun atau perbaiki workflow yang penting"
-          subtitle="MVP, integrasi sistem, dan software operasional untuk tim yang ingin bekerja lebih jelas."
+          title="Dari website sampai sistem bisnis"
+          subtitle="Kami bantu bisnis tampil lebih meyakinkan, bekerja lebih rapi, dan siap berkembang."
         />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item, index) => {

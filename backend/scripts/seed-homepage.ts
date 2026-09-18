@@ -7,10 +7,10 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const DEFAULT_HERO = {
-  title: 'Bangun Software untuk Workflow yang Penting',
+  title: 'Bisnis Makin Tumbuh, Sistem Jangan Ikut Berantakan',
   supporting:
-    'DN Tech membantu startup dan bisnis Indonesia membangun MVP, menghubungkan sistem, dan merapikan workflow operasional — dengan scope, timeline, dan harga yang jelas sejak awal.',
-  badges: ['MVP & Product Engineering', 'Workflow & Integrasi', 'Produk First-Party'],
+    'Kami bantu startup dan bisnis Indonesia membangun aplikasi, menghubungkan sistem, dan merapikan proses kerja — dengan scope, harga, dan timeline yang jelas dari awal.',
+  badges: ['Website & Company Profile', 'Aplikasi Custom', 'Integrasi Sistem'],
 };
 
 const DEFAULT_FAQ = [

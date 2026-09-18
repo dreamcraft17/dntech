@@ -23,9 +23,9 @@ export const PAGE_SEO: Record<string, { title: string; description: string; keyw
     keywords: ['software development Indonesia', 'MVP development Indonesia', 'integrasi API sistem bisnis'],
   },
   services: {
-    title: 'MVP, Integrasi Sistem & Software Operasional',
-    description: 'DN Tech membantu tim membangun MVP, menghubungkan sistem, dan memperbaiki workflow operasional di Indonesia.',
-    keywords: ['MVP development Indonesia', 'integrasi API sistem bisnis', 'software operasional Indonesia'],
+    title: 'Jasa Website, Aplikasi Custom & Integrasi Sistem',
+    description: 'DN Tech membuat website company profile, aplikasi custom, MVP, dan integrasi sistem untuk bisnis Indonesia.',
+    keywords: ['jasa website company profile', 'jasa aplikasi custom Indonesia', 'MVP development Indonesia', 'integrasi API sistem bisnis'],
   },
   products: {
     title: 'HRIS, ERP & Pembukuan untuk Bisnis Indonesia',
