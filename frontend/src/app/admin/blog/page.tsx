@@ -1,3 +1,5 @@
+'use client';
+
 import AdminCrudPage from '@/components/admin/AdminCrudPage';
 import { BlogGenerator } from '@/components/admin/BlogGenerator';
 
