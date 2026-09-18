@@ -105,7 +105,7 @@ export async function generateBlogDraft(input: unknown, userId: string) {
     throw new AppError(503, 'AI_NOT_CONFIGURED', 'GEMINI_API_KEY belum dikonfigurasi di backend');
   }
 
-  const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-pro';
   const prompt = `
 Anda adalah editor konten DN Tech, perusahaan software Indonesia. Buat satu DRAFT artikel blog yang informatif dan tidak mengarang fakta spesifik tentang DN Tech.
 
