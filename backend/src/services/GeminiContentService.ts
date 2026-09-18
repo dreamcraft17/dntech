@@ -55,6 +55,48 @@ function parseJson(text: string) {
   }
 }
 
+/**
+ * Gemini's `google_search` grounding tool cannot be combined with
+ * `responseMimeType: 'application/json'` in the same request (the API
+ * rejects structured output alongside tool use). So we run a separate
+ * grounded research pass first, then feed its findings as required
+ * context into the plain JSON-generation prompt below.
+ */
+async function researchTopic(topic: string, apiKey: string, model: string) {
+  const researchPrompt = `
+Cari informasi terkini dan akurat di internet tentang topik berikut, untuk dipakai sebagai bahan artikel blog: "${topic}".
+
+Jika topik menyebut nama produk, perusahaan, atau orang tertentu, cari dan laporkan fakta spesifik tentang mereka (apa yang mereka lakukan, fitur produk, dll) — jangan mengarang jika tidak ketemu, katakan saja informasinya tidak ditemukan.
+Rangkum temuan dalam poin-poin singkat berbahasa Indonesia, sebutkan sumber jika relevan.
+`.trim();
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey,
+        },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: researchPrompt }] }],
+          tools: [{ google_search: {} }],
+          generationConfig: { temperature: 0.3 },
+        }),
+      },
+    );
+
+    const result = await response.json() as GeminiResponse;
+    if (!response.ok) return '';
+    return extractText(result);
+  } catch {
+    // Research is best-effort: if it fails, fall back to the plain prompt
+    // (still labeled honestly below) rather than blocking draft generation.
+    return '';
+  }
+}
+
 async function generateBlogImage(title: string, excerpt: string, apiKey: string, userId: string) {
   const model = process.env.GEMINI_IMAGE_MODEL || 'gemini-2.5-flash-image';
   const prompt = `
@@ -106,6 +148,10 @@ export async function generateBlogDraft(input: unknown, userId: string) {
   }
 
   const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+  const research = await researchTopic(data.topic, apiKey, model);
+  const researchBlock = research
+    ? `Hasil riset internet (gunakan ini sebagai sumber fakta spesifik — nama produk, fitur, klaim tentang entitas yang disebut di topik; jangan mengarang di luar ini):\n${research}\n`
+    : 'Riset internet tidak tersedia untuk permintaan ini — jangan mengarang klaim spesifik (nama produk/fitur/statistik) yang tidak eksplisit ada di Topik atau Keyword di atas.\n';
   const prompt = `
 Anda adalah editor konten DN Tech, perusahaan software Indonesia. Buat satu DRAFT artikel blog yang informatif dan tidak mengarang fakta spesifik tentang DN Tech.
 
@@ -115,9 +161,10 @@ Gaya bahasa: ${data.tone || 'jelas, hangat, praktis, tidak kaku'}
 Keyword yang boleh dipakai secara natural: ${data.keywords || 'software development Indonesia, aplikasi custom, workflow bisnis'}
 Bahasa: ${data.language || 'Bahasa Indonesia'}
 
+${researchBlock}
 Aturan:
 - Fokus pada masalah pembaca dan langkah yang bisa diterapkan.
-- Jangan membuat klaim statistik, harga, studi kasus, atau nama klien tanpa sumber dari input.
+- Jangan membuat klaim statistik, harga, studi kasus, atau nama klien tanpa sumber dari hasil riset internet di atas atau dari input.
 - Gunakan HTML sederhana yang aman: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, dan <a href="...">.
 - Jangan memakai markdown, script, style, iframe, atau atribut HTML selain href pada link.
 - Struktur wajib: mulai dengan satu paragraf pembuka, gunakan <h2> untuk setiap bagian utama, <h3> untuk subbagian, dan gunakan list bila membahas langkah atau beberapa poin.
