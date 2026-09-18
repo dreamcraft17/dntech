@@ -38,6 +38,7 @@ export default function AdminCrudPage({
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [publishingId, setPublishingId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const load = useCallback(async () => {
     try {
@@ -164,6 +165,9 @@ export default function AdminCrudPage({
   }
 
   const displayKey = fields[0]?.key || 'title';
+  const statusField = fields.find((f) => f.key === 'status' && f.type === 'select');
+  const statusOptions = statusField?.options || [];
+  const filteredItems = statusFilter === 'all' ? items : items.filter((item) => item.status === statusFilter);
 
   return (
     <div>
@@ -174,6 +178,37 @@ export default function AdminCrudPage({
           <Button onClick={() => setEditing({ ...defaultItem, ...(fields.filter((f) => f.type === 'json').reduce((acc, f) => ({ ...acc, [f.key]: '{}' }), {})) })}><Plus className="h-4 w-4" /> Tambah</Button>
         </div>
       </div>
+
+      {statusOptions.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          <button
+            onClick={() => setStatusFilter('all')}
+            className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
+              statusFilter === 'all'
+                ? 'bg-blue-900 text-white border-blue-900'
+                : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            Semua ({items.length})
+          </button>
+          {statusOptions.map((opt) => {
+            const count = items.filter((item) => item.status === opt.value).length;
+            return (
+              <button
+                key={opt.value}
+                onClick={() => setStatusFilter(opt.value)}
+                className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
+                  statusFilter === opt.value
+                    ? 'bg-blue-900 text-white border-blue-900'
+                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                {opt.label} ({count})
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {editing && (
         <Card className="mb-6">
@@ -257,7 +292,7 @@ export default function AdminCrudPage({
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
+            {filteredItems.map((item) => (
               <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium text-gray-900">{String(item[displayKey] || item.title || item.clientName || item.question || item.name)}</td>
                 <td className="px-4 py-3">
@@ -297,6 +332,9 @@ export default function AdminCrudPage({
         </table>
         {initialLoading && <div className="flex items-center justify-center gap-2 py-10 text-sm text-gray-500"><span className="h-5 w-5 animate-spin rounded-full border-2 border-blue-900 border-t-transparent" /> Memuat data...</div>}
         {!initialLoading && items.length === 0 && <p className="text-center text-gray-500 py-8">Belum ada item</p>}
+        {!initialLoading && items.length > 0 && filteredItems.length === 0 && (
+          <p className="text-center text-gray-500 py-8">Tidak ada item dengan status ini</p>
+        )}
       </div>
     </div>
   );
