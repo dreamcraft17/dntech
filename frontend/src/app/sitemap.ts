@@ -2,6 +2,11 @@ import type { MetadataRoute } from 'next';
 import { fetchPublicApiList } from '@/lib/server-api';
 import { SITE_URL } from '@/lib/seo';
 
+// Without this, Next.js generates sitemap.xml once at build time and never
+// again — new blog posts/services/products/case studies published after
+// deploy silently never show up until the next redeploy.
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
     '', '/services', '/products', '/case-studies', '/portfolio', '/about', '/blog', '/contact',
