@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { WandSparkles, X } from 'lucide-react';
+import { Image as ImageIcon, WandSparkles, X } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
@@ -18,6 +18,8 @@ export interface GeneratedBlogDraft {
   seoTitle: string;
   seoDescription: string;
   status: 'draft';
+  featuredImageId: string;
+  featuredImageUrl: string;
 }
 
 interface BlogGeneratorProps {
@@ -30,6 +32,7 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
   const [audience, setAudience] = useState('');
   const [tone, setTone] = useState('jelas, hangat, praktis');
   const [keywords, setKeywords] = useState('');
+  const [generateImage, setGenerateImage] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -39,7 +42,7 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
     try {
       const draft = await apiFetch<Omit<GeneratedBlogDraft, 'status'>>('/admin/blog/generate', {
         method: 'POST',
-        body: JSON.stringify({ topic, audience, tone, keywords }),
+        body: JSON.stringify({ topic, audience, tone, keywords, generateImage }),
       });
       onGenerated({ ...draft, status: 'draft' });
       setOpen(false);
@@ -77,6 +80,10 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
             <Input label="Target pembaca" value={audience} onChange={(e) => setAudience(e.target.value)} placeholder="Contoh: HR manager dan pemilik bisnis retail" />
             <Input label="Gaya bahasa" value={tone} onChange={(e) => setTone(e.target.value)} />
             <Input label="Keyword SEO" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="Pisahkan dengan koma" />
+            <label className="flex items-start gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
+              <input type="checkbox" checked={generateImage} onChange={(e) => setGenerateImage(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-900" />
+              <span><span className="flex items-center gap-1 font-medium text-gray-900"><ImageIcon className="h-4 w-4" /> Buat gambar cover dengan Gemini</span><span className="mt-1 block text-xs text-gray-500">Memerlukan GEMINI_IMAGE_MODEL dan membuat satu gambar tambahan untuk artikel.</span></span>
+            </label>
           </div>
 
           <div className="mt-6 flex justify-end gap-2">

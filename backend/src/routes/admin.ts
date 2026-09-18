@@ -93,8 +93,8 @@ router.get('/blog', asyncHandler(async (req, res) => {
   successResponse(res, await content.listBlogPosts(req.query as Record<string, unknown>));
 }));
 
-router.post('/blog/generate', requireWrite('blog'), asyncHandler(async (req, res) => {
-  successResponse(res, await generateBlogDraft(req.body));
+router.post('/blog/generate', requireWrite('blog'), asyncHandler(async (req: AuthRequest, res) => {
+  successResponse(res, await generateBlogDraft(req.body, req.user!.id));
 }));
 
 router.post('/blog', requireWrite('blog'), asyncHandler(async (req: AuthRequest, res) => {

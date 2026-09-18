@@ -47,3 +47,35 @@ body {
 .prose p { @apply text-gray-700 leading-relaxed mb-4; }
 .prose ul { @apply list-disc list-inside space-y-1 text-gray-700 mb-4; }
 .prose a { @apply text-blue-900 hover:underline; }
+
+/* Blog reading layout: shorter lines, clearer chunks, and less visual weight on headings. */
+.article-body {
+  max-width: 68ch;
+  color: #374151;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+}
+.article-body > * + * { margin-top: 1.25rem; }
+.article-body h2 {
+  @apply border-l-4 border-teal-500 pl-4 text-2xl font-bold tracking-tight text-gray-950 sm:text-3xl;
+  margin-top: 3.25rem;
+  line-height: 1.25;
+}
+.article-body h2:first-child { margin-top: 0; }
+.article-body h3 {
+  @apply text-xl font-semibold tracking-tight text-gray-900;
+  margin-top: 2rem;
+  line-height: 1.35;
+}
+.article-body p { @apply text-gray-700; }
+.article-body ul,
+.article-body ol { @apply pl-6 text-gray-700; }
+.article-body ul { @apply list-disc; }
+.article-body ol { @apply list-decimal; }
+.article-body li { @apply pl-1; }
+.article-body li + li { margin-top: 0.5rem; }
+.article-body strong { @apply font-semibold text-gray-900; }
+.article-body blockquote {
+  @apply border-l-4 border-blue-200 bg-blue-50/60 px-5 py-4 italic text-gray-700;
+}
+.article-body a { @apply font-medium text-blue-900 underline decoration-blue-200 underline-offset-2 hover:decoration-blue-900; }

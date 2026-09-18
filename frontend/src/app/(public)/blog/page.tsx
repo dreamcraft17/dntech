@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card } from '@/components/ui/Card';
 import { ContentPillars } from '@/components/content/ContentPillars';
 import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonLd';
@@ -7,6 +8,7 @@ import { estimateReadTime, formatReadTime } from '@/lib/read-time';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
 import { CONTENT_PILLARS } from '@/lib/content-pillars';
 import { fetchPublicApiPaginated } from '@/lib/server-api';
+import { getUploadUrl } from '@/lib/api';
 import type { BlogPost } from '@/types';
 import type { Metadata } from 'next';
 
@@ -88,6 +90,16 @@ export default async function BlogPage({
                 return (
                   <Link key={post.id} href={`/blog/${post.slug}`}>
                     <Card hover className="h-full">
+                      {post.featuredImage?.url && (
+                        <Image
+                          src={getUploadUrl(post.featuredImage.url)}
+                          alt={post.featuredImage.altText || post.title}
+                          width={640}
+                          height={360}
+                          className="mb-4 aspect-video w-full rounded-lg object-cover"
+                          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                        />
+                      )}
                       <div className="text-xs text-teal-600 font-medium">{post.category}</div>
                       <h2 className="mt-2 text-lg font-semibold text-gray-900">{post.title}</h2>
                       <p className="mt-2 text-sm text-gray-600 line-clamp-3">{post.excerpt}</p>

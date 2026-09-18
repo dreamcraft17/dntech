@@ -6,6 +6,7 @@ import { JsonLd, breadcrumbSchema, articleSchema } from '@/components/seo/JsonLd
 import { InternalLinks } from '@/components/seo/InternalLinks';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { getPillarForCategory, getRelatedServiceLinks } from '@/lib/content-pillars';
+import { getUploadUrl } from '@/lib/api';
 import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import type { BlogPost, Service } from '@/types';
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     type: 'article',
     publishedTime: post.publishedAt,
     author: post.author?.name,
-    image: post.featuredImage?.url,
+    image: post.featuredImage?.url ? getUploadUrl(post.featuredImage.url) : undefined,
   });
 }
 
@@ -62,7 +63,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         slug,
         publishedAt: post.publishedAt,
         author: post.author?.name,
-        image: post.featuredImage?.url,
+        image: post.featuredImage?.url ? getUploadUrl(post.featuredImage.url) : undefined,
         category: post.category,
       })} />
 
@@ -81,9 +82,13 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
           </nav>
 
           <article itemScope itemType="https://schema.org/Article">
-            <div className="text-sm text-blue-900 font-medium">{post.category}</div>
-            <h1 className="mt-2 text-4xl font-bold text-gray-900" itemProp="headline">{post.title}</h1>
-            <div className="mt-4 text-sm text-gray-500">
+            {post.category && (
+              <div className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-900">
+                {post.category}
+              </div>
+            )}
+            <h1 className="mt-4 max-w-4xl text-4xl font-bold leading-tight tracking-tight text-gray-950 sm:text-5xl" itemProp="headline">{post.title}</h1>
+            <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-500">
               {formatReadTime(readMin)}
               {post.publishedAt && <> · <time itemProp="datePublished" dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time></>}
               {post.author && <span itemProp="author"> · {post.author.name}</span>}
@@ -91,7 +96,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
             {post.featuredImage?.url && (
               <Image
-                src={post.featuredImage.url}
+                src={getUploadUrl(post.featuredImage.url)}
                 alt={post.featuredImage.altText || post.title}
                 width={960}
                 height={540}
@@ -102,7 +107,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
               />
             )}
 
-            <div className="mt-8 prose max-w-none" itemProp="articleBody" dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} />
+            <div className="article-body mt-10" itemProp="articleBody" dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} />
           </article>
 
           <div className="mt-10">

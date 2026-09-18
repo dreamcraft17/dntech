@@ -65,6 +65,35 @@ export async function createMediaFromUpload(
   });
 }
 
+export async function createMediaFromBuffer(
+  buffer: Buffer,
+  mimeType: string,
+  originalFilename: string,
+  userId: string,
+) {
+  if (!buffer.length) throw new AppError(400, 'EMPTY_FILE', 'Generated image is empty');
+
+  const extensionByMimeType: Record<string, string> = {
+    'image/jpeg': '.jpg',
+    'image/png': '.png',
+    'image/webp': '.webp',
+  };
+  const extension = extensionByMimeType[mimeType] || '.png';
+  const filename = `${uuidv4()}${extension}`;
+  fs.writeFileSync(path.join(uploadDir, filename), buffer);
+
+  return prisma.media.create({
+    data: {
+      filename,
+      originalFilename,
+      fileSize: buffer.length,
+      mimeType,
+      url: `/uploads/${filename}`,
+      uploadedById: userId,
+    },
+  });
+}
+
 const mediaUpdateSchema = z.object({
   altText: z.string().optional(),
   description: z.string().optional(),

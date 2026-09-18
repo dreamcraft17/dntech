@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { AppError } from '../utils/helpers';
+import { createMediaFromBuffer } from './AdminMediaService';
 
 const generateBlogSchema = z.object({
   topic: z.string().min(3).max(240),
@@ -7,6 +8,7 @@ const generateBlogSchema = z.object({
   tone: z.string().max(100).optional(),
   keywords: z.string().max(300).optional(),
   language: z.string().max(40).optional(),
+  generateImage: z.boolean().optional().default(true),
 });
 
 const generatedBlogSchema = z.object({
@@ -22,6 +24,18 @@ const generatedBlogSchema = z.object({
 
 type GeminiResponse = {
   candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+  error?: { message?: string };
+};
+
+type GeminiImageResponse = {
+  steps?: Array<{
+    content?: Array<{
+      type?: string;
+      data?: string;
+      mime_type?: string;
+      mimeType?: string;
+    }>;
+  }>;
   error?: { message?: string };
 };
 
@@ -41,7 +55,50 @@ function parseJson(text: string) {
   }
 }
 
-export async function generateBlogDraft(input: unknown) {
+async function generateBlogImage(title: string, excerpt: string, apiKey: string, userId: string) {
+  const model = process.env.GEMINI_IMAGE_MODEL || 'gemini-2.5-flash-image';
+  const prompt = `
+Buat gambar hero editorial rasio 16:9 untuk artikel blog DN Tech.
+Judul: ${title}
+Ringkasan: ${excerpt}
+
+Gaya: modern, profesional, hangat, bersih, relevan untuk pemilik bisnis dan tim operasional di Indonesia.
+Jangan gunakan teks, logo, watermark, wajah orang nyata, atau elemen merek pihak lain. Gunakan ilustrasi konseptual yang mudah dipahami sebagai cover artikel.
+`.trim();
+
+  const response = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/interactions',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
+      body: JSON.stringify({
+        model,
+        input: prompt,
+      }),
+    },
+  );
+
+  const result = await response.json() as GeminiImageResponse;
+  if (!response.ok) {
+    throw new AppError(502, 'AI_IMAGE_REQUEST_FAILED', result.error?.message || 'Gemini gagal membuat gambar');
+  }
+
+  const image = result.steps?.flatMap((step) => step.content || [])
+    .find((part) => part.type === 'image' && part.data);
+  if (!image?.data) throw new AppError(502, 'AI_IMAGE_EMPTY_RESPONSE', 'Gemini tidak mengembalikan gambar');
+
+  return createMediaFromBuffer(
+    Buffer.from(image.data, 'base64'),
+    image.mimeType || image.mime_type || 'image/png',
+    `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'blog-cover'}.png`,
+    userId,
+  );
+}
+
+export async function generateBlogDraft(input: unknown, userId: string) {
   const data = generateBlogSchema.parse(input);
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) {
@@ -94,5 +151,14 @@ Aturan:
 
   const text = extractText(result);
   if (!text) throw new AppError(502, 'AI_EMPTY_RESPONSE', 'Gemini tidak mengembalikan draft');
-  return generatedBlogSchema.parse(parseJson(text));
+  const draft = generatedBlogSchema.parse(parseJson(text));
+  const featuredImage = data.generateImage
+    ? await generateBlogImage(draft.title, draft.excerpt, apiKey, userId)
+    : null;
+
+  return {
+    ...draft,
+    featuredImageId: featuredImage?.id || '',
+    featuredImageUrl: featuredImage?.url || '',
+  };
 }
