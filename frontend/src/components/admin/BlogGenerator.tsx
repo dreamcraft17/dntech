@@ -57,7 +57,9 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
       </Button>
 
       {open && (
-        <Card className="fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[90vh] max-w-xl -translate-y-1/2 overflow-y-auto shadow-2xl sm:inset-x-auto sm:w-full">
+        <>
+          <div className="fixed inset-0 z-40 bg-gray-900/40" aria-hidden="true" />
+          <Card className="fixed left-1/2 top-1/2 z-50 w-[calc(100vw-2rem)] max-w-xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto shadow-2xl">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-gray-900">Buat draft artikel</h2>
@@ -81,7 +83,8 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
             <Button type="button" variant="secondary" onClick={() => setOpen(false)}>Batal</Button>
             <Button type="button" onClick={generate} loading={loading} disabled={!topic.trim()}>Generate Draft</Button>
           </div>
-        </Card>
+          </Card>
+        </>
       )}
     </>
   );
