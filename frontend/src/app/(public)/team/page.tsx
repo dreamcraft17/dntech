@@ -58,25 +58,44 @@ export default async function TeamPage() {
               </Link>
             </div>
           ) : (
-            <div className="flex flex-wrap gap-6">
-              {team.map((member) => (
-                <Card key={member.id} className="text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]">
+            <div className="flex flex-wrap justify-center gap-6">
+              {team.map((member) => {
+                const isSingle = team.length === 1;
+                return (
+                <Card
+                  key={member.id}
+                  className={
+                    isSingle
+                      ? 'text-center w-full sm:w-96 p-8'
+                      : 'text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]'
+                  }
+                >
                   {member.photo?.url ? (
                     <Image
                       src={getUploadUrl(member.photo.url)}
                       alt={member.photo.altText || member.name}
-                      width={96}
-                      height={96}
+                      width={isSingle ? 144 : 96}
+                      height={isSingle ? 144 : 96}
                       quality={80}
-                      sizes="96px"
-                      className="h-24 w-24 rounded-full object-cover mx-auto mb-4 border border-gray-200"
+                      sizes={isSingle ? '144px' : '96px'}
+                      className={
+                        isSingle
+                          ? 'h-36 w-36 rounded-full object-cover mx-auto mb-5 border border-gray-200'
+                          : 'h-24 w-24 rounded-full object-cover mx-auto mb-4 border border-gray-200'
+                      }
                     />
                   ) : (
-                    <div className="h-24 w-24 rounded-full bg-blue-900 mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
+                    <div
+                      className={
+                        isSingle
+                          ? 'h-36 w-36 rounded-full bg-blue-900 mx-auto mb-5 flex items-center justify-center text-white text-4xl font-bold'
+                          : 'h-24 w-24 rounded-full bg-blue-900 mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold'
+                      }
+                    >
                       {member.name.charAt(0)}
                     </div>
                   )}
-                  <h2 className="font-semibold text-gray-900">{member.name}</h2>
+                  <h2 className={isSingle ? 'text-xl font-semibold text-gray-900' : 'font-semibold text-gray-900'}>{member.name}</h2>
                   <p className="text-sm text-teal-600 mt-1">{member.role}</p>
                   {member.bio && <p className="mt-3 text-sm text-gray-600">{member.bio}</p>}
                   {member.socialLinks && Object.keys(member.socialLinks).length > 0 && (
@@ -96,7 +115,7 @@ export default async function TeamPage() {
                     </div>
                   )}
                 </Card>
-              ))}
+              );})}
             </div>
           )}
         </div>

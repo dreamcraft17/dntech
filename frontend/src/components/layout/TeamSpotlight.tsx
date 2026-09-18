@@ -13,6 +13,7 @@ interface TeamSpotlightProps {
 export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
   const team = members.slice(0, limit);
   if (!team.length) return null;
+  const isSingle = team.length === 1;
 
   return (
     <section>
@@ -23,26 +24,43 @@ export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
         </div>
         <Link href="/team" className="text-blue-900 text-sm font-medium hover:underline">Lihat semua</Link>
       </div>
-      <div className="flex flex-wrap gap-6">
+      <div className="flex flex-wrap justify-center gap-6">
         {team.map((member) => (
-          <Card key={member.id} className="text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]">
+          <Card
+            key={member.id}
+            className={
+              isSingle
+                ? 'text-center w-full sm:w-96 p-8'
+                : 'text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]'
+            }
+          >
             {member.photo?.url ? (
               <Image
                 src={getUploadUrl(member.photo.url)}
                 alt={member.photo.altText || member.name}
-                width={80}
-                height={80}
+                width={isSingle ? 128 : 80}
+                height={isSingle ? 128 : 80}
                 quality={80}
-                sizes="80px"
-                className="h-20 w-20 rounded-full object-cover mx-auto mb-4 border border-gray-200"
+                sizes={isSingle ? '128px' : '80px'}
+                className={
+                  isSingle
+                    ? 'h-32 w-32 rounded-full object-cover mx-auto mb-5 border border-gray-200'
+                    : 'h-20 w-20 rounded-full object-cover mx-auto mb-4 border border-gray-200'
+                }
               />
             ) : (
-              <div className="h-20 w-20 rounded-full bg-blue-900 mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+              <div
+                className={
+                  isSingle
+                    ? 'h-32 w-32 rounded-full bg-blue-900 mx-auto mb-5 flex items-center justify-center text-white text-4xl font-bold'
+                    : 'h-20 w-20 rounded-full bg-blue-900 mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold'
+                }
+              >
                 {member.name.charAt(0)}
               </div>
             )}
-            <h3 className="font-semibold text-gray-900">{member.name}</h3>
-            <p className="text-sm text-teal-600 mt-0.5">{member.role}</p>
+            <h3 className={isSingle ? 'text-xl font-semibold text-gray-900' : 'font-semibold text-gray-900'}>{member.name}</h3>
+            <p className={isSingle ? 'text-teal-600 mt-1' : 'text-sm text-teal-600 mt-0.5'}>{member.role}</p>
             {member.bio && <p className="mt-2 text-sm text-gray-600 line-clamp-2">{member.bio}</p>}
             {member.socialLinks && Object.keys(member.socialLinks).length > 0 && (
               <div className="mt-4 flex justify-center gap-2">
