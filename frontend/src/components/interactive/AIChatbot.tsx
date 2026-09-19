@@ -6,7 +6,6 @@ import { getApiUrl } from '@/lib/api';
 
 type Message = { role: 'user' | 'model'; content: string };
 
-const STORAGE_KEY = 'dntech-ai-chat';
 const VISITOR_KEY = 'dntech-ai-visitor';
 const MAX_CLIENT_MESSAGES = 20; // mirror the backend's history cap so the UI never shows more than the model actually saw
 
@@ -47,15 +46,11 @@ export function AIChatbot() {
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Chat history is intentionally not persisted: there's no login for
+    // public chatbot visitors, so a new page load/session always starts
+    // with an empty conversation rather than resuming (or leaking) a
+    // previous one on a shared/public device.
     const hydrationTimer = window.setTimeout(() => {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved) as { conversationId?: string; messages?: Message[] };
-          setConversationId(parsed.conversationId);
-          setMessages(Array.isArray(parsed.messages) ? parsed.messages : []);
-        } catch { /* ignore invalid local state */ }
-      }
       let id = window.localStorage.getItem(VISITOR_KEY);
       if (!id) {
         id = crypto.randomUUID();
@@ -69,10 +64,6 @@ export function AIChatbot() {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, open]);
-
-  function saveConversation(nextMessages: Message[], nextId?: string) {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ conversationId: nextId, messages: nextMessages }));
-  }
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -94,7 +85,6 @@ export function AIChatbot() {
       const finalMessages = [...nextMessages, { role: 'model' as const, content: json.data.answer }].slice(-MAX_CLIENT_MESSAGES);
       setConversationId(json.data.conversationId);
       setMessages(finalMessages);
-      saveConversation(finalMessages, json.data.conversationId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Chatbot sedang tidak tersedia.');
     } finally {
