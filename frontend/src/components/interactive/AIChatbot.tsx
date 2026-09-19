@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Bot, MessageCircle, Send, X } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
 
@@ -8,6 +8,32 @@ type Message = { role: 'user' | 'model'; content: string };
 
 const STORAGE_KEY = 'dntech-ai-chat';
 const VISITOR_KEY = 'dntech-ai-visitor';
+
+function renderInlineMarkdown(text: string): ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).filter(Boolean);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <em key={index}>{part.slice(1, -1)}</em>;
+    }
+    return <span key={index}>{part}</span>;
+  });
+}
+
+function renderMessage(content: string) {
+  const lines = content.split('\n');
+  return lines.map((line, index) => {
+    const bullet = line.match(/^\s*[*-]\s+(.+)$/);
+    const rendered = renderInlineMarkdown(bullet ? bullet[1] : line);
+    return (
+      <span key={index} className={bullet ? 'block pl-4 before:mr-2 before:content-["•"]' : 'block'}>
+        {rendered}
+      </span>
+    );
+  });
+}
 
 export function AIChatbot() {
   const [open, setOpen] = useState(false);
@@ -88,7 +114,7 @@ export function AIChatbot() {
           </header>
           <div className="flex-1 space-y-3 overflow-y-auto bg-gray-50 p-4" aria-live="polite">
             {messages.length === 0 && <div className="rounded-xl bg-white p-3 text-sm text-gray-700 shadow-sm">Halo! Saya bisa membantu mencari informasi tentang layanan, produk, portofolio, artikel, dan FAQ DN Tech.</div>}
-            {messages.map((message, index) => <div key={`${message.role}-${index}`} className={`max-w-[88%] whitespace-pre-wrap rounded-xl px-3 py-2 text-sm ${message.role === 'user' ? 'ml-auto bg-blue-900 text-white' : 'bg-white text-gray-800 shadow-sm'}`}>{message.content}</div>)}
+            {messages.map((message, index) => <div key={`${message.role}-${index}`} className={`max-w-[88%] rounded-xl px-3 py-2 text-sm ${message.role === 'user' ? 'ml-auto bg-blue-900 text-white' : 'bg-white text-gray-800 shadow-sm'}`}>{renderMessage(message.content)}</div>)}
             {loading && <div className="w-fit rounded-xl bg-white px-3 py-2 text-sm text-gray-500 shadow-sm">Sedang mencari jawaban…</div>}
             {error && <p className="text-xs text-red-700" role="alert">{error}</p>}
             <div ref={endRef} />
