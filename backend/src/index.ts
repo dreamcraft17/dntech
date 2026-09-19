@@ -34,6 +34,7 @@ import quizRoutes from './routes/quiz';
 import adminRoutes from './routes/admin';
 import brandingRoutes from './routes/branding';
 import adminBrandingRoutes from './routes/admin-branding';
+import chatRoutes from './routes/chat';
 import { errorHandler } from './utils/helpers';
 
 function buildAllowedOrigins(): string[] {
@@ -139,6 +140,7 @@ v1.use('/quiz', quizRoutes);
 v1.use('/admin', adminRoutes);
 v1.use('/branding', brandingRoutes);
 v1.use('/admin/branding', adminBrandingRoutes);
+v1.use('/chat', chatRoutes);
 
 app.use('/api/v1', v1);
 

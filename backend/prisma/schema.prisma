@@ -579,3 +579,19 @@ model EmailLog {
   @@index([createdAt])
   @@map("email_logs")
 }
+
+model ChatConversation {
+  id           String   @id @default(uuid())
+  visitorId    String?  @map("visitor_id")
+  userId       String?  @map("user_id")
+  messages     Json
+  metadata     Json?
+  messageCount Int      @default(0) @map("message_count")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([visitorId])
+  @@index([userId])
+  @@index([updatedAt])
+  @@map("chat_conversations")
+}

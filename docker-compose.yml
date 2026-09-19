@@ -28,6 +28,9 @@ services:
       JWT_SECRET: ${JWT_SECRET:-change-this-in-production-use-long-random-string}
       PORT: ${PORT:-4000}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash-lite}
+      CHATBOT_ENABLED: ${CHATBOT_ENABLED:-true}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@dntech.id}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-DevOnly-LocalBootstrap-ChangeMe!}
     volumes:

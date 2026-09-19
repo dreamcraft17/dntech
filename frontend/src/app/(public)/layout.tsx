@@ -6,6 +6,7 @@ import { StickyCTA } from '@/components/layout/StickyCTA';
 import { CrispChatLoader } from '@/components/interactive/CrispChatLoader';
 import { ExitIntentModalLoader } from '@/components/interactive/ExitIntentModalLoader';
 import { AnalyticsLoader } from '@/components/seo/AnalyticsLoader';
+import { AIChatbot } from '@/components/interactive/AIChatbot';
 import {
   JsonLd,
   buildOrganizationSchema,
@@ -39,6 +40,7 @@ export default async function PublicLayout({ children }: { children: React.React
       <ExitIntentModalLoader />
       <CrispChatLoader crispWebsiteId={settings.crispWebsiteId} />
       <AnalyticsLoader googleAnalyticsId={settings.googleAnalyticsId} />
+      <AIChatbot />
     </>
   );
 }
