@@ -21,14 +21,30 @@ type GeminiResponse = {
 
 const MAX_HISTORY = 20;
 const MAX_CONTEXT_CHARS = 18_000;
+const GEMINI_TIMEOUT_MS = 20_000;
 const CODING_REFUSAL = 'Maaf, saya hanya bisa membantu informasi tentang layanan, produk, portofolio, artikel, dan FAQ DN Tech. Saya tidak dapat membantu pertanyaan tentang coding atau pemrograman. Untuk kebutuhan teknis bisnis, silakan hubungi tim DN Tech melalui halaman Kontak.';
 
+/**
+ * STRONG signals mean "asking how to do/write/fix code" and trigger the
+ * refusal on their own. GENERIC tech nouns (api, script, react, database, ...)
+ * are ambiguous on their own — DN Tech's own products are API/integration
+ * products, so "dnCore ada API untuk integrasi?" must NOT be refused. A
+ * generic noun only counts when paired with a coding action verb nearby.
+ */
+const STRONG_CODING_SIGNALS = /\b(coding|program(ming|mer)?|source\s*code|kode\s*(program|sumber)|algoritma|debug(ging)?|syntax\s*error|command\s*line|terminal)\b/i;
+const CODING_ACTION_VERBS = '(buat(kan)?|tulis(kan)?|bikin(kan)?|perbaiki|refactor|debug|jelaskan\\s+cara|cara\\s+(membuat|menulis|memperbaiki))';
+const GENERIC_TECH_NOUNS = '(script|function|fungsi|class|variable|variabel|javascript|typescript|python|java(?!script)|php|ruby|golang|rust|react|next\\.?js|node\\.?js|html|css|sql|git(hub)?|docker|api|endpoint|query\\s*database|kode|program|website|aplikasi|sistem)';
+const CODING_ACTION_PATTERN = new RegExp(
+  `${CODING_ACTION_VERBS}\\s+(\\w+\\s+){0,3}${GENERIC_TECH_NOUNS}|${GENERIC_TECH_NOUNS}\\s+(\\w+\\s+){0,3}${CODING_ACTION_VERBS}`,
+  'i',
+);
+
 /** Keep programming requests out of the model and avoid spending Gemini quota. */
-function isCodingRequest(message: string) {
-  return /\b(coding|program(ming|mer)?|source\s*code|kode\s*(program|sumber)|script|algoritm|debug|debugging|syntax|function|fungsi|class|variable|variabel|javascript|typescript|python|java|php|ruby|golang|rust|react|next\.?js|node\.?js|html|css|sql|git|github|docker|terminal|command\s*line|api|endpoint|query\s*database)\b|buat\s+(kan\s+)?(website|aplikasi|sistem)|cara\s+(membuat|menulis|memperbaiki)\s+(kode|program|script)/i.test(message);
+export function isCodingRequest(message: string) {
+  return STRONG_CODING_SIGNALS.test(message) || CODING_ACTION_PATTERN.test(message);
 }
 
-function extractText(response: GeminiResponse) {
+export function extractText(response: GeminiResponse) {
   return response.candidates?.[0]?.content?.parts
     ?.map((part) => part.text || '')
     .join('')
@@ -39,6 +55,52 @@ function asText(value: unknown) {
   if (typeof value === 'string') return value;
   if (value === null || value === undefined) return '';
   return JSON.stringify(value);
+}
+
+/**
+ * Isolated I/O boundary for the Gemini call: easy to mock in tests, and the
+ * one place that needs an AbortController so a slow/hung Gemini response
+ * can't leave the chat request stuck forever.
+ */
+async function callGeminiChat(
+  systemInstruction: string,
+  contents: ChatMessage[],
+  apiKey: string,
+  model: string,
+) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemInstruction }] },
+          contents: contents.map((message) => ({
+            role: message.role,
+            parts: [{ text: message.content }],
+          })),
+          generationConfig: { temperature: 0.3, maxOutputTokens: 700 },
+        }),
+        signal: controller.signal,
+      },
+    );
+
+    const result = await response.json() as GeminiResponse;
+    if (!response.ok) throw new AppError(502, 'AI_REQUEST_FAILED', result.error?.message || 'Permintaan ke Gemini gagal');
+    const answer = extractText(result);
+    if (!answer) throw new AppError(502, 'AI_EMPTY_RESPONSE', 'Gemini tidak mengembalikan jawaban');
+    return answer;
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      throw new AppError(504, 'AI_TIMEOUT', 'Gemini tidak merespons tepat waktu. Silakan coba lagi.');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 async function retrievePublicContext(query: string) {
@@ -78,13 +140,28 @@ export async function answerChat(input: unknown) {
   const parsed = chatInputSchema.parse(input);
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
-  const existing = parsed.conversationId
+  const found = parsed.conversationId
     ? await prisma.chatConversation.findUnique({ where: { id: parsed.conversationId } })
     : null;
-  if (parsed.conversationId && !existing) throw new AppError(404, 'CONVERSATION_NOT_FOUND', 'Percakapan tidak ditemukan');
+  if (parsed.conversationId && !found) throw new AppError(404, 'CONVERSATION_NOT_FOUND', 'Percakapan tidak ditemukan');
+
+  // Ownership check: conversationId is a client-supplied, unauthenticated
+  // UUID. If it belongs to a different visitorId, silently fall back to a
+  // fresh conversation instead of exposing someone else's chat history —
+  // never reveal via a 403 whether the id existed or belonged to someone else.
+  const existing = found && found.visitorId === parsed.visitorId ? found : null;
 
   const history = Array.isArray(existing?.messages)
-    ? existing.messages.map((message) => messageSchema.parse(message)).slice(-MAX_HISTORY)
+    ? existing.messages
+        .map((message) => {
+          try {
+            return messageSchema.parse(message);
+          } catch {
+            return null; // drop corrupted/legacy-shaped entries instead of crashing the whole request
+          }
+        })
+        .filter((message): message is ChatMessage => message !== null)
+        .slice(-MAX_HISTORY)
     : [];
 
   if (isCodingRequest(parsed.message)) {
@@ -112,26 +189,7 @@ KONTEKS PUBLIK DARI DATABASE:
 ${context || '(Tidak ada hasil yang relevan)'}
   `.trim();
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: systemInstruction }] },
-        contents: [...history, userMessage].map((message) => ({
-          role: message.role,
-          parts: [{ text: message.content }],
-        })),
-        generationConfig: { temperature: 0.3, maxOutputTokens: 700 },
-      }),
-    },
-  );
-
-  const result = await response.json() as GeminiResponse;
-  if (!response.ok) throw new AppError(502, 'AI_REQUEST_FAILED', result.error?.message || 'Permintaan ke Gemini gagal');
-  const answer = extractText(result);
-  if (!answer) throw new AppError(502, 'AI_EMPTY_RESPONSE', 'Gemini tidak mengembalikan jawaban');
+  const answer = await callGeminiChat(systemInstruction, [...history, userMessage], apiKey, model);
 
   const messages = [...history, userMessage, { role: 'model' as const, content: answer }].slice(-MAX_HISTORY);
   const conversation = existing
