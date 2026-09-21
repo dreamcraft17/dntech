@@ -22,6 +22,7 @@ type GeminiResponse = {
 const MAX_HISTORY = 20;
 const MAX_CONTEXT_CHARS = 18_000;
 const GEMINI_TIMEOUT_MS = 20_000;
+const DNTECH_WEB_TIMEOUT_MS = 8_000;
 const CODING_REFUSAL = 'Maaf, saya hanya bisa membantu informasi tentang layanan, produk, portofolio, artikel, dan FAQ DN Tech. Saya tidak dapat membantu pertanyaan tentang coding atau pemrograman. Untuk kebutuhan teknis bisnis, silakan hubungi tim DN Tech melalui halaman Kontak.';
 
 /**
@@ -42,6 +43,10 @@ const CODING_ACTION_PATTERN = new RegExp(
 /** Keep programming requests out of the model and avoid spending Gemini quota. */
 export function isCodingRequest(message: string) {
   return STRONG_CODING_SIGNALS.test(message) || CODING_ACTION_PATTERN.test(message);
+}
+
+function isDnTechProfileQuestion(message: string) {
+  return /\b(dn\s*tech|dntech|dozer(?:\s+napitupulu)?|founder|pendiri|ceo|profil|sejarah|tentang kami|company|perusahaan)\b/i.test(message);
 }
 
 export function extractText(response: GeminiResponse) {
@@ -67,6 +72,7 @@ async function callGeminiChat(
   contents: ChatMessage[],
   apiKey: string,
   model: string,
+  useWebSearch = false,
 ) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
@@ -82,6 +88,7 @@ async function callGeminiChat(
             role: message.role,
             parts: [{ text: message.content }],
           })),
+          ...(useWebSearch ? { tools: [{ google_search: {} }] } : {}),
           generationConfig: { temperature: 0.3, maxOutputTokens: 700 },
         }),
         signal: controller.signal,
@@ -109,7 +116,7 @@ async function retrievePublicContext(query: string) {
     OR: terms.flatMap((term) => fields.map((field) => ({ [field]: { contains: term, mode: 'insensitive' as const } }))),
   });
 
-  const [services, products, blogs, faqs, portfolio, settings, brand] = await Promise.all([
+  const [services, products, blogs, faqs, portfolio, settings, brand, publicSite] = await Promise.all([
     prisma.service.findMany({ where: { ...whereFor(['name', 'description']), status: 'active', deletedAt: null }, take: 5 }),
     prisma.product.findMany({ where: { ...whereFor(['name', 'description', 'longFormContent']), status: 'active', deletedAt: null }, take: 5 }),
     prisma.blogPost.findMany({ where: { ...whereFor(['title', 'excerpt', 'content']), status: 'published', deletedAt: null }, take: 4 }),
@@ -117,6 +124,27 @@ async function retrievePublicContext(query: string) {
     prisma.portfolioItem.findMany({ where: { ...whereFor(['title', 'description', 'solution', 'outcomes']), status: 'active', deletedAt: null }, take: 4 }),
     prisma.siteSettings.findUnique({ where: { id: 1 }, select: { companyName: true, tagline: true, companyEmail: true, companyPhone: true, companyAddress: true, businessHours: true, heroDescription: true, aboutContent: true } }),
     prisma.brandContent.findFirst({ orderBy: { updatedAt: 'desc' }, select: { tagline: true, story: true, mission: true } }),
+    isDnTechProfileQuestion(query)
+      ? (async () => {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), DNTECH_WEB_TIMEOUT_MS);
+          try {
+            const response = await fetch(process.env.PUBLIC_SITE_URL || 'https://dntech.id', { signal: controller.signal });
+            if (!response.ok) return '';
+            return (await response.text())
+              .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+              .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+              .replace(/<[^>]+>/g, ' ')
+              .replace(/\s+/g, ' ')
+              .trim()
+              .slice(0, 6_000);
+          } catch {
+            return '';
+          } finally {
+            clearTimeout(timeout);
+          }
+        })()
+      : Promise.resolve(''),
   ]);
 
   const sections = [
@@ -127,6 +155,7 @@ async function retrievePublicContext(query: string) {
     ['PORTOFOLIO', portfolio.map((item) => `${item.title}: ${item.description || ''}\nSolusi: ${item.solution || ''}\nHasil: ${item.outcomes || ''}`).join('\n')],
     ['PROFIL DN TECH', settings ? `Nama: ${settings.companyName || ''}\nTagline: ${settings.tagline || ''}\nKontak: ${settings.companyEmail || ''}, ${settings.companyPhone || ''}\nAlamat: ${settings.companyAddress || ''}\nJam kerja: ${settings.businessHours || ''}\nTentang: ${settings.heroDescription || ''}\n${asText(settings.aboutContent)}` : ''],
     ['CERITA DAN MISI', brand ? `Tagline: ${brand.tagline}\nCerita: ${brand.story}\nMisi: ${brand.mission}` : ''],
+    ['HALAMAN PUBLIK DN TECH', publicSite],
   ];
 
   return sections
@@ -175,10 +204,12 @@ export async function answerChat(input: unknown) {
   if (!apiKey) throw new AppError(503, 'AI_NOT_CONFIGURED', 'Chatbot AI belum dikonfigurasi');
 
   const context = await retrievePublicContext(parsed.message);
+  const profileQuestion = isDnTechProfileQuestion(parsed.message);
   const userMessage: ChatMessage = { role: 'user', content: parsed.message };
   const systemInstruction = `
 Kamu adalah DN Tech AI Assistant, customer-facing chatbot berbahasa Indonesia.
 Jawab hanya berdasarkan konteks konten publik DN Tech di bawah dan riwayat percakapan.
+Untuk pertanyaan tentang DN Tech, founder, atau sejarah perusahaan, berikan jawaban paling lengkap yang didukung konteks. Kamu boleh memakai hasil web publik terbaru bila tersedia, tetapi bedakan fakta yang terverifikasi dari informasi yang belum pasti dan jangan mengarang.
 Tolak semua pertanyaan tentang coding, pemrograman, source code, script, debugging, bahasa pemrograman, API, database query, atau pembuatan aplikasi/website. Gunakan penolakan singkat yang sopan dan arahkan ke halaman Kontak; jangan memberikan potongan kode, langkah teknis, atau instruksi pemrograman.
 Jika informasi tidak ada, katakan dengan jujur bahwa kamu belum menemukan informasinya dan arahkan ke halaman Kontak.
 Jangan mengarang harga, klien, angka, kebijakan, kredensial, data internal, atau janji hasil.
@@ -189,7 +220,7 @@ KONTEKS PUBLIK DARI DATABASE:
 ${context || '(Tidak ada hasil yang relevan)'}
   `.trim();
 
-  const answer = await callGeminiChat(systemInstruction, [...history, userMessage], apiKey, model);
+  const answer = await callGeminiChat(systemInstruction, [...history, userMessage], apiKey, model, profileQuestion);
 
   const messages = [...history, userMessage, { role: 'model' as const, content: answer }].slice(-MAX_HISTORY);
   const conversation = existing

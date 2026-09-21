@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import prisma from '../config/database';
 import { AppError } from '../utils/helpers';
 import { createMediaFromBuffer } from './AdminMediaService';
 
@@ -67,6 +68,9 @@ type OpenAIImageResponse = {
 };
 
 const OPENAI_TIMEOUT_MS = 30_000;
+const BRAND_CONTEXT_TIMEOUT_MS = 8_000;
+const GEMINI_RESEARCH_TIMEOUT_MS = 45_000;
+const MAX_BRAND_CONTEXT_CHARS = 12_000;
 
 function openAIKey() {
   return process.env.OPENAI_API_KEY?.trim() || '';
@@ -145,6 +149,78 @@ function parseJson(text: string) {
   }
 }
 
+function plainTextFromHtml(html: string) {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function fetchPublicBrandContext(topic: string) {
+  const terms = topic.toLowerCase().match(/[a-z0-9À-ÿ]+/gi)?.filter((term) => term.length > 2).slice(0, 6) || [];
+  const searchable = terms.length > 0
+    ? terms.flatMap((term) => [
+      { name: { contains: term, mode: 'insensitive' as const } },
+      { description: { contains: term, mode: 'insensitive' as const } },
+    ])
+    : undefined;
+
+  const [products, services, websiteText] = await Promise.all([
+    prisma.product.findMany({
+      where: {
+        status: 'active',
+        deletedAt: null,
+        showOnHomepage: true,
+        ...(searchable ? { OR: searchable } : {}),
+      },
+      orderBy: { displayOrder: 'asc' },
+      take: 5,
+      select: { name: true, slug: true, category: true, description: true, tagline: true, features: true },
+    }),
+    prisma.service.findMany({
+      where: {
+        status: 'active',
+        deletedAt: null,
+        ...(searchable ? { OR: searchable } : {}),
+      },
+      orderBy: { displayOrder: 'asc' },
+      take: 5,
+      select: { name: true, slug: true, category: true, description: true, features: true },
+    }),
+    (async () => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), BRAND_CONTEXT_TIMEOUT_MS);
+      try {
+        const response = await fetch(process.env.PUBLIC_SITE_URL || 'https://dntech.id', { signal: controller.signal });
+        return response.ok ? plainTextFromHtml(await response.text()).slice(0, 6_000) : '';
+      } catch {
+        return '';
+      } finally {
+        clearTimeout(timeout);
+      }
+    })(),
+  ]);
+
+  const productText = products.map((item) => (
+    `- ${item.name} (${item.slug})${item.category ? ` — ${item.category}` : ''}: ${item.tagline || item.description}\n  Fitur: ${JSON.stringify(item.features || [])}`
+  )).join('\n');
+  const serviceText = services.map((item) => (
+    `- ${item.name} (${item.slug})${item.category ? ` — ${item.category}` : ''}: ${item.description}\n  Fitur: ${JSON.stringify(item.features || [])}`
+  )).join('\n');
+
+  return [
+    'Konteks brand internal DN Tech (referensi editorial, jangan tampilkan sebagai metadata internal):',
+    productText ? `Produk DN Tech yang relevan:\n${productText}` : '',
+    serviceText ? `Layanan DN Tech yang relevan:\n${serviceText}` : '',
+    websiteText ? `Ringkasan halaman publik dntech.id:\n${websiteText}` : '',
+  ].filter(Boolean).join('\n\n').slice(0, MAX_BRAND_CONTEXT_CHARS);
+}
+
 /**
  * Gemini's `google_search` grounding tool cannot be combined with
  * `responseMimeType: 'application/json'` in the same request (the API
@@ -153,18 +229,28 @@ function parseJson(text: string) {
  * context into the plain JSON-generation prompt below.
  */
 async function researchTopic(topic: string, apiKey: string, model: string) {
+  const isDnTechTopic = /\b(dn\s*tech|dntech|dozer(?:\s+napitupulu)?|dn\s*people|dn\s*core|dn\s*shop)\b/i.test(topic);
+  const entityResearch = isDnTechTopic && /\b(perusahaan|company|startup|bisnis|founder|pendiri|co-?founder|ceo|chief executive|pemimpin|tokoh|profil|biografi|sejarah|emiten|investor|investasi|akuisisi|merger|karya|karier|career|organization|organisasi)\b/i.test(topic);
   const researchPrompt = `
-Cari informasi terkini dan akurat di internet tentang topik berikut, untuk dipakai sebagai bahan artikel blog: "${topic}".
+Cari informasi ${entityResearch ? 'mendalam, komprehensif, dan terkini' : 'terkini dan akurat'} di internet tentang topik berikut, untuk dipakai sebagai bahan artikel blog: "${topic}".
 
 Jika topik menyebut nama produk, perusahaan, atau orang tertentu, cari dan laporkan fakta spesifik tentang mereka (apa yang mereka lakukan, fitur produk, dll) — jangan mengarang jika tidak ketemu, katakan saja informasinya tidak ditemukan.
-Rangkum temuan dalam poin-poin singkat berbahasa Indonesia, sebutkan sumber jika relevan.
+${entityResearch ? `
+Ini adalah riset mendalam khusus DN Tech dan founder-nya. Gunakan beberapa sumber independen dan prioritaskan sumber primer atau kredibel: situs resmi DN Tech, profil perusahaan, siaran pers, wawancara, publikasi industri, registrasi atau filing resmi yang tersedia publik, dan liputan media tepercaya.
+Telusuri setidaknya aspek-aspek berikut bila relevan: identitas dan ejaan nama, sejarah dan timeline, pendiri dan peran mereka, kepemilikan atau afiliasi yang terverifikasi, produk/layanan, industri dan lokasi, pendanaan atau akuisisi, jabatan dan karya founder, klaim yang diperdebatkan, serta perubahan terbaru.
+Bedakan fakta terverifikasi, klaim dari pihak terkait, dan informasi yang belum dapat dikonfirmasi. Jangan menggabungkan dua entitas yang namanya mirip.
+` : ''}
+Rangkum temuan dalam poin-poin berbahasa Indonesia, sertakan URL sumber untuk setiap klaim penting dan tanggal publikasi jika tersedia. Jangan mengarang jika tidak ketemu; katakan informasi tidak ditemukan.
 `.trim();
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), GEMINI_RESEARCH_TIMEOUT_MS);
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
       {
         method: 'POST',
+        signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
           'x-goog-api-key': apiKey,
@@ -184,6 +270,8 @@ Rangkum temuan dalam poin-poin singkat berbahasa Indonesia, sebutkan sumber jika
     // Research is best-effort: if it fails, fall back to the plain prompt
     // (still labeled honestly below) rather than blocking draft generation.
     return '';
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -260,12 +348,12 @@ async function generateBlogImage(title: string, excerpt: string, userId: string)
 
   if (openAI) {
     try {
-      return await generateOpenAIBlogImage(title, excerpt, openAI, userId);
+      return { media: await generateOpenAIBlogImage(title, excerpt, openAI, userId), provider: 'openai' as const };
     } catch (error) {
       console.warn('[blog-ai] OpenAI image generation failed; trying Gemini fallback', error instanceof Error ? error.message : error);
     }
   }
-  if (gemini) return generateGeminiBlogImage(title, excerpt, gemini, userId);
+  if (gemini) return { media: await generateGeminiBlogImage(title, excerpt, gemini, userId), provider: 'gemini' as const };
   throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'Tidak ada provider image AI yang dikonfigurasi');
 }
 
@@ -276,7 +364,10 @@ export async function generateBlogDraft(input: unknown, userId: string) {
   if (!openAI && !gemini) throw new AppError(503, 'AI_NOT_CONFIGURED', 'OPENAI_API_KEY atau GEMINI_API_KEY belum dikonfigurasi di backend');
 
   const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
-  const research = gemini ? await researchTopic(data.topic, gemini, model) : '';
+  const [research, brandContext] = await Promise.all([
+    gemini ? researchTopic(data.topic, gemini, model) : Promise.resolve(''),
+    fetchPublicBrandContext(data.topic).catch(() => ''),
+  ]);
   const researchBlock = research
     ? `Hasil riset internet (gunakan ini sebagai sumber fakta spesifik — nama produk, fitur, klaim tentang entitas yang disebut di topik; jangan mengarang di luar ini):\n${research}\n`
     : 'Riset internet tidak tersedia untuk permintaan ini — jangan mengarang klaim spesifik (nama produk/fitur/statistik) yang tidak eksplisit ada di Topik atau Keyword di atas.\n';
@@ -290,6 +381,15 @@ Keyword yang boleh dipakai secara natural: ${data.keywords || 'software developm
 Bahasa: ${data.language || 'Bahasa Indonesia'}
 
 ${researchBlock}
+${brandContext}
+
+Aturan positioning DN Tech:
+- Jika topik berkaitan dengan kebutuhan yang dapat ditangani produk atau layanan DN Tech di atas, prioritaskan solusi DN Tech secara natural dan relevan.
+- Jangan mempromosikan, merekomendasikan, atau menyisipkan merek kompetitor jika tidak diminta secara eksplisit.
+- Jika artikel memang meminta perbandingan kompetitor, tetap faktual, berimbang, dan jangan membuat klaim yang tidak ada di sumber.
+- Jangan mengklaim DN Tech memiliki fitur, produk, integrasi, atau hasil yang tidak tercantum dalam konteks brand di atas.
+- Hindari hard sell; artikel tetap harus berguna bagi pembaca dan CTA ke DN Tech hanya bila relevan.
+
 Aturan:
 - Fokus pada masalah pembaca dan langkah yang bisa diterapkan.
 - Jangan membuat klaim statistik, harga, studi kasus, atau nama klien tanpa sumber dari hasil riset internet di atas atau dari input.
@@ -306,23 +406,30 @@ Aturan:
 
   const systemInstruction = 'Anda adalah editor konten DN Tech. Ikuti format JSON dan aturan editorial yang diberikan pengguna secara ketat.';
   let draft: z.infer<typeof generatedBlogSchema>;
+  let contentProvider: 'openai' | 'gemini';
 
   if (openAI) {
     try {
       draft = generatedBlogSchema.parse(parseJson(await callOpenAIJson(prompt, systemInstruction, openAI)));
+      contentProvider = 'openai';
     } catch (error) {
       if (!gemini) throw error;
       console.warn('[blog-ai] OpenAI generation failed; trying Gemini fallback', error instanceof Error ? error.message : error);
       draft = generatedBlogSchema.parse(await generateGeminiBlogDraft(prompt, gemini, model));
+      contentProvider = 'gemini';
     }
   } else {
     draft = generatedBlogSchema.parse(await generateGeminiBlogDraft(prompt, gemini, model));
+    contentProvider = 'gemini';
   }
 
   let featuredImage = null;
+  let imageProvider: 'openai' | 'gemini' | null = null;
   if (data.generateImage) {
     try {
-      featuredImage = await generateBlogImage(draft.title, draft.excerpt, userId);
+      const generatedImage = await generateBlogImage(draft.title, draft.excerpt, userId);
+      featuredImage = generatedImage.media;
+      imageProvider = generatedImage.provider;
     } catch (error) {
       // A cover image is optional; keep a valid article draft when image generation is unavailable.
       console.warn('[blog-ai] Cover image generation skipped', error instanceof Error ? error.message : error);
@@ -333,6 +440,8 @@ Aturan:
     ...draft,
     featuredImageId: featuredImage?.id || '',
     featuredImageUrl: featuredImage?.url || '',
+    aiProvider: contentProvider,
+    imageProvider,
   };
 }
 

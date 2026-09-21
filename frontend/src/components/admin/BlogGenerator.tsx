@@ -20,6 +20,8 @@ export interface GeneratedBlogDraft {
   status: 'draft';
   featuredImageId: string;
   featuredImageUrl: string;
+  aiProvider: 'openai' | 'gemini';
+  imageProvider: 'openai' | 'gemini' | null;
 }
 
 interface BlogGeneratorProps {
@@ -35,6 +37,7 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
   const [generateImage, setGenerateImage] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [lastProviders, setLastProviders] = useState<Pick<GeneratedBlogDraft, 'aiProvider' | 'imageProvider'> | null>(null);
 
   async function generate() {
     setError('');
@@ -44,6 +47,7 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
         method: 'POST',
         body: JSON.stringify({ topic, audience, tone, keywords, generateImage }),
       });
+      setLastProviders({ aiProvider: draft.aiProvider, imageProvider: draft.imageProvider });
       onGenerated({ ...draft, status: 'draft' });
       setOpen(false);
     } catch (err) {
@@ -58,6 +62,17 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
       <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
         <WandSparkles className="h-4 w-4" /> Buat dengan OpenAI
       </Button>
+
+      {lastProviders && (
+        <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-950" aria-live="polite">
+          <p className="font-semibold">Provider AI terakhir</p>
+          <div className="mt-1 flex flex-wrap gap-x-5 gap-y-1 text-xs text-blue-800">
+            <span>Konten: <strong>{lastProviders.aiProvider === 'openai' ? 'OpenAI' : 'Gemini'}</strong></span>
+            <span>Cover: <strong>{lastProviders.imageProvider === 'openai' ? 'OpenAI' : lastProviders.imageProvider === 'gemini' ? 'Gemini' : 'Tidak dibuat'}</strong></span>
+          </div>
+          <p className="mt-1 text-xs text-blue-700">Info ini hanya terlihat di panel writer.</p>
+        </div>
+      )}
 
       {open && (
         <>

@@ -11,7 +11,7 @@ interface HomeServicesProps {
 }
 
 export function HomeServices({ services, defaults }: HomeServicesProps) {
-  const apiItems = services.slice(0, 6).map((s) => ({
+  const apiItems = services.slice(0, 4).map((s) => ({
     name: s.name,
     description: s.description,
     slug: s.slug,
@@ -25,7 +25,7 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
         <SectionHeading
           kicker="Layanan"
           title="Dari website sampai sistem bisnis"
-          subtitle="Kami bantu bisnis tampil lebih meyakinkan, bekerja lebih rapi, dan siap berkembang."
+          subtitle="Layanan digital untuk membantu bisnis bekerja lebih rapi dan siap berkembang."
         />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item, index) => {
@@ -38,7 +38,7 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <h3 className="relative font-semibold text-gray-900">{item.name}</h3>
-                <p className="relative mt-2 text-sm leading-relaxed text-gray-600">
+                <p className="relative mt-2 line-clamp-2 text-sm leading-relaxed text-gray-600">
                   {item.description}
                 </p>
                 {item.slug && (
