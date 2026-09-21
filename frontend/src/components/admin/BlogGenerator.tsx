@@ -56,7 +56,7 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
   return (
     <>
       <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
-        <WandSparkles className="h-4 w-4" /> Buat dengan Gemini
+        <WandSparkles className="h-4 w-4" /> Buat dengan OpenAI
       </Button>
 
       {open && (
@@ -66,7 +66,7 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-gray-900">Buat draft artikel</h2>
-              <p className="mt-1 text-sm text-gray-600">Gemini akan mengisi form artikel. Review sebelum disimpan atau diterbitkan.</p>
+              <p className="mt-1 text-sm text-gray-600">OpenAI digunakan sebagai provider utama; Gemini menjadi fallback. Review sebelum disimpan atau diterbitkan.</p>
             </div>
             <button type="button" onClick={() => setOpen(false)} className="rounded p-2 text-gray-500 hover:bg-gray-100" aria-label="Tutup generator">
               <X className="h-5 w-5" />
@@ -82,7 +82,7 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
             <Input label="Keyword SEO" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="Pisahkan dengan koma" />
             <label className="flex items-start gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
               <input type="checkbox" checked={generateImage} onChange={(e) => setGenerateImage(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-900" />
-              <span><span className="flex items-center gap-1 font-medium text-gray-900"><ImageIcon className="h-4 w-4" /> Buat gambar cover dengan Gemini</span><span className="mt-1 block text-xs text-gray-500">Memerlukan GEMINI_IMAGE_MODEL dan membuat satu gambar tambahan untuk artikel.</span></span>
+              <span><span className="flex items-center gap-1 font-medium text-gray-900"><ImageIcon className="h-4 w-4" /> Buat gambar cover dengan AI</span><span className="mt-1 block text-xs text-gray-500">Mencoba OpenAI terlebih dahulu, lalu Gemini jika tersedia. Gambar bersifat opsional.</span></span>
             </label>
           </div>
 

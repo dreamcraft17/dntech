@@ -103,33 +103,34 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <span className="text-gray-900">{product.name}</span>
           </nav>
 
-          <section className="relative overflow-hidden rounded-3xl bg-slate-950 px-6 py-10 text-white shadow-xl sm:px-10 lg:px-14 lg:py-14">
-            <div className="absolute -right-20 -top-24 h-72 w-72 rounded-full bg-teal-400/20 blur-3xl" aria-hidden="true" />
+          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-sky-50 via-white to-teal-50 px-6 py-10 text-slate-900 shadow-sm sm:px-10 lg:px-14 lg:py-14">
+            <div className="absolute -right-20 -top-24 h-72 w-72 rounded-full bg-teal-300/25 blur-3xl" aria-hidden="true" />
+            <div className="absolute -bottom-32 -left-20 h-64 w-64 rounded-full bg-blue-200/20 blur-3xl" aria-hidden="true" />
             <div className="relative grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
               <div>
-                {product.category && <div className="text-sm font-semibold uppercase tracking-[0.16em] text-teal-300">{product.category}</div>}
+                {product.category && <div className="text-sm font-semibold uppercase tracking-[0.16em] text-teal-700">{product.category}</div>}
                 <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">{product.name}</h1>
-                {product.tagline && <p className="mt-3 text-xl text-slate-200">{product.tagline}</p>}
-                <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300">{product.description}</p>
+                {product.tagline && <p className="mt-3 text-xl text-slate-700">{product.tagline}</p>}
+                <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600">{product.description}</p>
                 <div className="mt-7 flex flex-wrap gap-3">
-                  {product.primaryCta && <Button href={product.primaryCta.url} className="bg-teal-400 text-slate-950 hover:bg-teal-300">{product.primaryCta.label}</Button>}
-                  {product.secondaryCtas?.slice(0, 1).map((cta, i) => <Button key={i} href={cta.url} variant="outline-on-dark">{cta.label}</Button>)}
+                  {product.primaryCta && <Button href={product.primaryCta.url} className="bg-teal-600 text-white hover:bg-teal-700">{product.primaryCta.label}</Button>}
+                  {product.secondaryCtas?.slice(0, 1).map((cta, i) => <Button key={i} href={cta.url} variant="outline">{cta.label}</Button>)}
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <span className="text-xs font-bold uppercase tracking-[0.16em] text-teal-300">Product proof</span>
-                  <ShieldCheck className="h-5 w-5 text-teal-300" aria-hidden="true" />
+              <div className="rounded-2xl border border-slate-200 bg-white/85 p-5 shadow-sm backdrop-blur-sm">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                  <span className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Product proof</span>
+                  <ShieldCheck className="h-5 w-5 text-teal-600" aria-hidden="true" />
                 </div>
                 <div className="mt-5 grid grid-cols-2 gap-3">
-                  <div className="rounded-xl bg-white/10 p-4"><div className="text-2xl font-bold">{statusBadge || 'Active'}</div><div className="mt-1 text-xs text-slate-300">Status produk</div></div>
-                  <div className="rounded-xl bg-white/10 p-4"><div className="text-2xl font-bold">{product.pricingTiers?.length || 0}</div><div className="mt-1 text-xs text-slate-300">Pilihan paket</div></div>
+                  <div className="rounded-xl bg-slate-100 p-4"><div className="text-2xl font-bold">{statusBadge || 'Active'}</div><div className="mt-1 text-xs text-slate-500">Status produk</div></div>
+                  <div className="rounded-xl bg-slate-100 p-4"><div className="text-2xl font-bold">{product.pricingTiers?.length || 0}</div><div className="mt-1 text-xs text-slate-500">Pilihan paket</div></div>
                 </div>
                 {proofItems.length > 0 && (
                   <ul className="mt-5 space-y-3">
                     {proofItems.map((feature, i) => (
-                      <li key={i} className="flex gap-2 text-sm text-slate-200"><CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />{feature.name || feature.title}</li>
+                      <li key={i} className="flex gap-2 text-sm text-slate-700"><CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" aria-hidden="true" />{feature.name || feature.title}</li>
                     ))}
                   </ul>
                 )}

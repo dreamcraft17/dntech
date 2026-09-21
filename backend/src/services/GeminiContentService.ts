@@ -141,7 +141,7 @@ function parseJson(text: string) {
   try {
     return JSON.parse(cleaned) as unknown;
   } catch {
-    throw new AppError(502, 'AI_INVALID_RESPONSE', 'Gemini mengembalikan format draft yang tidak valid');
+    throw new AppError(502, 'AI_INVALID_RESPONSE', 'Provider AI mengembalikan format draft yang tidak valid');
   }
 }
 
@@ -271,13 +271,12 @@ async function generateBlogImage(title: string, excerpt: string, userId: string)
 
 export async function generateBlogDraft(input: unknown, userId: string) {
   const data = generateBlogSchema.parse(input);
-  const apiKey = process.env.GEMINI_API_KEY?.trim();
-  if (!apiKey) {
-    throw new AppError(503, 'AI_NOT_CONFIGURED', 'GEMINI_API_KEY belum dikonfigurasi di backend');
-  }
+  const openAI = openAIKey();
+  const gemini = process.env.GEMINI_API_KEY?.trim() || '';
+  if (!openAI && !gemini) throw new AppError(503, 'AI_NOT_CONFIGURED', 'OPENAI_API_KEY atau GEMINI_API_KEY belum dikonfigurasi di backend');
 
   const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
-  const research = await researchTopic(data.topic, apiKey, model);
+  const research = gemini ? await researchTopic(data.topic, gemini, model) : '';
   const researchBlock = research
     ? `Hasil riset internet (gunakan ini sebagai sumber fakta spesifik — nama produk, fitur, klaim tentang entitas yang disebut di topik; jangan mengarang di luar ini):\n${research}\n`
     : 'Riset internet tidak tersedia untuk permintaan ini — jangan mengarang klaim spesifik (nama produk/fitur/statistik) yang tidak eksplisit ada di Topik atau Keyword di atas.\n';
@@ -305,41 +304,55 @@ Aturan:
 - seoTitle maksimal 60 karakter; seoDescription sekitar 140-160 karakter.
 `.trim();
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.7,
-          responseMimeType: 'application/json',
-        },
-      }),
-    },
-  );
+  const systemInstruction = 'Anda adalah editor konten DN Tech. Ikuti format JSON dan aturan editorial yang diberikan pengguna secara ketat.';
+  let draft: z.infer<typeof generatedBlogSchema>;
 
-  const result = await response.json() as GeminiResponse;
-  if (!response.ok) {
-    throw new AppError(502, 'AI_REQUEST_FAILED', result.error?.message || 'Permintaan ke Gemini gagal');
+  if (openAI) {
+    try {
+      draft = generatedBlogSchema.parse(parseJson(await callOpenAIJson(prompt, systemInstruction, openAI)));
+    } catch (error) {
+      if (!gemini) throw error;
+      console.warn('[blog-ai] OpenAI generation failed; trying Gemini fallback', error instanceof Error ? error.message : error);
+      draft = generatedBlogSchema.parse(await generateGeminiBlogDraft(prompt, gemini, model));
+    }
+  } else {
+    draft = generatedBlogSchema.parse(await generateGeminiBlogDraft(prompt, gemini, model));
   }
 
-  const text = extractText(result);
-  if (!text) throw new AppError(502, 'AI_EMPTY_RESPONSE', 'Gemini tidak mengembalikan draft');
-  const draft = generatedBlogSchema.parse(parseJson(text));
-  const featuredImage = data.generateImage
-    ? await generateBlogImage(draft.title, draft.excerpt, apiKey, userId)
-    : null;
+  let featuredImage = null;
+  if (data.generateImage) {
+    try {
+      featuredImage = await generateBlogImage(draft.title, draft.excerpt, userId);
+    } catch (error) {
+      // A cover image is optional; keep a valid article draft when image generation is unavailable.
+      console.warn('[blog-ai] Cover image generation skipped', error instanceof Error ? error.message : error);
+    }
+  }
 
   return {
     ...draft,
     featuredImageId: featuredImage?.id || '',
     featuredImageUrl: featuredImage?.url || '',
   };
+}
+
+async function generateGeminiBlogDraft(prompt: string, apiKey: string, model: string) {
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7, responseMimeType: 'application/json' },
+      }),
+    },
+  );
+  const result = await response.json() as GeminiResponse;
+  if (!response.ok) throw new AppError(502, 'AI_REQUEST_FAILED', result.error?.message || 'Permintaan ke Gemini gagal');
+  const text = extractText(result);
+  if (!text) throw new AppError(502, 'AI_EMPTY_RESPONSE', 'Gemini tidak mengembalikan draft');
+  return parseJson(text);
 }
 
 export async function generateServiceDraft(input: unknown, _userId: string) {
