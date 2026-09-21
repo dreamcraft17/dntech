@@ -30,7 +30,7 @@ function fromAddress() {
 }
 
 function adminEmail() {
-  return process.env.ADMIN_EMAIL || process.env.SALES_EMAIL || DEFAULT_FROM;
+  return process.env.CONTACT_NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || process.env.SALES_EMAIL || DEFAULT_FROM;
 }
 
 class EmailService {

@@ -36,6 +36,9 @@ export async function generateMetadata(): Promise<Metadata> {
       site: '@dntech',
     },
     robots: { index: true, follow: true },
+    verification: {
+      google: 'IxdlrBY7xXpYbGC8M_ECWk6_vF1QgMZ_xs6INbHHTA',
+    },
     icons: {
       icon: [
         { url: '/icon.png', sizes: '32x32', type: 'image/png' },

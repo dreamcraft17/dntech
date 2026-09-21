@@ -95,16 +95,19 @@ router.post(
     );
 
     sendWelcomeEmail(data.email, data.name, data.subject || 'Pertanyaan Umum').catch((err) => logger.error({ err }, "Background email send failed"));
-    sendLeadNotification({
+    const notification = await sendLeadNotification({
       name: data.name,
       email: data.email,
       phone: data.phone,
       projectType: data.subject || 'Pertanyaan Umum',
       message: data.message,
       source: 'contact-form',
-    }).catch((err) => logger.error({ err }, "Background email send failed"));
+    });
+    if (!notification.success) {
+      throw new AppError(503, 'CONTACT_EMAIL_FAILED', 'Pesan tersimpan, tetapi email notifikasi belum berhasil dikirim. Silakan coba lagi atau hubungi kami langsung.');
+    }
 
-    successResponse(res, { id: submission.id, message: 'Terima kasih! Kami akan segera menghubungi Anda.' }, 201);
+    successResponse(res, { id: submission.id, message: 'Terima kasih! Pesan Anda sudah terkirim ke tim kami.' }, 201);
   })
 );
 
