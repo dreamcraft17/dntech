@@ -42,18 +42,19 @@ export default async function ProductsPage({
 
       <div className="bg-slate-50 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-3xl bg-slate-950 px-6 py-12 text-white shadow-xl sm:px-10 lg:px-14">
-            <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-teal-400/20 blur-3xl" aria-hidden="true" />
+          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-sky-50 via-white to-teal-50 px-6 py-12 text-slate-900 shadow-sm sm:px-10 lg:px-14">
+            <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-teal-300/25 blur-3xl" aria-hidden="true" />
+            <div className="absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-blue-200/20 blur-3xl" aria-hidden="true" />
             <div className="relative max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-300">Produk DN Tech</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-700">Produk DN Tech</p>
               <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Software yang lahir dari workflow nyata.</h1>
-              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-300">
+              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
                 Pilih produk berdasarkan masalah yang ingin Anda bereskan—bukan daftar fitur yang panjang. Setiap halaman menjelaskan siapa yang cocok, apa yang tersedia, dan langkah berikutnya.
               </p>
-              <div className="mt-7 flex flex-wrap gap-3 text-sm text-slate-300">
-                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Outcome-led</span>
-                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Status rilis transparan</span>
-                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Dibuat untuk operasi Indonesia</span>
+              <div className="mt-7 flex flex-wrap gap-3 text-sm text-slate-700">
+                <span className="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5">Outcome-led</span>
+                <span className="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5">Status rilis transparan</span>
+                <span className="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5">Dibuat untuk operasi Indonesia</span>
               </div>
             </div>
           </div>
