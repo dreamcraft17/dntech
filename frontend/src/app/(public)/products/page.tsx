@@ -40,14 +40,30 @@ export default async function ProductsPage({
         })))} />
       )}
 
-      <div className="py-16">
+      <div className="bg-slate-50 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900">Produk yang Membuktikan Cara Kami Bekerja</h1>
-            <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-              dnPeople (HRIS), dnCore (ERP), dnShop Finance (pembukuan Shopee), dan tool operasional
-              yang kami bangun untuk workflow bisnis nyata. Fitur, harga, dan status rilis ada di halaman masing-masing.
-            </p>
+          <div className="relative overflow-hidden rounded-3xl bg-slate-950 px-6 py-12 text-white shadow-xl sm:px-10 lg:px-14">
+            <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-teal-400/20 blur-3xl" aria-hidden="true" />
+            <div className="relative max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-300">Produk DN Tech</p>
+              <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Software yang lahir dari workflow nyata.</h1>
+              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-300">
+                Pilih produk berdasarkan masalah yang ingin Anda bereskan—bukan daftar fitur yang panjang. Setiap halaman menjelaskan siapa yang cocok, apa yang tersedia, dan langkah berikutnya.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3 text-sm text-slate-300">
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Outcome-led</span>
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Status rilis transparan</span>
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Dibuat untuk operasi Indonesia</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-10 mt-12 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-teal-700">Katalog</p>
+              <h2 className="mt-2 text-2xl font-bold text-slate-950">Cari produk yang paling relevan</h2>
+            </div>
+            <p className="hidden max-w-sm text-right text-sm text-slate-500 md:block">Buka detail untuk melihat use case, pricing, FAQ, dan CTA yang sesuai.</p>
           </div>
 
           <ProductCatalog initialProducts={products} category={params.category} search={params.search} />

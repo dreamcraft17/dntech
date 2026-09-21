@@ -1,0 +1,6 @@
+id,title,url,type,credibility,recency,bias,used_for
+01,Baymard Product Details Page UX Research Studies,https://baymard.com/research/product-page,industry UX research,high,current,commercial research provider,information hierarchy and product-page sections
+02,Baymard Product Page UX: Avoid Horizontal Tabs,https://baymard.com/research-articles/avoid-horizontal-tabs,industry UX research,high,current,commercial research provider,keep core content scannable on one page
+03,web.dev Serve responsive images,https://web.dev/articles/serve-responsive-images,primary platform guidance,high,evergreen,low,avoid unnecessary media weight and protect LCP
+04,web.dev Nuvemshop image prioritization case study,https://web.dev/case-studies/nuvemshop,primary case study,high,recent,platform case-study bias,top-of-page performance and conversion measurement
+

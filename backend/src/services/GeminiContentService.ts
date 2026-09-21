@@ -56,11 +56,84 @@ type GeminiImageResponse = {
   error?: { message?: string };
 };
 
+type OpenAIResponse = {
+  choices?: Array<{ message?: { content?: string | null } }>;
+  error?: { message?: string };
+};
+
+type OpenAIImageResponse = {
+  data?: Array<{ b64_json?: string; url?: string }>;
+  error?: { message?: string };
+};
+
+const OPENAI_TIMEOUT_MS = 30_000;
+
+function openAIKey() {
+  return process.env.OPENAI_API_KEY?.trim() || '';
+}
+
+function openAIBaseUrl(apiKey: string) {
+  const configured = process.env.OPENAI_BASE_URL?.trim();
+  if (configured) return configured.replace(/\/$/, '');
+  if (apiKey.startsWith('sk-or-v1-')) return 'https://openrouter.ai/api/v1';
+  return 'https://api.openai.com/v1';
+}
+
+function openAIModel(apiKey: string) {
+  return process.env.OPENAI_MODEL?.trim()
+    || (openAIBaseUrl(apiKey).includes('openrouter') ? 'openai/gpt-4o-mini' : 'gpt-4o-mini');
+}
+
 function extractText(response: GeminiResponse) {
   return response.candidates?.[0]?.content?.parts
     ?.map((part) => part.text || '')
     .join('')
     .trim() || '';
+}
+
+function extractOpenAIText(response: OpenAIResponse) {
+  return response.choices?.[0]?.message?.content?.trim() || '';
+}
+
+async function callOpenAIJson(prompt: string, systemInstruction: string, apiKey: string) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), OPENAI_TIMEOUT_MS);
+  const baseUrl = openAIBaseUrl(apiKey);
+
+  try {
+    const response = await fetch(`${baseUrl}/chat/completions`, {
+      method: 'POST',
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+        ...(baseUrl.includes('openrouter') ? {
+          'HTTP-Referer': process.env.FRONTEND_URL || 'https://dntech.id',
+          'X-Title': 'DN Tech Blog Generator',
+        } : {}),
+      },
+      body: JSON.stringify({
+        model: openAIModel(apiKey),
+        messages: [
+          { role: 'system', content: systemInstruction },
+          { role: 'user', content: prompt },
+        ],
+        temperature: 0.7,
+        response_format: { type: 'json_object' },
+      }),
+    });
+    const result = await response.json() as OpenAIResponse;
+    if (!response.ok) throw new AppError(502, 'AI_REQUEST_FAILED', result.error?.message || 'Permintaan ke OpenAI gagal');
+    const text = extractOpenAIText(result);
+    if (!text) throw new AppError(502, 'AI_EMPTY_RESPONSE', 'OpenAI tidak mengembalikan draft');
+    return text;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    if ((error as Error)?.name === 'AbortError') throw new AppError(504, 'AI_TIMEOUT', 'OpenAI tidak merespons tepat waktu.');
+    throw new AppError(502, 'AI_REQUEST_FAILED', 'Permintaan ke OpenAI gagal');
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function parseJson(text: string) {
@@ -114,7 +187,7 @@ Rangkum temuan dalam poin-poin singkat berbahasa Indonesia, sebutkan sumber jika
   }
 }
 
-async function generateBlogImage(title: string, excerpt: string, apiKey: string, userId: string) {
+async function generateGeminiBlogImage(title: string, excerpt: string, apiKey: string, userId: string) {
   const model = process.env.GEMINI_IMAGE_MODEL || 'gemini-2.5-flash-image';
   const prompt = `
 Buat gambar hero editorial rasio 16:9 untuk artikel blog DN Tech.
@@ -155,6 +228,45 @@ Jangan gunakan teks, logo, watermark, wajah orang nyata, atau elemen merek pihak
     `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'blog-cover'}.png`,
     userId,
   );
+}
+
+async function generateOpenAIBlogImage(title: string, excerpt: string, apiKey: string, userId: string) {
+  const response = await fetch(`${openAIBaseUrl(apiKey)}/images/generations`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: process.env.OPENAI_IMAGE_MODEL || 'gpt-image-1',
+      size: '1536x864',
+      response_format: 'b64_json',
+      prompt: `Buat gambar hero editorial rasio 16:9 untuk artikel blog DN Tech. Judul: ${title}. Ringkasan: ${excerpt}. Gaya modern, profesional, hangat, bersih, relevan untuk pemilik bisnis dan tim operasional di Indonesia. Jangan gunakan teks, logo, watermark, wajah orang nyata, atau merek pihak lain.`,
+    }),
+  });
+  const result = await response.json() as OpenAIImageResponse;
+  if (!response.ok) throw new AppError(502, 'AI_IMAGE_REQUEST_FAILED', result.error?.message || 'OpenAI gagal membuat gambar');
+  const image = result.data?.[0];
+  if (!image?.b64_json) throw new AppError(502, 'AI_IMAGE_EMPTY_RESPONSE', 'OpenAI tidak mengembalikan gambar base64');
+
+  return createMediaFromBuffer(
+    Buffer.from(image.b64_json, 'base64'),
+    'image/png',
+    `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'blog-cover'}.png`,
+    userId,
+  );
+}
+
+async function generateBlogImage(title: string, excerpt: string, userId: string) {
+  const openAI = openAIKey();
+  const gemini = process.env.GEMINI_API_KEY?.trim() || '';
+
+  if (openAI) {
+    try {
+      return await generateOpenAIBlogImage(title, excerpt, openAI, userId);
+    } catch (error) {
+      console.warn('[blog-ai] OpenAI image generation failed; trying Gemini fallback', error instanceof Error ? error.message : error);
+    }
+  }
+  if (gemini) return generateGeminiBlogImage(title, excerpt, gemini, userId);
+  throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'Tidak ada provider image AI yang dikonfigurasi');
 }
 
 export async function generateBlogDraft(input: unknown, userId: string) {

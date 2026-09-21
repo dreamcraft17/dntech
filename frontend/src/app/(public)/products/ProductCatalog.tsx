@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, LoaderCircle } from 'lucide-react';
+import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { apiFetch } from '@/lib/api';
 import { formatCurrencyIDR } from '@/lib/utils';
@@ -104,33 +104,39 @@ export function ProductCatalog({ initialProducts, category, search }: ProductCat
           {products.map((product) => {
             const teasers = featureTeasers(product.features);
             const price = cheapestPrice(product);
+            const status = product.launchStatus === 'launched' ? 'Tersedia' : product.launchStatus === 'in_progress' ? 'Sedang divalidasi' : product.launchStatus === 'planned' ? 'Roadmap' : 'Produk aktif';
             return (
               <Link key={product.id} href={`/products/${product.slug}`}>
-                <Card hover className="h-full">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-xs text-blue-900 font-medium">{product.category}</span>
-                    {product.featured && <span className="text-xs font-semibold text-amber-600">★ Unggulan</span>}
+                <Card hover className="group h-full border-slate-200 p-6 shadow-sm hover:-translate-y-1 hover:border-teal-300 hover:shadow-lg transition-all">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-teal-700">{product.category}</span>
+                    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">{status}</span>
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">{product.name}</h2>
-                  {product.tagline && <p className="mt-1 text-sm text-gray-500">{product.tagline}</p>}
-                  <p className="mt-3 text-gray-600 line-clamp-3">{product.description}</p>
+                  <div className="mt-6 flex items-start justify-between gap-4">
+                    <div>
+                      <h2 className="text-2xl font-semibold tracking-tight text-slate-950">{product.name}</h2>
+                      {product.tagline && <p className="mt-1 text-sm font-medium text-slate-500">{product.tagline}</p>}
+                    </div>
+                    {product.featured && <span className="text-xs font-bold text-amber-600">★ Pilihan</span>}
+                  </div>
+                  <p className="mt-4 line-clamp-3 text-sm leading-6 text-slate-600">{product.description}</p>
                   {teasers.length > 0 && (
-                    <ul className="mt-4 space-y-1">
+                    <ul className="mt-5 space-y-2">
                       {teasers.map((title, index) => (
-                        <li key={index} className="text-sm text-gray-500 flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-blue-900" />
+                        <li key={index} className="flex items-center gap-2 text-sm text-slate-600">
+                          <Check className="h-4 w-4 shrink-0 text-teal-600" aria-hidden="true" />
                           {title}
                         </li>
                       ))}
                     </ul>
                   )}
                   {price != null && (
-                    <p className="mt-4 text-sm font-semibold text-gray-900">
+                    <p className="mt-5 text-sm font-bold text-slate-950">
                       Mulai dari {price === 0 ? 'Gratis' : formatCurrencyIDR(price)}
                     </p>
                   )}
-                  <span className="mt-2 inline-flex items-center text-sm text-blue-900 font-medium">
-                    Lihat detail <ArrowRight className="h-4 w-4 ml-1" />
+                  <span className="mt-6 inline-flex items-center text-sm font-bold text-blue-900">
+                    Lihat detail <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </span>
                 </Card>
               </Link>
