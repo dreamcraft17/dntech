@@ -431,7 +431,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   </Button>
                 )}
                 {product.secondaryCtas?.map((cta, i) => (
-                  <Button key={i} href={cta.url} variant="secondary" className="border-white text-white hover:bg-blue-800">
+                  <Button key={i} href={cta.url} variant="outline-on-dark" className="hover:bg-blue-800">
                     {cta.label}
                   </Button>
                 ))}
