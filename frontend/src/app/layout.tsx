@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     robots: { index: true, follow: true },
     verification: {
-      google: 'IxdlrBY7xXpYbGC8M_ECWk6_vF1QgMZ_xs6INbHHTA',
+      google: 'lxdLrBYX7xXpYbGC8M_ECWk6_vF1QgMZ_xs6lNbHHTA',
     },
     icons: {
       icon: [
