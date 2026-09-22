@@ -40,37 +40,35 @@ export default async function ProductsPage({
         })))} />
       )}
 
-      <div className="bg-slate-50 py-16">
+      <div className="bg-white py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-sky-50 via-white to-teal-50 px-6 py-12 text-slate-900 shadow-sm sm:px-10 lg:px-14">
-            <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-teal-300/25 blur-3xl" aria-hidden="true" />
-            <div className="absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-blue-200/20 blur-3xl" aria-hidden="true" />
-            <div className="relative max-w-3xl">
+          <div className="border-b border-slate-200 pb-14 text-slate-900">
+            <div className="max-w-3xl border-l-2 border-teal-600 pl-6 sm:pl-8">
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-700">Produk DN Tech</p>
-              <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Software yang lahir dari workflow nyata.</h1>
+              <h1 className="mt-4 max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">Software untuk pekerjaan yang harus selesai.</h1>
               <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
-                Pilih produk berdasarkan masalah yang ingin Anda bereskan—bukan daftar fitur yang panjang. Setiap halaman menjelaskan siapa yang cocok, apa yang tersedia, dan langkah berikutnya.
+                Kami membuat produk untuk pekerjaan operasional yang sering berantakan: mengurus orang, angka, dan proses harian. Lihat dulu produk, harga, batasan, dan statusnya sebelum memutuskan.
               </p>
-              <div className="mt-7 flex flex-wrap gap-3 text-sm text-slate-700">
-                <span className="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5">Outcome-led</span>
-                <span className="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5">Status rilis transparan</span>
-                <span className="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5">Dibuat untuk operasi Indonesia</span>
+              <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600">
+                <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-teal-600" />Jelas siapa yang cocok</span>
+                <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-teal-600" />Harga dan status terlihat</span>
+                <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-teal-600" />Ada tim yang bisa dihubungi</span>
               </div>
             </div>
           </div>
 
-          <div className="mb-10 mt-12 flex items-end justify-between gap-4">
+          <div className="mb-10 mt-14 flex items-end justify-between gap-4">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-teal-700">Katalog</p>
-              <h2 className="mt-2 text-2xl font-bold text-slate-950">Cari produk yang paling relevan</h2>
+              <h2 className="mt-2 text-2xl font-bold text-slate-950">Pilih yang paling dekat dengan pekerjaan Anda</h2>
             </div>
-            <p className="hidden max-w-sm text-right text-sm text-slate-500 md:block">Buka detail untuk melihat use case, pricing, FAQ, dan CTA yang sesuai.</p>
+            <p className="hidden max-w-sm text-right text-sm text-slate-500 md:block">Setiap produk punya detail use case, harga, batasan, dan cara mulai.</p>
           </div>
 
           <ProductCatalog initialProducts={products} category={params.category} search={params.search} />
 
           <div className="mt-16 text-center">
-            <p className="text-gray-600 mb-4">Butuh produk yang disesuaikan kebutuhan bisnis Anda?</p>
+            <p className="text-gray-600 mb-4">Tidak menemukan yang pas di katalog?</p>
             <div className="flex flex-wrap gap-4 justify-center text-sm">
               <Link href="/services" className="text-blue-900 font-medium hover:underline">Lihat Layanan Kami</Link>
               <Link href="/blog" className="text-blue-900 font-medium hover:underline">Baca Panduan Kami</Link>

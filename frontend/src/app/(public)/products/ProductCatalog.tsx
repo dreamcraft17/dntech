@@ -107,7 +107,7 @@ export function ProductCatalog({ initialProducts, category, search }: ProductCat
             const status = product.launchStatus === 'launched' ? 'Tersedia' : product.launchStatus === 'in_progress' ? 'Sedang divalidasi' : product.launchStatus === 'planned' ? 'Roadmap' : 'Produk aktif';
             return (
               <Link key={product.id} href={`/products/${product.slug}`}>
-                <Card hover className="group h-full border-slate-200 p-6 shadow-sm hover:-translate-y-1 hover:border-teal-300 hover:shadow-lg transition-all">
+                <Card className="group h-full rounded-xl border border-slate-200 bg-white p-6 transition-colors hover:border-teal-600">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-semibold uppercase tracking-wide text-teal-700">{product.category}</span>
                     <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">{status}</span>

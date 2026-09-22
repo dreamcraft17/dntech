@@ -21,6 +21,51 @@ async function getServices() {
   return fetchPublicApiList<Service>('/services', 60);
 }
 
+function headingText(value: string) {
+  return value
+    .replace(/<[^>]*>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function headingSlug(value: string, index: number, used: Set<string>) {
+  const base = headingText(value).toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+  const root = base || `bagian-${index + 1}`;
+  let id = root;
+  let suffix = 2;
+  while (used.has(id)) id = `${root}-${suffix++}`;
+  used.add(id);
+  return id;
+}
+
+function prepareArticleContent(content: string | undefined) {
+  const sanitized = sanitizeHtml(content);
+  const headings: Array<{ id: string; label: string }> = [];
+  const used = new Set<string>();
+  const headingMatches = [...sanitized.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/gi)];
+  headingMatches.forEach((match, index) => {
+    const label = headingText(match[1]);
+    if (label) headings.push({ id: headingSlug(label, index, used), label });
+  });
+
+  let headingIndex = 0;
+  const html = sanitized.replace(/<h2\b([^>]*)>/gi, (tag, attributes: string) => {
+    const heading = headings[headingIndex++];
+    if (!heading) return tag;
+    const withoutId = attributes.replace(/\s+id\s*=\s*(["']).*?\1/gi, '');
+    return `<h2${withoutId} id="${heading.id}">`;
+  });
+  return { html, headings };
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
@@ -50,6 +95,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   ];
   const readMin = estimateReadTime(post.content || post.excerpt);
   const isPeopleArticle = /hr|people|karyawan|absen|cuti|payroll/i.test(`${post.category || ''} ${post.title}`);
+  const articleContent = prepareArticleContent(post.content);
 
   return (
     <>
@@ -68,56 +114,75 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         category: post.category,
       })} />
 
-      <div className="bg-slate-50 py-10 sm:py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-gray-500" aria-label="Jejak navigasi">
+      <div className="article-page-bg py-8 sm:py-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <nav className="mb-8 flex flex-wrap items-center gap-2 text-sm text-gray-500" aria-label="Jejak navigasi">
             <Link href="/" className="hover:text-blue-900">Beranda</Link>
-            <span className="mx-2">/</span>
+            <span aria-hidden="true">/</span>
             <Link href="/blog" className="hover:text-blue-900">Blog</Link>
             {post.category && (
               <>
-                <span className="mx-2">/</span>
+                <span aria-hidden="true">/</span>
                 <Link href={`/blog?category=${post.category}`} className="hover:text-blue-900">{post.category}</Link>
               </>
             )}
           </nav>
 
-          <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm" itemScope itemType="https://schema.org/Article">
-            <div className="px-6 py-9 sm:px-12 sm:py-12">
-              {post.category && (
-                <div className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-900">
-                  {post.category}
+          <article itemScope itemType="https://schema.org/Article">
+            <header className="article-hero-grid">
+              <div className="article-hero-copy">
+                <div className="flex flex-wrap items-center gap-3 text-sm font-semibold text-teal-700">
+                  {post.category && <span>{post.category}</span>}
+                  <span className="h-1 w-1 rounded-full bg-teal-500" aria-hidden="true" />
+                  <span className="font-medium text-gray-500">{formatReadTime(readMin)}</span>
                 </div>
-              )}
-              <h1 className="mt-4 max-w-4xl text-4xl font-bold leading-[1.08] tracking-tight text-gray-950 sm:text-5xl" itemProp="headline">{post.title}</h1>
-              <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-500">
-                <span>{formatReadTime(readMin)}</span>
-                {post.publishedAt && <><span aria-hidden="true">·</span><time itemProp="datePublished" dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time></>}
-                {post.author && <><span aria-hidden="true">·</span><span itemProp="author">{post.author.name}</span></>}
+                <h1 className="mt-5 max-w-3xl text-4xl font-bold leading-[1.06] tracking-[-0.035em] text-gray-950 sm:text-6xl" itemProp="headline">{post.title}</h1>
+                {post.excerpt && <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600" itemProp="description">{post.excerpt}</p>}
+                <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-200 pt-5 text-sm text-gray-500">
+                  {post.publishedAt && <time itemProp="datePublished" dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>}
+                  {post.author && <><span aria-hidden="true">·</span><span itemProp="author">Oleh {post.author.name}</span></>}
+                </div>
               </div>
-            </div>
 
-            {post.featuredImage?.url && (
-              <Image
-                src={getUploadUrl(post.featuredImage.url)}
-                alt={post.featuredImage.altText || post.title}
-                width={1280}
-                height={720}
-                quality={85}
-                priority
-                className="aspect-video w-full object-cover"
-                sizes="(min-width: 1024px) 960px, 100vw"
-                itemProp="image"
-              />
-            )}
+              <div className="article-hero-media">
+                {post.featuredImage?.url ? (
+                  <Image
+                    src={getUploadUrl(post.featuredImage.url)}
+                    alt={post.featuredImage.altText || post.title}
+                    width={1280}
+                    height={720}
+                    quality={85}
+                    priority
+                    className="h-full min-h-[280px] w-full object-cover"
+                    sizes="(min-width: 1024px) 48vw, 100vw"
+                    itemProp="image"
+                  />
+                ) : (
+                  <div className="flex h-full min-h-[280px] items-end bg-blue-950 p-7 text-white">
+                    <span className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-300">DN Tech · Wawasan</span>
+                  </div>
+                )}
+              </div>
+            </header>
 
-            <div className="px-6 py-9 sm:px-12 sm:py-12">
-              {post.excerpt && (
-                <p className="article-lead" itemProp="description">{post.excerpt}</p>
-              )}
-              <div className="article-body" itemProp="articleBody" dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} />
+            <div className="article-reading-surface">
+              <div className="article-reading-grid">
+                {articleContent.headings.length >= 2 && (
+                  <aside className="article-toc" aria-label="Daftar isi artikel">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-gray-500">Dalam artikel</p>
+                    <nav className="mt-4 border-l border-gray-200 pl-4">
+                      {articleContent.headings.map((heading) => (
+                        <a key={heading.id} href={`#${heading.id}`} className="article-toc-link">{heading.label}</a>
+                      ))}
+                    </nav>
+                  </aside>
+                )}
 
-              <div className="mt-12 rounded-2xl bg-blue-950 px-6 py-7 text-white sm:px-8">
+                <div className="min-w-0">
+                  {post.excerpt && <p className="article-lead" itemProp="description">{post.excerpt}</p>}
+                  <div className="article-body" itemProp="articleBody" dangerouslySetInnerHTML={{ __html: articleContent.html }} />
+
+                  <div className="article-cta mt-14">
                 <p className="text-sm font-semibold uppercase tracking-[0.14em] text-teal-300">Lanjutkan ke solusi</p>
                 {isPeopleArticle ? (
                   <>
@@ -132,6 +197,8 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                     <Link href="/contact" className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-white px-5 py-2.5 font-semibold text-blue-950 transition hover:bg-blue-50">Konsultasi dengan DN Tech <span className="ml-2" aria-hidden="true">→</span></Link>
                   </>
                 )}
+                  </div>
+                </div>
               </div>
             </div>
           </article>
@@ -147,11 +214,21 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
           {post.relatedPosts && post.relatedPosts.length > 0 && (
             <div className="mt-10 border-t border-gray-200 pt-10">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Artikel Terkait</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {post.relatedPosts.map((related) => (
                   <Link key={related.id} href={`/blog/${related.slug}`}
-                    className="p-4 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
-                    <div className="font-medium text-gray-900 text-sm">{related.title}</div>
+                    className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-colors hover:border-blue-300">
+                    {related.featuredImage?.url && (
+                      <Image
+                        src={getUploadUrl(related.featuredImage.url)}
+                        alt={related.featuredImage.altText || related.title}
+                        width={640}
+                        height={360}
+                        className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                        sizes="(min-width: 640px) 33vw, 100vw"
+                      />
+                    )}
+                    <div className="p-4"><div className="font-semibold leading-6 text-gray-900">{related.title}</div><span className="mt-3 inline-block text-sm font-semibold text-blue-900">Baca artikel →</span></div>
                   </Link>
                 ))}
               </div>
