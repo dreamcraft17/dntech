@@ -30,10 +30,10 @@ export function HomeHero({ content }: HomeHeroProps) {
         fill
         priority
         sizes="100vw"
-        className="object-cover opacity-35"
+        className="object-cover opacity-60"
         aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-[var(--primary)]/75" aria-hidden="true" />
+      <div className="absolute inset-0 bg-[var(--primary)]/55" aria-hidden="true" />
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)] lg:items-end">
           <div className="max-w-3xl">
