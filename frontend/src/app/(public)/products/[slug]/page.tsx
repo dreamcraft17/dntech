@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { ArrowRight, CheckCircle, ShieldCheck } from 'lucide-react';
+import { ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
 import { JsonLd, breadcrumbSchema, productSchema, faqSchema } from '@/components/seo/JsonLd';
 import { InternalLinks } from '@/components/seo/InternalLinks';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
@@ -36,9 +35,9 @@ const ROADMAP_STATUS_LABEL: Record<string, string> = {
 };
 
 const ROADMAP_STATUS_STYLE: Record<string, string> = {
-  launched: 'bg-green-100 text-green-700',
-  in_progress: 'bg-amber-100 text-amber-700',
-  planned: 'bg-gray-100 text-gray-600',
+  launched: 'text-green-700',
+  in_progress: 'text-amber-700',
+  planned: 'text-gray-600',
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -103,10 +102,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <span className="text-gray-900">{product.name}</span>
           </nav>
 
-          <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-sky-50 via-white to-teal-50 px-6 py-10 text-slate-900 shadow-sm sm:px-10 lg:px-14 lg:py-14">
-            <div className="absolute -right-20 -top-24 h-72 w-72 rounded-full bg-teal-300/25 blur-3xl" aria-hidden="true" />
-            <div className="absolute -bottom-32 -left-20 h-64 w-64 rounded-full bg-blue-200/20 blur-3xl" aria-hidden="true" />
-            <div className="relative grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+          <section className="border-y-2 border-slate-900 px-1 py-10 text-slate-900 sm:px-3 lg:py-14">
+            <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
               <div>
                 {product.category && <div className="text-sm font-semibold uppercase tracking-[0.16em] text-teal-700">{product.category}</div>}
                 <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">{product.name}</h1>
@@ -118,14 +115,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white/85 p-5 shadow-sm backdrop-blur-sm">
+              <div className="border-l-2 border-teal-600 pl-6 lg:pl-8">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                   <span className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Product proof</span>
-                  <ShieldCheck className="h-5 w-5 text-teal-600" aria-hidden="true" />
                 </div>
-                <div className="mt-5 grid grid-cols-2 gap-3">
-                  <div className="rounded-xl bg-slate-100 p-4"><div className="text-2xl font-bold">{statusBadge || 'Active'}</div><div className="mt-1 text-xs text-slate-500">Status produk</div></div>
-                  <div className="rounded-xl bg-slate-100 p-4"><div className="text-2xl font-bold">{product.pricingTiers?.length || 0}</div><div className="mt-1 text-xs text-slate-500">Pilihan paket</div></div>
+                <div className="mt-5 grid grid-cols-2 gap-4 border-b border-slate-200 pb-5">
+                  <div><div className="text-2xl font-bold">{statusBadge || 'Active'}</div><div className="mt-1 text-xs text-slate-500">Status produk</div></div>
+                  <div><div className="text-2xl font-bold">{product.pricingTiers?.length || 0}</div><div className="mt-1 text-xs text-slate-500">Pilihan paket</div></div>
                 </div>
                 {proofItems.length > 0 && (
                   <ul className="mt-5 space-y-3">
@@ -138,11 +134,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
           </section>
 
-          <nav className="sticky top-16 z-10 -mx-4 mt-8 flex gap-2 overflow-x-auto border-y border-slate-200 bg-white/95 px-4 py-3 text-sm backdrop-blur sm:mx-0 sm:rounded-xl sm:border" aria-label="Navigasi detail produk">
-            <a href="#features" className="whitespace-nowrap rounded-full px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-100">Fitur & outcomes</a>
-            {product.useCases?.length ? <a href="#use-cases" className="whitespace-nowrap rounded-full px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-100">Use case</a> : null}
-            {product.pricingTiers?.length ? <a href="#pricing" className="whitespace-nowrap rounded-full px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-100">Pricing</a> : null}
-            {faqs.length > 0 ? <a href="#faq" className="whitespace-nowrap rounded-full px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-100">FAQ</a> : null}
+          <nav className="sticky top-16 z-10 -mx-4 mt-8 flex gap-6 overflow-x-auto border-y border-slate-200 bg-white px-4 py-3 text-sm sm:mx-0" aria-label="Navigasi detail produk">
+            <a href="#features" className="whitespace-nowrap border-b-2 border-transparent py-1 font-medium text-slate-600 hover:border-blue-900 hover:text-slate-950">Fitur & outcomes</a>
+            {product.useCases?.length ? <a href="#use-cases" className="whitespace-nowrap border-b-2 border-transparent py-1 font-medium text-slate-600 hover:border-blue-900 hover:text-slate-950">Use case</a> : null}
+            {product.pricingTiers?.length ? <a href="#pricing" className="whitespace-nowrap border-b-2 border-transparent py-1 font-medium text-slate-600 hover:border-blue-900 hover:text-slate-950">Pricing</a> : null}
+            {faqs.length > 0 ? <a href="#faq" className="whitespace-nowrap border-b-2 border-transparent py-1 font-medium text-slate-600 hover:border-blue-900 hover:text-slate-950">FAQ</a> : null}
           </nav>
 
           <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-3">
@@ -152,9 +148,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 {(product.features as ProductFeatureGroup[]).map((group, gi) => (
                   <div key={gi} className="mt-12">
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">{group.category}</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="border-t border-slate-300">
                       {group.features.map((feature, i) => (
-                        <div key={i} className="flex gap-3 p-4 rounded-lg border border-gray-200 bg-gray-50">
+                        <div key={i} className="flex gap-3 border-b border-slate-200 py-4">
                           <CheckCircle className="h-5 w-5 text-blue-900 shrink-0 mt-0.5" />
                           <div>
                             <div className="font-medium text-gray-900">{feature.name || feature.title}</div>
@@ -169,9 +165,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               ) : product.features && product.features.length > 0 && (
                 <div id="features" className="mt-12">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">Fitur Produk</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="border-t border-slate-300">
                     {(product.features as ProductFeatureItem[]).map((feature, i) => (
-                      <div key={i} className="flex gap-3 p-4 rounded-lg border border-gray-200 bg-gray-50">
+                      <div key={i} className="flex gap-3 border-b border-slate-200 py-4">
                         <CheckCircle className="h-5 w-5 text-blue-900 shrink-0 mt-0.5" />
                         <div>
                           <div className="font-medium text-gray-900">{feature.title || feature.name}</div>
@@ -185,10 +181,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
 
             <div>
-              <div className="sticky top-24 rounded-lg border border-gray-200 bg-white p-6">
+              <div className="sticky top-24 border-t-4 border-blue-900 bg-slate-50 p-6">
                 <h3 className="font-semibold text-gray-900 mb-4">Tertarik dengan produk ini?</h3>
                 {statusBadge && (
-                  <span className="mb-3 inline-block rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-900">
+                  <span className="mb-3 inline-block text-xs font-semibold text-blue-900">
                     {statusBadge}
                   </span>
                 )}
@@ -206,7 +202,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   <div className="space-y-3">
                     {product.relatedProducts.map((related) => (
                       <Link key={related.id} href={`/products/${related.slug}`}
-                        className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
+                        className="flex items-center justify-between border-b border-gray-200 py-3 hover:border-blue-900 transition-colors">
                         <span className="text-sm font-medium text-gray-900">{related.name}</span>
                         <ArrowRight className="h-4 w-4 text-blue-900" />
                       </Link>
@@ -223,36 +219,35 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           {product.useCases && product.useCases.length > 0 && (
             <div id="use-cases" className="mt-20">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Solusi untuk Segmen Anda</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Solusi untuk Segmen Anda</h2>
+              <div className="border-t border-slate-300">
                 {product.useCases.map((useCase) => (
-                  <Card key={useCase.id} className="flex flex-col">
+                  <article key={useCase.id} className="grid gap-5 border-b border-slate-300 py-7 md:grid-cols-[0.7fr_1.3fr]">
                     <h3 className="text-lg font-semibold text-gray-900">{useCase.segment}</h3>
-                    {useCase.description && <p className="mt-2 text-sm text-gray-600">{useCase.description}</p>}
-                    {useCase.uniqueFeatures && useCase.uniqueFeatures.length > 0 && (
-                      <ul className="mt-4 space-y-1.5">
-                        {useCase.uniqueFeatures.map((f, i) => (
-                          <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
-                            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-900 shrink-0" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {useCase.testimonial && (
-                      <blockquote className="mt-4 text-sm italic text-gray-700 border-l-2 border-blue-900 pl-3">
-                        &ldquo;{useCase.testimonial.quote}&rdquo;
-                        <footer className="mt-1 text-xs text-gray-500 not-italic">
-                          — {useCase.testimonial.author}{useCase.testimonial.company ? `, ${useCase.testimonial.company}` : ''}
-                        </footer>
-                      </blockquote>
-                    )}
-                    {useCase.cta && (
-                      <Link href={useCase.cta.url} className="mt-4 inline-flex items-center text-sm font-medium text-blue-900 hover:underline">
-                        {useCase.cta.label} <ArrowRight className="h-4 w-4 ml-1" />
-                      </Link>
-                    )}
-                  </Card>
+                    <div>
+                      {useCase.description && <p className="text-sm leading-6 text-gray-600">{useCase.description}</p>}
+                      {useCase.uniqueFeatures && useCase.uniqueFeatures.length > 0 && (
+                        <ul className="mt-4 space-y-1.5">
+                          {useCase.uniqueFeatures.map((f, i) => (
+                            <li key={i} className="text-sm text-gray-600">— {f}</li>
+                          ))}
+                        </ul>
+                      )}
+                      {useCase.testimonial && (
+                        <blockquote className="mt-4 border-l-2 border-blue-900 pl-3 text-sm italic text-gray-700">
+                          &ldquo;{useCase.testimonial.quote}&rdquo;
+                          <footer className="mt-1 text-xs text-gray-500 not-italic">
+                            — {useCase.testimonial.author}{useCase.testimonial.company ? `, ${useCase.testimonial.company}` : ''}
+                          </footer>
+                        </blockquote>
+                      )}
+                      {useCase.cta && (
+                        <Link href={useCase.cta.url} className="mt-4 inline-flex items-center text-sm font-medium text-blue-900 hover:underline">
+                          {useCase.cta.label} <ArrowRight className="h-4 w-4 ml-1" />
+                        </Link>
+                      )}
+                    </div>
+                  </article>
                 ))}
               </div>
             </div>
@@ -260,11 +255,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           {product.pricingTiers && product.pricingTiers.length > 0 && (
             <div id="pricing" className="mt-20">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Pricing</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Pricing</h2>
+              <div className="grid grid-cols-1 border-t border-slate-300 md:grid-cols-2 lg:grid-cols-5">
                 {product.pricingTiers.map((tier) => (
-                  <div key={tier.id} className={`flex flex-col rounded-lg border p-5 ${tier.featured ? 'border-blue-900 shadow-md ring-1 ring-blue-900' : 'border-gray-200'}`}>
-                    {tier.popular && <span className="mb-2 inline-block w-fit rounded-full bg-blue-900 px-2 py-0.5 text-xs font-medium text-white">Populer</span>}
+                  <div key={tier.id} className={`flex flex-col border-b border-slate-300 p-5 lg:border-r ${tier.featured ? 'border-t-4 border-t-blue-900 bg-slate-50' : 'border-t border-slate-300'}`}>
+                    {tier.popular && <span className="mb-2 inline-block w-fit text-xs font-bold uppercase tracking-wide text-blue-900">Populer</span>}
                     <h3 className="font-semibold text-gray-900">{tier.name}</h3>
                     {tier.tagline && <p className="text-xs text-gray-500 mt-1">{tier.tagline}</p>}
                     <div className="mt-3">
@@ -304,10 +299,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           {product.integrations && product.integrations.length > 0 && (
             <div className="mt-20">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Integrasi</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Integrasi</h2>
+              <div className="grid grid-cols-2 border-t border-slate-300 sm:grid-cols-3 md:grid-cols-6">
                 {product.integrations.map((integration, i) => (
-                  <div key={i} className="rounded-lg border border-gray-200 p-4 text-center">
+                  <div key={i} className="border-b border-r border-slate-200 p-4">
                     <div className="font-medium text-sm text-gray-900">{integration.name}</div>
                     {integration.category && <div className="text-xs text-gray-500 mt-1">{integration.category}</div>}
                     {integration.status === 'coming_soon' && (
@@ -322,7 +317,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           {product.comparisonTable && product.comparisonTable.rows?.length > 0 && (
             <div className="mt-20">
               <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">{product.comparisonTable.title || 'Perbandingan'}</h2>
-              <div className="overflow-x-auto rounded-lg border border-gray-200">
+              <div className="overflow-x-auto border border-gray-200">
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50">
                     <tr>
@@ -349,16 +344,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           {product.testimonials && product.testimonials.length > 0 && (
             <div className="mt-20">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Kata Pelanggan</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Kata Pelanggan</h2>
+              <div className="grid grid-cols-1 border-t border-slate-300 md:grid-cols-3">
                 {product.testimonials.map((t) => (
-                  <Card key={t.id}>
+                  <blockquote key={t.id} className="border-b border-r border-slate-300 p-6">
                     <p className="text-sm italic text-gray-700">&ldquo;{t.quote}&rdquo;</p>
                     <div className="mt-4 text-sm font-medium text-gray-900">{t.author}</div>
                     <div className="text-xs text-gray-500">
                       {[t.company, t.employeeCount, t.location].filter(Boolean).join(' · ')}
                     </div>
-                  </Card>
+                  </blockquote>
                 ))}
               </div>
             </div>
@@ -369,10 +364,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Roadmap</h2>
               <div className="space-y-4">
                 {product.roadmap.map((quarter, i) => (
-                  <div key={i} className="flex gap-4 p-4 rounded-lg border border-gray-200">
+                  <div key={i} className="flex gap-4 border-b border-slate-300 py-5">
                     <div className="w-24 shrink-0">
                       <div className="font-semibold text-gray-900 text-sm">{quarter.quarter}</div>
-                      <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${ROADMAP_STATUS_STYLE[quarter.status] || 'bg-gray-100 text-gray-600'}`}>
+                      <span className={`mt-1 inline-block text-xs font-medium ${ROADMAP_STATUS_STYLE[quarter.status] || 'text-gray-600'}`}>
                         {ROADMAP_STATUS_LABEL[quarter.status] || quarter.status}
                       </span>
                     </div>
@@ -395,7 +390,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Pertanyaan Umum</h2>
               <div className="space-y-3">
                 {faqs.map((faq) => (
-                  <details key={faq.id} className="rounded-lg border border-gray-200 p-4 group">
+                  <details key={faq.id} className="border-b border-gray-200 py-4 group">
                     <summary className="font-medium text-gray-900 cursor-pointer list-none flex justify-between items-center">
                       {faq.question}
                       <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
@@ -413,7 +408,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <div className="space-y-3">
                 {relatedPosts.map((post) => (
                   <Link key={post.id} href={`/blog/${post.slug}`}
-                    className="block p-3 rounded-lg border border-gray-200 hover:border-gray-300 text-sm font-medium text-gray-900">
+                    className="block border-b border-gray-200 py-3 hover:border-blue-900 text-sm font-medium text-gray-900">
                     {post.title}
                   </Link>
                 ))}
@@ -422,7 +417,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           )}
 
           {(product.primaryCta || product.secondaryCtas?.length) && (
-            <div className="mt-20 rounded-lg bg-blue-900 px-8 py-12 text-center">
+            <div className="mt-20 border-y-2 border-blue-900 bg-blue-900 px-8 py-12 text-center">
               <h2 className="text-2xl font-bold text-white">Siap mencoba {product.name}?</h2>
               <div className="mt-6 flex flex-wrap gap-3 justify-center">
                 {product.primaryCta && (

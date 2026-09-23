@@ -5,6 +5,7 @@ import { fetchPublicApiList } from '@/lib/server-api';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
+import { PageIntro } from '@/components/layout/PageIntro';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.portfolio.title,
@@ -24,7 +25,7 @@ export default async function PortfolioPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 rounded-lg border border-blue-100 bg-blue-50 p-4 text-center">
+        <div className="mb-8 border-l-2 border-teal-600 pl-4">
           <p className="text-sm text-blue-800">
             Mencari kisah sukses detail dengan metrik dan testimoni klien?{' '}
             <Link href="/case-studies" className="font-semibold text-blue-900 hover:underline">
@@ -33,14 +34,13 @@ export default async function PortfolioPage() {
           </p>
         </div>
 
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-gray-900">Portofolio</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-            {items.length > 0
-              ? 'Proyek yang kami izinkan tampil publik.'
-              : 'Belum ada item portofolio publik. Lihat produk first-party di halaman Produk.'}
-          </p>
-        </div>
+        <PageIntro
+          kicker="Pekerjaan terpilih"
+          title="Portofolio"
+          description={items.length > 0
+            ? 'Proyek yang kami izinkan tampil publik.'
+            : 'Belum ada item portofolio publik. Lihat produk first-party di halaman Produk.'}
+        />
 
         {industries.length > 0 && (
           <div className="mb-10 flex flex-wrap justify-center gap-2">
@@ -59,7 +59,7 @@ export default async function PortfolioPage() {
         </div>
 
         {items.length === 0 && (
-          <div className="text-center py-16 rounded-lg border border-dashed border-gray-200 bg-gray-50">
+          <div className="border-y border-slate-300 py-16">
             <p className="text-gray-600 max-w-md mx-auto">
               Item portofolio akan muncul setelah proyek klien selesai dan klien memberi izin publikasi.
             </p>

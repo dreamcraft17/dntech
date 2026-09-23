@@ -1,6 +1,6 @@
 import { Download, FileText, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
+import { PageIntro } from '@/components/layout/PageIntro';
 import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { getPublicSettings, getResources } from '@/lib/settings';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
@@ -20,51 +20,42 @@ export default async function ResourcesPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900">Sumber Daya</h1>
-          <p className="mt-4 text-gray-600">Panduan dan wawasan untuk mendukung transformasi digital Anda</p>
-        </div>
+        <PageIntro kicker="Sumber daya" title="Panduan yang bisa langsung dipakai" description="Panduan dan wawasan untuk mendukung transformasi digital Anda." />
 
         {resources.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <div className="mb-16 border-t border-slate-300">
             {resources.map((resource) => (
-              <Card key={resource.title} className="flex flex-col">
-                <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center mb-4">
-                  <FileText className="h-5 w-5 text-blue-900" />
+              <div key={resource.title} className="grid gap-5 border-b border-slate-300 py-7 sm:grid-cols-[2rem_0.65fr_1.35fr_auto] sm:items-start">
+                <FileText className="mt-1 h-5 w-5 text-teal-700" aria-hidden="true" />
+                <div>
+                  {resource.type && <span className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">{resource.type}</span>}
+                  <h3 className="mt-1 font-semibold text-slate-950">{resource.title}</h3>
                 </div>
-                {resource.type && (
-                  <span className="text-xs text-blue-900 font-medium">{resource.type}</span>
-                )}
-                <h3 className="mt-1 font-semibold text-gray-900">{resource.title}</h3>
-                {resource.description && (
-                  <p className="mt-2 text-sm text-gray-600 flex-1">{resource.description}</p>
-                )}
-                {resource.downloadUrl ? (
-                  <Button
+                <p className="text-sm leading-6 text-slate-600">{resource.description}</p>
+                <div>
+                  {resource.downloadUrl ? <Button
                     href={resource.downloadUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     variant="outline"
                     size="sm"
-                    className="mt-4 w-full"
+                    className="w-full sm:w-auto"
                   >
                     <Download className="h-4 w-4" /> Unduh
-                  </Button>
-                ) : (
-                  <Button
+                  </Button> : <Button
                     href="/contact"
                     variant="outline"
                     size="sm"
-                    className="mt-4 w-full"
+                    className="w-full sm:w-auto"
                   >
                     Minta Akses <ArrowRight className="h-4 w-4" />
-                  </Button>
-                )}
-              </Card>
+                  </Button>}
+                </div>
+              </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 mb-16 rounded-xl border border-dashed border-gray-200 bg-gray-50">
+          <div className="mb-16 border-y border-slate-300 py-12">
             <p className="text-gray-600">Belum ada sumber daya tersedia. Hubungi kami untuk informasi lebih lanjut.</p>
             <Button href="/contact" variant="outline" className="mt-4">
               Hubungi Kami
@@ -72,10 +63,8 @@ export default async function ResourcesPage() {
           </div>
         )}
 
-        <div className="max-w-md mx-auto">
-          <Card>
+        <div className="max-w-md border-t border-slate-300 pt-8">
             <NewsletterForm />
-          </Card>
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ import type { TeamMember } from '@/types';
 import type { Metadata } from 'next';
 import { Globe } from 'lucide-react';
 import { getUploadUrl } from '@/lib/api';
+import { PageIntro } from '@/components/layout/PageIntro';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.team.title,
@@ -45,13 +46,10 @@ export default async function TeamPage() {
 
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900">Kenalan dengan Tim Kami</h1>
-            <p className="mt-4 text-gray-600">Orang-orang di balik DN Tech</p>
-          </div>
+          <PageIntro kicker="Tim DN Tech" title="Kenalan dengan tim kami" description="Orang-orang di balik DN Tech dan pekerjaan yang kami lakukan untuk bisnis Indonesia." />
 
           {team.length === 0 ? (
-            <div className="text-center py-16 rounded-lg border border-dashed border-gray-200 bg-gray-50">
+            <div className="border-y border-slate-300 py-16">
               <p className="text-gray-600">Profil tim akan segera ditambahkan.</p>
               <Link href="/contact" className="inline-block mt-4 text-blue-900 font-medium hover:underline">
                 Hubungi kami

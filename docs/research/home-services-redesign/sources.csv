@@ -1,0 +1,6 @@
+id,title,type,url,credibility,recency,bias,used_for
+1,Information Scent: How Users Decide Where to Go Next,UX research synthesis,https://www.nngroup.com/articles/information-scent/,5,3,4,Link labels and surrounding context
+2,Writing for user interfaces,Government service guidance,https://www.gov.uk/service-manual/design/writing-for-user-interfaces,5,4,4,Scannable headings and self-contained links
+3,Tile usage,Enterprise design system,https://v10.carbondesignsystem.com/components/tile/usage/,5,3,4,Flat hierarchy and tile interaction patterns
+4,Web Content Accessibility Guidelines 2.2,Web standard,https://www.w3.org/TR/WCAG22/,5,5,5,Focus and pointer target requirements
+

@@ -5,6 +5,7 @@ import { fetchPublicApiList } from '@/lib/server-api';
 import type { Career } from '@/types';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo';
+import { PageIntro } from '@/components/layout/PageIntro';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Karier di DN Tech',
@@ -23,12 +24,7 @@ export default async function CareersPage() {
   return (
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900">Bergabung dengan Tim Kami</h1>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            Bangun masa depan teknologi bersama kami. Jelajahi posisi terbuka di bawah ini.
-          </p>
-        </div>
+        <PageIntro kicker="Karier" title="Bergabung dengan tim kami" description="Bangun masa depan teknologi bersama kami. Jelajahi posisi terbuka di bawah ini." />
 
         <div className="space-y-4 max-w-3xl mx-auto">
           {careers.map((job) => (
@@ -58,7 +54,7 @@ export default async function CareersPage() {
           ))}
 
           {careers.length === 0 && (
-            <div className="text-center py-16 rounded-lg border border-dashed border-gray-200 bg-gray-50">
+            <div className="border-y border-slate-300 py-16">
               <p className="text-gray-600 max-w-md mx-auto">
                 Belum ada posisi terbuka saat ini. Kami akan update halaman ini saat ada rekrutmen.
               </p>

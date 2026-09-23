@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
 import { fetchPublicApiList } from '@/lib/server-api';
 import type { Metadata } from 'next';
+import { PageIntro } from '@/components/layout/PageIntro';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO['case-studies'].title,
@@ -38,14 +39,13 @@ export default async function CaseStudiesPage() {
 
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900">Studi Kasus</h1>
-            <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-              {items.length > 0
-                ? 'Studi kasus dipublikasikan hanya dengan izin klien.'
-                : 'Belum ada studi kasus publik. Produk first-party kami ada di halaman Produk.'}
-            </p>
-          </div>
+          <PageIntro
+            kicker="Bukti kerja"
+            title="Studi kasus"
+            description={items.length > 0
+              ? 'Studi kasus dipublikasikan hanya dengan izin klien.'
+              : 'Belum ada studi kasus publik. Produk first-party kami ada di halaman Produk.'}
+          />
 
           {items.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -62,7 +62,7 @@ export default async function CaseStudiesPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 rounded-lg border border-dashed border-gray-200 bg-gray-50">
+            <div className="border-y border-slate-300 py-16">
               <p className="text-gray-600 max-w-md mx-auto">
                 Studi kasus akan dipublikasikan setelah proyek nyata selesai dan klien memberikan izin.
               </p>
@@ -80,7 +80,7 @@ export default async function CaseStudiesPage() {
             </div>
           )}
 
-          <div className="mt-16 text-center p-8 rounded-lg bg-blue-900">
+          <div className="mt-16 border-y-2 border-blue-900 bg-blue-900 p-8 text-center">
             <h2 className="text-2xl font-bold text-white">Punya proyek yang ingin dikerjakan?</h2>
             <p className="mt-2 text-blue-100">Mari diskusikan kebutuhan teknologi Anda.</p>
             <Button href="/contact" size="lg" variant="inverse" className="mt-6">

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Card } from '@/components/ui/Card';
-import { ContentPillars } from '@/components/content/ContentPillars';
+import { PageIntro } from '@/components/layout/PageIntro';
 import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonLd';
 import { formatDate } from '@/lib/utils';
 import { estimateReadTime, formatReadTime } from '@/lib/read-time';
@@ -50,20 +49,17 @@ export default async function BlogPage({
 
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900">Blog & Wawasan</h1>
-            <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-              Panduan tech stack, scaling software, dan saran untuk founder startup Indonesia
-            </p>
-          </div>
+          <PageIntro
+            kicker="Wawasan"
+            title="Blog & Wawasan"
+            description="Panduan tech stack, scaling software, dan saran untuk founder startup Indonesia."
+          />
 
-          <ContentPillars />
-
-          <div className="flex flex-wrap gap-2 justify-center mb-10">
+          <nav className="mb-10 mt-8 flex flex-wrap gap-x-6 gap-y-3 border-b border-slate-200" aria-label="Filter topik blog">
             <Link
               href="/blog"
-              className={`px-4 py-2 rounded-full text-sm font-medium min-h-[44px] flex items-center ${
-                !params.category ? 'bg-blue-900 text-white' : 'border border-gray-300 text-gray-600'
+              className={`border-b-2 pb-3 text-sm font-semibold ${
+                !params.category ? 'border-blue-900 text-blue-900' : 'border-transparent text-slate-500 hover:text-slate-900'
               }`}
             >
               Semua
@@ -72,49 +68,49 @@ export default async function BlogPage({
               <Link
                 key={pillar.id}
                 href={pillar.href}
-                className={`px-4 py-2 rounded-full text-sm font-medium border min-h-[44px] flex items-center ${
+                className={`border-b-2 pb-3 text-sm font-semibold ${
                   params.category === pillar.category
-                    ? 'bg-blue-900 text-white border-blue-900'
-                    : 'border-gray-300 text-gray-600'
+                    ? 'border-blue-900 text-blue-900'
+                    : 'border-transparent text-slate-500 hover:text-slate-900'
                 }`}
               >
                 {pillar.label}
               </Link>
             ))}
-          </div>
+          </nav>
 
           {posts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="border-t border-slate-300">
               {posts.map((post) => {
                 const readMin = estimateReadTime(post.content || post.excerpt);
                 return (
-                  <Link key={post.id} href={`/blog/${post.slug}`}>
-                    <Card hover className="h-full">
-                      {post.featuredImage?.url && (
+                  <Link key={post.id} href={`/blog/${post.slug}`} className="group grid gap-6 border-b border-slate-300 py-7 transition-colors hover:bg-slate-50 sm:grid-cols-[12rem_1fr] sm:px-3 lg:grid-cols-[16rem_1fr_12rem]">
+                      {post.featuredImage?.url ? (
                         <Image
                           src={getUploadUrl(post.featuredImage.url)}
                           alt={post.featuredImage.altText || post.title}
                           width={640}
                           height={360}
-                          className="mb-4 aspect-video w-full rounded-lg object-cover"
-                          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                          className="aspect-[4/3] w-full object-cover sm:row-span-2"
+                          sizes="(min-width: 1024px) 16rem, 12rem"
                         />
-                      )}
-                      <div className="text-xs text-teal-600 font-medium">{post.category}</div>
-                      <h2 className="mt-2 text-lg font-semibold text-gray-900">{post.title}</h2>
-                      <p className="mt-2 text-sm text-gray-600 line-clamp-3">{post.excerpt}</p>
-                      <div className="mt-4 text-xs text-gray-500">
+                      ) : <div className="hidden border-l-2 border-teal-600 sm:block" aria-hidden="true" />}
+                      <div>
+                        <div className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">{post.category}</div>
+                        <h2 className="mt-2 text-xl font-semibold leading-snug text-slate-950 sm:text-2xl">{post.title}</h2>
+                        <p className="mt-3 text-sm leading-6 text-slate-600">{post.excerpt}</p>
+                      </div>
+                      <div className="text-xs text-slate-500 sm:text-right">
                         {formatReadTime(readMin)}
                         {post.publishedAt && ` · ${formatDate(post.publishedAt)}`}
                         {post.author && ` · ${post.author.name}`}
                       </div>
-                    </Card>
                   </Link>
                 );
               })}
             </div>
           ) : (
-            <p className="text-center text-gray-500 py-12">
+            <p className="border-y border-slate-300 py-12 text-slate-500">
               {params.category
                 ? `Belum ada artikel untuk topik "${params.category}". Cek kembali nanti atau jelajahi topik lain.`
                 : 'Belum ada artikel blog yang dipublikasikan.'}
@@ -127,8 +123,8 @@ export default async function BlogPage({
                 <Link
                   key={p}
                   href={`/blog?page=${p}${params.category ? `&category=${encodeURIComponent(params.category)}` : ''}`}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                    p === page ? 'bg-blue-900 text-white' : 'border border-gray-300 text-gray-600'
+                  className={`border px-4 py-2 text-sm font-medium ${
+                    p === page ? 'border-blue-900 bg-blue-900 text-white' : 'border-gray-300 text-gray-600'
                   }`}
                 >
                   {p}
@@ -137,9 +133,9 @@ export default async function BlogPage({
             </div>
           )}
 
-          <div className="mt-16 text-center p-6 rounded-xl bg-gray-50 border border-gray-200">
-            <p className="text-gray-600">Ingin menerapkan apa yang Anda baca?</p>
-            <div className="mt-3 flex flex-wrap gap-4 justify-center text-sm">
+          <div className="mt-16 border-l-2 border-teal-600 pl-5">
+            <p className="font-semibold text-slate-900">Ingin menerapkan apa yang Anda baca?</p>
+            <div className="mt-3 flex flex-wrap gap-5 text-sm">
               <Link href="/services" className="text-blue-900 font-medium hover:underline">Jelajahi Layanan</Link>
               <Link href="/case-studies" className="text-blue-900 font-medium hover:underline">Lihat Studi Kasus</Link>
               <Link href="/contact" className="text-blue-900 font-medium hover:underline">Konsultasi dengan Ahli</Link>

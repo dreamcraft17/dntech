@@ -25,7 +25,7 @@ describe('HomeServices', () => {
     render(<HomeServices services={services} defaults={defaults} />);
 
     expect(
-      screen.getByRole('heading', { name: 'Dari website sampai sistem bisnis' }),
+      screen.getByRole('heading', { name: 'Butuh website, aplikasi, atau sistem internal?' }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: /Web App Development/ }),
@@ -48,9 +48,22 @@ describe('HomeServices', () => {
 
   it('always links to the full services listing', () => {
     render(<HomeServices services={[]} defaults={defaults} />);
-    expect(screen.getByRole('link', { name: /Lihat semua layanan/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Lihat seluruh layanan/ })).toHaveAttribute(
       'href',
       '/services',
     );
+  });
+
+  it('uses an editorial list without generic repeated learn-more labels', () => {
+    const services = [
+      service({ id: '1', name: 'Web App Development', slug: 'web-app-development' }),
+      service({ id: '2', name: 'Mobile App Development', slug: 'mobile-app-development' }),
+    ];
+
+    render(<HomeServices services={services} defaults={defaults} />);
+
+    expect(screen.queryByText('Pelajari lebih lanjut')).not.toBeInTheDocument();
+    expect(screen.getByRole('list')).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
   });
 });

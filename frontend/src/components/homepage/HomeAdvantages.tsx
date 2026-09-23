@@ -28,18 +28,12 @@ export function HomeAdvantages({ advantages }: HomeAdvantagesProps) {
           </div>
           {rest.length > 0 && (
             <ul className="divide-y divide-white/15">
-              {rest.map((item, index) => (
-                <li key={item.title} className="flex gap-6 py-8 first:pt-0">
-                  <span
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/25 font-mono text-sm text-blue-200"
-                    aria-hidden="true"
-                  >
-                    {String(index + 2).padStart(2, '0')}
-                  </span>
+              {rest.map((item) => (
+                <li key={item.title} className="grid gap-3 py-8 first:pt-0 sm:grid-cols-[minmax(10rem,0.65fr)_1fr] sm:gap-8">
                   <div>
                     <h4 className="text-lg font-semibold text-white">{item.title}</h4>
-                    <p className="mt-2 leading-relaxed text-blue-100">{item.description}</p>
                   </div>
+                  <p className="leading-relaxed text-blue-100">{item.description}</p>
                 </li>
               ))}
             </ul>

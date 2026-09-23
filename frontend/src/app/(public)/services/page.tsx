@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
+import { PageIntro } from '@/components/layout/PageIntro';
 import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
 import { fetchPublicApiList } from '@/lib/server-api';
@@ -45,57 +45,55 @@ export default async function ServicesPage({
 
       <div className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900">Dari website sampai sistem bisnis</h1>
-            <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-              Website company profile, aplikasi custom, dan integrasi sistem untuk bisnis yang ingin tampil meyakinkan dan bekerja lebih rapi.
-            </p>
-          </div>
+          <PageIntro
+            kicker="Layanan"
+            title="Dari website sampai sistem bisnis"
+            description="Website company profile, aplikasi custom, dan integrasi sistem untuk bisnis yang ingin tampil meyakinkan dan bekerja lebih rapi."
+          />
 
           {categories.length > 0 && (
-            <div className="flex flex-wrap gap-2 justify-center mb-10">
-              <Link href="/services" className="px-4 py-2 rounded-full text-sm font-medium bg-blue-900 text-white">Semua</Link>
+            <nav className="mb-10 mt-8 flex flex-wrap gap-x-6 gap-y-3 border-b border-slate-200" aria-label="Filter kategori layanan">
+              <Link href="/services" className={`border-b-2 pb-3 text-sm font-semibold ${!params.category ? 'border-blue-900 text-blue-900' : 'border-transparent text-slate-500 hover:text-slate-900'}`}>Semua</Link>
               {categories.map((cat) => (
                 <Link key={cat} href={`/services?category=${encodeURIComponent(cat!)}`}
-                  className={`px-4 py-2 rounded-full text-sm font-medium border ${
-                    params.category === cat ? 'bg-blue-900 text-white border-blue-900' : 'border-gray-300 text-gray-600'
+                  className={`border-b-2 pb-3 text-sm font-semibold ${
+                    params.category === cat ? 'border-blue-900 text-blue-900' : 'border-transparent text-slate-500 hover:text-slate-900'
                   }`}>{cat}</Link>
               ))}
-            </div>
+            </nav>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="mt-10 border-t border-slate-300">
             {services.map((service) => (
-              <Link key={service.id} href={`/services/${service.slug}`}>
-                <Card hover className="h-full">
-                  <div className="text-xs text-blue-900 font-medium mb-2">{service.category}</div>
-                  <h2 className="text-xl font-semibold text-gray-900">{service.name}</h2>
-                  <p className="mt-3 text-gray-600 line-clamp-3">{service.description}</p>
+              <Link key={service.id} href={`/services/${service.slug}`} className="group grid gap-6 border-b border-slate-300 py-8 transition-colors hover:bg-slate-50 sm:px-3 lg:grid-cols-[0.8fr_1.3fr_auto] lg:items-start">
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">{service.category}</div>
+                  <h2 className="mt-2 text-xl font-semibold text-slate-950 sm:text-2xl">{service.name}</h2>
+                </div>
+                <div>
+                  <p className="leading-7 text-slate-600">{service.description}</p>
                   {service.features && Array.isArray(service.features) && (
-                    <ul className="mt-4 space-y-1">
+                    <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
                       {(service.features as { title: string }[]).slice(0, 3).map((f, i) => (
-                        <li key={i} className="text-sm text-gray-500 flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-blue-900" />
-                          {f.title}
-                        </li>
+                        <li key={i} className="text-sm text-slate-500">— {f.title}</li>
                       ))}
                     </ul>
                   )}
-                  <span className="mt-4 inline-flex items-center text-sm text-blue-900 font-medium">
-                    Lihat detail <ArrowRight className="h-4 w-4 ml-1" />
-                  </span>
-                </Card>
+                </div>
+                <span className="inline-flex items-center gap-2 text-sm font-bold text-blue-900 lg:pt-7">
+                  Lihat detail <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
               </Link>
             ))}
           </div>
 
           {services.length === 0 && (
-            <p className="text-center text-gray-500 py-12">Tidak ada layanan ditemukan.</p>
+            <p className="border-y border-slate-300 py-12 text-slate-500">Tidak ada layanan ditemukan.</p>
           )}
 
-          <div className="mt-16 text-center">
-            <p className="text-gray-600 mb-4">Belum yakin layanan mana yang sesuai?</p>
-            <div className="flex flex-wrap gap-4 justify-center text-sm">
+          <div className="mt-16 border-l-2 border-teal-600 pl-5">
+            <p className="mb-4 font-semibold text-slate-900">Belum yakin layanan mana yang sesuai?</p>
+            <div className="flex flex-wrap gap-5 text-sm">
               <Link href="/quiz" className="text-blue-900 font-medium hover:underline">Ikuti Kuis Solusi</Link>
               <Link href="/blog" className="text-blue-900 font-medium hover:underline">Baca Panduan Kami</Link>
               <Link href="/contact" className="text-blue-900 font-medium hover:underline">Hubungi Kami</Link>
