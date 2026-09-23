@@ -27,6 +27,7 @@ export interface HomeServiceCard {
   name: string;
   description: string;
   slug?: string;
+  category?: string;
 }
 
 export interface HomeCta {
@@ -80,30 +81,37 @@ export const DEFAULT_PRODUCTS_SECTION = {
 export const DEFAULT_HOME_SERVICES: HomeServiceCard[] = [
   {
     name: 'Website & Company Profile',
+    category: 'Web',
     description: 'Website profesional, landing page, dan company profile yang membuat bisnis Anda terlihat meyakinkan dan mudah ditemukan online.',
   },
   {
     name: 'Web App Development',
+    category: 'Web App',
     description: 'Dashboard dan portal yang benar-benar dipakai tim Anda tiap hari untuk kerja, bukan sekadar demo.',
   },
   {
     name: 'Mobile App Development',
+    category: 'Mobile',
     description: 'Aplikasi iOS & Android yang pelanggan Anda buka setiap hari — cepat, stabil, siap App Store & Play Store.',
   },
   {
     name: 'Custom Software',
+    category: 'Software',
     description: 'Dari MVP sampai sistem operasional harian — dibangun dari workflow dan kebutuhan bisnis Anda, bukan template generik.',
   },
   {
     name: 'Maintenance & Support',
+    category: 'Support',
     description: 'Setelah go live kami tetap ada: update berkala, perbaikan bug cepat, dan pemantauan performa.',
   },
   {
     name: 'Technical Consulting',
+    category: 'Consulting',
     description: 'Petakan masalah, arsitektur, dan feasibility sebelum development — supaya investasi Anda bergerak ke jalan yang tepat.',
   },
   {
     name: 'Integration & API Development',
+    category: 'Integration',
     description: 'Hubungkan sistem yang sudah dipakai melalui API dan integrasi pihak ketiga, tanpa mengganti semuanya dari nol.',
   },
 ];
