@@ -15,6 +15,8 @@ type GeneratedDraft = {
   tags?: string[];
   seoTitle: string;
   seoDescription: string;
+  featuredImageId?: string;
+  imageProvider?: 'openai' | null;
 };
 
 type WorkerResult = {
@@ -283,11 +285,14 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
       tone: 'jelas, hangat, praktis, jujur, tidak terasa seperti copy AI; target 700-1000 kata',
       keywords: topic.keywords,
       language: 'Bahasa Indonesia',
-      generateImage: process.env.BLOG_AUTOMATION_DRY_RUN !== 'true'
-        && process.env.BLOG_AUTOMATION_GENERATE_IMAGE !== 'false',
+      generateImage: process.env.BLOG_AUTOMATION_DRY_RUN !== 'true',
       imageProvider: 'openai',
     }, authorId);
     quality = validateGeneratedDraft(draft);
+    if (quality.valid && process.env.BLOG_AUTOMATION_DRY_RUN !== 'true' && !draft.featuredImageId) {
+      quality = { ...quality, valid: false, reason: 'openai_cover_image_generation_failed' };
+      logger.warn({ attempt, maxAttempts, title: draft.title, imageProvider: draft.imageProvider }, '[blog-worker] OpenAI cover image missing; retrying draft');
+    }
     if (quality.valid) break;
 
     logger.warn({ attempt, maxAttempts, title: draft.title, words: quality.words, reason: quality.reason }, '[blog-worker] draft rejected by quality guard');
@@ -338,7 +343,7 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
     select: { id: true, title: true },
   });
   cacheService.clear();
-  logger.info({ postId: post.id, title: post.title, status: isPublished ? 'published' : 'scheduled' }, '[blog-worker] blog post created');
+  logger.info({ postId: post.id, title: post.title, status: isPublished ? 'published' : 'scheduled', imageProvider: draft.imageProvider }, '[blog-worker] blog post created');
   return { created: true, published: isPublished, postId: post.id, title: post.title };
 }
 
