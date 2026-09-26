@@ -1,7 +1,7 @@
 # DN Tech Company Profile
 
 > **Author:** Dozer  
-> **Updated:** 2026-09-12
+> **Updated:** 2026-09-26
 
 Production company profile for **DN Tech** (PT. Dozer Napitupulu Technology): public marketing site, admin CMS, lead capture, email notifications, and SEO foundations.
 
@@ -11,7 +11,7 @@ Production company profile for **DN Tech** (PT. Dozer Napitupulu Technology): pu
 |---|---|
 | Live | https://www.dntech.id · https://api.dntech.id |
 | Repo | [github.com/dreamcraft17/dntech](https://github.com/dreamcraft17/dntech) |
-| Latest | `84a2448` |
+| Latest | `922b571` |
 
 ## What it does
 
@@ -32,7 +32,7 @@ Detailed history: [`CHANGELOG.md`](https://github.com/dreamcraft17/company-wiki/
 | About — Founded by | Implemented (`DEFAULT_FOUNDER` + CMS `aboutContent.founder`) |
 | Legal pages | Implemented — Kebijakan Privasi + Syarat & Ketentuan (`db:seed-legal`) |
 | Relaunch anti-slop pass | Implemented (Aug 2026) — honest copy, skip link, CSP headers, deferred third-party JS |
-| Unit tests | **206 passing** (102 backend + 104 frontend) — verified 2026-09-12 |
+| Unit tests | **236 passing** (127 backend + 109 frontend) — verified 2026-09-26 |
 | CI | Lint + test + build on `main` (`.github/workflows/ci.yml`) |
 | Frontend build | Passing (Next.js 16.3.4, React 19.2.4, standalone output) |
 | Lighthouse baseline | Recorded — see [wiki LIGHTHOUSE-BASELINE](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/frontend/LIGHTHOUSE-BASELINE.md) |
