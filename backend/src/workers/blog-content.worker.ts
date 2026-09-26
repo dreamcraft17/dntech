@@ -285,6 +285,7 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
       language: 'Bahasa Indonesia',
       generateImage: process.env.BLOG_AUTOMATION_DRY_RUN !== 'true'
         && process.env.BLOG_AUTOMATION_GENERATE_IMAGE !== 'false',
+      imageProvider: 'gemini',
     }, authorId);
     quality = validateGeneratedDraft(draft);
     if (quality.valid) break;

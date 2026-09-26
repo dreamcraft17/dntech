@@ -10,6 +10,7 @@ const generateBlogSchema = z.object({
   keywords: z.string().max(300).optional(),
   language: z.string().max(40).optional(),
   generateImage: z.boolean().optional().default(true),
+  imageProvider: z.enum(['openai', 'gemini']).optional(),
 });
 
 const generateServiceSchema = z.object({
@@ -347,9 +348,19 @@ async function generateOpenAIBlogImage(title: string, excerpt: string, content: 
   );
 }
 
-async function generateBlogImage(title: string, excerpt: string, content: string, userId: string) {
+async function generateBlogImage(title: string, excerpt: string, content: string, userId: string, preferredProvider?: 'openai' | 'gemini') {
   const openAI = openAIKey();
   const gemini = process.env.GEMINI_API_KEY?.trim() || '';
+
+  if (preferredProvider === 'gemini') {
+    if (!gemini) throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'GEMINI_API_KEY belum dikonfigurasi untuk cover blog');
+    return { media: await generateGeminiBlogImage(title, excerpt, content, gemini, userId), provider: 'gemini' as const };
+  }
+
+  if (preferredProvider === 'openai') {
+    if (!openAI) throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'OPENAI_API_KEY belum dikonfigurasi untuk cover blog');
+    return { media: await generateOpenAIBlogImage(title, excerpt, content, openAI, userId), provider: 'openai' as const };
+  }
 
   if (openAI) {
     try {
@@ -433,7 +444,7 @@ Aturan:
   let imageProvider: 'openai' | 'gemini' | null = null;
   if (data.generateImage) {
     try {
-      const generatedImage = await generateBlogImage(draft.title, draft.excerpt, draft.content, userId);
+      const generatedImage = await generateBlogImage(draft.title, draft.excerpt, draft.content, userId, data.imageProvider);
       featuredImage = generatedImage.media;
       imageProvider = generatedImage.provider;
     } catch (error) {
