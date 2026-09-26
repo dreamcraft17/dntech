@@ -28,6 +28,7 @@ type WorkerResult = {
 const DEFAULT_SLOTS = ['09:00', '12:00', '15:00', '18:00'];
 const DEFAULT_TIMEZONE = 'Asia/Jakarta';
 const AUTOMATION_TAG = 'dntech-automation';
+const DEFAULT_GENERATION_ATTEMPTS = 3;
 
 const TOPIC_POOL = [
   {
@@ -252,18 +253,25 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
   if (!authorId) throw new Error('No active admin author found for blog automation');
 
   const topic = topicForSlot(local.dateKey, postsToday.length);
-  const draft = await generateBlogDraft({
-    topic: topic.topic,
-    audience: 'pemilik bisnis, founder startup, HR manager, dan tim operasional di Indonesia',
-    tone: 'jelas, hangat, praktis, jujur, tidak terasa seperti copy AI',
-    keywords: topic.keywords,
-    language: 'Bahasa Indonesia',
-    generateImage: false,
-  }, authorId);
-  const quality = validateGeneratedDraft(draft);
-  if (!quality.valid) {
-    logger.warn({ title: draft.title, words: quality.words, reason: quality.reason }, '[blog-worker] draft rejected by quality guard');
-    return { created: false, published: false, reason: quality.reason };
+  const maxAttempts = Math.max(1, Number(process.env.BLOG_AUTOMATION_MAX_GENERATION_ATTEMPTS || DEFAULT_GENERATION_ATTEMPTS));
+  let draft: GeneratedDraft | null = null;
+  let quality: ReturnType<typeof validateGeneratedDraft> | null = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    draft = await generateBlogDraft({
+      topic: topic.topic,
+      audience: 'pemilik bisnis, founder startup, HR manager, dan tim operasional di Indonesia',
+      tone: 'jelas, hangat, praktis, jujur, tidak terasa seperti copy AI; target 700-1000 kata',
+      keywords: topic.keywords,
+      language: 'Bahasa Indonesia',
+      generateImage: false,
+    }, authorId);
+    quality = validateGeneratedDraft(draft);
+    if (quality.valid) break;
+
+    logger.warn({ attempt, maxAttempts, title: draft.title, words: quality.words, reason: quality.reason }, '[blog-worker] draft rejected by quality guard');
+  }
+  if (!draft || !quality || !quality.valid) {
+    return { created: false, published: false, reason: quality?.reason || 'draft_generation_failed' };
   }
 
   const dayTag = `automation:${local.dateKey}`;
