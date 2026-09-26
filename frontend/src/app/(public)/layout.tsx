@@ -5,7 +5,6 @@ import { PageTracker } from '@/components/common/PageTracker';
 import { StickyCTA } from '@/components/layout/StickyCTA';
 import { CrispChatLoader } from '@/components/interactive/CrispChatLoader';
 import { ExitIntentModalLoader } from '@/components/interactive/ExitIntentModalLoader';
-import { AnalyticsLoader } from '@/components/seo/AnalyticsLoader';
 import { AIChatbot } from '@/components/interactive/AIChatbot';
 import {
   JsonLd,
@@ -14,8 +13,6 @@ import {
   buildWebsiteSchema,
 } from '@/components/seo/JsonLd';
 import { getPublicSettings } from '@/lib/settings';
-
-const DEFAULT_GOOGLE_ANALYTICS_ID = 'G-V6262D1WEE';
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await getPublicSettings();
@@ -41,13 +38,6 @@ export default async function PublicLayout({ children }: { children: React.React
       <StickyCTA />
       <ExitIntentModalLoader />
       <CrispChatLoader crispWebsiteId={settings.crispWebsiteId} />
-      <AnalyticsLoader
-        googleAnalyticsId={
-          settings.googleAnalyticsId ||
-          process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID ||
-          DEFAULT_GOOGLE_ANALYTICS_ID
-        }
-      />
       <AIChatbot />
     </>
   );

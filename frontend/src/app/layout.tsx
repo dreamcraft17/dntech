@@ -9,6 +9,9 @@ import {
 } from '@/lib/seo';
 import { getPublicSettings } from '@/lib/settings';
 import { GlobalLoadingIndicator } from '@/components/ui/GlobalLoadingIndicator';
+import { AnalyticsLoader } from '@/components/seo/AnalyticsLoader';
+
+const DEFAULT_GOOGLE_ANALYTICS_ID = 'G-V6262D1WEE';
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getPublicSettings();
@@ -55,6 +58,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="id" className="h-full">
       <body className="min-h-full flex flex-col antialiased">
         <GlobalLoadingIndicator />
+        <AnalyticsLoader
+          googleAnalyticsId={
+            process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || DEFAULT_GOOGLE_ANALYTICS_ID
+          }
+        />
         {children}
       </body>
     </html>
