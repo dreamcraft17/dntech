@@ -108,7 +108,7 @@ body {
 .article-hero-copy { display: flex; flex-direction: column; justify-content: center; }
 .article-hero-media {
   overflow: hidden;
-  min-height: 280px;
+  align-self: center;
   border: 1px solid #d1d5db;
   border-radius: 1rem;
   background: #172554;

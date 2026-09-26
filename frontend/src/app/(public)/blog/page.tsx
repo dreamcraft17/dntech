@@ -89,9 +89,9 @@ export default async function BlogPage({
                         <Image
                           src={getUploadUrl(post.featuredImage.url)}
                           alt={post.featuredImage.altText || post.title}
-                          width={640}
-                          height={360}
-                          className="aspect-[4/3] w-full object-cover sm:row-span-2"
+                          width={1536}
+                          height={1024}
+                          className="h-auto w-full object-contain sm:row-span-2"
                           sizes="(min-width: 1024px) 16rem, 12rem"
                         />
                       ) : <div className="hidden border-l-2 border-teal-600 sm:block" aria-hidden="true" />}

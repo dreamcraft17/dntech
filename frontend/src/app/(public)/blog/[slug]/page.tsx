@@ -149,11 +149,11 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                   <Image
                     src={getUploadUrl(post.featuredImage.url)}
                     alt={post.featuredImage.altText || post.title}
-                    width={1280}
-                    height={720}
+                    width={1536}
+                    height={1024}
                     quality={85}
                     priority
-                    className="h-full min-h-[280px] w-full object-cover"
+                    className="h-auto w-full object-contain"
                     sizes="(min-width: 1024px) 48vw, 100vw"
                     itemProp="image"
                   />
@@ -222,9 +222,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                       <Image
                         src={getUploadUrl(related.featuredImage.url)}
                         alt={related.featuredImage.altText || related.title}
-                        width={640}
-                        height={360}
-                        className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                          width={1536}
+                          height={1024}
+                          className="h-auto w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
                         sizes="(min-width: 640px) 33vw, 100vw"
                       />
                     )}
