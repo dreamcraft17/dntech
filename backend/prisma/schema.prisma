@@ -258,6 +258,16 @@ model BlogPost {
   @@map("blog_posts")
 }
 
+model BlogAutomationState {
+  id            String   @id @default(uuid())
+  dateKey       String   @unique @map("date_key")
+  skippedTopics Json?    @map("skipped_topics")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("blog_automation_states")
+}
+
 model FormSubmission {
   id                String     @id @default(uuid())
   formType          FormType   @map("form_type")

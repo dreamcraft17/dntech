@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { UserRole } from '@prisma/client';
 import prisma from '../config/database';
 import logger from '../config/logger';
-import { generateBlogDraft } from '../services/GeminiContentService';
+import { BLOG_MIN_WORDS, generateBlogDraft } from '../services/GeminiContentService';
 import { cacheService } from '../services/CacheService';
 import { slugify } from '../utils/helpers';
 
@@ -168,7 +168,7 @@ export function validateGeneratedDraft(draft: GeneratedDraft) {
       draft.excerpt.trim() &&
       draft.seoTitle.trim() &&
       draft.seoDescription.trim() &&
-      words >= 500 &&
+      words >= BLOG_MIN_WORDS &&
       words <= 1800 &&
       hasStructure &&
       !forbidden,
@@ -178,7 +178,7 @@ export function validateGeneratedDraft(draft: GeneratedDraft) {
       ? 'draft_contains_forbidden_ai_or_placeholder_phrase'
       : !hasStructure
         ? 'draft_missing_html_structure'
-        : words < 500
+        : words < BLOG_MIN_WORDS
           ? 'draft_too_short'
           : words > 1800
             ? 'draft_too_long'
@@ -229,6 +229,27 @@ async function generatedToday(dateKey: string) {
   return recent.filter((post) => Array.isArray(post.tags) && post.tags.includes(AUTOMATION_TAG));
 }
 
+async function skippedTopicsForDay(dateKey: string) {
+  const state = await prisma.blogAutomationState.findUnique({
+    where: { dateKey },
+    select: { skippedTopics: true },
+  });
+  return Array.isArray(state?.skippedTopics)
+    ? state.skippedTopics.filter((topic): topic is string => typeof topic === 'string')
+    : [];
+}
+
+async function skipTopicForDay(dateKey: string, topic: string) {
+  const skippedTopics = await skippedTopicsForDay(dateKey);
+  if (skippedTopics.includes(topic)) return;
+
+  await prisma.blogAutomationState.upsert({
+    where: { dateKey },
+    update: { skippedTopics: [...skippedTopics, topic] },
+    create: { dateKey, skippedTopics: [...skippedTopics, topic] },
+  });
+}
+
 export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerResult> {
   if (process.env.BLOG_AUTOMATION_ENABLED !== 'true') {
     return { created: false, published: false, reason: 'disabled' };
@@ -244,15 +265,14 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
   const postsToday = await generatedToday(local.dateKey);
   const target = Math.min(Number(process.env.BLOG_AUTOMATION_POSTS_PER_DAY || 4), slots.length);
   if (postsToday.length >= target) return { created: false, published: false, reason: 'daily_target_reached' };
-  const slotTag = `automation-slot:${postsToday.length}`;
-  if (postsToday.some((post) => Array.isArray(post.tags) && post.tags.includes(slotTag))) {
-    return { created: false, published: false, reason: 'slot_already_generated' };
-  }
+  const skippedTopics = process.env.BLOG_AUTOMATION_DRY_RUN === 'true'
+    ? []
+    : await skippedTopicsForDay(local.dateKey);
+  const topic = topicForSlot(local.dateKey, postsToday.length + skippedTopics.length);
 
   const authorId = await findAuthorId();
   if (!authorId) throw new Error('No active admin author found for blog automation');
 
-  const topic = topicForSlot(local.dateKey, postsToday.length);
   const maxAttempts = Math.max(1, Number(process.env.BLOG_AUTOMATION_MAX_GENERATION_ATTEMPTS || DEFAULT_GENERATION_ATTEMPTS));
   let draft: GeneratedDraft | null = null;
   let quality: ReturnType<typeof validateGeneratedDraft> | null = null;
@@ -271,10 +291,16 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
     logger.warn({ attempt, maxAttempts, title: draft.title, words: quality.words, reason: quality.reason }, '[blog-worker] draft rejected by quality guard');
   }
   if (!draft || !quality || !quality.valid) {
-    return { created: false, published: false, reason: quality?.reason || 'draft_generation_failed' };
+    if (process.env.BLOG_AUTOMATION_DRY_RUN !== 'true') {
+      await skipTopicForDay(local.dateKey, topic.topic);
+      logger.warn({ topic: topic.topic, dateKey: local.dateKey }, '[blog-worker] topic skipped after max generation attempts');
+    }
+    return { created: false, published: false, reason: 'topic_skipped_after_max_attempts' };
   }
 
   const dayTag = `automation:${local.dateKey}`;
+  const slotTag = `automation-slot:${postsToday.length}`;
+  const topicTag = `automation-topic:${slugify(topic.topic)}`;
   const cleanSlug = slugify(draft.slug || draft.title);
   const duplicate = await prisma.blogPost.findFirst({
     where: { OR: [{ slug: cleanSlug }, { title: draft.title }], deletedAt: null },
@@ -299,7 +325,7 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
       content: draft.content,
       excerpt: draft.excerpt,
       category: draft.category || topic.pillar,
-      tags: [...(draft.tags || []), AUTOMATION_TAG, dayTag, slotTag, topic.pillar.toLowerCase().replace(/\s+/g, '-')],
+      tags: [...(draft.tags || []), AUTOMATION_TAG, dayTag, slotTag, topicTag, topic.pillar.toLowerCase().replace(/\s+/g, '-')],
       authorId,
       status: isPublished ? 'published' : 'scheduled',
       publishedAt: isPublished ? now : undefined,

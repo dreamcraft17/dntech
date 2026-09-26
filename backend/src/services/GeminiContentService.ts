@@ -71,6 +71,8 @@ const OPENAI_TIMEOUT_MS = 30_000;
 const BRAND_CONTEXT_TIMEOUT_MS = 8_000;
 const GEMINI_RESEARCH_TIMEOUT_MS = 45_000;
 const MAX_BRAND_CONTEXT_CHARS = 12_000;
+export const BLOG_MIN_WORDS = 500;
+const BLOG_TARGET_WORD_RANGE = '700-1000';
 
 function openAIKey() {
   return process.env.OPENAI_API_KEY?.trim() || '';
@@ -398,7 +400,8 @@ Aturan:
 - Struktur wajib: mulai dengan satu paragraf pembuka, gunakan <h2> untuk setiap bagian utama, <h3> untuk subbagian, dan gunakan list bila membahas langkah atau beberapa poin.
 - Jangan menulis judul bagian sebagai paragraf biasa. Jangan memakai <strong> sebagai pengganti heading.
 - Jangan mengulang excerpt di paragraf pembuka.
-- Buat artikel sekitar 700-1000 kata dengan struktur yang nyaman dibaca.
+- Panjang artikel wajib minimal ${BLOG_MIN_WORDS} kata. Targetkan ${BLOG_TARGET_WORD_RANGE} kata agar hasil tidak terlalu pendek atau melebar.
+- Hitung kata pada field content saja (teks di dalam HTML), bukan title, excerpt, tags, atau metadata. Jangan mengakhiri artikel sebelum batas minimal terpenuhi.
 - Kembalikan JSON valid saja, tanpa markdown fence, dengan field: title, slug, excerpt, content, category, tags, seoTitle, seoDescription.
 - slug harus lowercase, singkat, dan memakai tanda hubung.
 - seoTitle maksimal 60 karakter; seoDescription sekitar 140-160 karakter.
