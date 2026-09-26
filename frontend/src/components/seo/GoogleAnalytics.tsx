@@ -2,8 +2,14 @@
 
 import Script from 'next/script';
 
+const GOOGLE_MEASUREMENT_ID_PATTERN = /^G-[A-Z0-9]+$/;
+
+export function isValidGoogleMeasurementId(measurementId?: string): measurementId is string {
+  return Boolean(measurementId && GOOGLE_MEASUREMENT_ID_PATTERN.test(measurementId));
+}
+
 export function GoogleAnalytics({ measurementId }: { measurementId?: string }) {
-  if (!measurementId) return null;
+  if (!isValidGoogleMeasurementId(measurementId)) return null;
 
   return (
     <>

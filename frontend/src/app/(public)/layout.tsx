@@ -15,6 +15,8 @@ import {
 } from '@/components/seo/JsonLd';
 import { getPublicSettings } from '@/lib/settings';
 
+const DEFAULT_GOOGLE_ANALYTICS_ID = 'G-V6262D1WEE';
+
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await getPublicSettings();
 
@@ -39,7 +41,13 @@ export default async function PublicLayout({ children }: { children: React.React
       <StickyCTA />
       <ExitIntentModalLoader />
       <CrispChatLoader crispWebsiteId={settings.crispWebsiteId} />
-      <AnalyticsLoader googleAnalyticsId={settings.googleAnalyticsId} />
+      <AnalyticsLoader
+        googleAnalyticsId={
+          settings.googleAnalyticsId ||
+          process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID ||
+          DEFAULT_GOOGLE_ANALYTICS_ID
+        }
+      />
       <AIChatbot />
     </>
   );
