@@ -22,7 +22,11 @@ function HeroKicker({ subtitle }: { subtitle: string }) {
 
 export function HomeHero({ content }: HomeHeroProps) {
   return (
-    <section className="relative overflow-hidden bg-[var(--primary)] text-white">
+    <section
+      className="relative overflow-hidden bg-[var(--primary)] bg-cover bg-center text-white"
+      style={{ backgroundImage: "url('/hero_bg.png')" }}
+    >
+      <div className="absolute inset-0 bg-blue-950/45" aria-hidden="true" />
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)] lg:items-end">
           <div className="max-w-3xl">

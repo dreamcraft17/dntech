@@ -8,6 +8,7 @@
     "build": "tsc",
     "prebuild": "prisma generate",
     "start": "node dist/index.js",
+    "worker:blog": "node dist/workers/blog-content.worker.js",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",

@@ -13,6 +13,7 @@
 set -euo pipefail
 
 BACKEND_PM2="${BACKEND_PM2:-dntech-api}"
+BLOG_WORKER_PM2="${BLOG_WORKER_PM2:-dntech-blog-worker}"
 FRONTEND_PM2="${FRONTEND_PM2:-dntech-web}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -60,6 +61,13 @@ step_backend_build() {
 
   banner "Backend: pm2 restart ${BACKEND_PM2}"
   pm2 restart "$BACKEND_PM2"
+
+  if pm2 describe "$BLOG_WORKER_PM2" >/dev/null 2>&1; then
+    banner "Blog worker: pm2 restart ${BLOG_WORKER_PM2}"
+    pm2 restart "$BLOG_WORKER_PM2"
+  else
+    log "Blog worker PM2 process '${BLOG_WORKER_PM2}' is not registered; skipping restart."
+  fi
 }
 
 step_frontend_build() {

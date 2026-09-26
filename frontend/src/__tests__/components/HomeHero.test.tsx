@@ -3,11 +3,12 @@ import { HomeHero } from '@/components/homepage/HomeHero';
 import { resolveHomeContent } from '@/lib/homepage-content';
 
 describe('HomeHero', () => {
-  it('shows a clear text-led hero layout without decorative stock imagery', () => {
+  it('shows text-led hero with hero_bg.png as CSS background (no img tag)', () => {
     render(<HomeHero content={resolveHomeContent({})} />);
 
     const section = screen.getByRole('heading', { level: 1 }).closest('section');
-    expect(section).toHaveClass('bg-[var(--primary)]');
+    expect(section).toHaveClass('bg-cover');
+    expect(section).toHaveStyle({ backgroundImage: "url('/hero_bg.png')" });
     expect(section?.querySelector('img')).toBeNull();
     expect(screen.getByRole('complementary', { name: 'Fokus layanan' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Konsultasi Gratis/ })).toHaveAttribute(

@@ -110,6 +110,7 @@ npm run dev
 | `npm run dev` | API with hot reload |
 | `npm run build` | TypeScript compile (+ `prisma generate`) |
 | `npm run start` | Run compiled API |
+| `npm run worker:blog` | Run the opt-in daily blog content worker |
 | `npm run test` | All Jest tests |
 | `npm run test:unit` | Unit tests only |
 | `npm run test:integration` | Integration tests (needs Postgres) |
@@ -159,6 +160,10 @@ From `backend/.env.example`:
 | `SMTP_FROM_NAME` / `SMTP_FROM_EMAIL` | Sender identity |
 | `EMAIL_RETRY_ATTEMPTS` / `EMAIL_RATE_LIMIT` | Mail queue tuning |
 | `SENTRY_DSN` | Optional error monitoring (no-op if unset) |
+
+Blog automation is intentionally opt-in. Set `BLOG_AUTOMATION_ENABLED=true` only after configuring an active admin author and an AI provider. The worker creates up to four useful, structured articles per day at the configured slots, rejects short/placeholder drafts, avoids AI-generated cover images, and defaults to `scheduled` status. Run it as a separate PM2 process with `npm run worker:blog`; use `BLOG_AUTOMATION_DRY_RUN=true` to validate generation without writing posts.
+
+On the VPS, after the first backend build, register the process once: `pm2 start backend/dist/workers/blog-content.worker.js --name dntech-blog-worker --cwd backend`. Future `scripts/deploy.sh` runs restart it automatically when registered.
 
 Legacy SendGrid vars exist but SMTP is preferred.
 
