@@ -10,14 +10,14 @@ const generateBlogSchema = z.object({
   keywords: z.string().max(300).optional(),
   language: z.string().max(40).optional(),
   generateImage: z.boolean().optional().default(true),
-  imageProvider: z.enum(['openai', 'gemini']).optional(),
+  imageProvider: z.literal('openai').default('openai'),
 });
 
 const generateBlogImageSchema = z.object({
   title: z.string().min(3).max(240),
   excerpt: z.string().max(1_000).optional().default(''),
   content: z.string().min(100),
-  imageProvider: z.enum(['openai', 'gemini']).default('openai'),
+  imageProvider: z.literal('openai').default('openai'),
 });
 
 const generateServiceSchema = z.object({
@@ -50,18 +50,6 @@ const generatedServiceSchema = z.object({
 
 type GeminiResponse = {
   candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
-  error?: { message?: string };
-};
-
-type GeminiImageResponse = {
-  steps?: Array<{
-    content?: Array<{
-      type?: string;
-      data?: string;
-      mime_type?: string;
-      mimeType?: string;
-    }>;
-  }>;
   error?: { message?: string };
 };
 
@@ -285,51 +273,6 @@ Rangkum temuan dalam poin-poin berbahasa Indonesia, sertakan URL sumber untuk se
   }
 }
 
-async function generateGeminiBlogImage(title: string, excerpt: string, content: string, apiKey: string, userId: string) {
-  const model = process.env.GEMINI_IMAGE_MODEL || 'gemini-2.5-flash-image';
-  const articleContext = plainTextFromHtml(content).slice(0, 2_000);
-  const prompt = `
-Buat gambar hero editorial rasio 16:9 untuk artikel blog DN Tech.
-Judul: ${title}
-Ringkasan: ${excerpt}
-Konteks isi artikel: ${articleContext}
-
-Gambarkan ide utama dan situasi yang dibahas dalam artikel, bukan sekadar gambar laptop atau orang tersenyum. Gaya: modern, profesional, hangat, bersih, relevan untuk pemilik bisnis dan tim operasional di Indonesia.
-Jangan gunakan teks, logo, watermark, wajah orang nyata, atau elemen merek pihak lain. Gunakan ilustrasi konseptual yang mudah dipahami sebagai cover artikel.
-`.trim();
-
-  const response = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/interactions',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify({
-        model,
-        input: prompt,
-      }),
-    },
-  );
-
-  const result = await response.json() as GeminiImageResponse;
-  if (!response.ok) {
-    throw new AppError(502, 'AI_IMAGE_REQUEST_FAILED', result.error?.message || 'Gemini gagal membuat gambar');
-  }
-
-  const image = result.steps?.flatMap((step) => step.content || [])
-    .find((part) => part.type === 'image' && part.data);
-  if (!image?.data) throw new AppError(502, 'AI_IMAGE_EMPTY_RESPONSE', 'Gemini tidak mengembalikan gambar');
-
-  return createMediaFromBuffer(
-    Buffer.from(image.data, 'base64'),
-    image.mimeType || image.mime_type || 'image/png',
-    `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'blog-cover'}.png`,
-    userId,
-  );
-}
-
 async function generateOpenAIBlogImage(title: string, excerpt: string, content: string, apiKey: string, userId: string) {
   const articleContext = plainTextFromHtml(content).slice(0, 2_000);
   const response = await fetch(`${openAIBaseUrl(apiKey)}/images/generations`, {
@@ -355,29 +298,10 @@ async function generateOpenAIBlogImage(title: string, excerpt: string, content: 
   );
 }
 
-async function generateBlogImage(title: string, excerpt: string, content: string, userId: string, preferredProvider?: 'openai' | 'gemini') {
+async function generateBlogImage(title: string, excerpt: string, content: string, userId: string) {
   const openAI = openAIKey();
-  const gemini = process.env.GEMINI_API_KEY?.trim() || '';
-
-  if (preferredProvider === 'gemini') {
-    if (!gemini) throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'GEMINI_API_KEY belum dikonfigurasi untuk cover blog');
-    return { media: await generateGeminiBlogImage(title, excerpt, content, gemini, userId), provider: 'gemini' as const };
-  }
-
-  if (preferredProvider === 'openai') {
-    if (!openAI) throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'OPENAI_API_KEY belum dikonfigurasi untuk cover blog');
-    return { media: await generateOpenAIBlogImage(title, excerpt, content, openAI, userId), provider: 'openai' as const };
-  }
-
-  if (openAI) {
-    try {
-      return { media: await generateOpenAIBlogImage(title, excerpt, content, openAI, userId), provider: 'openai' as const };
-    } catch (error) {
-      console.warn('[blog-ai] OpenAI image generation failed; trying Gemini fallback', error instanceof Error ? error.message : error);
-    }
-  }
-  if (gemini) return { media: await generateGeminiBlogImage(title, excerpt, content, gemini, userId), provider: 'gemini' as const };
-  throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'Tidak ada provider image AI yang dikonfigurasi');
+  if (!openAI) throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'OPENAI_API_KEY belum dikonfigurasi untuk cover blog');
+  return { media: await generateOpenAIBlogImage(title, excerpt, content, openAI, userId), provider: 'openai' as const };
 }
 
 export async function generateBlogDraft(input: unknown, userId: string) {
@@ -448,10 +372,10 @@ Aturan:
   }
 
   let featuredImage = null;
-  let imageProvider: 'openai' | 'gemini' | null = null;
+  let imageProvider: 'openai' | null = null;
   if (data.generateImage) {
     try {
-      const generatedImage = await generateBlogImage(draft.title, draft.excerpt, draft.content, userId, data.imageProvider);
+      const generatedImage = await generateBlogImage(draft.title, draft.excerpt, draft.content, userId);
       featuredImage = generatedImage.media;
       imageProvider = generatedImage.provider;
     } catch (error) {
@@ -471,7 +395,7 @@ Aturan:
 
 export async function generateBlogCoverImage(input: unknown, userId: string) {
   const data = generateBlogImageSchema.parse(input);
-  const generatedImage = await generateBlogImage(data.title, data.excerpt, data.content, userId, data.imageProvider);
+  const generatedImage = await generateBlogImage(data.title, data.excerpt, data.content, userId);
 
   return {
     featuredImageId: generatedImage.media.id,
