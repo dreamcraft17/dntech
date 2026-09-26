@@ -13,7 +13,7 @@ import * as settings from '../services/AdminSettingsService';
 import * as users from '../services/AdminUserService';
 import * as analytics from '../services/AdminAnalyticsService';
 import * as leads from '../services/LeadService';
-import { generateBlogDraft, generateServiceDraft } from '../services/GeminiContentService';
+import { generateBlogCoverImage, generateBlogDraft, generateServiceDraft } from '../services/GeminiContentService';
 
 const router = Router();
 router.use(authenticate);
@@ -107,6 +107,10 @@ router.get('/blog', asyncHandler(async (req, res) => {
 
 router.post('/blog/generate', requireWrite('blog'), asyncHandler(async (req: AuthRequest, res) => {
   successResponse(res, await generateBlogDraft(req.body, req.user!.id));
+}));
+
+router.post('/blog/generate-image', requireWrite('blog'), asyncHandler(async (req: AuthRequest, res) => {
+  successResponse(res, await generateBlogCoverImage(req.body, req.user!.id));
 }));
 
 router.post('/blog', requireWrite('blog'), asyncHandler(async (req: AuthRequest, res) => {

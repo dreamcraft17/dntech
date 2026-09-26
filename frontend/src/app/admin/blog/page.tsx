@@ -14,7 +14,7 @@ export default function AdminBlogPage() {
         { key: 'category', label: 'Kategori' },
         { key: 'excerpt', label: 'Cuplikan', type: 'textarea' },
         { key: 'content', label: 'Konten (HTML)', type: 'textarea', required: true },
-        { key: 'featuredImageId', label: 'Gambar Utama', type: 'image' },
+        { key: 'featuredImageId', label: 'Gambar Utama', type: 'image', aiGenerate: true },
         { key: 'status', label: 'Status', type: 'select', options: [{ value: 'draft', label: 'Draf' }, { value: 'published', label: 'Diterbitkan' }, { value: 'scheduled', label: 'Terjadwal' }] },
         { key: 'seoTitle', label: 'Meta Title' },
         { key: 'seoDescription', label: 'Meta Description', type: 'textarea' },

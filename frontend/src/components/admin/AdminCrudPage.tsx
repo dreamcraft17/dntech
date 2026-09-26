@@ -18,6 +18,7 @@ type FieldDef = {
   options?: { value: string; label: string }[];
   required?: boolean;
   placeholder?: string;
+  aiGenerate?: boolean;
 };
 
 export default function AdminCrudPage({
@@ -38,6 +39,7 @@ export default function AdminCrudPage({
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [publishingId, setPublishingId] = useState<string | null>(null);
+  const [generatingImage, setGeneratingImage] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const load = useCallback(async () => {
@@ -150,6 +152,30 @@ export default function AdminCrudPage({
     load();
   }
 
+  async function generateImage(fieldKey: string) {
+    if (!editing) return;
+    setGeneratingImage(true);
+    try {
+      const generated = await apiFetch<{ featuredImageId: string; featuredImageUrl: string }>(`/admin/${endpoint}/generate-image`, {
+        method: 'POST',
+        body: JSON.stringify({
+          title: editing.title || editing.name || '',
+          excerpt: editing.excerpt || '',
+          content: editing.content || '',
+        }),
+      });
+      setEditing({
+        ...editing,
+        [fieldKey]: generated.featuredImageId,
+        [`${fieldKey}Url`]: generated.featuredImageUrl,
+      });
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Gagal membuat gambar dengan Gemini');
+    } finally {
+      setGeneratingImage(false);
+    }
+  }
+
   function startEdit(item: Item) {
     const data: Record<string, unknown> = { ...defaultItem, ...item };
     fields.filter((f) => f.type === 'json').forEach((f) => {
@@ -239,6 +265,8 @@ export default function AdminCrudPage({
                       [f.key]: media.id,
                       [urlKey]: media.url,
                     })}
+                    onGenerate={f.aiGenerate ? () => generateImage(f.key) : undefined}
+                    generating={generatingImage}
                     className="md:col-span-2"
                   />
                 );

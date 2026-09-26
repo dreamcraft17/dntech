@@ -13,6 +13,12 @@ const generateBlogSchema = z.object({
   imageProvider: z.enum(['openai', 'gemini']).optional(),
 });
 
+const generateBlogImageSchema = z.object({
+  title: z.string().min(3).max(240),
+  excerpt: z.string().max(1_000).optional().default(''),
+  content: z.string().min(100),
+});
+
 const generateServiceSchema = z.object({
   prompt: z.string().min(3).max(1200),
   audience: z.string().max(160).optional(),
@@ -459,6 +465,17 @@ Aturan:
     featuredImageUrl: featuredImage?.url || '',
     aiProvider: contentProvider,
     imageProvider,
+  };
+}
+
+export async function generateBlogCoverImage(input: unknown, userId: string) {
+  const data = generateBlogImageSchema.parse(input);
+  const generatedImage = await generateBlogImage(data.title, data.excerpt, data.content, userId, 'gemini');
+
+  return {
+    featuredImageId: generatedImage.media.id,
+    featuredImageUrl: generatedImage.media.url,
+    imageProvider: generatedImage.provider,
   };
 }
 
