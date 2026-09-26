@@ -283,7 +283,8 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
       tone: 'jelas, hangat, praktis, jujur, tidak terasa seperti copy AI; target 700-1000 kata',
       keywords: topic.keywords,
       language: 'Bahasa Indonesia',
-      generateImage: false,
+      generateImage: process.env.BLOG_AUTOMATION_DRY_RUN !== 'true'
+        && process.env.BLOG_AUTOMATION_GENERATE_IMAGE !== 'false',
     }, authorId);
     quality = validateGeneratedDraft(draft);
     if (quality.valid) break;
