@@ -107,7 +107,7 @@ export function ImageUploadField({
               className="inline-flex items-center gap-1 rounded-md border border-teal-600 px-2.5 py-1.5 text-xs font-semibold text-teal-700 hover:bg-teal-50 disabled:opacity-50"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              {generating ? 'Membuat…' : 'Generate dengan Gemini'}
+              {generating ? 'Membuat…' : 'Generate dengan OpenAI'}
             </button>
           )}
           <button

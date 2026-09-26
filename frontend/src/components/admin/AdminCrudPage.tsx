@@ -162,6 +162,7 @@ export default function AdminCrudPage({
           title: editing.title || editing.name || '',
           excerpt: editing.excerpt || '',
           content: editing.content || '',
+          imageProvider: 'openai',
         }),
       });
       setEditing({

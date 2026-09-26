@@ -17,6 +17,7 @@ const generateBlogImageSchema = z.object({
   title: z.string().min(3).max(240),
   excerpt: z.string().max(1_000).optional().default(''),
   content: z.string().min(100),
+  imageProvider: z.enum(['openai', 'gemini']).default('openai'),
 });
 
 const generateServiceSchema = z.object({
@@ -470,7 +471,7 @@ Aturan:
 
 export async function generateBlogCoverImage(input: unknown, userId: string) {
   const data = generateBlogImageSchema.parse(input);
-  const generatedImage = await generateBlogImage(data.title, data.excerpt, data.content, userId, 'gemini');
+  const generatedImage = await generateBlogImage(data.title, data.excerpt, data.content, userId, data.imageProvider);
 
   return {
     featuredImageId: generatedImage.media.id,
