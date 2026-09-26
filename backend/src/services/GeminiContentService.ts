@@ -280,7 +280,7 @@ async function generateOpenAIBlogImage(title: string, excerpt: string, content: 
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify({
       model: process.env.OPENAI_IMAGE_MODEL || 'gpt-image-1',
-      size: '1536x864',
+      size: '1536x1024',
       response_format: 'b64_json',
       prompt: `Buat gambar hero editorial rasio 16:9 untuk artikel blog DN Tech. Judul: ${title}. Ringkasan: ${excerpt}. Konteks isi artikel: ${articleContext}. Gambarkan ide utama artikel, bukan stock image generik laptop atau orang tersenyum. Gaya modern, profesional, hangat, bersih, relevan untuk pemilik bisnis dan tim operasional di Indonesia. Jangan gunakan teks, logo, watermark, wajah orang nyata, atau merek pihak lain.`,
     }),
