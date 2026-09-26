@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
+import { TrendBars } from '@/components/admin/TrendBars';
 import { Users, Eye, MessageSquare, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 
@@ -15,11 +16,17 @@ interface Overview {
   conversionRate: string;
 }
 
+interface Traffic {
+  dailyTrend: [string, number][];
+}
+
 export default function AdminDashboardPage() {
   const [overview, setOverview] = useState<Overview | null>(null);
+  const [traffic, setTraffic] = useState<Traffic | null>(null);
 
   useEffect(() => {
     apiFetch<Overview>('/admin/analytics/overview').then(setOverview).catch(console.error);
+    apiFetch<Traffic>('/admin/analytics/traffic?days=30').then(setTraffic).catch(console.error);
   }, []);
 
   const stats = [
@@ -49,6 +56,12 @@ export default function AdminDashboardPage() {
           </Card>
         ))}
       </div>
+
+      {traffic && traffic.dailyTrend.length > 0 && (
+        <Card title="Tampilan Halaman per Hari (30 hr)" className="mb-8">
+          <TrendBars data={traffic.dailyTrend} />
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card title="Aksi Cepat">
