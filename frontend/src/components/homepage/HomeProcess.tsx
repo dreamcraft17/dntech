@@ -7,7 +7,7 @@ interface HomeProcessProps {
 
 export function HomeProcess({ steps }: HomeProcessProps) {
   return (
-    <section className="bg-white py-section">
+    <section id="cara-kerja" className="bg-white py-section scroll-mt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           kicker="Proses Kerja"

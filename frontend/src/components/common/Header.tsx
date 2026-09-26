@@ -14,11 +14,11 @@ const HeaderSearch = dynamic(
 );
 
 const navLinks = [
-  { href: '/', label: 'Beranda' },
   { href: '/services', label: 'Layanan' },
   { href: '/products', label: 'Produk' },
+  { href: '/case-studies', label: 'Bukti' },
+  { href: '/#cara-kerja', label: 'Cara kerja' },
   { href: '/about', label: 'Tentang' },
-  { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Kontak' },
 ];
 
@@ -83,7 +83,7 @@ export function Header() {
               href={link.href}
               className={cn(
                 'px-3 py-2 text-sm font-medium rounded-lg transition-colors min-h-[48px] flex items-center',
-                pathname === link.href
+                pathname === link.href || (link.href === '/#cara-kerja' && pathname === '/')
                   ? 'text-blue-900 bg-blue-50'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               )}
@@ -145,7 +145,7 @@ export function Header() {
               onClick={() => setMobileOpen(false)}
               className={cn(
                 'block px-3 py-3 text-sm font-medium rounded-lg min-h-[48px] flex items-center',
-                pathname === link.href ? 'text-blue-900 bg-blue-50' : 'text-gray-600'
+                pathname === link.href || (link.href === '/#cara-kerja' && pathname === '/') ? 'text-blue-900 bg-blue-50' : 'text-gray-600'
               )}
             >
               {link.label}

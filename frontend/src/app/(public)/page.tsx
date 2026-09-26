@@ -4,6 +4,7 @@ import { getPublicSettings } from '@/lib/settings';
 import { resolveHomeContent } from '@/lib/homepage-content';
 import type { Metadata } from 'next';
 import { HomeHero } from '@/components/homepage/HomeHero';
+import { HomeJobPaths } from '@/components/homepage/HomeJobPaths';
 import { HomeBelowFold, HomeBelowFoldFallback } from '@/components/homepage/HomeBelowFold';
 
 export const metadata: Metadata = buildMetadata({
@@ -20,6 +21,7 @@ export default async function HomePage() {
   return (
     <>
       <HomeHero content={content} />
+      <HomeJobPaths />
       <Suspense fallback={<HomeBelowFoldFallback />}>
         <HomeBelowFold content={content} settings={settings} />
       </Suspense>

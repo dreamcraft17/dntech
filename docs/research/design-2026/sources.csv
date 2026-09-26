@@ -1,0 +1,12 @@
+id,title,url,type,credibility,recency,bias,role
+01,DN Tech local implementation audit,local://dntech-repo,primary,high,high,internal,Current constraints and existing evidence
+02,DN Tech live homepage,https://dntech.id/,primary,high,high,first-party,Observed public IA copy proof and CTA paths
+03,B2B Usability — Nielsen Norman Group,https://www.nngroup.com/articles/b2b-usability/,secondary,high,medium,low,Buyer research and disclosure/navigation principles
+04,Trustworthiness in Web Design — Nielsen Norman Group,https://www.nngroup.com/articles/trustworthy-design/,secondary,high,medium,low,Credibility and human proof principles
+05,B2B UX benchmark — Baymard Institute,https://baymard.com/ux-benchmark/collections/business-to-business,secondary,high,high,low,Independent B2B UX benchmark themes
+06,Web Vitals — web.dev,https://web.dev/articles/vitals,primary,high,high,low,Performance thresholds and field measurement
+07,WCAG 2.2 Contrast Minimum — W3C,https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html,primary,high,high,low,Contrast requirement
+08,WCAG 2.2 Target Size Minimum — W3C,https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html,primary,high,high,low,Touch target requirement
+09,Site names and snippets — Google Search Central,https://developers.google.com/search/docs/appearance/site-names,primary,high,high,low,Consistent entity and search presentation
+10,GOV.UK Design System header,https://design-system.service.gov.uk/components/header/,primary,high,high,government,Reference for restrained navigational system
+
