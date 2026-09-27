@@ -75,10 +75,11 @@ type OpenAIImageResponse = {
   error?: { message?: string };
 };
 
-const OPENAI_TIMEOUT_MS = 30_000;
+const OPENAI_TIMEOUT_MS = 20_000;
 const BRAND_CONTEXT_TIMEOUT_MS = 8_000;
 const GEMINI_RESEARCH_TIMEOUT_MS = 30_000;
-const AI_IMAGE_TIMEOUT_MS = 20_000;
+const GEMINI_GENERATION_TIMEOUT_MS = 20_000;
+const AI_IMAGE_TIMEOUT_MS = 15_000;
 const MAX_BRAND_CONTEXT_CHARS = 12_000;
 export const BLOG_MIN_WORDS = 500;
 const BLOG_TARGET_WORD_RANGE = '700-1000';
@@ -503,17 +504,30 @@ export async function generateBlogCoverImage(input: unknown, userId: string) {
 }
 
 async function generateGeminiBlogDraft(prompt: string, apiKey: string, model: string) {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, responseMimeType: 'application/json' },
-      }),
-    },
-  );
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), GEMINI_GENERATION_TIMEOUT_MS);
+  let response: Response;
+  try {
+    response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+      {
+        method: 'POST',
+        signal: controller.signal,
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, responseMimeType: 'application/json' },
+        }),
+      },
+    );
+  } catch (error) {
+    if ((error as Error)?.name === 'AbortError') {
+      throw new AppError(504, 'AI_TIMEOUT', 'Gemini tidak merespons tepat waktu.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
   const result = await response.json() as GeminiResponse;
   if (!response.ok) throw new AppError(502, 'AI_REQUEST_FAILED', result.error?.message || 'Permintaan ke Gemini gagal');
   const text = extractText(result);
