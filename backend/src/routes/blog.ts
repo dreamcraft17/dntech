@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import prisma from '../config/database';
-import { asyncHandler, successResponse, getPagination, paginatedResponse, param } from '../utils/helpers';
+import { asyncHandler, successResponse, getPagination, paginatedResponse, param, slugify } from '../utils/helpers';
 import { cacheService } from '../services/CacheService';
 
 const router = Router();
@@ -30,7 +30,7 @@ router.get(
       ];
     }
 
-    const [posts, total] = await Promise.all([
+    const [rawPosts, total] = await Promise.all([
       prisma.blogPost.findMany({
         where,
         orderBy: { publishedAt: 'desc' },
@@ -43,6 +43,7 @@ router.get(
       }),
       prisma.blogPost.count({ where }),
     ]);
+    const posts = rawPosts.map((post) => ({ ...post, slug: post.slug || slugify(post.title) }));
 
     if (!search) cacheService.set(cacheKey, { posts, total }, 900);
     paginatedResponse(res, posts, { page, pageSize, total });
@@ -75,7 +76,7 @@ router.get(
 router.get(
   '/:slug',
   asyncHandler(async (req, res) => {
-    const post = await prisma.blogPost.findFirst({
+    let post = await prisma.blogPost.findFirst({
       where: {
         slug: param(req.params.slug),
         status: 'published',
@@ -87,6 +88,25 @@ router.get(
         author: { select: { id: true, name: true } },
       },
     });
+
+    // Older records may have been created before Unicode-safe slug generation
+    // and have an empty slug. Resolve those records by the slug derived from
+    // their title so existing public cards remain clickable.
+    if (!post) {
+      const legacyPosts = await prisma.blogPost.findMany({
+        where: {
+          slug: '',
+          status: 'published',
+          deletedAt: null,
+          publishedAt: { lte: new Date() },
+        },
+        include: {
+          featuredImage: true,
+          author: { select: { id: true, name: true } },
+        },
+      });
+      post = legacyPosts.find((candidate) => slugify(candidate.title) === param(req.params.slug)) || null;
+    }
 
     if (!post) {
       return res.status(404).json({

@@ -34,6 +34,8 @@ describe('helpers utils', () => {
   it('slugifies text safely', () => {
     expect(slugify(' DN Tech 2026! ')).toBe('dn-tech-2026');
     expect(slugify('A---B__C')).toBe('a-b-c');
+    expect(slugify('中美在人工智能领域的竞争')).toBe('中美在人工智能领域的竞争');
+    expect(slugify('🔥')).toMatch(/^item-/);
   });
 
   it('calculates pagination bounds', () => {

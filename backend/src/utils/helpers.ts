@@ -120,12 +120,21 @@ export function asyncHandler(
 }
 
 export function slugify(text: string): string {
-  return text
+  const slug = text
+    .normalize('NFKC')
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[^\p{L}\p{N}\s_-]/gu, '')
+    .replace(/[\s_-]+/gu, '-')
+    .replace(/^-+|-+$/gu, '');
+
+  if (slug) return slug;
+
+  // Keep generated records addressable even when a title only contains
+  // symbols or emoji and therefore has no usable URL characters.
+  let hash = 0;
+  for (const character of text) hash = (hash * 31 + character.codePointAt(0)!) | 0;
+  return `item-${Math.abs(hash).toString(36)}`;
 }
 
 export function getPagination(query: Record<string, unknown>, defaultPageSize = 20) {
