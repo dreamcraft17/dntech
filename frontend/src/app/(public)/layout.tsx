@@ -18,7 +18,7 @@ export default async function PublicLayout({ children }: { children: React.React
   const settings = await getPublicSettings();
 
   return (
-    <>
+    <div className="public-shell min-h-screen">
       <JsonLd data={buildOrganizationSchema(settings)} />
       <JsonLd data={buildLocalBusinessSchema(settings)} />
       <JsonLd data={buildWebsiteSchema(settings)} />
@@ -39,6 +39,6 @@ export default async function PublicLayout({ children }: { children: React.React
       <ExitIntentModalLoader />
       <CrispChatLoader crispWebsiteId={settings.crispWebsiteId} />
       <AIChatbot />
-    </>
+    </div>
   );
 }

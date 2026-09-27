@@ -76,7 +76,7 @@ export function Footer({
   }[];
 
   return (
-    <footer className="border-t border-gray-200 bg-white">
+    <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
       <div className="mx-auto max-w-9xl px-8 py-10 sm:px-8 lg:px-8">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-md">
@@ -88,7 +88,7 @@ export function Footer({
 
           <Link
             href="/contact"
-            className="inline-flex shrink-0 items-center justify-center self-start rounded-lg bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800 min-h-[44px]"
+            className="inline-flex min-h-[44px] shrink-0 items-center justify-center self-start border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
           >
             Konsultasi Gratis
           </Link>

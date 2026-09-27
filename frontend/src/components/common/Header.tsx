@@ -66,7 +66,7 @@ export function Header() {
   }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
+    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--surface)]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
@@ -100,7 +100,7 @@ export function Header() {
               setSearchOpen((open) => !open);
               setMobileOpen(false);
             }}
-            className="p-2 text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 min-h-[48px] min-w-[48px] flex items-center justify-center"
+            className="flex min-h-[48px] min-w-[48px] items-center justify-center border-l border-[var(--border)] p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
             aria-label={searchOpen ? 'Tutup pencarian' : 'Buka pencarian'}
             aria-expanded={searchOpen}
           >
@@ -119,7 +119,7 @@ export function Header() {
               setMobileOpen((open) => !open);
               setSearchOpen(false);
             }}
-            className="md:hidden p-2 text-gray-600 rounded-lg hover:bg-gray-50 min-h-[48px] min-w-[48px] flex items-center justify-center"
+            className="flex min-h-[48px] min-w-[48px] items-center justify-center border-l border-[var(--border)] p-2 text-gray-600 transition-colors hover:bg-gray-100"
             aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
@@ -135,7 +135,7 @@ export function Header() {
         <nav
           id="mobile-nav"
           ref={mobileMenuRef}
-          className="md:hidden border-t border-gray-200 bg-white px-4 py-3"
+          className="md:hidden border-t border-[var(--border)] bg-[var(--surface)] px-4 py-3"
           aria-label="Navigasi mobile"
         >
           {navLinks.map((link) => (
@@ -144,8 +144,8 @@ export function Header() {
               href={link.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                'block px-3 py-3 text-sm font-medium rounded-lg min-h-[48px] flex items-center',
-                pathname === link.href ? 'text-blue-900 bg-blue-50' : 'text-gray-600'
+                'flex min-h-[48px] items-center border-b border-[var(--border)] px-3 py-3 text-sm font-medium',
+                pathname === link.href ? 'text-blue-900' : 'text-gray-600'
               )}
             >
               {link.label}
@@ -154,7 +154,7 @@ export function Header() {
           <Link
             href="/contact"
             onClick={() => setMobileOpen(false)}
-            className="block mt-2 px-3 py-3 text-sm font-semibold text-center text-white bg-blue-900 rounded-lg min-h-[48px] flex items-center justify-center"
+            className="mt-3 flex min-h-[48px] items-center justify-center border border-blue-900 bg-blue-900 px-3 py-3 text-center text-sm font-semibold text-white"
           >
             Konsultasi Gratis
           </Link>

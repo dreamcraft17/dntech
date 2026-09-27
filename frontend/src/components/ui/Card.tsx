@@ -13,7 +13,7 @@ export function Card({ title, description, children, footer, className, hover }:
   return (
     <div
       className={cn(
-        'rounded-lg border border-gray-200 bg-white p-6',
+        'rounded-sm border border-[var(--border)] bg-[var(--surface)] p-6',
         hover && 'transition-colors hover:border-gray-300',
         className
       )}

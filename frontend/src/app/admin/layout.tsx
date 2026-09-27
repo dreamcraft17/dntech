@@ -19,7 +19,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="admin-shell min-h-screen">
       <AdminSidebar />
       <main className="lg:pl-64">
         <div className="p-4 lg:p-8">{children}</div>

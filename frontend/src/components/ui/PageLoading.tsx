@@ -17,7 +17,7 @@ export function PageLoading({
       aria-label={label}
     >
       <div className="flex flex-col items-center gap-3 text-center">
-        <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-900 shadow-sm ring-1 ring-blue-100">
+        <div className="relative flex h-14 w-14 items-center justify-center rounded-sm border border-blue-200 bg-blue-50 text-blue-900">
           <LoaderCircle className="h-7 w-7 animate-spin" aria-hidden="true" />
         </div>
         <div>

@@ -1,7 +1,7 @@
 # DN Tech Company Profile
 
 > **Author:** Dozer  
-> **Updated:** 2026-09-26
+> **Updated:** 2026-09-27
 
 Production company profile for **DN Tech** (PT. Dozer Napitupulu Technology): public marketing site, admin CMS, lead capture, email notifications, and SEO foundations.
 
@@ -11,7 +11,7 @@ Production company profile for **DN Tech** (PT. Dozer Napitupulu Technology): pu
 |---|---|
 | Live | https://www.dntech.id · https://api.dntech.id |
 | Repo | [github.com/dreamcraft17/dntech](https://github.com/dreamcraft17/dntech) |
-| Latest | `922b571` |
+| Latest | `9c69cf3` |
 
 ## What it does
 
@@ -32,9 +32,12 @@ Detailed history: [`CHANGELOG.md`](https://github.com/dreamcraft17/company-wiki/
 | About — Founded by | Implemented (`DEFAULT_FOUNDER` + CMS `aboutContent.founder`) |
 | Legal pages | Implemented — Kebijakan Privasi + Syarat & Ketentuan (`db:seed-legal`) |
 | Relaunch anti-slop pass | Implemented (Aug 2026) — honest copy, skip link, CSP headers, deferred third-party JS |
-| Unit tests | **236 passing** (127 backend + 109 frontend) — verified 2026-09-26 |
+| Homepage visual refresh | Implemented — hero asset retained; project brief, workflow register, and pricing register added |
+| Site-wide visual system | Implemented — editorial surfaces, compact controls, shared public/admin shells, and route-wide legacy class normalization |
+| Blog automation | Implemented — scheduled generation queue, max 4 publishes/day, random Indonesian/English/Mandarin output |
+| Targeted worker tests | **5 passing** — verified 2026-09-27 |
 | CI | Lint + test + build on `main` (`.github/workflows/ci.yml`) |
-| Frontend build | Passing (Next.js 16.3.4, React 19.2.4, standalone output) |
+| Frontend build | Passing locally (Next.js 16.3.4, React 19.2.4, standalone output) — verified 2026-09-27 |
 | Lighthouse baseline | Recorded — see [wiki LIGHTHOUSE-BASELINE](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/frontend/LIGHTHOUSE-BASELINE.md) |
 
 ## Tech stack
@@ -110,7 +113,7 @@ npm run dev
 | `npm run dev` | API with hot reload |
 | `npm run build` | TypeScript compile (+ `prisma generate`) |
 | `npm run start` | Run compiled API |
-| `npm run worker:blog` | Run the opt-in daily blog content worker |
+| `npm run worker:blog` | Run the opt-in blog generation queue and daily publish worker |
 | `npm run test` | All Jest tests |
 | `npm run test:unit` | Unit tests only |
 | `npm run test:integration` | Integration tests (needs Postgres) |
@@ -160,6 +163,13 @@ From `backend/.env.example`:
 | `SMTP_FROM_NAME` / `SMTP_FROM_EMAIL` | Sender identity |
 | `EMAIL_RETRY_ATTEMPTS` / `EMAIL_RATE_LIMIT` | Mail queue tuning |
 | `SENTRY_DSN` | Optional error monitoring (no-op if unset) |
+| `OPENAI_API_KEY` / `GEMINI_API_KEY` | Blog generation and fallback provider credentials |
+| `BLOG_AUTOMATION_ENABLED` | Set `true` to run the blog worker |
+| `BLOG_AUTOMATION_POSTS_PER_DAY` | Maximum automation articles published per local day; default `4` |
+| `BLOG_AUTOMATION_QUEUE_TARGET` | Scheduled automation queue target; default `12` |
+| `BLOG_AUTOMATION_SLOTS` / `BLOG_AUTOMATION_TIMEZONE` | Publish slots and local timezone; defaults to `09:00,12:00,15:00,18:00` / `Asia/Jakarta` |
+| `BLOG_AUTOMATION_PUBLISH_MODE` / `BLOG_AUTOMATION_DRY_RUN` | Scheduled/direct mode and validation-only mode |
+| `BLOG_AUTOMATION_AUTHOR_EMAIL` | Optional active admin/content author for generated posts |
 
 Blog automation is intentionally opt-in. Set `BLOG_AUTOMATION_ENABLED=true` only after configuring an active admin author and `OPENAI_API_KEY`. The worker keeps a scheduled generation queue (default target: 12 articles), randomly writes each article in Bahasa Indonesia, English, or Mandarin, and publishes no more than four automation articles per local calendar day at the configured slots. It retries drafts that fail the quality guard or do not receive an OpenAI cover image, skips a topic for the current day after all retries fail so it cannot block the remaining queue, rejects short/placeholder drafts, creates a context-aware cover image with OpenAI only, and defaults to `scheduled` status. If OpenAI image generation is unavailable, the worker does not create the article without a cover and will retry/skip the topic. `BLOG_AUTOMATION_DRY_RUN=true` validates content without writing posts or generating images. Run it as a separate PM2 process with `npm run worker:blog`.
 

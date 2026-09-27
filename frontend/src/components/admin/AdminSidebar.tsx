@@ -48,7 +48,7 @@ export function AdminSidebar() {
     <>
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-4 z-50 rounded-lg bg-blue-800 p-2 text-white lg:hidden"
+        className="fixed left-4 top-4 z-50 border border-blue-700 bg-blue-950 p-2 text-white lg:hidden"
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -59,11 +59,11 @@ export function AdminSidebar() {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-blue-900 text-blue-100 transition-transform lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-slate-950 text-slate-200 transition-transform lg:translate-x-0',
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="flex h-16 items-center justify-between border-b border-blue-800 px-4">
+        <div className="flex h-16 items-center justify-between border-b border-slate-800 px-4">
           <Link href="/admin/dashboard" className="flex items-center gap-2">
             <Logo href={null} size="sm" />
             <span className="font-semibold text-white">Admin</span>
@@ -80,10 +80,10 @@ export function AdminSidebar() {
               href={href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'flex items-center gap-3 border-l-2 border-transparent px-3 py-2 text-sm font-medium transition-colors',
                 pathname === href || pathname.startsWith(href + '/')
-                  ? 'bg-blue-800 text-white'
-                  : 'text-blue-100 hover:bg-blue-800/60 hover:text-white'
+                  ? 'border-teal-400 bg-slate-900 text-white'
+                  : 'text-slate-300 hover:bg-slate-900 hover:text-white'
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -92,12 +92,12 @@ export function AdminSidebar() {
           ))}
         </nav>
 
-        <div className="border-t border-blue-800 p-4">
-          <div className="mb-2 truncate text-sm text-blue-200">{user?.name}</div>
-          <div className="mb-3 truncate text-xs text-blue-300">{user?.role}</div>
+        <div className="border-t border-slate-800 p-4">
+          <div className="mb-2 truncate text-sm text-slate-200">{user?.name}</div>
+          <div className="mb-3 truncate text-xs text-slate-400">{user?.role}</div>
           <button
             onClick={logout}
-            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-300 transition-colors hover:bg-blue-800"
+            className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-300 transition-colors hover:bg-slate-900"
           >
             <LogOut className="h-4 w-4" /> Keluar
           </button>

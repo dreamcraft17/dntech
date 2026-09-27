@@ -52,7 +52,7 @@ export function Alert({ variant = 'info', title, children, className, onClose }:
 
   return (
     <div
-      className={cn('flex gap-3 rounded-lg border p-4', config.bg, config.border, className)}
+      className={cn('flex gap-3 rounded-sm border-l-4 border p-4', config.bg, config.border, className)}
       role="alert"
     >
       <Icon className={cn('mt-0.5 h-5 w-5 shrink-0', config.icon)} aria-hidden />
