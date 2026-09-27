@@ -39,12 +39,18 @@ import { errorHandler } from './utils/helpers';
 
 function buildAllowedOrigins(): string[] {
   const origins = new Set<string>();
-  const raw = (process.env.FRONTEND_URL || 'http://localhost:3000')
-    .split(',')
+  const configuredOrigins = process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',')
+    : [];
+  const environmentDefaults = process.env.NODE_ENV === 'production'
+    ? ['https://dntech.id', 'https://www.dntech.id']
+    : ['http://localhost:3000'];
+  const raw = [...environmentDefaults, ...configuredOrigins]
     .map((o) => o.trim())
     .filter(Boolean);
 
-  for (const origin of raw) {
+  for (const configuredOrigin of raw) {
+    const origin = configuredOrigin.replace(/\/$/, '');
     origins.add(origin);
     try {
       const url = new URL(origin);
