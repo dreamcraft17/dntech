@@ -11,6 +11,11 @@ import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
 import type { Service, BlogPost, Faq } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { PublicPageShell, SaasPanel } from '@/components/layout/PublicPageShell';
+import { PageEndCta } from '@/components/layout/PageEndCta';
+import { PageBreadcrumb } from '@/components/layout/PageBreadcrumb';
+import { DetailPageHeader } from '@/components/layout/DetailPageHeader';
+import { DetailSection } from '@/components/layout/DetailSection';
 
 async function getService(slug: string) {
   return fetchPublicApiSafe<Service>(`/services/${slug}`, 60);
@@ -73,34 +78,36 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         <JsonLd data={faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))} />
       )}
 
-      <div className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <nav className="text-sm text-gray-500 mb-8" aria-label="Jejak navigasi">
-            <Link href="/" className="hover:text-blue-900">Beranda</Link>
-            <span className="mx-2">/</span>
-            <Link href="/services" className="hover:text-blue-900">Layanan</Link>
-            <span className="mx-2">/</span>
-            <span className="text-gray-900">{service.name}</span>
-          </nav>
+      <PublicPageShell>
+          <PageBreadcrumb
+            items={[
+              { label: 'Beranda', href: '/' },
+              { label: 'Layanan', href: '/services' },
+              { label: service.name },
+            ]}
+          />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              {service.category && (
-                <div className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-teal-700">{service.category}</div>
-              )}
-              <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">{service.name}</h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">{service.description}</p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Button href={`/contact?service=${encodeURIComponent(service.slug)}`}>Bahas kebutuhan ini</Button>
-                <Button href="#process" variant="outline">Lihat cara kerja</Button>
-              </div>
+              <DetailPageHeader
+                kicker={service.category || 'Layanan'}
+                title={service.name}
+                description={service.description}
+                actions={
+                  <>
+                    <Button href={`/contact?service=${encodeURIComponent(service.slug)}`}>Bahas kebutuhan ini</Button>
+                    <Button href="#process" variant="outline">
+                      Lihat cara kerja
+                    </Button>
+                  </>
+                }
+              />
 
               {features.length > 0 && (
-                <div className="mt-12">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Yang Termasuk</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <DetailSection title="Yang termasuk">
+                  <div className="saas-card-grid sm:grid-cols-2">
                     {features.map((feature, i) => (
-                      <div key={i} className="flex gap-3 p-4 rounded-lg border border-gray-200 bg-gray-50">
+                      <SaasPanel key={i} className="flex gap-3 !p-4">
                         <CheckCircle className="h-5 w-5 text-blue-900 shrink-0 mt-0.5" />
                         <div>
                           <div className="font-medium text-gray-900">{feature.title}</div>
@@ -108,17 +115,16 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                             <div className="text-sm text-gray-600 mt-1">{feature.description}</div>
                           )}
                         </div>
-                      </div>
+                      </SaasPanel>
                     ))}
                   </div>
-                </div>
+                </DetailSection>
               )}
 
-              <div id="process" className="mt-12">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Proses Kerja</h2>
-                <div className="space-y-4">
+              <DetailSection title="Proses kerja" className="scroll-mt-24" >
+                <div id="process" className="space-y-4">
                   {SERVICE_PROCESS_STEPS.map((step) => (
-                    <div key={step.step} className="flex gap-4 p-4 rounded-lg border border-gray-200">
+                    <SaasPanel key={step.step} className="flex gap-4 !p-4">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-blue-900 bg-blue-900 font-bold text-white">
                         {step.step}
                       </div>
@@ -126,52 +132,55 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                         <h3 className="font-semibold text-gray-900">{step.title}</h3>
                         <p className="text-sm text-gray-600 mt-1">{step.description}</p>
                       </div>
-                    </div>
+                    </SaasPanel>
                   ))}
                 </div>
-              </div>
+              </DetailSection>
 
               {faqs.length > 0 && (
-                <div className="mt-12">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Pertanyaan Umum</h2>
+                <DetailSection title="Pertanyaan umum">
                   <div className="space-y-3">
                     {faqs.map((faq) => (
-                      <details key={faq.id} className="rounded-lg border border-gray-200 p-4 group">
+                      <SaasPanel key={faq.id} className="group !p-0 overflow-hidden">
+                      <details className="p-4">
                         <summary className="font-medium text-gray-900 cursor-pointer list-none flex justify-between items-center">
                           {faq.question}
                           <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
                         </summary>
-                        <p className="mt-3 text-sm text-gray-600 leading-relaxed">{faq.answer}</p>
+                        <p className="mt-3 text-sm leading-relaxed text-gray-600">{faq.answer}</p>
                       </details>
+                      </SaasPanel>
                     ))}
                   </div>
-                </div>
+                </DetailSection>
               )}
 
               {relatedPosts.length > 0 && (
-                <div className="mt-12">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Artikel Terkait</h2>
+                <DetailSection title="Artikel terkait">
                   <div className="space-y-3">
                     {relatedPosts.map((post) => (
-                      <Link key={post.id} href={`/blog/${post.slug}`}
-                        className="block p-3 rounded-lg border border-gray-200 hover:border-gray-300 text-sm font-medium text-gray-900">
+                      <Link
+                        key={post.id}
+                        href={`/blog/${post.slug}`}
+                        className="saas-panel block rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)] p-3 text-sm font-medium text-gray-900 shadow-sm transition-colors hover:border-[var(--border-strong)]"
+                      >
                         {post.title}
                       </Link>
                     ))}
                   </div>
-                </div>
+                </DetailSection>
               )}
             </div>
 
             <div>
-              <div className="sticky top-24 border-t-4 border-blue-900 bg-white p-6 shadow-sm">
+              <SaasPanel className="sticky top-24 border-t-4 border-blue-900">
                 <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Next step</p>
                 <h3 className="mt-2 font-semibold text-slate-950">Mulai diskusi proyek Anda</h3>
                 <p className="mb-6 mt-3 text-sm leading-6 text-slate-600">Konsultasi gratis — respons dalam 24 jam.</p>
                 <Button href={`/contact?service=${encodeURIComponent(service.slug)}`} className="w-full">
                   Konsultasi Gratis
                 </Button>
-              </div>
+              </SaasPanel>
 
               {service.relatedServices && service.relatedServices.length > 0 && (
                 <div className="mt-6">
@@ -197,8 +206,8 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <div className="mt-16">
             <CalendlyEmbed url={calendlyUrl} />
           </div>
-        </div>
-      </div>
+          <PageEndCta />
+      </PublicPageShell>
     </>
   );
 }

@@ -7,6 +7,8 @@ import { buildMetadata } from '@/lib/seo';
 import type { PortfolioItem } from '@/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { PublicPageShell } from '@/components/layout/PublicPageShell';
+import { PageEndCta } from '@/components/layout/PageEndCta';
 
 async function getItem(slug: string) {
   return fetchPublicApiSafe<PortfolioItem>(`/portfolio/${slug}`, 60);
@@ -30,8 +32,7 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
   if (!item) notFound();
 
   return (
-    <div className="py-16">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <PublicPageShell width="4xl">
         <nav className="mb-8 text-sm text-gray-500">
           <Link href="/portfolio" className="text-blue-900 hover:underline">
             Portofolio
@@ -81,7 +82,7 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
         <div className="mt-10">
           <Button href="/contact">Mulai Proyek Anda</Button>
         </div>
-      </div>
-    </div>
+        <PageEndCta />
+    </PublicPageShell>
   );
 }

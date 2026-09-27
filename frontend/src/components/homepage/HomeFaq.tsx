@@ -14,7 +14,7 @@ interface HomeFaqProps {
 
 export function HomeFaq({ items }: HomeFaqProps) {
   return (
-    <section className="bg-surface py-section" id="faq">
+    <section className="home-section-alt py-section" id="faq">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <SectionHeading kicker="FAQ" title="Pertanyaan yang Sering Ditanyakan" />
         <div className="space-y-3">

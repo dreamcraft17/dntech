@@ -19,7 +19,7 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
   const items = (apiItems.length > 0 ? apiItems : defaults).slice(0, 4);
 
   return (
-    <section className="border-y border-slate-200 bg-[#f3f5f7] py-section" aria-labelledby="services-heading">
+    <section className="home-section-alt py-section" aria-labelledby="services-heading">
       <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-20 lg:px-8">
         <header className="lg:sticky lg:top-28 lg:self-start">
           <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[var(--secondary)]">

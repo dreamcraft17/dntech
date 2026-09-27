@@ -1,11 +1,13 @@
-import Link from 'next/link';
 import { CaseStudyCard } from '@/components/cards/CaseStudyCard';
 import { JsonLd, breadcrumbSchema } from '@/components/seo/JsonLd';
-import { Button } from '@/components/ui/Button';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
 import { fetchPublicApiList } from '@/lib/server-api';
 import type { Metadata } from 'next';
 import { PageIntro } from '@/components/layout/PageIntro';
+import { PublicPageShell } from '@/components/layout/PublicPageShell';
+import { PageEndCta } from '@/components/layout/PageEndCta';
+import { SaasEmptyState } from '@/components/layout/SaasEmptyState';
+import { Button } from '@/components/ui/Button';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO['case-studies'].title,
@@ -37,8 +39,7 @@ export default async function CaseStudiesPage() {
         { name: 'Studi Kasus', url: `${SITE_URL}/case-studies` },
       ])} />
 
-      <div className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <PublicPageShell>
           <PageIntro
             kicker="Bukti kerja"
             title="Studi kasus"
@@ -48,7 +49,7 @@ export default async function CaseStudiesPage() {
           />
 
           {items.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="saas-card-grid lg-3">
               {items.map((item) => (
                 <CaseStudyCard
                   key={item.slug}
@@ -62,33 +63,28 @@ export default async function CaseStudiesPage() {
               ))}
             </div>
           ) : (
-            <div className="border-y border-slate-300 py-16">
-              <p className="text-gray-600 max-w-md mx-auto">
-                Studi kasus akan dipublikasikan setelah proyek nyata selesai dan klien memberikan izin.
-              </p>
-              <p className="mt-2 text-sm text-gray-500">
-                Sementara itu, lihat produk first-party atau artikel blog kami.
-              </p>
-              <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <Link href="/products" className="inline-flex items-center justify-center rounded-lg border-2 border-teal-600 px-5 py-2.5 text-sm font-semibold text-teal-600 hover:bg-teal-50 min-h-[44px]">
-                  Lihat Produk
-                </Link>
-                <Link href="/blog" className="inline-flex items-center justify-center rounded-lg bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 min-h-[44px]">
-                  Baca Blog
-                </Link>
-              </div>
-            </div>
+            <SaasEmptyState
+              description={
+                <>
+                  Studi kasus akan dipublikasikan setelah proyek nyata selesai dan klien memberikan izin.
+                  <span className="mt-2 block text-gray-500">
+                    Sementara itu, lihat produk first-party atau artikel blog kami.
+                  </span>
+                </>
+              }
+              actions={
+                <>
+                  <Button href="/products" variant="outline">
+                    Lihat Produk
+                  </Button>
+                  <Button href="/blog">Baca Blog</Button>
+                </>
+              }
+            />
           )}
 
-          <div className="mt-16 border-y-2 border-blue-900 bg-blue-900 p-8 text-center">
-            <h2 className="text-2xl font-bold text-white">Punya proyek yang ingin dikerjakan?</h2>
-            <p className="mt-2 text-blue-100">Mari diskusikan kebutuhan teknologi Anda.</p>
-            <Button href="/contact" size="lg" variant="inverse" className="mt-6">
-              Konsultasi Gratis
-            </Button>
-          </div>
-        </div>
-      </div>
+          <PageEndCta />
+      </PublicPageShell>
     </>
   );
 }

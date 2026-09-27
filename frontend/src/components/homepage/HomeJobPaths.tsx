@@ -27,7 +27,7 @@ const paths = [
 
 export function HomeJobPaths() {
   return (
-    <section className="border-b border-slate-200 bg-[#f5f6f4] py-14 sm:py-16" aria-labelledby="job-paths-heading">
+    <section className="home-section-alt py-14 sm:py-16" aria-labelledby="job-paths-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:gap-16">
           <header>

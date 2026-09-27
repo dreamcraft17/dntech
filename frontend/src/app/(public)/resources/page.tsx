@@ -5,6 +5,8 @@ import { NewsletterForm } from '@/components/forms/NewsletterForm';
 import { getPublicSettings, getResources } from '@/lib/settings';
 import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import type { Metadata } from 'next';
+import { PublicPageShell } from '@/components/layout/PublicPageShell';
+import { PageEndCta } from '@/components/layout/PageEndCta';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.resources.title,
@@ -18,8 +20,7 @@ export default async function ResourcesPage() {
   const resources = getResources(settings);
 
   return (
-    <div className="py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <PublicPageShell>
         <PageIntro kicker="Sumber daya" title="Panduan yang bisa langsung dipakai" description="Panduan dan wawasan untuk mendukung transformasi digital Anda." />
 
         {resources.length > 0 ? (
@@ -66,7 +67,7 @@ export default async function ResourcesPage() {
         <div className="max-w-md border-t border-slate-300 pt-8">
             <NewsletterForm />
         </div>
-      </div>
-    </div>
+        <PageEndCta />
+    </PublicPageShell>
   );
 }

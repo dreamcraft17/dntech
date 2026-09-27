@@ -9,6 +9,8 @@ import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { fetchPublicApiSafe } from '@/lib/server-api';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { PublicPageShell } from '@/components/layout/PublicPageShell';
+import { PageEndCta } from '@/components/layout/PageEndCta';
 
 interface CaseStudy {
   slug: string;
@@ -56,8 +58,7 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
         { name: item.title, url: `${SITE_URL}/case-studies/${slug}` },
       ])} />
 
-      <div className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <PublicPageShell width="4xl">
           <nav className="mb-8 text-sm text-gray-500">
             <Link href="/" className="text-blue-900 hover:underline">Beranda</Link>
             <span className="mx-2">/</span>
@@ -170,8 +171,8 @@ export default async function CaseStudyDetailPage({ params }: { params: Promise<
               Studi Kasus Lainnya
             </Button>
           </div>
-        </div>
-      </div>
+          <PageEndCta />
+      </PublicPageShell>
     </>
   );
 }

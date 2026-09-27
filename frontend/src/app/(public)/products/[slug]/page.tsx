@@ -10,6 +10,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { formatProductStatusBadge } from '@/lib/product-status';
 import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
+import { PublicPageShell, SaasPanel } from '@/components/layout/PublicPageShell';
+import { PageBreadcrumb } from '@/components/layout/PageBreadcrumb';
+import { DetailPageHeader } from '@/components/layout/DetailPageHeader';
+import { PageEndCta } from '@/components/layout/PageEndCta';
 
 async function getProduct(slug: string) {
   return fetchPublicApiSafe<Product>(`/products/${slug}`, 60);
@@ -92,49 +96,67 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         <JsonLd data={faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))} />
       )}
 
-      <div className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <nav className="text-sm text-gray-500 mb-8" aria-label="Jejak navigasi">
-            <Link href="/" className="hover:text-blue-900">Beranda</Link>
-            <span className="mx-2">/</span>
-            <Link href="/products" className="hover:text-blue-900">Produk</Link>
-            <span className="mx-2">/</span>
-            <span className="text-gray-900">{product.name}</span>
-          </nav>
+      <PublicPageShell>
+          <PageBreadcrumb
+            items={[
+              { label: 'Beranda', href: '/' },
+              { label: 'Produk', href: '/products' },
+              { label: product.name },
+            ]}
+          />
 
-          <section className="border-y-2 border-slate-900 px-1 py-10 text-slate-900 sm:px-3 lg:py-14">
-            <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-              <div>
-                {product.category && <div className="text-sm font-semibold uppercase tracking-[0.16em] text-teal-700">{product.category}</div>}
-                <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">{product.name}</h1>
-                {product.tagline && <p className="mt-3 text-xl text-slate-700">{product.tagline}</p>}
-                <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600">{product.description}</p>
-                <div className="mt-7 flex flex-wrap gap-3">
-                  {product.primaryCta && <Button href={product.primaryCta.url} className="bg-teal-600 text-white hover:bg-teal-700">{product.primaryCta.label}</Button>}
-                  {product.secondaryCtas?.slice(0, 1).map((cta, i) => <Button key={i} href={cta.url} variant="outline">{cta.label}</Button>)}
+          <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+            <DetailPageHeader
+              kicker={product.category || 'Produk'}
+              title={product.name}
+              description={
+                <>
+                  {product.tagline && <p className="mb-3 text-lg text-slate-700">{product.tagline}</p>}
+                  {product.description}
+                </>
+              }
+              actions={
+                <>
+                  {product.primaryCta && (
+                    <Button href={product.primaryCta.url} className="bg-teal-600 text-white hover:bg-teal-700">
+                      {product.primaryCta.label}
+                    </Button>
+                  )}
+                  {product.secondaryCtas?.slice(0, 1).map((cta, i) => (
+                    <Button key={i} href={cta.url} variant="outline">
+                      {cta.label}
+                    </Button>
+                  ))}
+                </>
+              }
+            />
+
+            <SaasPanel>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Ringkasan produk</p>
+              <div className="mt-5 grid grid-cols-2 gap-4 border-b border-[var(--border)] pb-5">
+                <div>
+                  <div className="text-2xl font-bold text-slate-950">{statusBadge || 'Active'}</div>
+                  <div className="mt-1 text-xs text-slate-500">Status produk</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-slate-950">{product.pricingTiers?.length || 0}</div>
+                  <div className="mt-1 text-xs text-slate-500">Pilihan paket</div>
                 </div>
               </div>
+              {proofItems.length > 0 && (
+                <ul className="mt-5 space-y-3">
+                  {proofItems.map((feature, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-slate-700">
+                      <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" aria-hidden="true" />
+                      {feature.name || feature.title}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </SaasPanel>
+          </div>
 
-              <div className="border-l-2 border-teal-600 pl-6 lg:pl-8">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-                  <span className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Product proof</span>
-                </div>
-                <div className="mt-5 grid grid-cols-2 gap-4 border-b border-slate-200 pb-5">
-                  <div><div className="text-2xl font-bold">{statusBadge || 'Active'}</div><div className="mt-1 text-xs text-slate-500">Status produk</div></div>
-                  <div><div className="text-2xl font-bold">{product.pricingTiers?.length || 0}</div><div className="mt-1 text-xs text-slate-500">Pilihan paket</div></div>
-                </div>
-                {proofItems.length > 0 && (
-                  <ul className="mt-5 space-y-3">
-                    {proofItems.map((feature, i) => (
-                      <li key={i} className="flex gap-2 text-sm text-slate-700"><CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" aria-hidden="true" />{feature.name || feature.title}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          </section>
-
-          <nav className="sticky top-16 z-10 -mx-4 mt-8 flex gap-6 overflow-x-auto border-y border-slate-200 bg-white px-4 py-3 text-sm sm:mx-0" aria-label="Navigasi detail produk">
+          <nav className="sticky top-16 z-10 -mx-4 mt-8 flex gap-6 overflow-x-auto border-y border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm sm:mx-0" aria-label="Navigasi detail produk">
             <a href="#features" className="whitespace-nowrap border-b-2 border-transparent py-1 font-medium text-slate-600 hover:border-blue-900 hover:text-slate-950">Fitur & outcomes</a>
             {product.useCases?.length ? <a href="#use-cases" className="whitespace-nowrap border-b-2 border-transparent py-1 font-medium text-slate-600 hover:border-blue-900 hover:text-slate-950">Use case</a> : null}
             {product.pricingTiers?.length ? <a href="#pricing" className="whitespace-nowrap border-b-2 border-transparent py-1 font-medium text-slate-600 hover:border-blue-900 hover:text-slate-950">Pricing</a> : null}
@@ -416,25 +438,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
           )}
 
-          {(product.primaryCta || product.secondaryCtas?.length) && (
-            <div className="mt-20 border-y-2 border-blue-900 bg-blue-900 px-8 py-12 text-center">
-              <h2 className="text-2xl font-bold text-white">Siap mencoba {product.name}?</h2>
-              <div className="mt-6 flex flex-wrap gap-3 justify-center">
-                {product.primaryCta && (
-                  <Button href={product.primaryCta.url} className="bg-white text-blue-900 hover:bg-gray-100">
-                    {product.primaryCta.label}
-                  </Button>
-                )}
-                {product.secondaryCtas?.map((cta, i) => (
-                  <Button key={i} href={cta.url} variant="outline-on-dark" className="hover:bg-blue-800">
-                    {cta.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+          <PageEndCta />
+      </PublicPageShell>
     </>
   );
 }

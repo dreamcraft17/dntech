@@ -63,7 +63,7 @@ export function HomeProducts({
   const featuredStatus = formatProductStatusBadge(featured.customerCount);
 
   return (
-    <section className="bg-white py-section" aria-label={title}>
+    <section className="home-section py-section" aria-label={title}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading kicker="Produk" title={title} subtitle={subtitle} />
 
@@ -72,7 +72,7 @@ export function HomeProducts({
             href={`/products/${featured.slug}`}
             className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 lg:col-span-7"
           >
-            <article className="flex h-full flex-col border border-t-4 border-[var(--border)] border-t-[var(--primary)] bg-white p-6 text-[var(--foreground)] sm:p-8 lg:p-10">
+            <article className="flex h-full flex-col rounded-xl border border-t-4 border-[var(--border)] border-t-[var(--primary)] bg-white p-6 text-[var(--foreground)] shadow-sm sm:p-8 lg:p-10">
               <div className="flex items-start gap-4">
                 <ProductMark name={featured.name} onDark />
                 <div className="min-w-0 flex-1">

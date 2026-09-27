@@ -7,7 +7,7 @@ interface HomeTechStackProps {
 
 export function HomeTechStack({ categories }: HomeTechStackProps) {
   return (
-    <section className="bg-white py-section">
+    <section className="home-section py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Teknologi yang Kami Gunakan"

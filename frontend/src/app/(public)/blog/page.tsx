@@ -10,6 +10,8 @@ import { fetchPublicApiPaginated } from '@/lib/server-api';
 import { getUploadUrl } from '@/lib/api';
 import type { BlogPost } from '@/types';
 import type { Metadata } from 'next';
+import { PublicPageShell } from '@/components/layout/PublicPageShell';
+import { PageEndCta } from '@/components/layout/PageEndCta';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.blog.title,
@@ -47,8 +49,7 @@ export default async function BlogPage({
         })))} />
       )}
 
-      <div className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <PublicPageShell>
           <PageIntro
             kicker="Wawasan"
             title="Blog & Wawasan"
@@ -133,16 +134,8 @@ export default async function BlogPage({
             </div>
           )}
 
-          <div className="mt-16 border-l-2 border-teal-600 pl-5">
-            <p className="font-semibold text-slate-900">Ingin menerapkan apa yang Anda baca?</p>
-            <div className="mt-3 flex flex-wrap gap-5 text-sm">
-              <Link href="/services" className="text-blue-900 font-medium hover:underline">Jelajahi Layanan</Link>
-              <Link href="/case-studies" className="text-blue-900 font-medium hover:underline">Lihat Studi Kasus</Link>
-              <Link href="/contact" className="text-blue-900 font-medium hover:underline">Konsultasi dengan Ahli</Link>
-            </div>
-          </div>
-        </div>
-      </div>
+          <PageEndCta />
+      </PublicPageShell>
     </>
   );
 }

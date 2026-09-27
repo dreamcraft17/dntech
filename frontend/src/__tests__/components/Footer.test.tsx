@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Footer } from '@/components/common/Footer';
 
 describe('Footer', () => {
-  it('lays out nav in four columns instead of a clustered link row', () => {
+  it('lays out nav in five columns with proof and resources', () => {
     render(
       <Footer
         companyEmail="info@dntech.id"
@@ -11,14 +11,16 @@ describe('Footer', () => {
     );
 
     const nav = screen.getByRole('navigation', { name: 'Navigasi footer' });
-    expect(nav.className).toMatch(/lg:grid-cols-4/);
-    expect(screen.getByRole('heading', { name: 'Situs' })).toBeInTheDocument();
+    expect(nav.className).toMatch(/lg:grid-cols-5/);
+    expect(screen.getByRole('heading', { name: 'Perusahaan' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Produk & layanan' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Bantuan' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Bukti kerja' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Resources' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Hubungi' })).toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: 'Produk' })).toHaveAttribute('href', '/products');
-    expect(screen.getByRole('link', { name: 'Form kontak' })).toHaveAttribute('href', '/contact');
+    expect(screen.getByRole('link', { name: 'Studi kasus' })).toHaveAttribute('href', '/case-studies');
+    expect(screen.getByRole('link', { name: 'Karier' })).toHaveAttribute('href', '/careers');
     expect(screen.getByRole('link', { name: 'info@dntech.id' })).toHaveAttribute(
       'href',
       'mailto:info@dntech.id',
@@ -27,8 +29,6 @@ describe('Footer', () => {
       'href',
       '/contact',
     );
-    expect(screen.queryByRole('link', { name: 'Karier' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: 'Studi Kasus' })).not.toBeInTheDocument();
     expect(
       screen.getByText(/© \d{4} PT\. Dozer Napitupulu Technology\. Hak cipta dilindungi\./),
     ).toBeInTheDocument();

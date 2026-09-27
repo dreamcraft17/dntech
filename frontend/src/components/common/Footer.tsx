@@ -2,23 +2,29 @@ import Link from 'next/link';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { FooterBrand } from '@/components/layout/FooterBrand';
 
-const siteLinks = [
-  { href: '/', label: 'Beranda' },
-  { href: '/case-studies', label: 'Bukti kerja' },
+const companyLinks = [
   { href: '/about', label: 'Tentang' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/team', label: 'Tim' },
+  { href: '/careers', label: 'Karier' },
+  { href: '/contact', label: 'Kontak' },
 ];
 
 const offerLinks = [
   { href: '/products', label: 'Produk' },
   { href: '/services', label: 'Layanan' },
+  { href: '/quiz', label: 'Temukan solusi' },
 ];
 
-const helpLinks = [
+const proofLinks = [
+  { href: '/case-studies', label: 'Studi kasus' },
+  { href: '/portfolio', label: 'Portofolio' },
+  { href: '/testimonials', label: 'Testimoni' },
+];
+
+const resourceLinks = [
+  { href: '/blog', label: 'Blog' },
+  { href: '/resources', label: 'Panduan' },
   { href: '/faq', label: 'FAQ' },
-  { href: '/quiz', label: 'Temukan Solusi' },
-  { href: '/team', label: 'Tim' },
-  { href: '/resources', label: 'Sumber Daya' },
 ];
 
 const legalLinks = [
@@ -38,20 +44,14 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   return (
     <Link
       href={href}
-      className="inline-flex min-h-11 items-center text-sm text-gray-600 transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2 rounded-sm"
+      className="inline-flex min-h-11 items-center rounded-sm text-sm text-gray-600 transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2"
     >
       {children}
     </Link>
   );
 }
 
-function FooterColumn({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
       <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
@@ -78,7 +78,7 @@ export function Footer({
 
   return (
     <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
-      <div className="mx-auto max-w-9xl px-8 py-10 sm:px-8 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-md">
             <FooterBrand />
@@ -89,19 +89,19 @@ export function Footer({
 
           <Link
             href="/contact"
-            className="inline-flex min-h-[44px] shrink-0 items-center justify-center self-start border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
+            className="inline-flex min-h-[44px] shrink-0 items-center justify-center self-start rounded-[var(--radius-card)] border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
           >
             Konsultasi Gratis
           </Link>
         </div>
 
         <nav
-          className="mt-8 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-gray-100 pt-8 lg:grid-cols-4"
+          className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-[var(--border)] pt-10 lg:grid-cols-5"
           aria-label="Navigasi footer"
         >
-          <FooterColumn title="Situs">
+          <FooterColumn title="Perusahaan">
             <ul className="mt-2 flex flex-col">
-              {siteLinks.map((link) => (
+              {companyLinks.map((link) => (
                 <li key={link.href}>
                   <FooterLink href={link.href}>{link.label}</FooterLink>
                 </li>
@@ -119,9 +119,19 @@ export function Footer({
             </ul>
           </FooterColumn>
 
-          <FooterColumn title="Bantuan">
+          <FooterColumn title="Bukti kerja">
             <ul className="mt-2 flex flex-col">
-              {helpLinks.map((link) => (
+              {proofLinks.map((link) => (
+                <li key={link.href}>
+                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                </li>
+              ))}
+            </ul>
+          </FooterColumn>
+
+          <FooterColumn title="Resources">
+            <ul className="mt-2 flex flex-col">
+              {resourceLinks.map((link) => (
                 <li key={link.href}>
                   <FooterLink href={link.href}>{link.label}</FooterLink>
                 </li>
@@ -131,9 +141,6 @@ export function Footer({
 
           <FooterColumn title="Hubungi">
             <ul className="mt-2 flex flex-col">
-              <li>
-                <FooterLink href="/contact">Form kontak</FooterLink>
-              </li>
               {contactItems.map(({ icon: Icon, value, href }) => (
                 <li key={value}>
                   <div className="flex min-h-11 items-center gap-2 text-sm text-gray-600">
@@ -141,7 +148,7 @@ export function Footer({
                     {href ? (
                       <a
                         href={href}
-                        className="transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2 rounded-sm"
+                        className="rounded-sm transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2"
                       >
                         {value}
                       </a>
@@ -155,7 +162,7 @@ export function Footer({
           </FooterColumn>
         </nav>
 
-        <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:items-center">
+        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-[var(--border)] pt-6 sm:flex-row sm:items-center">
           <p className="text-sm text-gray-500">
             &copy; {new Date().getFullYear()} PT. Dozer Napitupulu Technology. Hak cipta dilindungi.
           </p>

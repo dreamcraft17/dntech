@@ -6,6 +6,10 @@ import type { Career } from '@/types';
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo';
 import { PageIntro } from '@/components/layout/PageIntro';
+import { PublicPageShell } from '@/components/layout/PublicPageShell';
+import { PageEndCta } from '@/components/layout/PageEndCta';
+import { SaasEmptyState } from '@/components/layout/SaasEmptyState';
+import { Button } from '@/components/ui/Button';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Karier di DN Tech',
@@ -22,8 +26,7 @@ export default async function CareersPage() {
   const careers = await getCareers();
 
   return (
-    <div className="py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <PublicPageShell>
         <PageIntro kicker="Karier" title="Bergabung dengan tim kami" description="Bangun masa depan teknologi bersama kami. Jelajahi posisi terbuka di bawah ini." />
 
         <div className="space-y-4 max-w-3xl mx-auto">
@@ -54,20 +57,15 @@ export default async function CareersPage() {
           ))}
 
           {careers.length === 0 && (
-            <div className="border-y border-slate-300 py-16">
-              <p className="text-gray-600 max-w-md mx-auto">
-                Belum ada posisi terbuka saat ini. Kami akan update halaman ini saat ada rekrutmen.
-              </p>
-              <Link
-                href="/contact?subject=Karier"
-                className="mt-6 inline-flex min-h-[44px] items-center justify-center border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800"
-              >
-                Kirim CV / Perkenalan
-              </Link>
-            </div>
+            <SaasEmptyState
+              description="Belum ada posisi terbuka saat ini. Kami akan memperbarui halaman ini saat ada rekrutmen."
+              actions={
+                <Button href="/contact?subject=Karier">Kirim CV / Perkenalan</Button>
+              }
+            />
           )}
         </div>
-      </div>
-    </div>
+        <PageEndCta />
+    </PublicPageShell>
   );
 }

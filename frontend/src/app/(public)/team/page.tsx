@@ -9,6 +9,10 @@ import type { Metadata } from 'next';
 import { Globe } from 'lucide-react';
 import { getUploadUrl } from '@/lib/api';
 import { PageIntro } from '@/components/layout/PageIntro';
+import { PublicPageShell } from '@/components/layout/PublicPageShell';
+import { PageEndCta } from '@/components/layout/PageEndCta';
+import { SaasEmptyState } from '@/components/layout/SaasEmptyState';
+import { Button } from '@/components/ui/Button';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.team.title,
@@ -44,17 +48,14 @@ export default async function TeamPage() {
         />
       ))}
 
-      <div className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <PublicPageShell>
           <PageIntro kicker="Tim DN Tech" title="Kenalan dengan tim kami" description="Orang-orang di balik DN Tech dan pekerjaan yang kami lakukan untuk bisnis Indonesia." />
 
           {team.length === 0 ? (
-            <div className="border-y border-slate-300 py-16">
-              <p className="text-gray-600">Profil tim akan segera ditambahkan.</p>
-              <Link href="/contact" className="inline-block mt-4 text-blue-900 font-medium hover:underline">
-                Hubungi kami
-              </Link>
-            </div>
+            <SaasEmptyState
+              description="Profil tim akan segera ditambahkan."
+              actions={<Button href="/contact">Hubungi kami</Button>}
+            />
           ) : (
             <div className="flex flex-wrap justify-center gap-6">
               {team.map((member) => {
@@ -116,8 +117,8 @@ export default async function TeamPage() {
               );})}
             </div>
           )}
-        </div>
-      </div>
+          <PageEndCta />
+      </PublicPageShell>
     </>
   );
 }

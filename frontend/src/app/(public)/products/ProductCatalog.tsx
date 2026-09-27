@@ -99,19 +99,22 @@ export function ProductCatalog({ initialProducts, category, search }: ProductCat
           <span>Memuat produk...</span>
         </div>
       ) : (
-        <div className="border-t border-slate-300">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => {
             const teasers = featureTeasers(product.features);
             const price = cheapestPrice(product);
             const status = product.launchStatus === 'launched' ? 'Tersedia' : product.launchStatus === 'in_progress' ? 'Sedang divalidasi' : product.launchStatus === 'planned' ? 'Roadmap' : 'Produk aktif';
             return (
-              <Link key={product.id} href={`/products/${product.slug}`} className="group grid gap-6 border-b border-slate-300 py-8 transition-colors hover:bg-slate-50 sm:px-3 lg:grid-cols-[0.75fr_1.2fr_0.65fr]">
-                  <div>
+              <Link key={product.id} href={`/products/${product.slug}`} className="group flex min-h-[330px] flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md">
+                  <div className="flex items-start justify-between gap-3">
                     <span className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">{product.category}</span>
-                    <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{product.name}</h2>
-                    {product.tagline && <p className="mt-1 text-sm font-medium text-slate-500">{product.tagline}</p>}
+                    <span className="text-xs font-semibold text-slate-500">{status}</span>
                   </div>
                   <div>
+                    <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-950">{product.name}</h2>
+                    {product.tagline && <p className="mt-1 text-sm font-medium text-slate-500">{product.tagline}</p>}
+                  </div>
+                  <div className="mt-5 flex-1">
                     <p className="text-sm leading-6 text-slate-600">{product.description}</p>
                     {teasers.length > 0 && (
                       <ul className="mt-4 space-y-1.5">
@@ -119,11 +122,12 @@ export function ProductCatalog({ initialProducts, category, search }: ProductCat
                       </ul>
                     )}
                   </div>
-                  <div className="flex flex-col items-start lg:items-end lg:text-right">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{status}</span>
-                    {product.featured && <span className="mt-1 text-xs font-bold text-amber-700">Produk pilihan</span>}
-                    {price != null && <p className="mt-4 text-sm font-bold text-slate-950">Mulai dari {price === 0 ? 'Gratis' : formatCurrencyIDR(price)}</p>}
-                    <span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-bold text-blue-900">
+                  <div className="mt-6 flex items-end justify-between gap-3 border-t border-slate-200 pt-4">
+                    <div>
+                      {product.featured && <span className="block text-xs font-bold text-amber-700">Produk pilihan</span>}
+                      {price != null && <p className="mt-1 text-sm font-bold text-slate-950">Mulai dari {price === 0 ? 'Gratis' : formatCurrencyIDR(price)}</p>}
+                    </div>
+                    <span className="inline-flex items-center gap-2 text-sm font-bold text-blue-900">
                       Lihat detail <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </span>
                   </div>

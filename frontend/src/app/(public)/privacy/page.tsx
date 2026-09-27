@@ -3,6 +3,8 @@ import { fetchPublicApiSafe } from '@/lib/server-api';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { PRIVACY_POLICY_HTML } from '@/lib/legal-content';
 import { buildMetadata } from '@/lib/seo';
+import { PageIntro } from '@/components/layout/PageIntro';
+import { PublicPageShell, SaasPanel } from '@/components/layout/PublicPageShell';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Kebijakan Privasi DN Tech',
@@ -19,10 +21,11 @@ export default async function PrivacyPage() {
   const content = await getPrivacy();
 
   return (
-    <div className="py-16">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }} />
-      </div>
-    </div>
+    <PublicPageShell width="3xl">
+      <PageIntro kicker="Legal" title="Kebijakan Privasi" description="Cara kami mengumpulkan, menggunakan, menyimpan, dan melindungi data pribadi di situs DN Tech." />
+      <SaasPanel>
+        <div className="prose max-w-none prose-slate" dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }} />
+      </SaasPanel>
+    </PublicPageShell>
   );
 }

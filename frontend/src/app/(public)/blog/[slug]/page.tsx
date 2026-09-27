@@ -114,7 +114,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         category: post.category,
       })} />
 
-      <div className="article-page-bg py-8 sm:py-12">
+      <div className="saas-page article-page-bg py-8 sm:py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <nav className="mb-8 flex flex-wrap items-center gap-2 text-sm text-gray-500" aria-label="Jejak navigasi">
             <Link href="/" className="hover:text-blue-900">Beranda</Link>

@@ -26,7 +26,7 @@ export function HomePortfolio({ projects }: HomePortfolioProps) {
   if (!projects.length) return null;
 
   return (
-    <section className="bg-surface py-section">
+    <section className="home-section-alt py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading title="Portfolio" />
 

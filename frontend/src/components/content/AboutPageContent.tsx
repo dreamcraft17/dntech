@@ -4,6 +4,8 @@ import { hasAboutCopy, resolveFounder, type AboutContent } from '@/lib/about-con
 import { cn } from '@/lib/utils';
 import type { TeamMember } from '@/types';
 import { PageIntro } from '@/components/layout/PageIntro';
+import { PageEndCta } from '@/components/layout/PageEndCta';
+import { PublicPageShell } from '@/components/layout/PublicPageShell';
 
 export type { AboutContent } from '@/lib/about-content';
 
@@ -17,8 +19,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
   const founder = resolveFounder(about.founder);
 
   return (
-    <div className="py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <PublicPageShell>
         <PageIntro kicker="Tentang kami" title="Tentang DN Tech" description={about.story || undefined}>
           {!hasCopy && (
             <p className="text-gray-600">
@@ -105,7 +106,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
         )}
 
         <TeamSpotlight members={team} />
-      </div>
-    </div>
+        <PageEndCta />
+    </PublicPageShell>
   );
 }

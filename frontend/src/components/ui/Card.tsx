@@ -13,8 +13,8 @@ export function Card({ title, description, children, footer, className, hover }:
   return (
     <div
       className={cn(
-        'rounded-sm border border-[var(--border)] bg-[var(--surface)] p-6',
-        hover && 'transition-colors hover:border-gray-300',
+        'saas-panel rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm',
+        hover && 'transition-[border-color,box-shadow] hover:border-[var(--border-strong)] hover:shadow-md',
         className
       )}
     >

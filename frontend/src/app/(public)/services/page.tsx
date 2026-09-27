@@ -6,6 +6,8 @@ import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
 import { fetchPublicApiList } from '@/lib/server-api';
 import type { Service } from '@/types';
 import type { Metadata } from 'next';
+import { PublicPageShell } from '@/components/layout/PublicPageShell';
+import { PageEndCta } from '@/components/layout/PageEndCta';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.services.title,
@@ -43,8 +45,7 @@ export default async function ServicesPage({
         })))} />
       )}
 
-      <div className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <PublicPageShell>
           <PageIntro
             kicker="Layanan"
             title="Dari website sampai sistem bisnis"
@@ -91,16 +92,8 @@ export default async function ServicesPage({
             <p className="border-y border-slate-300 py-12 text-slate-500">Tidak ada layanan ditemukan.</p>
           )}
 
-          <div className="mt-16 border-l-2 border-teal-600 pl-5">
-            <p className="mb-4 font-semibold text-slate-900">Belum yakin layanan mana yang sesuai?</p>
-            <div className="flex flex-wrap gap-5 text-sm">
-              <Link href="/quiz" className="text-blue-900 font-medium hover:underline">Ikuti Kuis Solusi</Link>
-              <Link href="/blog" className="text-blue-900 font-medium hover:underline">Baca Panduan Kami</Link>
-              <Link href="/contact" className="text-blue-900 font-medium hover:underline">Hubungi Kami</Link>
-            </div>
-          </div>
-        </div>
-      </div>
+          <PageEndCta />
+      </PublicPageShell>
     </>
   );
 }
