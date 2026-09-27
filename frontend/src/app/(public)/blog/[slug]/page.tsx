@@ -153,7 +153,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                     height={1024}
                     quality={85}
                     priority
-                    className="h-auto w-full object-contain"
+                    className="block h-auto w-full object-contain"
                     sizes="(min-width: 1024px) 48vw, 100vw"
                     itemProp="image"
                   />
@@ -217,14 +217,14 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {post.relatedPosts.map((related) => (
                   <Link key={related.id} href={`/blog/${related.slug}`}
-                    className="group overflow-hidden rounded-xl border border-gray-200 bg-white transition-colors hover:border-blue-300">
+                    className="group rounded-xl border border-gray-200 bg-white transition-colors hover:border-blue-300">
                     {related.featuredImage?.url && (
                       <Image
                         src={getUploadUrl(related.featuredImage.url)}
                         alt={related.featuredImage.altText || related.title}
-                          width={1536}
-                          height={1024}
-                          className="h-auto w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                        width={1536}
+                        height={1024}
+                        className="block h-auto w-full rounded-t-xl object-contain"
                         sizes="(min-width: 640px) 33vw, 100vw"
                       />
                     )}
