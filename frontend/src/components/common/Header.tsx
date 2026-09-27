@@ -82,10 +82,10 @@ export function Header() {
               key={link.href}
               href={link.href}
               className={cn(
-                'px-3 py-2 text-sm font-medium rounded-lg transition-colors min-h-[48px] flex items-center',
+                'flex min-h-[48px] items-center border-b-2 border-transparent px-3 py-2 text-sm font-medium transition-colors',
                 pathname === link.href
-                  ? 'text-blue-900 bg-blue-50'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'border-blue-900 text-blue-900'
+                  : 'text-gray-600 hover:border-gray-300 hover:text-gray-900'
               )}
             >
               {link.label}
@@ -108,7 +108,7 @@ export function Header() {
           </button>
           <Link
             href="/contact"
-            className="hidden sm:inline-flex items-center px-4 py-2.5 text-sm font-semibold text-white bg-blue-900 rounded-lg hover:bg-blue-800 transition-colors min-h-[48px]"
+            className="hidden min-h-[48px] items-center border border-blue-900 bg-blue-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800 sm:inline-flex"
           >
             Konsultasi Gratis
           </Link>

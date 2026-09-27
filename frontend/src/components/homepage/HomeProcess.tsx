@@ -14,30 +14,16 @@ export function HomeProcess({ steps }: HomeProcessProps) {
           title="Gimana Cara Kerjanya?"
           subtitle="Proses kerja yang jelas — dari konsultasi awal hingga launch & support"
         />
-        <ol className="mx-auto max-w-3xl">
-          {steps.map((step, index) => {
-            const isLast = index === steps.length - 1;
+        <ol className="mx-auto grid max-w-5xl border-y border-slate-300 sm:grid-cols-2 sm:divide-x sm:divide-slate-300">
+          {steps.map((step) => {
             return (
-              <li key={step.step} className="relative flex gap-x-8 pb-12 last:pb-0">
-                {!isLast && (
-                  <span
-                    className="absolute left-6 top-14 h-[calc(100%-2.25rem)] w-0.5 bg-gray-200"
-                    aria-hidden="true"
-                  />
-                )}
-                <span
-                  className={`relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-bold text-white ${
-                    isLast ? 'bg-[var(--secondary)]' : 'bg-[var(--primary)]'
-                  }`}
-                >
-                  {step.step}
-                </span>
-                <div className="pt-2">
-                  <h3 className="text-lg font-semibold text-gray-900">{step.title}</h3>
-                  <p className="mt-2 max-w-xl leading-relaxed text-gray-600">
-                    {step.description}
-                  </p>
+              <li key={step.step} className="border-b border-slate-300 p-6 last:border-b-0 sm:p-7 sm:odd:border-b sm:even:border-b lg:p-8">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="font-mono text-3xl font-bold leading-none text-[var(--secondary)]">0{step.step}</span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Langkah {step.step}</span>
                 </div>
+                <h3 className="mt-8 text-lg font-semibold text-gray-900">{step.title}</h3>
+                <p className="mt-2 leading-relaxed text-gray-600">{step.description}</p>
               </li>
             );
           })}
