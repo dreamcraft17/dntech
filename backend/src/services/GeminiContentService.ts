@@ -77,7 +77,8 @@ type OpenAIImageResponse = {
 
 const OPENAI_TIMEOUT_MS = 30_000;
 const BRAND_CONTEXT_TIMEOUT_MS = 8_000;
-const GEMINI_RESEARCH_TIMEOUT_MS = 45_000;
+const GEMINI_RESEARCH_TIMEOUT_MS = 30_000;
+const AI_IMAGE_TIMEOUT_MS = 20_000;
 const MAX_BRAND_CONTEXT_CHARS = 12_000;
 export const BLOG_MIN_WORDS = 500;
 const BLOG_TARGET_WORD_RANGE = '700-1000';
@@ -309,20 +310,28 @@ function blogCoverImagePrompt(title: string, excerpt: string, content: string) {
 
 async function generateGeminiBlogImage(title: string, excerpt: string, content: string, apiKey: string, userId: string) {
   const model = process.env.GEMINI_IMAGE_MODEL || 'gemini-2.5-flash-image';
-  const response = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/interactions',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), AI_IMAGE_TIMEOUT_MS);
+  let response: Response;
+  try {
+    response = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/interactions',
+      {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey,
+        },
+        body: JSON.stringify({
+          model,
+          input: blogCoverImagePrompt(title, excerpt, content),
+        }),
       },
-      body: JSON.stringify({
-        model,
-        input: blogCoverImagePrompt(title, excerpt, content),
-      }),
-    },
-  );
+    );
+  } finally {
+    clearTimeout(timeout);
+  }
 
   const result = await response.json() as GeminiImageResponse;
   if (!response.ok) {
@@ -342,16 +351,24 @@ async function generateGeminiBlogImage(title: string, excerpt: string, content: 
 }
 
 async function generateOpenAIBlogImage(title: string, excerpt: string, content: string, apiKey: string, userId: string) {
-  const response = await fetch(`${openAIBaseUrl(apiKey)}/images/generations`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model: process.env.OPENAI_IMAGE_MODEL || 'gpt-image-1',
-      size: resolveOpenAIImageSize(),
-      response_format: 'b64_json',
-      prompt: blogCoverImagePrompt(title, excerpt, content),
-    }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), AI_IMAGE_TIMEOUT_MS);
+  let response: Response;
+  try {
+    response = await fetch(`${openAIBaseUrl(apiKey)}/images/generations`, {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: process.env.OPENAI_IMAGE_MODEL || 'gpt-image-1',
+        size: resolveOpenAIImageSize(),
+        response_format: 'b64_json',
+        prompt: blogCoverImagePrompt(title, excerpt, content),
+      }),
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
   const result = await response.json() as OpenAIImageResponse;
   if (!response.ok) throw new AppError(502, 'AI_IMAGE_REQUEST_FAILED', result.error?.message || 'OpenAI gagal membuat gambar');
   const image = result.data?.[0];
