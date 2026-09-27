@@ -87,6 +87,35 @@ const OPENAI_IMAGE_SIZES = ['1024x1024', '1024x1536', '1536x1024', 'auto'] as co
 type OpenAIImageSize = (typeof OPENAI_IMAGE_SIZES)[number];
 const DEFAULT_OPENAI_IMAGE_SIZE: OpenAIImageSize = '1536x1024';
 
+/**
+ * The topic is the only language signal the generator reliably receives from
+ * the admin form. Keep this heuristic conservative: it gives the model a
+ * useful hint for short titles, while the prompt below remains the final
+ * authority for mixed-language or ambiguous input.
+ */
+export function inferBlogLanguage(topic: string): string {
+  const value = topic.trim();
+  if (/\p{Script=Han}/u.test(value)) return 'Mandarin Chinese';
+  if (/\p{Script=Hiragana}|\p{Script=Katakana}/u.test(value)) return 'Japanese';
+  if (/\p{Script=Hangul}/u.test(value)) return 'Korean';
+  if (/\p{Script=Cyrillic}/u.test(value)) return 'the same Cyrillic language as the title';
+  if (/\p{Script=Arabic}/u.test(value)) return 'Arabic';
+
+  const words = new Set(value.toLowerCase().match(/[a-zÀ-ÿ]+/g) || []);
+  const scores: Array<[string, string[]]> = [
+    ['English', ['the', 'and', 'for', 'with', 'how', 'what', 'best', 'business', 'guide', 'software']],
+    ['Bahasa Indonesia', ['dan', 'untuk', 'dengan', 'cara', 'yang', 'bisnis', 'panduan', 'aplikasi', 'terbaik']],
+    ['Spanish', ['el', 'la', 'los', 'las', 'para', 'con', 'cómo', 'mejor', 'guía']],
+    ['Portuguese', ['o', 'a', 'os', 'as', 'para', 'com', 'como', 'melhor', 'guia']],
+    ['French', ['le', 'la', 'les', 'pour', 'avec', 'comment', 'meilleur', 'guide']],
+    ['German', ['der', 'die', 'das', 'für', 'mit', 'wie', 'beste', 'leitfaden']],
+  ];
+  const ranked = scores
+    .map(([language, hints]) => [language, hints.filter((hint) => words.has(hint)).length] as const)
+    .sort((a, b) => b[1] - a[1]);
+  return ranked[0][1] > 0 ? ranked[0][0] : 'the dominant language used in the title';
+}
+
 export function resolveOpenAIImageSize(env: NodeJS.ProcessEnv = process.env): OpenAIImageSize {
   const configured = env.OPENAI_IMAGE_SIZE?.trim();
   if (!configured) return DEFAULT_OPENAI_IMAGE_SIZE;
@@ -405,6 +434,8 @@ async function generateBlogImage(title: string, excerpt: string, content: string
 
 export async function generateBlogDraft(input: unknown, userId: string) {
   const data = generateBlogSchema.parse(input);
+  const requestedLanguage = data.language?.trim() || '';
+  const languageDirective = requestedLanguage || inferBlogLanguage(data.topic);
   const openAI = openAIKey();
   const gemini = process.env.GEMINI_API_KEY?.trim() || '';
   if (!openAI && !gemini) throw new AppError(503, 'AI_NOT_CONFIGURED', 'OPENAI_API_KEY atau GEMINI_API_KEY belum dikonfigurasi di backend');
@@ -420,11 +451,11 @@ export async function generateBlogDraft(input: unknown, userId: string) {
   const prompt = `
 Anda adalah editor konten DN Tech, perusahaan software Indonesia. Buat satu DRAFT artikel blog yang informatif dan tidak mengarang fakta spesifik tentang DN Tech.
 
-Topik: ${data.topic}
+Judul/topik utama: ${data.topic}
 Target pembaca: ${data.audience || 'pemilik bisnis, founder startup, dan tim operasional di Indonesia'}
 Gaya bahasa: ${data.tone || 'jelas, hangat, praktis, tidak kaku'}
 Keyword yang boleh dipakai secara natural: ${data.keywords || 'software development Indonesia, aplikasi custom, workflow bisnis'}
-Bahasa: ${data.language || 'Bahasa Indonesia'}
+Bahasa output: ${languageDirective}
 
 ${researchBlock}
 ${brandContext}
@@ -438,6 +469,8 @@ Aturan positioning DN Tech:
 
 Aturan:
 - Fokus pada masalah pembaca dan langkah yang bisa diterapkan.
+- Tulis seluruh output editorial (title, excerpt, content, category, tags, seoTitle, dan seoDescription) dalam bahasa utama judul/topik. Jangan menerjemahkan judul ke Bahasa Indonesia dan jangan mencampur bahasa, kecuali istilah teknis, nama merek, URL, atau kutipan yang memang perlu dipertahankan.
+- Deteksi bahasa dari judul/topik jika Bahasa output tidak diberikan secara eksplisit. Jika judul campuran, ikuti bahasa yang dominan; jika ambigu, pertahankan bahasa yang paling banyak dipakai dalam judul.
 - Jangan membuat klaim statistik, harga, studi kasus, atau nama klien tanpa sumber dari hasil riset internet di atas atau dari input.
 - Gunakan HTML sederhana yang aman: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, dan <a href="...">.
 - Jangan memakai markdown, script, style, iframe, atau atribut HTML selain href pada link.

@@ -78,7 +78,8 @@ export function BlogGenerator({ onGenerated }: BlogGeneratorProps) {
           {error && <Alert variant="error" className="mt-4">{error}</Alert>}
 
           <div className="mt-5 space-y-4">
-            <Textarea label="Topik artikel" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Contoh: Cara memilih software HRIS untuk bisnis multi-cabang" required rows={3} />
+            <Textarea label="Judul / topik artikel" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Tulis dalam bahasa yang ingin dipakai — contoh: How to choose HR software" required rows={3} />
+            <p className="-mt-2 text-xs text-gray-500">Bahasa artikel, metadata SEO, dan kategori akan mengikuti bahasa utama judul/topik ini.</p>
             <Input label="Target pembaca" value={audience} onChange={(e) => setAudience(e.target.value)} placeholder="Contoh: HR manager dan pemilik bisnis retail" />
             <Input label="Gaya bahasa" value={tone} onChange={(e) => setTone(e.target.value)} />
             <Input label="Keyword SEO" value={keywords} onChange={(e) => setKeywords(e.target.value)} placeholder="Pisahkan dengan koma" />
