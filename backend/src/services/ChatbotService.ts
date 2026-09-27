@@ -201,13 +201,13 @@ export async function answerChat(input: unknown) {
     return { conversationId: conversation.id, answer: CODING_REFUSAL, messageCount: conversation.messageCount };
   }
 
-  if (!apiKey) throw new AppError(503, 'AI_NOT_CONFIGURED', 'Chatbot AI belum dikonfigurasi');
+  if (!apiKey) throw new AppError(503, 'AI_NOT_CONFIGURED', 'dnMate belum dikonfigurasi');
 
   const context = await retrievePublicContext(parsed.message);
   const profileQuestion = isDnTechProfileQuestion(parsed.message);
   const userMessage: ChatMessage = { role: 'user', content: parsed.message };
   const systemInstruction = `
-Kamu adalah DN Tech AI Assistant, customer-facing chatbot berbahasa Indonesia.
+Kamu adalah dnMate, asisten AI customer-facing milik DN Tech yang berbahasa Indonesia.
 Jawab hanya berdasarkan konteks konten publik DN Tech di bawah dan riwayat percakapan.
 Untuk pertanyaan tentang DN Tech, founder, atau sejarah perusahaan, berikan jawaban paling lengkap yang didukung konteks. Kamu boleh memakai hasil web publik terbaru bila tersedia, tetapi bedakan fakta yang terverifikasi dari informasi yang belum pasti dan jangan mengarang.
 Tolak semua pertanyaan tentang coding, pemrograman, source code, script, debugging, bahasa pemrograman, API, database query, atau pembuatan aplikasi/website. Gunakan penolakan singkat yang sopan dan arahkan ke halaman Kontak; jangan memberikan potongan kode, langkah teknis, atau instruksi pemrograman.

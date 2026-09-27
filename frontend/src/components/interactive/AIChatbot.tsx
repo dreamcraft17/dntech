@@ -8,6 +8,7 @@ type Message = { role: 'user' | 'model'; content: string };
 
 const VISITOR_KEY = 'dntech-ai-visitor';
 const MAX_CLIENT_MESSAGES = 20; // mirror the backend's history cap so the UI never shows more than the model actually saw
+const CHATBOT_NAME = 'dnMate';
 
 function renderInlineMarkdown(text: string): ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).filter(Boolean);
@@ -81,12 +82,12 @@ export function AIChatbot() {
         body: JSON.stringify({ message, conversationId, visitorId }),
       });
       const json = await response.json() as { success: boolean; data?: { conversationId: string; answer: string }; error?: { message?: string } };
-      if (!response.ok || !json.success || !json.data) throw new Error(json.error?.message || 'Chatbot sedang tidak tersedia.');
+      if (!response.ok || !json.success || !json.data) throw new Error(json.error?.message || `${CHATBOT_NAME} sedang tidak tersedia.`);
       const finalMessages = [...nextMessages, { role: 'model' as const, content: json.data.answer }].slice(-MAX_CLIENT_MESSAGES);
       setConversationId(json.data.conversationId);
       setMessages(finalMessages);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Chatbot sedang tidak tersedia.');
+      setError(err instanceof Error ? err.message : `${CHATBOT_NAME} sedang tidak tersedia.`);
     } finally {
       setLoading(false);
     }
@@ -95,11 +96,11 @@ export function AIChatbot() {
   return (
     <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
       {open && (
-        <section className="flex h-[min(620px,calc(100vh-110px))] w-[min(390px,calc(100vw-2rem))] flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl" aria-label="DN Tech AI Assistant">
+        <section className="flex h-[min(620px,calc(100vh-110px))] w-[min(390px,calc(100vw-2rem))] flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl" aria-label={`${CHATBOT_NAME} DN Tech`}>
           <header className="flex items-center justify-between bg-blue-900 px-4 py-3 text-white">
             <div className="flex items-center gap-3">
               <span className="rounded-full bg-white/15 p-2"><Bot className="h-5 w-5" aria-hidden="true" /></span>
-              <div><h2 className="font-semibold">DN Tech Assistant</h2><p className="text-xs text-blue-100">Jawaban berdasarkan konten DN Tech</p></div>
+              <div><h2 className="font-semibold">{CHATBOT_NAME}</h2><p className="text-xs text-blue-100">Asisten DN Tech berdasarkan konten publik</p></div>
             </div>
             <button type="button" onClick={() => setOpen(false)} className="rounded-lg p-2 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-900" aria-label="Tutup chatbot"><X className="h-5 w-5" /></button>
           </header>
@@ -111,16 +112,16 @@ export function AIChatbot() {
             <div ref={endRef} />
           </div>
           <form onSubmit={submit} className="flex gap-2 border-t border-gray-200 bg-white p-3">
-            <label htmlFor="ai-chat-message" className="sr-only">Pesan untuk AI Assistant</label>
+            <label htmlFor="ai-chat-message" className="sr-only">Pesan untuk {CHATBOT_NAME}</label>
             <input id="ai-chat-message" value={input} onChange={(event) => setInput(event.target.value)} maxLength={4000} placeholder="Tanyakan sesuatu…" className="min-h-[48px] min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20" disabled={loading} />
             <button type="submit" disabled={loading || !input.trim()} className="rounded-lg bg-blue-900 px-3 py-2 text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 disabled:cursor-not-allowed disabled:opacity-50" aria-label="Kirim pesan"><Send className="h-4 w-4" aria-hidden="true" /></button>
           </form>
           <p className="bg-white px-3 pb-2 text-xs text-gray-600">AI dapat keliru. Untuk kepastian, hubungi tim DN Tech.</p>
         </section>
       )}
-      <button type="button" onClick={() => setOpen((value) => !value)} className="flex min-h-14 items-center gap-2 rounded-full bg-teal-600 px-5 text-sm font-semibold text-white shadow-lg transition hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-700" aria-label={open ? 'Tutup DN Tech AI Assistant' : 'Buka DN Tech AI Assistant'} aria-expanded={open}>
+      <button type="button" onClick={() => setOpen((value) => !value)} className="flex min-h-14 items-center gap-2 rounded-full bg-teal-600 px-5 text-sm font-semibold text-white shadow-lg transition hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-700" aria-label={open ? `Tutup ${CHATBOT_NAME}` : `Buka ${CHATBOT_NAME}`} aria-expanded={open}>
         {open ? <X className="h-5 w-5" aria-hidden="true" /> : <MessageCircle className="h-5 w-5" aria-hidden="true" />}
-        <span className="hidden sm:inline">Tanya AI</span>
+        <span className="hidden sm:inline">Tanya {CHATBOT_NAME}</span>
       </button>
     </div>
   );
