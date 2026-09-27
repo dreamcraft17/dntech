@@ -32,6 +32,7 @@ const DEFAULT_TIMEZONE = 'Asia/Jakarta';
 const AUTOMATION_TAG = 'dntech-automation';
 const DEFAULT_GENERATION_ATTEMPTS = 3;
 const DEFAULT_POSTS_PER_DAY = 4;
+const DEFAULT_GENERATION_QUEUE_TARGET = 12;
 const BLOG_LANGUAGES = [
   { code: 'id', prompt: 'Bahasa Indonesia' },
   { code: 'en', prompt: 'English' },
@@ -154,6 +155,11 @@ function localDateBounds(dateKey: string, timeZone = process.env.BLOG_AUTOMATION
   };
 }
 
+function addDaysToDateKey(dateKey: string, days: number) {
+  const [year, month, day] = dateKey.split('-').map(Number);
+  return new Date(Date.UTC(year, month - 1, day + days)).toISOString().slice(0, 10);
+}
+
 function localDayIndex(dateKey: string) {
   return Number(dateKey.replace(/-/g, '')) % TOPIC_POOL.length;
 }
@@ -239,6 +245,14 @@ async function publishedAutomationToday(dateKey: string) {
   return posts.filter((post) => Array.isArray(post.tags) && post.tags.includes(AUTOMATION_TAG)).length;
 }
 
+async function queuedAutomationPosts() {
+  const posts = await prisma.blogPost.findMany({
+    where: { status: 'scheduled', deletedAt: null },
+    select: { tags: true },
+  });
+  return posts.filter((post) => Array.isArray(post.tags) && post.tags.includes(AUTOMATION_TAG)).length;
+}
+
 async function publishDueScheduledPosts(now: Date, dateKey: string, dailyTarget: number) {
   const alreadyPublished = await publishedAutomationToday(dateKey);
   const remaining = Math.max(0, dailyTarget - alreadyPublished);
@@ -307,7 +321,10 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
   if (dueSlotIndex < 0) return { created: false, published: false, reason: 'before_first_slot' };
 
   const postsToday = await generatedToday(local.dateKey);
-  if (postsToday.length >= target) return { created: false, published: false, reason: 'daily_target_reached' };
+  const queuedPosts = await queuedAutomationPosts();
+  const queueTargetValue = Number(process.env.BLOG_AUTOMATION_QUEUE_TARGET || DEFAULT_GENERATION_QUEUE_TARGET);
+  const queueTarget = Math.max(target, Number.isFinite(queueTargetValue) ? Math.floor(queueTargetValue) : DEFAULT_GENERATION_QUEUE_TARGET);
+  if (queuedPosts >= queueTarget) return { created: false, published: false, reason: 'generation_queue_target_reached' };
   const skippedTopics = process.env.BLOG_AUTOMATION_DRY_RUN === 'true'
     ? []
     : await skippedTopicsForDay(local.dateKey);
@@ -364,10 +381,13 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
   }
 
   const publishMode = process.env.BLOG_AUTOMATION_PUBLISH_MODE || 'scheduled';
-  const scheduledAt = slotDate(local.dateKey, slots[postsToday.length]);
+  const queueSlotIndex = dueSlotIndex + queuedPosts;
+  const scheduledDateKey = addDaysToDateKey(local.dateKey, Math.floor(queueSlotIndex / slots.length));
+  const scheduledAt = slotDate(scheduledDateKey, slots[queueSlotIndex % slots.length]);
+  const publishedToday = await publishedAutomationToday(local.dateKey);
   // If the worker was briefly offline and catches up after a slot, publish the
   // missed slot immediately instead of creating a scheduled post in the past.
-  const isPublished = publishMode === 'published' || scheduledAt <= now;
+  const isPublished = (publishMode === 'published' || scheduledAt <= now) && publishedToday < target;
   const post = await prisma.blogPost.create({
     data: {
       title: draft.title,
