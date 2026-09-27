@@ -53,6 +53,18 @@ type GeminiResponse = {
   error?: { message?: string };
 };
 
+type GeminiImageResponse = {
+  steps?: Array<{
+    content?: Array<{
+      type?: string;
+      data?: string;
+      mime_type?: string;
+      mimeType?: string;
+    }>;
+  }>;
+  error?: { message?: string };
+};
+
 type OpenAIResponse = {
   choices?: Array<{ message?: { content?: string | null } }>;
   error?: { message?: string };
@@ -69,6 +81,23 @@ const GEMINI_RESEARCH_TIMEOUT_MS = 45_000;
 const MAX_BRAND_CONTEXT_CHARS = 12_000;
 export const BLOG_MIN_WORDS = 500;
 const BLOG_TARGET_WORD_RANGE = '700-1000';
+const OPENAI_IMAGE_SIZES = ['1024x1024', '1024x1536', '1536x1024', 'auto'] as const;
+type OpenAIImageSize = (typeof OPENAI_IMAGE_SIZES)[number];
+const DEFAULT_OPENAI_IMAGE_SIZE: OpenAIImageSize = '1536x1024';
+
+export function resolveOpenAIImageSize(env: NodeJS.ProcessEnv = process.env): OpenAIImageSize {
+  const configured = env.OPENAI_IMAGE_SIZE?.trim();
+  if (!configured) return DEFAULT_OPENAI_IMAGE_SIZE;
+  if ((OPENAI_IMAGE_SIZES as readonly string[]).includes(configured)) {
+    return configured as OpenAIImageSize;
+  }
+  // Legacy 16:9 preset is not supported by gpt-image-1; map to closest landscape size.
+  if (configured === '1536x864' || configured === '1792x1024' || configured === '1024x576') {
+    return '1536x1024';
+  }
+  console.warn(`[blog-ai] Ignoring unsupported OPENAI_IMAGE_SIZE=${configured}; using ${DEFAULT_OPENAI_IMAGE_SIZE}`);
+  return DEFAULT_OPENAI_IMAGE_SIZE;
+}
 
 function openAIKey() {
   return process.env.OPENAI_API_KEY?.trim() || '';
@@ -273,16 +302,54 @@ Rangkum temuan dalam poin-poin berbahasa Indonesia, sertakan URL sumber untuk se
   }
 }
 
-async function generateOpenAIBlogImage(title: string, excerpt: string, content: string, apiKey: string, userId: string) {
+function blogCoverImagePrompt(title: string, excerpt: string, content: string) {
   const articleContext = plainTextFromHtml(content).slice(0, 2_000);
+  return `Buat gambar hero editorial landscape (rasio 3:2) untuk artikel blog DN Tech. Judul: ${title}. Ringkasan: ${excerpt}. Konteks isi artikel: ${articleContext}. Gambarkan ide utama artikel, bukan stock image generik laptop atau orang tersenyum. Gaya modern, profesional, hangat, bersih, relevan untuk pemilik bisnis dan tim operasional di Indonesia. Jangan gunakan teks, logo, watermark, wajah orang nyata, atau merek pihak lain.`;
+}
+
+async function generateGeminiBlogImage(title: string, excerpt: string, content: string, apiKey: string, userId: string) {
+  const model = process.env.GEMINI_IMAGE_MODEL || 'gemini-2.5-flash-image';
+  const response = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/interactions',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
+      body: JSON.stringify({
+        model,
+        input: blogCoverImagePrompt(title, excerpt, content),
+      }),
+    },
+  );
+
+  const result = await response.json() as GeminiImageResponse;
+  if (!response.ok) {
+    throw new AppError(502, 'AI_IMAGE_REQUEST_FAILED', result.error?.message || 'Gemini gagal membuat gambar');
+  }
+
+  const image = result.steps?.flatMap((step) => step.content || [])
+    .find((part) => part.type === 'image' && part.data);
+  if (!image?.data) throw new AppError(502, 'AI_IMAGE_EMPTY_RESPONSE', 'Gemini tidak mengembalikan gambar');
+
+  return createMediaFromBuffer(
+    Buffer.from(image.data, 'base64'),
+    image.mimeType || image.mime_type || 'image/png',
+    `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'blog-cover'}.png`,
+    userId,
+  );
+}
+
+async function generateOpenAIBlogImage(title: string, excerpt: string, content: string, apiKey: string, userId: string) {
   const response = await fetch(`${openAIBaseUrl(apiKey)}/images/generations`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify({
       model: process.env.OPENAI_IMAGE_MODEL || 'gpt-image-1',
-      size: '1536x1024',
+      size: resolveOpenAIImageSize(),
       response_format: 'b64_json',
-      prompt: `Buat gambar hero editorial rasio 16:9 untuk artikel blog DN Tech. Judul: ${title}. Ringkasan: ${excerpt}. Konteks isi artikel: ${articleContext}. Gambarkan ide utama artikel, bukan stock image generik laptop atau orang tersenyum. Gaya modern, profesional, hangat, bersih, relevan untuk pemilik bisnis dan tim operasional di Indonesia. Jangan gunakan teks, logo, watermark, wajah orang nyata, atau merek pihak lain.`,
+      prompt: blogCoverImagePrompt(title, excerpt, content),
     }),
   });
   const result = await response.json() as OpenAIImageResponse;
@@ -300,8 +367,22 @@ async function generateOpenAIBlogImage(title: string, excerpt: string, content: 
 
 async function generateBlogImage(title: string, excerpt: string, content: string, userId: string) {
   const openAI = openAIKey();
-  if (!openAI) throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'OPENAI_API_KEY belum dikonfigurasi untuk cover blog');
-  return { media: await generateOpenAIBlogImage(title, excerpt, content, openAI, userId), provider: 'openai' as const };
+  const gemini = process.env.GEMINI_API_KEY?.trim() || '';
+
+  if (openAI) {
+    try {
+      return { media: await generateOpenAIBlogImage(title, excerpt, content, openAI, userId), provider: 'openai' as const };
+    } catch (error) {
+      if (!gemini) throw error;
+      console.warn('[blog-ai] OpenAI image generation failed; trying Gemini fallback', error instanceof Error ? error.message : error);
+    }
+  }
+
+  if (gemini) {
+    return { media: await generateGeminiBlogImage(title, excerpt, content, gemini, userId), provider: 'gemini' as const };
+  }
+
+  throw new AppError(503, 'AI_IMAGE_NOT_CONFIGURED', 'OPENAI_API_KEY atau GEMINI_API_KEY belum dikonfigurasi untuk cover blog');
 }
 
 export async function generateBlogDraft(input: unknown, userId: string) {
@@ -372,7 +453,7 @@ Aturan:
   }
 
   let featuredImage = null;
-  let imageProvider: 'openai' | null = null;
+  let imageProvider: 'openai' | 'gemini' | null = null;
   if (data.generateImage) {
     try {
       const generatedImage = await generateBlogImage(draft.title, draft.excerpt, draft.content, userId);

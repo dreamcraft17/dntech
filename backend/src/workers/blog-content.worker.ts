@@ -16,7 +16,7 @@ type GeneratedDraft = {
   seoTitle: string;
   seoDescription: string;
   featuredImageId?: string;
-  imageProvider?: 'openai' | null;
+  imageProvider?: 'openai' | 'gemini' | null;
 };
 
 type WorkerResult = {
