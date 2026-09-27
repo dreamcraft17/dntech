@@ -34,6 +34,7 @@ Detailed history: [`CHANGELOG.md`](https://github.com/dreamcraft17/company-wiki/
 | Relaunch anti-slop pass | Implemented (Aug 2026) — honest copy, skip link, CSP headers, deferred third-party JS |
 | Homepage visual refresh | Implemented — hero asset retained; project brief, workflow register, and pricing register added |
 | Site-wide visual system | Implemented — editorial surfaces, compact controls, shared public/admin shells, and route-wide legacy class normalization |
+| Mekari-inspired information architecture | Implemented — solution-led navigation, modular product catalog, proof/resources grouping, and package decision surfaces; see `docs/research/mekari-inspired-design-2026/` |
 | Blog automation | Implemented — scheduled generation queue, max 4 publishes/day, random Indonesian/English/Mandarin output |
 | Targeted worker tests | **5 passing** — verified 2026-09-27 |
 | CI | Lint + test + build on `main` (`.github/workflows/ci.yml`) |

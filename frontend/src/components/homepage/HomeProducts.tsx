@@ -72,7 +72,7 @@ export function HomeProducts({
             href={`/products/${featured.slug}`}
             className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 lg:col-span-7"
           >
-            <article className="flex h-full flex-col border-l-[6px] border-[var(--secondary)] bg-[var(--primary)] p-6 text-white sm:p-8 lg:p-10">
+            <article className="flex h-full flex-col border border-t-4 border-[var(--border)] border-t-[var(--primary)] bg-white p-6 text-[var(--foreground)] sm:p-8 lg:p-10">
               <div className="flex items-start gap-4">
                 <ProductMark name={featured.name} onDark />
                 <div className="min-w-0 flex-1">
@@ -83,13 +83,13 @@ export function HomeProducts({
                       </p>
                     )}
                     {featuredStatus && (
-                      <span className="rounded-sm bg-white/15 px-2 py-0.5 text-xs font-medium text-blue-100">
+                        <span className="rounded-sm bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-900">
                         {featuredStatus}
                       </span>
                     )}
                   </div>
                   {featured.category && (
-                    <span className="mt-2 inline-block w-fit rounded-sm bg-white/15 px-2 py-0.5 text-xs font-medium text-white">
+                      <span className="mt-2 inline-block w-fit rounded-sm bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
                       {featured.category}
                     </span>
                   )}
@@ -98,17 +98,17 @@ export function HomeProducts({
 
               <h3 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{featured.name}</h3>
               {(featured.tagline || featured.description) && (
-                <p className="mt-3 text-base font-medium leading-relaxed text-blue-50">
+                <p className="mt-3 text-base font-medium leading-relaxed text-slate-700">
                   {featured.tagline || featured.description}
                 </p>
               )}
               {featuredBody && (
-                <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-blue-100">
+                <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-600">
                   {featuredBody}
                 </p>
               )}
 
-              <span className="mt-8 inline-flex min-h-11 w-fit items-center rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-[var(--primary)] group-hover:bg-blue-50">
+              <span className="mt-8 inline-flex min-h-11 w-fit items-center border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white group-hover:bg-blue-800">
                 Lihat {featured.name} <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
               </span>
             </article>

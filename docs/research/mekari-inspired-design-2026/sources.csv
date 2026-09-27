@@ -1,0 +1,8 @@
+id,title,url,type,credibility,recency,bias,notes
+01,Mekari official ecosystem homepage,https://mekari.com/,primary,high,current,commercial,"Solution-led ecosystem, modular products, business-job groupings, proof and CTA patterns"
+02,Mekari Jurnal UMKM solution page,https://mekari.com/produk/jurnal/modul/aplikasi-umkm/,primary,high,current,commercial,"Problem-to-solution narrative, operational outcomes, customer quote, contact CTA"
+03,Mekari Desty pricing page,https://desty.mekari.com/harga,primary,high,current,commercial,"Visible packages, feature comparison, bundling, customer proof, FAQ"
+04,Mekari Spotlight/resources,https://mekari.com/download/,primary,high,current,commercial,"Products, services, support, resources, and company navigation are separated"
+05,DN Tech design decision 2026,local:docs/research/design-2026/2026-09-26_decision.md,local,high,current,internal,"Existing anti-slop direction and route inventory"
+06,DN Tech product UX decision,local:docs/research/product-page-ux-2026-09-21/2026-09-21_decision.md,local,high,current,internal,"Existing product detail structure and proof requirements"
+

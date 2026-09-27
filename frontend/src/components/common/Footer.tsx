@@ -4,6 +4,7 @@ import { FooterBrand } from '@/components/layout/FooterBrand';
 
 const siteLinks = [
   { href: '/', label: 'Beranda' },
+  { href: '/case-studies', label: 'Bukti kerja' },
   { href: '/about', label: 'Tentang' },
   { href: '/blog', label: 'Blog' },
 ];

@@ -6,6 +6,7 @@ import { fetchPublicApiList } from '@/lib/server-api';
 import type { Service } from '@/types';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import type { Metadata } from 'next';
+import { PageIntro } from '@/components/layout/PageIntro';
 
 export const metadata: Metadata = buildMetadata({
   title: PAGE_SEO.contact.title,
@@ -41,17 +42,18 @@ export default async function ContactPage({
   return (
     <div className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900">Hubungi Kami</h1>
-          <p className="mt-4 text-gray-600">Ceritakan workflow atau sistem yang ingin diperbaiki — kami akan merespons dalam 1 hari kerja.</p>
-        </div>
+        <PageIntro
+          kicker="Mulai percakapan"
+          title="Bahas workflow yang ingin dibuat lebih rapi."
+          description="Ceritakan konteks, batasan, dan hasil yang ingin dicapai. Tim kami akan merespons dalam 1 hari kerja dengan langkah berikutnya yang jelas."
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {contactItems.length > 0 && (
             <div className="space-y-6">
               {contactItems.map(({ icon: Icon, label, value }) => (
-                <div key={label} className="flex gap-4">
-                  <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                <div key={label} className="flex gap-4 border-b border-slate-200 pb-5">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-blue-200 bg-blue-50">
                     <Icon className="h-5 w-5 text-blue-900" />
                   </div>
                   <div>
@@ -64,8 +66,14 @@ export default async function ContactPage({
           )}
 
           <div className={contactItems.length > 0 ? 'lg:col-span-2' : 'lg:col-span-3'}>
-            <div className="rounded-lg border border-gray-200 bg-white p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Bahas Scope dan Workflow Anda</h2>
+            <div className="border border-slate-200 bg-white p-6 sm:p-8">
+              <div className="mb-6 flex items-start justify-between gap-4 border-b border-slate-200 pb-5">
+                <div>
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-teal-700">Project brief</p>
+                  <h2 className="mt-2 text-xl font-semibold text-slate-950">Bahas scope dan workflow Anda</h2>
+                </div>
+                <span className="hidden text-xs font-medium text-slate-500 sm:block">± 3 menit</span>
+              </div>
               <MultiStepForm
                 source="contact-form"
                 pageSource="/contact"

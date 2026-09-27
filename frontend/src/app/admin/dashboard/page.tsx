@@ -38,7 +38,11 @@ export default function AdminDashboardPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Dasbor</h1>
+      <div className="mb-8 border-b border-slate-200 pb-5">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-teal-700">Workspace</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">Dasbor</h1>
+        <p className="mt-1 text-sm text-slate-500">Pantau pekerjaan konten, lead, dan performa situs dari satu tempat.</p>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map(({ label, value, change, icon: Icon }) => (
@@ -49,7 +53,7 @@ export default function AdminDashboardPage() {
                 <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
                 {change && <p className="text-xs text-green-600 mt-1">{change}% vs periode sebelumnya</p>}
               </div>
-              <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+              <div className="flex h-10 w-10 items-center justify-center border border-blue-200 bg-blue-50">
                 <Icon className="h-5 w-5 text-blue-900" />
               </div>
             </div>
@@ -75,7 +79,7 @@ export default function AdminDashboardPage() {
               { href: '/admin/analytics', label: 'Analitik' },
             ].map(({ href, label }) => (
               <Link key={href} href={href}
-                className="p-3 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-blue-300 hover:text-blue-900 transition-colors text-center">
+                className="border border-gray-200 p-3 text-center text-sm font-medium text-gray-700 transition-colors hover:border-blue-300 hover:text-blue-900">
                 {label}
               </Link>
             ))}

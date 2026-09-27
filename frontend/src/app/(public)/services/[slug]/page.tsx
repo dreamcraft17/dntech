@@ -86,10 +86,14 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2">
               {service.category && (
-                <div className="text-sm text-teal-600 font-medium mb-2">{service.category}</div>
+                <div className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-teal-700">{service.category}</div>
               )}
-              <h1 className="text-4xl font-bold text-gray-900">{service.name}</h1>
-              <p className="mt-6 text-lg text-gray-600 leading-relaxed">{service.description}</p>
+              <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">{service.name}</h1>
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">{service.description}</p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Button href={`/contact?service=${encodeURIComponent(service.slug)}`}>Bahas kebutuhan ini</Button>
+                <Button href="#process" variant="outline">Lihat cara kerja</Button>
+              </div>
 
               {features.length > 0 && (
                 <div className="mt-12">
@@ -110,12 +114,12 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 </div>
               )}
 
-              <div className="mt-12">
+              <div id="process" className="mt-12">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Proses Kerja</h2>
                 <div className="space-y-4">
                   {SERVICE_PROCESS_STEPS.map((step) => (
                     <div key={step.step} className="flex gap-4 p-4 rounded-lg border border-gray-200">
-                      <div className="h-10 w-10 rounded-lg bg-blue-900 text-white flex items-center justify-center font-bold shrink-0">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-blue-900 bg-blue-900 font-bold text-white">
                         {step.step}
                       </div>
                       <div>
@@ -160,9 +164,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             </div>
 
             <div>
-              <div className="sticky top-24 rounded-lg border border-gray-200 bg-white p-6">
-                <h3 className="font-semibold text-gray-900 mb-4">Mulai diskusi proyek Anda</h3>
-                <p className="text-sm text-gray-600 mb-6">Konsultasi gratis — respons dalam 24 jam.</p>
+              <div className="sticky top-24 border-t-4 border-blue-900 bg-white p-6 shadow-sm">
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Next step</p>
+                <h3 className="mt-2 font-semibold text-slate-950">Mulai diskusi proyek Anda</h3>
+                <p className="mb-6 mt-3 text-sm leading-6 text-slate-600">Konsultasi gratis — respons dalam 24 jam.</p>
                 <Button href={`/contact?service=${encodeURIComponent(service.slug)}`} className="w-full">
                   Konsultasi Gratis
                 </Button>

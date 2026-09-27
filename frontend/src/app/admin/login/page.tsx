@@ -28,7 +28,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-900 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-10 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-gray-900"
@@ -40,13 +40,14 @@ export default function AdminLoginPage() {
           <div className="mb-4 flex justify-center">
             <Logo href={null} size="xl" priority />
           </div>
-          <h1 className="text-2xl font-bold text-white">Dasbor Admin</h1>
-          <p className="mt-2 text-gray-400">Masuk untuk mengelola situs web Anda</p>
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-teal-300">DN Tech workspace</p>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight text-white">Dasbor Admin</h1>
+          <p className="mt-2 text-gray-400">Masuk untuk mengelola situs, produk, dan leads.</p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 rounded-lg border border-gray-200 bg-white p-6"
+          className="space-y-4 border border-slate-700 bg-white p-6"
         >
           {error && <Alert variant="error">{error}</Alert>}
           <Input

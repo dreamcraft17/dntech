@@ -29,7 +29,7 @@ export function CaseStudyCard({
     <Link href={`/case-studies/${slug}`}>
       <Card hover className="h-full">
         {heroImage ? (
-          <div className="relative mb-4 h-36 overflow-hidden rounded-lg">
+          <div className="relative mb-4 h-36 overflow-hidden border border-slate-200">
             <Image
               src={heroImage}
               alt={heroImageAlt || title}
@@ -39,14 +39,15 @@ export function CaseStudyCard({
             />
           </div>
         ) : (
-          <div className="mb-4 flex h-36 items-end rounded-lg bg-blue-900/10 p-4">
+          <div className="mb-4 flex h-36 items-end border border-blue-100 bg-blue-50 p-4">
             {industries && industries.length > 0 && (
               <Badge variant="default">{industries[0]}</Badge>
             )}
             {!industries?.length && <FolderOpen className="h-8 w-8 text-blue-900" />}
           </div>
         )}
-        <h3 className="font-semibold text-gray-900">{title}</h3>
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-teal-700">Case study</p>
+        <h3 className="mt-2 font-semibold text-slate-950">{title}</h3>
         {clientName && <p className="mt-1 text-sm text-gray-500">{clientName}</p>}
         {description && <p className="mt-2 line-clamp-2 text-sm text-gray-600">{description}</p>}
         {metrics && Object.keys(metrics).length > 0 && (

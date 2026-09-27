@@ -46,7 +46,7 @@ export default async function CareersPage() {
                   <p className="mt-2 text-sm text-gray-600 line-clamp-2">{job.description}</p>
                 </div>
                 <Link href={`/contact?subject=Karier: ${encodeURIComponent(job.title)}`}
-                  className="shrink-0 px-4 py-2 text-sm font-medium text-white bg-blue-900 rounded-lg hover:bg-blue-800 transition-colors">
+                  className="shrink-0 border border-blue-900 bg-blue-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-800">
                   Lamar Sekarang
                 </Link>
               </div>
@@ -60,7 +60,7 @@ export default async function CareersPage() {
               </p>
               <Link
                 href="/contact?subject=Karier"
-                className="inline-flex mt-6 items-center justify-center rounded-lg bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 min-h-[44px]"
+                className="mt-6 inline-flex min-h-[44px] items-center justify-center border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800"
               >
                 Kirim CV / Perkenalan
               </Link>
