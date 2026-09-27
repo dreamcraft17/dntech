@@ -1,6 +1,19 @@
-import { topicForSlot, validateGeneratedDraft } from '../../workers/blog-content.worker';
+import { dailyAutomationTarget, randomBlogLanguage, topicForSlot, validateGeneratedDraft } from '../../workers/blog-content.worker';
 
 describe('blog content worker guards', () => {
+  it('caps the automation target at the available slots', () => {
+    expect(dailyAutomationTarget(4, '10')).toBe(4);
+    expect(dailyAutomationTarget(4, '2')).toBe(2);
+    expect(dailyAutomationTarget(4, 'invalid')).toBe(4);
+  });
+
+  it('selects each supported blog language from the random slot', () => {
+    expect(randomBlogLanguage(0).code).toBe('id');
+    expect(randomBlogLanguage(0.34).code).toBe('en');
+    expect(randomBlogLanguage(0.67).code).toBe('zh');
+    expect(randomBlogLanguage(1).code).toBe('zh');
+  });
+
   it('rotates topics deterministically by day and slot', () => {
     const first = topicForSlot('2026-09-26', 0);
     const second = topicForSlot('2026-09-26', 1);

@@ -469,8 +469,7 @@ Aturan positioning DN Tech:
 
 Aturan:
 - Fokus pada masalah pembaca dan langkah yang bisa diterapkan.
-- Tulis seluruh output editorial (title, excerpt, content, category, tags, seoTitle, dan seoDescription) dalam bahasa utama judul/topik. Jangan menerjemahkan judul ke Bahasa Indonesia dan jangan mencampur bahasa, kecuali istilah teknis, nama merek, URL, atau kutipan yang memang perlu dipertahankan.
-- Deteksi bahasa dari judul/topik jika Bahasa output tidak diberikan secara eksplisit. Jika judul campuran, ikuti bahasa yang dominan; jika ambigu, pertahankan bahasa yang paling banyak dipakai dalam judul.
+- Tulis seluruh output editorial (title, excerpt, content, category, tags, seoTitle, dan seoDescription) dalam Bahasa output yang diminta secara eksplisit. Jika Bahasa output tidak diberikan, deteksi bahasa utama judul/topik; jangan mencampur bahasa, kecuali istilah teknis, nama merek, URL, atau kutipan yang memang perlu dipertahankan.
 - Jangan membuat klaim statistik, harga, studi kasus, atau nama klien tanpa sumber dari hasil riset internet di atas atau dari input.
 - Gunakan HTML sederhana yang aman: <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, dan <a href="...">.
 - Jangan memakai markdown, script, style, iframe, atau atribut HTML selain href pada link.

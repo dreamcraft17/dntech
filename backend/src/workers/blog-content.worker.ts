@@ -31,6 +31,12 @@ const DEFAULT_SLOTS = ['09:00', '12:00', '15:00', '18:00'];
 const DEFAULT_TIMEZONE = 'Asia/Jakarta';
 const AUTOMATION_TAG = 'dntech-automation';
 const DEFAULT_GENERATION_ATTEMPTS = 3;
+const DEFAULT_POSTS_PER_DAY = 4;
+const BLOG_LANGUAGES = [
+  { code: 'id', prompt: 'Bahasa Indonesia' },
+  { code: 'en', prompt: 'English' },
+  { code: 'zh', prompt: 'Mandarin Chinese (简体中文)' },
+] as const;
 
 const TOPIC_POOL = [
   {
@@ -138,8 +144,29 @@ function slotDate(dateKey: string, slot: string, timeZone = process.env.BLOG_AUT
   return new Date(`${dateKey}T${slot}:00Z`);
 }
 
+function localDateBounds(dateKey: string, timeZone = process.env.BLOG_AUTOMATION_TIMEZONE || DEFAULT_TIMEZONE) {
+  const [year, month, day] = dateKey.split('-').map(Number);
+  const nextDate = new Date(Date.UTC(year, month - 1, day + 1));
+  const nextDateKey = nextDate.toISOString().slice(0, 10);
+  return {
+    start: slotDate(dateKey, '00:00', timeZone),
+    end: slotDate(nextDateKey, '00:00', timeZone),
+  };
+}
+
 function localDayIndex(dateKey: string) {
   return Number(dateKey.replace(/-/g, '')) % TOPIC_POOL.length;
+}
+
+export function dailyAutomationTarget(slotCount: number, configuredValue = process.env.BLOG_AUTOMATION_POSTS_PER_DAY) {
+  const configured = Number(configuredValue || DEFAULT_POSTS_PER_DAY);
+  const target = Number.isFinite(configured) && configured > 0 ? Math.floor(configured) : DEFAULT_POSTS_PER_DAY;
+  return Math.min(target, slotCount);
+}
+
+export function randomBlogLanguage(randomValue = Math.random()) {
+  const index = Math.min(BLOG_LANGUAGES.length - 1, Math.floor(randomValue * BLOG_LANGUAGES.length));
+  return BLOG_LANGUAGES[index];
 }
 
 export function topicForSlot(dateKey: string, slotIndex: number) {
@@ -203,27 +230,41 @@ async function findAuthorId() {
   return fallback?.id || null;
 }
 
-async function publishDueScheduledPosts(now: Date) {
+async function publishedAutomationToday(dateKey: string) {
+  const { start, end } = localDateBounds(dateKey);
+  const posts = await prisma.blogPost.findMany({
+    where: { status: 'published', publishedAt: { gte: start, lt: end }, deletedAt: null },
+    select: { tags: true },
+  });
+  return posts.filter((post) => Array.isArray(post.tags) && post.tags.includes(AUTOMATION_TAG)).length;
+}
+
+async function publishDueScheduledPosts(now: Date, dateKey: string, dailyTarget: number) {
+  const alreadyPublished = await publishedAutomationToday(dateKey);
+  const remaining = Math.max(0, dailyTarget - alreadyPublished);
+  if (remaining === 0) return 0;
+
   const due = await prisma.blogPost.findMany({
     where: { status: 'scheduled', scheduledAt: { lte: now }, deletedAt: null },
-    select: { id: true, title: true },
-    take: 10,
+    select: { id: true, title: true, tags: true },
+    orderBy: { scheduledAt: 'asc' },
   });
-  if (due.length === 0) return 0;
+  const automationDue = due
+    .filter((post) => Array.isArray(post.tags) && post.tags.includes(AUTOMATION_TAG))
+    .slice(0, remaining);
+  if (automationDue.length === 0) return 0;
 
   await prisma.blogPost.updateMany({
-    where: { id: { in: due.map((post) => post.id) }, status: 'scheduled' },
+    where: { id: { in: automationDue.map((post) => post.id) }, status: 'scheduled' },
     data: { status: 'published', publishedAt: now },
   });
   cacheService.clear();
-  logger.info({ count: due.length }, '[blog-worker] scheduled posts published');
-  return due.length;
+  logger.info({ count: automationDue.length }, '[blog-worker] scheduled posts published');
+  return automationDue.length;
 }
 
 async function generatedToday(dateKey: string) {
-  const [year, month, day] = dateKey.split('-').map(Number);
-  const start = new Date(Date.UTC(year, month - 1, day, 0, 0));
-  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+  const { start, end } = localDateBounds(dateKey);
   const recent = await prisma.blogPost.findMany({
     where: { createdAt: { gte: start, lt: end }, deletedAt: null },
     select: { id: true, title: true, slug: true, tags: true },
@@ -257,20 +298,21 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
     return { created: false, published: false, reason: 'disabled' };
   }
 
-  await publishDueScheduledPosts(now);
   const slots = getSlots();
   const local = timezoneParts(now);
+  const target = dailyAutomationTarget(slots.length);
+  await publishDueScheduledPosts(now, local.dateKey, target);
   const currentMinutes = local.hour * 60 + local.minute;
   const dueSlotIndex = slots.findIndex((slot) => slotMinutes(slot) <= currentMinutes);
   if (dueSlotIndex < 0) return { created: false, published: false, reason: 'before_first_slot' };
 
   const postsToday = await generatedToday(local.dateKey);
-  const target = Math.min(Number(process.env.BLOG_AUTOMATION_POSTS_PER_DAY || 4), slots.length);
   if (postsToday.length >= target) return { created: false, published: false, reason: 'daily_target_reached' };
   const skippedTopics = process.env.BLOG_AUTOMATION_DRY_RUN === 'true'
     ? []
     : await skippedTopicsForDay(local.dateKey);
   const topic = topicForSlot(local.dateKey, postsToday.length + skippedTopics.length);
+  const language = randomBlogLanguage();
 
   const authorId = await findAuthorId();
   if (!authorId) throw new Error('No active admin author found for blog automation');
@@ -284,7 +326,7 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
       audience: 'pemilik bisnis, founder startup, HR manager, dan tim operasional di Indonesia',
       tone: 'jelas, hangat, praktis, jujur, tidak terasa seperti copy AI; target 700-1000 kata',
       keywords: topic.keywords,
-      language: 'Bahasa Indonesia',
+      language: language.prompt,
       generateImage: process.env.BLOG_AUTOMATION_DRY_RUN !== 'true',
       imageProvider: 'openai',
     }, authorId);
@@ -308,6 +350,7 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
   const dayTag = `automation:${local.dateKey}`;
   const slotTag = `automation-slot:${postsToday.length}`;
   const topicTag = `automation-topic:${slugify(topic.topic)}`;
+  const languageTag = `language:${language.code}`;
   const cleanSlug = slugify(draft.slug || draft.title);
   const duplicate = await prisma.blogPost.findFirst({
     where: { OR: [{ slug: cleanSlug }, { title: draft.title }], deletedAt: null },
@@ -332,7 +375,7 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
       content: draft.content,
       excerpt: draft.excerpt,
       category: draft.category || topic.pillar,
-      tags: [...(draft.tags || []), AUTOMATION_TAG, dayTag, slotTag, topicTag, topic.pillar.toLowerCase().replace(/\s+/g, '-')],
+      tags: [...(draft.tags || []), AUTOMATION_TAG, dayTag, slotTag, topicTag, languageTag, topic.pillar.toLowerCase().replace(/\s+/g, '-')],
       authorId,
       status: isPublished ? 'published' : 'scheduled',
       publishedAt: isPublished ? now : undefined,
@@ -343,7 +386,7 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
     select: { id: true, title: true },
   });
   cacheService.clear();
-  logger.info({ postId: post.id, title: post.title, status: isPublished ? 'published' : 'scheduled', imageProvider: draft.imageProvider }, '[blog-worker] blog post created');
+  logger.info({ postId: post.id, title: post.title, language: language.code, status: isPublished ? 'published' : 'scheduled', imageProvider: draft.imageProvider }, '[blog-worker] blog post created');
   return { created: true, published: isPublished, postId: post.id, title: post.title };
 }
 
