@@ -129,13 +129,13 @@ export function Header() {
       ref={headerRef}
       className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-sm supports-[backdrop-filter]:bg-[var(--surface)]/90"
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="inline-flex shrink-0 items-center transition-opacity hover:opacity-80"
+          className="inline-flex min-w-0 shrink items-center transition-opacity hover:opacity-80"
           aria-label="Beranda DN Tech"
         >
-          <LogoLight />
+          <LogoLight size="sm" className="sm:[&_span:last-child]:inline-flex [&_span:last-child]:hidden" />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
@@ -200,7 +200,7 @@ export function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
           <button
             type="button"
             onClick={() => {
@@ -208,15 +208,17 @@ export function Header() {
               setMobileOpen(false);
               setOpenGroup(null);
             }}
-            className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-[var(--radius-card)] p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
-            aria-label={searchOpen ? 'Tutup pencarian' : 'Buka pencarian'}
+            className="flex min-h-[48px] items-center justify-center gap-1.5 rounded-[var(--radius-card)] px-2.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 lg:min-w-[48px] lg:px-2"
+            aria-label={searchOpen ? 'Tutup pencarian' : 'Buka pencarian situs'}
             aria-expanded={searchOpen}
+            title="Cari di situs"
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-5 w-5 shrink-0" aria-hidden="true" />
+            <span className="text-sm font-medium lg:sr-only">Cari</span>
           </button>
           <Link
             href="/contact"
-            className="hidden min-h-[48px] items-center rounded-[var(--radius-card)] border border-blue-900 bg-blue-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800 sm:inline-flex"
+            className="hidden min-h-[48px] items-center rounded-[var(--radius-card)] border border-blue-900 bg-blue-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800 lg:inline-flex"
           >
             Konsultasi Gratis
           </Link>
