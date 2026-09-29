@@ -230,7 +230,7 @@ export function Header() {
               setSearchOpen(false);
               setOpenGroup(null);
             }}
-            className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-[var(--radius-card)] p-2 text-gray-600 transition-colors hover:bg-gray-100 md:border-l md:border-[var(--border)] md:rounded-none md:pl-3"
+            className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-[var(--radius-card)] p-2 text-gray-600 transition-colors hover:bg-gray-100 md:hidden"
             aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
