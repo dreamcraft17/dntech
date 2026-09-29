@@ -51,6 +51,36 @@ router.get(
 );
 
 router.get(
+  '/categories',
+  asyncHandler(async (_req, res) => {
+    const cacheKey = 'blog:categories';
+    const cached = cacheService.get<string[]>(cacheKey);
+    if (cached) return successResponse(res, cached);
+
+    const rows = await prisma.blogPost.findMany({
+      where: {
+        status: 'published',
+        deletedAt: null,
+        publishedAt: { lte: new Date() },
+        category: { not: null },
+      },
+      distinct: ['category'],
+      select: { category: true },
+      orderBy: { category: 'asc' },
+    });
+
+    const categories = [...new Set(
+      rows
+        .map((row) => row.category?.trim())
+        .filter((category): category is string => Boolean(category)),
+    )].sort((a, b) => a.localeCompare(b, 'id'));
+
+    cacheService.set(cacheKey, categories, 900);
+    successResponse(res, categories);
+  })
+);
+
+router.get(
   '/search',
   asyncHandler(async (req, res) => {
     const q = String(req.query.q || '');

@@ -123,7 +123,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
             {post.category && (
               <>
                 <span aria-hidden="true">/</span>
-                <Link href={`/blog?category=${post.category}`} className="hover:text-blue-900">{post.category}</Link>
+                <Link href={`/blog?category=${encodeURIComponent(post.category)}`} className="hover:text-blue-900">{post.category}</Link>
               </>
             )}
           </nav>

@@ -5,8 +5,7 @@ import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonL
 import { formatDate } from '@/lib/utils';
 import { estimateReadTime, formatReadTime } from '@/lib/read-time';
 import { buildMetadata, PAGE_SEO, SITE_URL } from '@/lib/seo';
-import { CONTENT_PILLARS } from '@/lib/content-pillars';
-import { fetchPublicApiPaginated } from '@/lib/server-api';
+import { fetchPublicApiList, fetchPublicApiPaginated } from '@/lib/server-api';
 import { getUploadUrl } from '@/lib/api';
 import type { BlogPost } from '@/types';
 import type { Metadata } from 'next';
@@ -27,6 +26,10 @@ async function getPosts(page = 1, category?: string) {
   return { posts: data, pages: pagination?.pages || 1 };
 }
 
+async function getCategories() {
+  return fetchPublicApiList<string>('/blog/categories', 60);
+}
+
 export default async function BlogPage({
   searchParams,
 }: {
@@ -34,7 +37,10 @@ export default async function BlogPage({
 }) {
   const params = await searchParams;
   const page = parseInt(params.page || '1', 10);
-  const { posts, pages } = await getPosts(page, params.category);
+  const [{ posts, pages }, categories] = await Promise.all([
+    getPosts(page, params.category),
+    getCategories(),
+  ]);
 
   return (
     <>
@@ -65,17 +71,17 @@ export default async function BlogPage({
             >
               Semua
             </Link>
-            {CONTENT_PILLARS.map((pillar) => (
+            {categories.map((category) => (
               <Link
-                key={pillar.id}
-                href={pillar.href}
+                key={category}
+                href={`/blog?category=${encodeURIComponent(category)}`}
                 className={`border-b-2 pb-3 text-sm font-semibold ${
-                  params.category === pillar.category
+                  params.category === category
                     ? 'border-blue-900 text-blue-900'
                     : 'border-transparent text-slate-500 hover:text-slate-900'
                 }`}
               >
-                {pillar.label}
+                {category}
               </Link>
             ))}
           </nav>
