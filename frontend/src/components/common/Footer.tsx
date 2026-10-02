@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, MessageCircle, MapPin } from 'lucide-react';
 import { FooterBrand } from '@/components/layout/FooterBrand';
+import { resolveCompanyPhone, whatsAppUrl } from '@/lib/contact-links';
 
 const companyLinks = [
   { href: '/about', label: 'Tentang' },
@@ -66,14 +67,22 @@ export function Footer({
   companyPhone,
   companyAddress,
 }: FooterProps) {
+  const whatsapp = resolveCompanyPhone(companyPhone);
+
   const contactItems = [
     companyEmail ? { icon: Mail, value: companyEmail, href: `mailto:${companyEmail}` } : null,
-    companyPhone ? { icon: Phone, value: companyPhone, href: `tel:${companyPhone}` } : null,
+    {
+      icon: MessageCircle,
+      value: whatsapp,
+      href: whatsAppUrl(whatsapp),
+      external: true,
+    },
     companyAddress ? { icon: MapPin, value: companyAddress } : null,
   ].filter(Boolean) as {
     icon: typeof Mail;
     value: string;
     href?: string;
+    external?: boolean;
   }[];
 
   return (
@@ -141,16 +150,19 @@ export function Footer({
 
           <FooterColumn title="Hubungi">
             <ul className="mt-2 flex flex-col">
-              {contactItems.map(({ icon: Icon, value, href }) => (
+              {contactItems.map(({ icon: Icon, value, href, external }) => (
                 <li key={value}>
                   <div className="flex min-h-11 items-center gap-2 text-sm text-gray-600">
                     <Icon className="h-4 w-4 shrink-0 text-blue-900" aria-hidden="true" />
                     {href ? (
                       <a
                         href={href}
+                        {...(external
+                          ? { target: '_blank', rel: 'noopener noreferrer' }
+                          : {})}
                         className="rounded-sm transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2"
                       >
-                        {value}
+                        {external ? `WhatsApp ${value}` : value}
                       </a>
                     ) : (
                       <span>{value}</span>

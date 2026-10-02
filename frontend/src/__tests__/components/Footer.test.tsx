@@ -25,6 +25,10 @@ describe('Footer', () => {
       'href',
       'mailto:info@dntech.id',
     );
+    expect(screen.getByRole('link', { name: /WhatsApp \+62 21 0000/ })).toHaveAttribute(
+      'href',
+      'https://wa.me/62210000',
+    );
     expect(screen.getByRole('link', { name: 'Konsultasi Gratis' })).toHaveAttribute(
       'href',
       '/contact',

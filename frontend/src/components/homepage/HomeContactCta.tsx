@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Mail, Phone, Calendar } from 'lucide-react';
+import { Mail, MessageCircle, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { resolveCompanyPhone, whatsAppUrl } from '@/lib/contact-links';
 import type { PublicSettings } from '@/lib/settings';
 
 interface HomeContactCtaProps {
@@ -9,7 +10,7 @@ interface HomeContactCtaProps {
 
 export function HomeContactCta({ settings }: HomeContactCtaProps) {
   const email = settings.companyEmail || 'info@dntech.id';
-  const phone = settings.companyPhone;
+  const whatsapp = resolveCompanyPhone(settings.companyPhone);
   const linkedin = settings.socialLinks?.linkedin;
   const calendly = settings.calendlyUrl;
 
@@ -47,15 +48,15 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
             <Mail className="h-4 w-4 text-white" />
             {email}
           </a>
-          {phone && (
-            <a
-              href={`tel:${phone.replace(/\s/g, '')}`}
-              className="inline-flex items-center gap-2 text-sm text-blue-100 hover:text-white transition-colors"
-            >
-              <Phone className="h-4 w-4 text-white" />
-              WhatsApp / {phone}
-            </a>
-          )}
+          <a
+            href={whatsAppUrl(whatsapp, 'Halo DN Tech, saya ingin konsultasi.')}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm text-blue-100 transition-colors hover:text-white"
+          >
+            <MessageCircle className="h-4 w-4 text-white" aria-hidden="true" />
+            WhatsApp {whatsapp}
+          </a>
           {linkedin && (
             <a
               href={linkedin}

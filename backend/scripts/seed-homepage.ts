@@ -74,6 +74,7 @@ async function main() {
       tagline: DEFAULT_HERO.title,
       heroDescription: DEFAULT_HERO.supporting,
       homeContent,
+      companyPhone: '+62 81232037001',
     },
     create: {
       id: 1,
@@ -81,6 +82,7 @@ async function main() {
       tagline: DEFAULT_HERO.title,
       heroDescription: DEFAULT_HERO.supporting,
       companyEmail: 'info@dntech.id',
+      companyPhone: '+62 81232037001',
       homeContent,
     },
   });

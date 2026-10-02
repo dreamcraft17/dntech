@@ -7,7 +7,8 @@ import { buildMetadata, PAGE_SEO } from '@/lib/seo';
 import { getPublicSettings } from '@/lib/settings';
 import { fetchPublicApiList } from '@/lib/server-api';
 import type { Service } from '@/types';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Mail, MessageCircle, MapPin, Clock } from 'lucide-react';
+import { resolveCompanyPhone, whatsAppUrl } from '@/lib/contact-links';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = buildMetadata({
@@ -34,12 +35,19 @@ export default async function ContactPage({
   const { settings, services } = await getContactData();
   const calendlyUrl = settings.calendlyUrl;
 
+  const whatsapp = resolveCompanyPhone(settings.companyPhone);
+
   const contactItems = [
     settings.companyEmail ? { icon: Mail, label: 'Email', value: settings.companyEmail } : null,
-    settings.companyPhone ? { icon: Phone, label: 'Telepon', value: settings.companyPhone } : null,
+    {
+      icon: MessageCircle,
+      label: 'WhatsApp',
+      value: whatsapp,
+      href: whatsAppUrl(whatsapp, 'Halo DN Tech, saya ingin konsultasi.'),
+    },
     settings.companyAddress ? { icon: MapPin, label: 'Alamat', value: settings.companyAddress } : null,
     settings.businessHours ? { icon: Clock, label: 'Jam Operasional', value: settings.businessHours } : null,
-  ].filter(Boolean) as { icon: typeof Mail; label: string; value: string }[];
+  ].filter(Boolean) as { icon: typeof Mail; label: string; value: string; href?: string }[];
 
   return (
     <PublicPageShell>
@@ -52,14 +60,25 @@ export default async function ContactPage({
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:gap-12">
         {contactItems.length > 0 && (
           <SaasPanel className="space-y-6 lg:col-span-1">
-            {contactItems.map(({ icon: Icon, label, value }) => (
+            {contactItems.map(({ icon: Icon, label, value, href }) => (
               <div key={label} className="flex gap-4 border-b border-[var(--border)] pb-5 last:border-0 last:pb-0">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-card)] border border-blue-200 bg-blue-50">
                   <Icon className="h-5 w-5 text-blue-900" aria-hidden="true" />
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-gray-900">{label}</div>
-                  <div className="text-sm text-gray-600">{value}</div>
+                  {href ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-blue-900 underline decoration-blue-200 underline-offset-2 hover:decoration-blue-900"
+                    >
+                      {value}
+                    </a>
+                  ) : (
+                    <div className="text-sm text-gray-600">{value}</div>
+                  )}
                 </div>
               </div>
             ))}
