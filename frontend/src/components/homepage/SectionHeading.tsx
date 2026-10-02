@@ -2,6 +2,8 @@ import { cn } from '@/lib/utils';
 
 interface SectionHeadingProps {
   title: string;
+  /** Optional id for the h2 (e.g. section `aria-labelledby`). */
+  titleId?: string;
   subtitle?: string;
   /** Short uppercase label shown above the heading — the shared identity
    * device that ties every homepage section together. */
@@ -13,6 +15,7 @@ interface SectionHeadingProps {
 
 export function SectionHeading({
   title,
+  titleId,
   subtitle,
   kicker,
   onDark = false,
@@ -32,6 +35,7 @@ export function SectionHeading({
         </p>
       )}
       <h2
+        id={titleId}
         className={cn(
           'text-3xl font-bold tracking-tight sm:text-4xl',
           onDark ? 'text-white' : 'text-gray-900'
