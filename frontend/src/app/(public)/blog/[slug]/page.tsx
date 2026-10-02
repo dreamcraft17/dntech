@@ -164,7 +164,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                       width={56}
                       height={56}
                       aria-hidden="true"
-                      className="pointer-events-none absolute bottom-5 right-5 h-12 w-12 rounded-full shadow-lg ring-2 ring-white/80"
+                      className="article-hero-logo pointer-events-none absolute bottom-5 right-5 h-12 w-12 rounded-full shadow-lg ring-2 ring-white/80"
                     />
                   </>
                 ) : (
