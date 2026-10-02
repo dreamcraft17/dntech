@@ -3,4 +3,6 @@ id,title,type,url,credibility,recency,bias,used_for
 2,Writing for user interfaces,Government service guidance,https://www.gov.uk/service-manual/design/writing-for-user-interfaces,5,4,4,Scannable headings and self-contained links
 3,Tile usage,Enterprise design system,https://v10.carbondesignsystem.com/components/tile/usage/,5,3,4,Flat hierarchy and tile interaction patterns
 4,Web Content Accessibility Guidelines 2.2,Web standard,https://www.w3.org/TR/WCAG22/,5,5,5,Focus and pointer target requirements
-
+5,Animations and performance,Browser performance guidance,https://web.dev/articles/animations-and-performance?hl=en,5,3,5,Compositor-safe animation properties
+6,prefers-reduced-motion CSS media feature,Web platform and accessibility reference,https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/%40media/prefers-reduced-motion,5,5,5,Reduced-motion fallback
+7,Card,Government design-system guidance,https://designsystem.digital.gov/components/card/,5,5,5,Single-subject cards and grid composition

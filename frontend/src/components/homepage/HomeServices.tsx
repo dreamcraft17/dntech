@@ -17,84 +17,64 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
   }));
 
   const items = (apiItems.length > 0 ? apiItems : defaults).slice(0, 4);
+  const itemCount = String(items.length).padStart(2, '0');
 
   return (
-    <section className="home-section-alt py-section" aria-labelledby="services-heading">
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-20 lg:px-8">
-        <header className="lg:sticky lg:top-28 lg:self-start">
-          <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[var(--secondary)]">
-            <span className="h-px w-8 bg-[var(--accent)]" aria-hidden="true" />
-            Layanan DN Tech
-          </p>
-          <h2
-            id="services-heading"
-            className="mt-4 max-w-lg text-3xl font-bold leading-tight tracking-tight text-slate-950 sm:text-4xl lg:text-[2.75rem]"
-          >
+    <section className="home-services-showcase py-section" aria-labelledby="services-heading">
+      <div className="home-services-orbit home-services-orbit-one" data-depth="1" aria-hidden="true" />
+      <div className="home-services-orbit home-services-orbit-two" data-depth="1" aria-hidden="true" />
+      <div className="relative mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(15rem,0.68fr)_minmax(0,1.32fr)] lg:gap-16 lg:px-8">
+        <header className="home-services-intro" data-depth="4">
+          <div className="flex items-end justify-between gap-4">
+            <p className="home-services-kicker">
+              <span className="h-px w-8 bg-[var(--accent)]" aria-hidden="true" />
+              Layanan DN Tech
+            </p>
+            <span className="home-services-index" aria-hidden="true">01 / {itemCount}</span>
+          </div>
+          <h2 id="services-heading" className="mt-5 max-w-xl text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-4xl lg:text-[3.25rem]">
             Butuh website, aplikasi, atau sistem internal?
           </h2>
           <p className="mt-5 max-w-md text-base leading-7 text-slate-600">
-            Ceritakan alur kerja yang sedang bikin repot. Kami bantu menentukan apa yang perlu
-            dibangun—dan apa yang belum perlu.
+            Mulai dari alur kerja yang bikin repot. Kami bantu menemukan bentuk software yang paling masuk akal untuk tim Anda.
           </p>
-          <Link
-            href="/services"
-            className="mt-8 inline-flex min-h-11 items-center gap-2 border-b-2 border-[var(--primary)] text-sm font-semibold text-[var(--primary)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f3f5f7]"
-          >
+          <Link href="/services" className="home-services-all-link mt-8">
             Lihat seluruh layanan
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
+          <p className="home-services-note" aria-hidden="true">Scope jelas · build seperlunya · siap dipakai</p>
         </header>
 
-        <ul className="border-t border-slate-300">
+        <ul className="home-services-grid" data-depth="4">
           {items.map((item, index) => {
             const content = (
               <>
-                <div className="flex items-baseline gap-4">
-                  <span
-                    className="font-mono text-2xl font-bold leading-none text-slate-300 transition-colors duration-200 group-hover:text-[var(--accent)] sm:text-3xl"
-                    aria-hidden="true"
-                  >
-                    0{index + 1}
-                  </span>
-                  <div>
-                    {item.category && (
-                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--secondary)]">
-                        {item.category}
-                      </p>
-                    )}
-                    <h3 className="mt-1 text-lg font-semibold leading-snug text-slate-950 sm:text-xl">
-                      {item.name}
-                    </h3>
-                  </div>
+                <div className="flex items-start justify-between gap-5">
+                  <span className="home-service-number" aria-hidden="true">0{index + 1}</span>
+                  {index === 0 && <span className="home-service-badge">Pilihan utama</span>}
                 </div>
-                <p className="pl-[2.75rem] text-sm leading-6 text-slate-600 sm:text-[0.95rem] sm:leading-7 lg:pl-0">
-                  {item.description}
-                </p>
-                {item.slug && (
-                  <span
-                    className="inline-flex items-center gap-2 self-start pl-[2.75rem] text-sm font-semibold text-[var(--primary)] lg:justify-self-end lg:pl-0"
-                    aria-hidden="true"
-                  >
-                    Detail
-                    <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                  </span>
-                )}
+                <div className="mt-auto">
+                  {item.category && <p className="home-service-category">{item.category}</p>}
+                  <h3 className="home-service-title">{item.name}</h3>
+                  <p className="home-service-description">{item.description}</p>
+                  {item.slug && (
+                    <span className="home-service-action" aria-hidden="true">
+                      Lihat layanan
+                      <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                    </span>
+                  )}
+                </div>
               </>
             );
 
             return (
-              <li key={item.slug || item.name} className="border-b border-slate-300">
+              <li key={item.slug || item.name} className={index === 0 ? 'home-service-item home-service-feature' : 'home-service-item'}>
                 {item.slug ? (
-                  <Link
-                    href={`/services/${item.slug}`}
-                    className="group grid min-h-24 gap-3 border-l-2 border-transparent px-3 py-6 transition-colors hover:border-[var(--accent)] hover:bg-white focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--primary)] sm:px-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_auto] lg:items-start lg:gap-8 lg:py-7"
-                  >
+                  <Link href={`/services/${item.slug}`} className="home-service-link group">
                     {content}
                   </Link>
                 ) : (
-                  <div className="group grid min-h-24 gap-3 px-3 py-6 sm:px-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start lg:gap-8 lg:py-7">
-                    {content}
-                  </div>
+                  <div className="home-service-link group">{content}</div>
                 )}
               </li>
             );
