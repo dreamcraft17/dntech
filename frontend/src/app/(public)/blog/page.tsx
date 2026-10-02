@@ -93,14 +93,24 @@ export default async function BlogPage({
                 return (
                   <Link key={post.id} href={`/blog/${post.slug}`} className="group grid gap-6 border-b border-slate-300 py-7 transition-colors hover:bg-slate-50 sm:grid-cols-[12rem_1fr] sm:px-3 lg:grid-cols-[16rem_1fr_12rem]">
                       {post.featuredImage?.url ? (
-                        <Image
-                          src={getUploadUrl(post.featuredImage.url)}
-                          alt={post.featuredImage.altText || post.title}
-                          width={1536}
-                          height={1024}
-                          className="h-auto w-full object-contain sm:row-span-2"
-                          sizes="(min-width: 1024px) 16rem, 12rem"
-                        />
+                        <div className="relative sm:row-span-2">
+                          <Image
+                            src={getUploadUrl(post.featuredImage.url)}
+                            alt={post.featuredImage.altText || post.title}
+                            width={1536}
+                            height={1024}
+                            className="h-auto w-full object-contain"
+                            sizes="(min-width: 1024px) 16rem, 12rem"
+                          />
+                          <Image
+                            src="/apple-icon.png"
+                            alt=""
+                            width={40}
+                            height={40}
+                            aria-hidden="true"
+                            className="pointer-events-none absolute bottom-3 right-3 h-9 w-9 rounded-full shadow-lg ring-2 ring-white/80"
+                          />
+                        </div>
                       ) : <div className="hidden border-l-2 border-teal-600 sm:block" aria-hidden="true" />}
                       <div>
                         <div className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">{post.category}</div>

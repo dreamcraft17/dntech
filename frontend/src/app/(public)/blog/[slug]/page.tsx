@@ -144,19 +144,29 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                 </div>
               </div>
 
-              <div className="article-hero-media">
+              <div className="article-hero-media relative">
                 {post.featuredImage?.url ? (
-                  <Image
-                    src={getUploadUrl(post.featuredImage.url)}
-                    alt={post.featuredImage.altText || post.title}
-                    width={1536}
-                    height={1024}
-                    quality={85}
-                    priority
-                    className="block h-auto w-full object-contain"
-                    sizes="(min-width: 1024px) 48vw, 100vw"
-                    itemProp="image"
-                  />
+                  <>
+                    <Image
+                      src={getUploadUrl(post.featuredImage.url)}
+                      alt={post.featuredImage.altText || post.title}
+                      width={1536}
+                      height={1024}
+                      quality={85}
+                      priority
+                      className="block h-auto w-full object-contain"
+                      sizes="(min-width: 1024px) 48vw, 100vw"
+                      itemProp="image"
+                    />
+                    <Image
+                      src="/apple-icon.png"
+                      alt=""
+                      width={56}
+                      height={56}
+                      aria-hidden="true"
+                      className="pointer-events-none absolute bottom-5 right-5 h-12 w-12 rounded-full shadow-lg ring-2 ring-white/80"
+                    />
+                  </>
                 ) : (
                   <div className="flex h-full min-h-[280px] items-end bg-blue-950 p-7 text-white">
                     <span className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-300">DN Tech · Wawasan</span>
