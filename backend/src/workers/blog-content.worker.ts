@@ -394,6 +394,7 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
       slug: cleanSlug,
       content: draft.content,
       excerpt: draft.excerpt,
+      featuredImageId: draft.featuredImageId || undefined,
       category: draft.category || topic.pillar,
       tags: [...(draft.tags || []), AUTOMATION_TAG, dayTag, slotTag, topicTag, languageTag, topic.pillar.toLowerCase().replace(/\s+/g, '-')],
       authorId,
