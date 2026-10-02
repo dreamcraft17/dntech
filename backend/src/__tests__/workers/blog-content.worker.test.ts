@@ -1,4 +1,11 @@
-import { dailyAutomationTarget, randomBlogLanguage, topicForSlot, validateGeneratedDraft } from '../../workers/blog-content.worker';
+import {
+  dailyAutomationTarget,
+  isDuplicateGeneratedDraft,
+  isTopicAlreadyCovered,
+  randomBlogLanguage,
+  topicForSlot,
+  validateGeneratedDraft,
+} from '../../workers/blog-content.worker';
 
 describe('blog content worker guards', () => {
   it('caps the automation target at the available slots', () => {
@@ -20,6 +27,32 @@ describe('blog content worker guards', () => {
 
     expect(first.topic).not.toBe(second.topic);
     expect(first.keywords).toContain('approval workflow');
+  });
+
+  it('recognizes a topic already used by the automation tag', () => {
+    const topic = topicForSlot('2026-09-26', 0).topic;
+
+    expect(isTopicAlreadyCovered(topic, {
+      title: 'Judul yang berbeda',
+      slug: 'judul-yang-berbeda',
+      excerpt: null,
+      category: null,
+      tags: [`automation-topic:${topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`],
+    })).toBe(true);
+  });
+
+  it('recognizes a changed AI title that still covers the same theme', () => {
+    expect(isDuplicateGeneratedDraft(
+      { title: 'Scope MVP: fitur penting tanpa fondasi teknis yang rapuh', slug: 'scope-mvp-fitur-penting' },
+      'Cara menentukan scope MVP agar fitur penting selesai lebih cepat tanpa mengorbankan fondasi teknis',
+      [{
+        title: 'Menentukan scope MVP untuk proyek aplikasi',
+        slug: 'menentukan-scope-mvp-untuk-proyek-aplikasi',
+        excerpt: 'Panduan product engineering untuk memprioritaskan fitur penting.',
+        category: 'Product engineering',
+        tags: [],
+      }],
+    )).toBe(true);
   });
 
   it('rejects short, unstructured, or AI-placeholder content', () => {

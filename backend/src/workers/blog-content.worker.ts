@@ -27,6 +27,14 @@ type WorkerResult = {
   title?: string;
 };
 
+type ExistingBlogSummary = {
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  category: string | null;
+  tags: unknown;
+};
+
 const DEFAULT_SLOTS = ['09:00', '12:00', '15:00', '18:00'];
 const DEFAULT_TIMEZONE = 'Asia/Jakarta';
 const AUTOMATION_TAG = 'dntech-automation';
@@ -38,6 +46,15 @@ const BLOG_LANGUAGES = [
   { code: 'en', prompt: 'English' },
   { code: 'zh', prompt: 'Mandarin Chinese (简体中文)' },
 ] as const;
+
+// These words are too broad to identify an editorial theme by themselves.
+// Keeping the list here also makes the duplicate check deterministic and cheap.
+const THEME_STOP_WORDS = new Set([
+  'agar', 'akan', 'apa', 'cara', 'dan', 'dari', 'dengan', 'di', 'dalam', 'ini',
+  'jadi', 'juga', 'lebih', 'mana', 'memilih', 'menjadi', 'mengapa', 'sebelum',
+  'untuk', 'yang', 'bisnis', 'indonesia', 'software', 'sistem', 'aplikasi',
+  'digital', 'tim', 'bagi', 'bukan', 'bisa', 'perlu', 'mulai', 'saat',
+]);
 
 const TOPIC_POOL = [
   {
@@ -179,6 +196,51 @@ export function topicForSlot(dateKey: string, slotIndex: number) {
   return TOPIC_POOL[(localDayIndex(dateKey) + slotIndex) % TOPIC_POOL.length];
 }
 
+function themeTokens(value: string) {
+  return new Set(
+    value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLocaleLowerCase()
+      .match(/[\p{L}\p{N}]+/gu)
+      ?.filter((token) => token.length > 2 && !THEME_STOP_WORDS.has(token)) || [],
+  );
+}
+
+function postTags(post: Pick<ExistingBlogSummary, 'tags'>) {
+  return Array.isArray(post.tags) ? post.tags.filter((tag): tag is string => typeof tag === 'string') : [];
+}
+
+function themeOverlap(left: string, right: string) {
+  const leftTokens = themeTokens(left);
+  const rightTokens = themeTokens(right);
+  if (leftTokens.size < 2 || rightTokens.size < 2) return false;
+  const shared = [...leftTokens].filter((token) => rightTokens.has(token)).length;
+  const smaller = Math.min(leftTokens.size, rightTokens.size);
+  return shared >= 2 && shared / smaller >= 0.6;
+}
+
+export function isTopicAlreadyCovered(topic: string, post: ExistingBlogSummary) {
+  const topicTag = `automation-topic:${slugify(topic)}`;
+  if (postTags(post).includes(topicTag)) return true;
+
+  const metadata = [post.title, post.excerpt || '', post.category || '', ...postTags(post)].join(' ');
+  return themeOverlap(topic, post.title) || themeOverlap(topic, metadata);
+}
+
+export function isDuplicateGeneratedDraft(
+  draft: Pick<GeneratedDraft, 'title' | 'slug'>,
+  topic: string,
+  posts: ExistingBlogSummary[],
+) {
+  const draftSlug = slugify(draft.slug || draft.title);
+  const normalizedTitle = draft.title.trim().toLocaleLowerCase();
+  return posts.some((post) => {
+    if (slugify(post.slug) === draftSlug || post.title.trim().toLocaleLowerCase() === normalizedTitle) return true;
+    return themeOverlap(draft.title, post.title) || isTopicAlreadyCovered(topic, post);
+  });
+}
+
 function plainText(html: string) {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
@@ -286,6 +348,13 @@ async function generatedToday(dateKey: string) {
   return recent.filter((post) => Array.isArray(post.tags) && post.tags.includes(AUTOMATION_TAG));
 }
 
+async function existingBlogSummaries(): Promise<ExistingBlogSummary[]> {
+  return prisma.blogPost.findMany({
+    where: { deletedAt: null },
+    select: { title: true, slug: true, excerpt: true, category: true, tags: true },
+  });
+}
+
 async function skippedTopicsForDay(dateKey: string) {
   const state = await prisma.blogAutomationState.findUnique({
     where: { dateKey },
@@ -328,7 +397,19 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
   const skippedTopics = process.env.BLOG_AUTOMATION_DRY_RUN === 'true'
     ? []
     : await skippedTopicsForDay(local.dateKey);
-  const topic = topicForSlot(local.dateKey, postsToday.length + skippedTopics.length);
+  const existingPosts = await existingBlogSummaries();
+  const topicStartIndex = postsToday.length + skippedTopics.length;
+  let topic: (typeof TOPIC_POOL)[number] | null = null;
+  for (let offset = 0; offset < TOPIC_POOL.length; offset += 1) {
+    const candidate = topicForSlot(local.dateKey, topicStartIndex + offset);
+    if (skippedTopics.includes(candidate.topic)) continue;
+    if (existingPosts.some((post) => isTopicAlreadyCovered(candidate.topic, post))) continue;
+    topic = candidate;
+    break;
+  }
+  if (!topic) {
+    return { created: false, published: false, reason: 'no_unique_topic_available' };
+  }
   const language = randomBlogLanguage();
 
   const authorId = await findAuthorId();
@@ -369,11 +450,21 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
   const topicTag = `automation-topic:${slugify(topic.topic)}`;
   const languageTag = `language:${language.code}`;
   const cleanSlug = slugify(draft.slug || draft.title);
-  const duplicate = await prisma.blogPost.findFirst({
+  if (isDuplicateGeneratedDraft({ title: draft.title, slug: cleanSlug }, topic.topic, existingPosts)) {
+    if (process.env.BLOG_AUTOMATION_DRY_RUN !== 'true') {
+      await skipTopicForDay(local.dateKey, topic.topic);
+    }
+    logger.warn({ title: draft.title, topic: topic.topic }, '[blog-worker] duplicate theme rejected');
+    return { created: false, published: false, reason: 'duplicate_title_or_theme' };
+  }
+  // Keep the database-level exact check immediately before insert as a last
+  // line of defense when another worker/request created the same post after
+  // the summary query above.
+  const exactDuplicate = await prisma.blogPost.findFirst({
     where: { OR: [{ slug: cleanSlug }, { title: draft.title }], deletedAt: null },
     select: { id: true },
   });
-  if (duplicate) return { created: false, published: false, reason: 'duplicate_title_or_slug' };
+  if (exactDuplicate) return { created: false, published: false, reason: 'duplicate_title_or_slug' };
 
   if (process.env.BLOG_AUTOMATION_DRY_RUN === 'true') {
     logger.info({ title: draft.title, words: quality.words, slot: slots[postsToday.length] }, '[blog-worker] dry run draft accepted');
