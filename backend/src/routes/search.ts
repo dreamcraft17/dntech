@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import prisma from '../config/database';
 import { asyncHandler, successResponse } from '../utils/helpers';
+import { normalizeLocale, resolveBlogPost } from '../utils/blog-locale';
 
 const router = Router();
 
@@ -8,6 +9,7 @@ router.get(
   '/',
   asyncHandler(async (req, res) => {
     const q = String(req.query.q || '').trim();
+    const locale = normalizeLocale(req.query.locale, req.headers['accept-language'] ?? null);
     const startedAt = Date.now();
     if (!q || q.length < 2) {
       console.info('[search] ignored short query', { q, ip: req.ip });
@@ -39,6 +41,8 @@ router.get(
         take: 5,
         select: { id: true, name: true, slug: true, description: true },
       }),
+      // A post reads in `locale` either through its own columns or through a
+      // translation row, so both have to be searched and returned.
       prisma.blogPost.findMany({
         where: {
           status: 'published',
@@ -46,10 +50,39 @@ router.get(
           OR: [
             { title: { contains: q } },
             { content: { contains: q } },
+            {
+              translations: {
+                some: {
+                  locale,
+                  OR: [
+                    { title: { contains: q } },
+                    { content: { contains: q } },
+                    { excerpt: { contains: q } },
+                  ],
+                },
+              },
+            },
           ],
         },
         take: 5,
-        select: { id: true, title: true, slug: true, excerpt: true },
+        select: {
+          id: true,
+          locale: true,
+          title: true,
+          slug: true,
+          content: true,
+          excerpt: true,
+          translations: {
+            select: {
+              locale: true,
+              title: true,
+              slug: true,
+              content: true,
+              excerpt: true,
+              isMachine: true,
+            },
+          },
+        },
       }),
       prisma.faq.findMany({
         where: {
@@ -89,12 +122,14 @@ router.get(
         snippet: p.description?.substring(0, 150),
         url: `/products/${p.slug}`,
       })),
-      ...blogPosts.map((b) => ({
-        type: 'blog',
-        title: b.title,
-        snippet: b.excerpt || '',
-        url: `/blog/${b.slug}`,
-      })),
+      ...blogPosts
+        .map((b) => resolveBlogPost(b, locale))
+        .map((b) => ({
+          type: 'blog',
+          title: String(b.title),
+          snippet: (b.excerpt as string | null) || '',
+          url: `/blog/${String(b.slug)}`,
+        })),
       ...portfolio.map((p) => ({
         type: 'portfolio',
         title: p.title,

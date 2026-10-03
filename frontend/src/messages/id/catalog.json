@@ -166,6 +166,16 @@
       "paginationAria": "Navigasi halaman artikel",
       "pageAria": "Halaman {page}",
       "metadataFallback": "Artikel Blog",
+      "fallback": {
+        "title": "Artikel ini belum diterjemahkan.",
+        "body": "Untuk sementara kami menampilkannya dalam {language}.",
+        "machineTranslated": "Terjemahan ini dibuat otomatis, jadi beberapa kalimat mungkin terasa kurang luwes.",
+        "badge": "Dalam {language}",
+        "language": {
+          "id": "bahasa Indonesia",
+          "en": "bahasa Inggris"
+        }
+      },
       "detail": {
         "byAuthor": "Oleh {name}",
         "heroFallback": "DN Tech · Wawasan",

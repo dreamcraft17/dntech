@@ -5,7 +5,8 @@ import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonL
 import { estimateReadTime } from '@/lib/read-time';
 import { buildMetadata, getPageSeo, localePath, SITE_URL } from '@/lib/seo';
 import { fetchPublicApiList, fetchPublicApiPaginated } from '@/lib/server-api';
-import { getUploadUrl } from '@/lib/api';
+import { getUploadUrl, withLocale } from '@/lib/api';
+import type { LocalizedContentMeta } from '@/lib/api';
 import type { BlogPost } from '@/types';
 import type { Metadata } from 'next';
 import { Link } from '@/i18n/navigation';
@@ -28,15 +29,20 @@ export async function generateMetadata({
   });
 }
 
-async function getPosts(page = 1, category?: string) {
+type LocalizedBlogPost = BlogPost & LocalizedContentMeta;
+
+async function getPosts(locale: string, page = 1, category?: string) {
   const params = new URLSearchParams({ page: String(page), pageSize: '9' });
   if (category) params.set('category', category);
-  const { data, pagination } = await fetchPublicApiPaginated<BlogPost>(`/blog?${params}`, 60);
+  const { data, pagination } = await fetchPublicApiPaginated<LocalizedBlogPost>(
+    withLocale(`/blog?${params}`, locale),
+    60,
+  );
   return { posts: data, pages: pagination?.pages || 1 };
 }
 
-async function getCategories() {
-  return fetchPublicApiList<string>('/blog/categories', 60);
+async function getCategories(locale: string) {
+  return fetchPublicApiList<string>(withLocale('/blog/categories', locale), 60);
 }
 
 export default async function BlogPage({
@@ -53,8 +59,8 @@ export default async function BlogPage({
   const query = await searchParams;
   const page = parseInt(query.page || '1', 10);
   const [{ posts, pages }, categories] = await Promise.all([
-    getPosts(page, query.category),
-    getCategories(),
+    getPosts(locale, page, query.category),
+    getCategories(locale),
   ]);
   const base = `${SITE_URL}${localePath('/blog', locale)}`;
 
@@ -129,7 +135,14 @@ export default async function BlogPage({
                         </div>
                       ) : <div className="hidden border-l-2 border-teal-600 sm:block" aria-hidden="true" />}
                       <div>
-                        <div className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">{post.category}</div>
+                        <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-teal-700">
+                          <span>{post.category}</span>
+                          {post.isFallback && post.locale && (
+                            <span className="rounded-full bg-slate-100 px-2 py-0.5 font-semibold tracking-normal text-slate-600 normal-case">
+                              {t('blog.fallback.badge', { language: t(`blog.fallback.language.${post.locale === 'en' ? 'en' : 'id'}`) })}
+                            </span>
+                          )}
+                        </div>
                         <h2 className="mt-2 text-xl font-semibold leading-snug text-slate-950 sm:text-2xl">{post.title}</h2>
                         <p className="mt-3 text-sm leading-6 text-slate-600">{post.excerpt}</p>
                       </div>

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import prisma from '../config/database';
-import { AppError } from '../utils/helpers';
+import { AppError, slugify } from '../utils/helpers';
 import { createMediaFromBuffer } from './AdminMediaService';
 
 const generateBlogSchema = z.object({
@@ -565,6 +565,130 @@ async function generateGeminiBlogDraft(prompt: string, apiKey: string, model: st
   const text = extractText(result);
   if (!text) throw new AppError(502, 'AI_EMPTY_RESPONSE', 'Gemini tidak mengembalikan draft');
   return parseJson(text);
+}
+
+const SEO_TITLE_MAX = 60;
+const SEO_DESCRIPTION_MAX = 160;
+
+const LOCALE_LABELS: Record<string, string> = {
+  id: 'Bahasa Indonesia',
+  en: 'English (natural, international business English)',
+  zh: 'Mandarin Chinese (简体中文)',
+};
+
+function localeLabel(locale: string) {
+  return LOCALE_LABELS[locale.trim().toLowerCase()] || locale.trim();
+}
+
+const translatedBlogSchema = z.object({
+  title: z.string().min(1),
+  excerpt: z.string().optional().default(''),
+  content: z.string().min(1),
+  category: z.string().optional().nullable(),
+  tags: z.array(z.string()).optional().nullable(),
+  seoTitle: z.string().optional().default(''),
+  seoDescription: z.string().optional().default(''),
+});
+
+export interface BlogTranslationInput {
+  title: string;
+  excerpt?: string | null;
+  content: string;
+  category?: string | null;
+  tags?: string[] | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  sourceLocale: string;
+  targetLocale: string;
+}
+
+export interface BlogTranslationResult {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string | null;
+  tags: string[];
+  seoTitle: string;
+  seoDescription: string;
+}
+
+/**
+ * Translates one blog post into another site locale. Pure content work: it
+ * never touches the database and returns only a *suggested* slug derived from
+ * the translated title — the caller is responsible for making that slug unique
+ * against both blog_posts and blog_post_translations.
+ */
+export async function translateBlogPost(input: BlogTranslationInput): Promise<BlogTranslationResult> {
+  const openAI = openAIKey();
+  const gemini = process.env.GEMINI_API_KEY?.trim() || '';
+  if (!openAI && !gemini) {
+    throw new AppError(503, 'AI_NOT_CONFIGURED', 'OPENAI_API_KEY atau GEMINI_API_KEY belum dikonfigurasi di backend');
+  }
+
+  const sourceLabel = localeLabel(input.sourceLocale);
+  const targetLabel = localeLabel(input.targetLocale);
+  const payload = {
+    title: input.title,
+    excerpt: input.excerpt || '',
+    content: input.content,
+    category: input.category || '',
+    tags: input.tags || [],
+    seoTitle: input.seoTitle || '',
+    seoDescription: input.seoDescription || '',
+  };
+
+  const prompt = `
+You are DN Tech's bilingual marketing editor. Translate the blog post below from ${sourceLabel} into ${targetLabel}.
+
+This is published marketing content, so it must read as if it had been written in ${targetLabel} by a native editor — not as a literal translation.
+
+Rules:
+- Translate title, excerpt, content, category, tags, seoTitle, and seoDescription. Do not add, drop, or reorder sections.
+- Preserve the HTML structure and heading hierarchy EXACTLY: the same tags, the same order, the same nesting (<p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <a href="...">). Keep every href URL unchanged.
+- Keep code blocks, inline code, commands, file names, and identifiers byte-for-byte unchanged.
+- Never translate brand names and proper nouns: DN Tech, dnPeople, dnCore, dnShopee, product names, company names, and people's names stay exactly as written.
+- Localize idioms, humour, and culturally specific references instead of translating them word-for-word; keep the same meaning and tone.
+- Do not invent facts, statistics, prices, clients, or claims that are not in the source.
+- seoTitle: at most ${SEO_TITLE_MAX} characters. seoDescription: about 140-${SEO_DESCRIPTION_MAX} characters, never longer than ${SEO_DESCRIPTION_MAX}.
+- tags: translate human-readable tags, but keep machine-looking tags (containing ":" or "-") unchanged.
+- Return valid JSON only, no markdown fence, with the fields: title, excerpt, content, category, tags, seoTitle, seoDescription.
+
+Source post (JSON):
+${JSON.stringify(payload)}
+`.trim();
+
+  const systemInstruction = `You are a professional ${sourceLabel} to ${targetLabel} marketing translator for DN Tech. You always answer with a single valid JSON object and preserve HTML markup exactly.`;
+  const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+
+  let translated: z.infer<typeof translatedBlogSchema>;
+  if (openAI) {
+    try {
+      translated = translatedBlogSchema.parse(parseJson(await callOpenAIJson(prompt, systemInstruction, openAI)));
+    } catch (error) {
+      if (!gemini) throw error;
+      console.warn('[blog-ai] OpenAI translation failed; trying Gemini fallback', error instanceof Error ? error.message : error);
+      translated = translatedBlogSchema.parse(await generateGeminiBlogDraft(prompt, gemini, model));
+    }
+  } else {
+    translated = translatedBlogSchema.parse(await generateGeminiBlogDraft(prompt, gemini, model));
+  }
+
+  const title = translated.title.trim();
+  const excerpt = (translated.excerpt || '').trim();
+  const seoTitle = (translated.seoTitle || title).trim().slice(0, SEO_TITLE_MAX);
+  const seoDescription = (translated.seoDescription || excerpt).trim().slice(0, SEO_DESCRIPTION_MAX);
+
+  return {
+    title,
+    slug: slugify(title),
+    excerpt,
+    content: translated.content,
+    category: translated.category?.trim() || null,
+    tags: (translated.tags || []).filter((tag): tag is string => typeof tag === 'string' && tag.trim().length > 0),
+    seoTitle,
+    seoDescription,
+  };
 }
 
 export async function generateServiceDraft(input: unknown, _userId: string) {

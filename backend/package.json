@@ -28,6 +28,7 @@
     "db:seed-products": "tsx scripts/seed-all-products.ts",
     "db:disable-seed-admin": "tsx scripts/disable-seed-admin.ts",
     "db:backfill-blog-covers": "tsx scripts/backfill-blog-cover-images.ts",
+    "blog:backfill-translations": "tsx scripts/backfill-blog-translations.ts",
     "validate:env": "tsx scripts/validate-env.ts",
     "db:vps": "bash ../scripts/db-vps.sh",
     "db:vps:tunnel": "bash ../scripts/db-vps.sh tunnel",

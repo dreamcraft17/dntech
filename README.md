@@ -115,6 +115,7 @@ npm run dev
 | `npm run build` | TypeScript compile (+ `prisma generate`) |
 | `npm run start` | Run compiled API |
 | `npm run worker:blog` | Run the opt-in blog generation queue and daily publish worker |
+| `npm run blog:backfill-translations` | Add the missing id/en version to existing blog posts (run `-- --dry-run` first) |
 | `npm run test` | All Jest tests |
 | `npm run test:unit` | Unit tests only |
 | `npm run test:integration` | Integration tests (needs Postgres) |
@@ -140,6 +141,26 @@ npm run dev
 | `npm run test:e2e` | Playwright smoke tests |
 | `npm run lighthouse` | Lighthouse on `/`, `/products/dnpeople`, `/contact` |
 | `npm run storybook` | Component docs (Button, Card, SectionHeading, HomeProducts) |
+
+## Languages (`/id` and `/en`)
+
+The public site is served under a locale prefix; `/admin` is not prefixed and stays Indonesian.
+
+**Which language a visitor gets.** `frontend/src/proxy.ts` redirects an unprefixed URL to a locale, in this order: the `NEXT_LOCALE` cookie (a manual choice in the navbar switcher), then the country header from the edge (`cf-ipcountry` on Cloudflare, with the Vercel/Netlify equivalents as fallbacks) — Indonesia gets `id`, everywhere else gets `en` — then `Accept-Language`, then `id`. **If production traffic stops going through Cloudflare, geo detection silently degrades to `Accept-Language`.**
+
+**UI copy** lives in `frontend/src/messages/{id,en}/*.json` (next-intl). Metadata emits a per-locale canonical plus `hreflang` alternates, and the sitemap lists both variants of every route.
+
+**Blog posts are bilingual.** A post is one `BlogPost` row written in `BlogPost.locale`, plus a `BlogPostTranslation` row per other language (its own title, slug, body and SEO fields). Public blog endpoints take `?locale=`, resolve either language's slug, and fall back to the original language when a translation is missing — the page then shows a notice. Automated posts are written in Indonesian and translated to English in the same run; if translation fails the Indonesian post still publishes. Editors can review, fix, regenerate or delete the English version from the admin blog screen, and a human-edited translation (`isMachine: false`) is never overwritten by automation.
+
+**Deploying this change.** Push the schema (`npm run db:push`), then backfill the existing posts:
+
+```bash
+cd backend
+npm run blog:backfill-translations -- --dry-run   # check the plan first
+npm run blog:backfill-translations
+```
+
+The first pass repairs `BlogPost.locale` from the old `language:<code>` tag — automation used to write posts in Indonesian, English or Mandarin at random — so posts are translated from their real language. Translation needs `OPENAI_API_KEY` or `GEMINI_API_KEY`; without one, posts stay single-language.
 
 ## Configuration
 

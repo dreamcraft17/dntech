@@ -2,8 +2,9 @@ import 'dotenv/config';
 import { UserRole } from '@prisma/client';
 import prisma from '../config/database';
 import logger from '../config/logger';
-import { BLOG_MIN_WORDS, generateBlogDraft } from '../services/GeminiContentService';
+import { BLOG_MIN_WORDS, generateBlogDraft, translateBlogPost } from '../services/GeminiContentService';
 import { cacheService } from '../services/CacheService';
+import { uniqueTranslationSlug } from '../utils/blog-locale';
 import { slugify } from '../utils/helpers';
 
 type GeneratedDraft = {
@@ -25,6 +26,8 @@ type WorkerResult = {
   reason?: string;
   postId?: string;
   title?: string;
+  /** Whether the English BlogPostTranslation row was written in this run. */
+  translated?: boolean;
 };
 
 type ExistingBlogSummary = {
@@ -41,11 +44,14 @@ const AUTOMATION_TAG = 'dntech-automation';
 const DEFAULT_GENERATION_ATTEMPTS = 3;
 const DEFAULT_POSTS_PER_DAY = 4;
 const DEFAULT_GENERATION_QUEUE_TARGET = 12;
-const BLOG_LANGUAGES = [
-  { code: 'id', prompt: 'Bahasa Indonesia' },
-  { code: 'en', prompt: 'English' },
-  { code: 'zh', prompt: 'Mandarin Chinese (简体中文)' },
-] as const;
+/**
+ * The marketing site serves /id and /en, so automation always writes the base
+ * row in Indonesian and mirrors it into an English BlogPostTranslation in the
+ * same run. (Automation used to pick a language at random, Mandarin included;
+ * older rows in other languages are left untouched.)
+ */
+export const BASE_LANGUAGE = { code: 'id', prompt: 'Bahasa Indonesia' } as const;
+export const TRANSLATION_LANGUAGE = { code: 'en', prompt: 'English' } as const;
 
 // These words are too broad to identify an editorial theme by themselves.
 // Keeping the list here also makes the duplicate check deterministic and cheap.
@@ -185,11 +191,6 @@ export function dailyAutomationTarget(slotCount: number, configuredValue = proce
   const configured = Number(configuredValue || DEFAULT_POSTS_PER_DAY);
   const target = Number.isFinite(configured) && configured > 0 ? Math.floor(configured) : DEFAULT_POSTS_PER_DAY;
   return Math.min(target, slotCount);
-}
-
-export function randomBlogLanguage(randomValue = Math.random()) {
-  const index = Math.min(BLOG_LANGUAGES.length - 1, Math.floor(randomValue * BLOG_LANGUAGES.length));
-  return BLOG_LANGUAGES[index];
 }
 
 export function topicForSlot(dateKey: string, slotIndex: number) {
@@ -376,6 +377,68 @@ async function skipTopicForDay(dateKey: string, topic: string) {
   });
 }
 
+/**
+ * Mirrors a freshly created Indonesian post into an English translation row.
+ * Scheduling and publishing stay on the base row, so the translation is saved
+ * even while the post is still `scheduled`. A failed translation is logged and
+ * swallowed on purpose: a post with one language beats no post at all.
+ */
+export async function createEnglishTranslation(
+  postId: string,
+  draft: GeneratedDraft,
+  machineTags: string[],
+): Promise<boolean> {
+  try {
+    const translated = await translateBlogPost({
+      title: draft.title,
+      excerpt: draft.excerpt,
+      content: draft.content,
+      category: draft.category || null,
+      tags: draft.tags || [],
+      seoTitle: draft.seoTitle,
+      seoDescription: draft.seoDescription,
+      sourceLocale: BASE_LANGUAGE.code,
+      targetLocale: TRANSLATION_LANGUAGE.code,
+    });
+
+    const slug = await uniqueTranslationSlug(
+      slugify(translated.slug || translated.title),
+      async (candidate) => {
+        const [basePost, translation] = await Promise.all([
+          prisma.blogPost.findFirst({ where: { slug: candidate }, select: { id: true } }),
+          prisma.blogPostTranslation.findFirst({ where: { slug: candidate }, select: { id: true } }),
+        ]);
+        return Boolean(basePost || translation);
+      },
+    );
+
+    await prisma.blogPostTranslation.create({
+      data: {
+        postId,
+        locale: TRANSLATION_LANGUAGE.code,
+        title: translated.title,
+        slug,
+        content: translated.content,
+        excerpt: translated.excerpt || null,
+        category: translated.category,
+        tags: [...translated.tags, ...machineTags],
+        seoTitle: translated.seoTitle || null,
+        seoDescription: translated.seoDescription || null,
+        isMachine: true,
+      },
+    });
+
+    logger.info({ postId, locale: TRANSLATION_LANGUAGE.code, slug }, '[blog-worker] translation saved');
+    return true;
+  } catch (error) {
+    logger.error(
+      { err: error, postId, locale: TRANSLATION_LANGUAGE.code },
+      '[blog-worker] translation failed; post kept in Indonesian only',
+    );
+    return false;
+  }
+}
+
 export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerResult> {
   if (process.env.BLOG_AUTOMATION_ENABLED !== 'true') {
     return { created: false, published: false, reason: 'disabled' };
@@ -410,8 +473,6 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
   if (!topic) {
     return { created: false, published: false, reason: 'no_unique_topic_available' };
   }
-  const language = randomBlogLanguage();
-
   const authorId = await findAuthorId();
   if (!authorId) throw new Error('No active admin author found for blog automation');
 
@@ -424,7 +485,7 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
       audience: 'pemilik bisnis, founder startup, HR manager, dan tim operasional di Indonesia',
       tone: 'jelas, hangat, praktis, jujur, tidak terasa seperti copy AI; target 700-1000 kata',
       keywords: topic.keywords,
-      language: language.prompt,
+      language: BASE_LANGUAGE.prompt,
       generateImage: process.env.BLOG_AUTOMATION_DRY_RUN !== 'true',
       imageProvider: 'openai',
     }, authorId);
@@ -448,7 +509,8 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
   const dayTag = `automation:${local.dateKey}`;
   const slotTag = `automation-slot:${postsToday.length}`;
   const topicTag = `automation-topic:${slugify(topic.topic)}`;
-  const languageTag = `language:${language.code}`;
+  const languageTag = `language:${BASE_LANGUAGE.code}`;
+  const pillarTag = topic.pillar.toLowerCase().replace(/\s+/g, '-');
   const cleanSlug = slugify(draft.slug || draft.title);
   if (isDuplicateGeneratedDraft({ title: draft.title, slug: cleanSlug }, topic.topic, existingPosts)) {
     if (process.env.BLOG_AUTOMATION_DRY_RUN !== 'true') {
@@ -487,7 +549,8 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
       excerpt: draft.excerpt,
       featuredImageId: draft.featuredImageId || undefined,
       category: draft.category || topic.pillar,
-      tags: [...(draft.tags || []), AUTOMATION_TAG, dayTag, slotTag, topicTag, languageTag, topic.pillar.toLowerCase().replace(/\s+/g, '-')],
+      tags: [...(draft.tags || []), AUTOMATION_TAG, dayTag, slotTag, topicTag, languageTag, pillarTag],
+      locale: BASE_LANGUAGE.code,
       authorId,
       status: isPublished ? 'published' : 'scheduled',
       publishedAt: isPublished ? now : undefined,
@@ -497,9 +560,22 @@ export async function runBlogAutomationOnce(now = new Date()): Promise<WorkerRes
     },
     select: { id: true, title: true },
   });
+
+  // Every automated post must exist in both site locales, so the English
+  // version is written in the same run — regardless of whether the base row is
+  // published now or still waiting for its slot.
+  const translated = await createEnglishTranslation(post.id, draft, [
+    AUTOMATION_TAG,
+    dayTag,
+    slotTag,
+    topicTag,
+    `language:${TRANSLATION_LANGUAGE.code}`,
+    pillarTag,
+  ]);
+
   cacheService.clear();
-  logger.info({ postId: post.id, title: post.title, language: language.code, status: isPublished ? 'published' : 'scheduled', imageProvider: draft.imageProvider }, '[blog-worker] blog post created');
-  return { created: true, published: isPublished, postId: post.id, title: post.title };
+  logger.info({ postId: post.id, title: post.title, locale: BASE_LANGUAGE.code, translated, status: isPublished ? 'published' : 'scheduled', imageProvider: draft.imageProvider }, '[blog-worker] blog post created');
+  return { created: true, published: isPublished, postId: post.id, title: post.title, translated };
 }
 
 export function startBlogContentWorker() {

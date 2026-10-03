@@ -244,18 +244,48 @@ model BlogPost {
   seoTitle        String?    @map("seo_title")
   seoDescription  String?    @map("seo_description")
   viewCount       Int        @default(0) @map("view_count")
+  // Language the columns on this row are written in. Automation used to pick a
+  // language at random, so older rows are not all Indonesian.
+  locale          String     @default("id")
   createdAt       DateTime   @default(now()) @map("created_at")
   updatedAt       DateTime   @updatedAt @map("updated_at")
   deletedAt       DateTime?  @map("deleted_at")
 
-  featuredImage Media? @relation("BlogFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
-  author        User?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  featuredImage Media?                @relation("BlogFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
+  author        User?                 @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  translations  BlogPostTranslation[]
 
   @@index([slug])
   @@index([status])
   @@index([publishedAt])
   @@index([authorId])
   @@map("blog_posts")
+}
+
+/// One rendering of a post in a locale other than BlogPost.locale.
+model BlogPostTranslation {
+  id             String   @id @default(uuid())
+  postId         String   @map("post_id")
+  locale         String
+  title          String
+  slug           String
+  content        String
+  excerpt        String?
+  category       String?
+  tags           Json?
+  seoTitle       String?  @map("seo_title")
+  seoDescription String?  @map("seo_description")
+  /// False once an editor has revised the machine output.
+  isMachine      Boolean  @default(true) @map("is_machine")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, locale])
+  @@unique([locale, slug])
+  @@index([locale])
+  @@map("blog_post_translations")
 }
 
 model BlogAutomationState {

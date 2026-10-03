@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, withLocale } from '@/lib/api';
 import type { SearchResult } from '@/types';
 
 interface HeaderSearchProps {
@@ -13,6 +13,7 @@ interface HeaderSearchProps {
 
 export function HeaderSearch({ open, onClose }: HeaderSearchProps) {
   const t = useTranslations('layout.search');
+  const locale = useLocale();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -42,9 +43,10 @@ export function HeaderSearch({ open, onClose }: HeaderSearchProps) {
         setSearchError('');
         const controller = new AbortController();
         abortRef.current = controller;
-        const results = await apiFetch<SearchResult[]>(`/search?q=${encodeURIComponent(q)}`, {
-          signal: controller.signal,
-        });
+        const results = await apiFetch<SearchResult[]>(
+          withLocale(`/search?q=${encodeURIComponent(q)}`, locale),
+          { signal: controller.signal },
+        );
         setSearchResults(results);
         setSearchSearched(true);
       } catch (err) {
@@ -56,7 +58,7 @@ export function HeaderSearch({ open, onClose }: HeaderSearchProps) {
         setSearchLoading(false);
       }
     }, 300);
-  }, [t]);
+  }, [t, locale]);
 
   useEffect(() => {
     if (!open) return;

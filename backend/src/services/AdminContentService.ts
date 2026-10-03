@@ -1,8 +1,16 @@
 import { z } from 'zod';
 import prisma from '../config/database';
-import { slugify, param } from '../utils/helpers';
+import { slugify, param, AppError } from '../utils/helpers';
 import { logActivity } from '../middleware/auth';
 import { cacheService } from '../services/CacheService';
+import {
+  SITE_LOCALES,
+  DEFAULT_LOCALE,
+  isSiteLocale,
+  uniqueTranslationSlug,
+  type SiteLocale,
+} from '../utils/blog-locale';
+import { translateBlogPost } from './GeminiContentService';
 
 /**
  * Admin CRUD logic for the "big 4" CMS content types (services, products,
@@ -280,6 +288,9 @@ export const blogSchema = z.object({
   scheduledAt: z.string().optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
+  // Language the base row's own columns are written in. Never left to the
+  // column default silently: created posts are explicitly stamped.
+  locale: z.enum(SITE_LOCALES).optional(),
 });
 
 export async function listBlogPosts(query: Record<string, unknown>) {
@@ -303,6 +314,7 @@ export async function createBlogPost(body: unknown, userId: string, ip?: string)
     data: {
       ...data,
       slug,
+      locale: data.locale ?? DEFAULT_LOCALE,
       authorId: userId,
       publishedAt: data.publishedAt
         ? new Date(data.publishedAt)
@@ -328,6 +340,22 @@ export async function updateBlogPost(id: string, body: unknown) {
       select: { publishedAt: true },
     });
     publishedAt = existing?.publishedAt ?? new Date();
+  }
+
+  // Moving the base row into a locale that already has a translation would
+  // leave two rows claiming the same language for the same post.
+  if (data.locale) {
+    const clash = await prisma.blogPostTranslation.findUnique({
+      where: { postId_locale: { postId: param(id), locale: data.locale } },
+      select: { id: true },
+    });
+    if (clash) {
+      throw new AppError(
+        409,
+        'LOCALE_CONFLICT',
+        `This post already has a ${data.locale} translation; delete it before making ${data.locale} the base locale`
+      );
+    }
   }
 
   const post = await prisma.blogPost.update({
@@ -363,5 +391,244 @@ export async function unpublishBlogPost(id: string) {
 
 export async function deleteBlogPost(id: string) {
   await prisma.blogPost.update({ where: { id: param(id) }, data: { deletedAt: new Date() } });
+  cacheService.clear();
+}
+
+// --- Blog translations ---
+// A post is one base row (written in BlogPost.locale) plus one
+// BlogPostTranslation per other site locale. Machine output can be
+// overwritten freely; anything an editor has touched (isMachine === false)
+// is only replaced when the caller explicitly asks for it.
+
+export const blogTranslationSchema = z.object({
+  title: z.string().min(1),
+  slug: z.string().optional(),
+  content: z.string().min(1),
+  excerpt: z.string().nullish(),
+  category: z.string().nullish(),
+  tags: z.array(z.string()).nullish(),
+  seoTitle: z.string().nullish(),
+  seoDescription: z.string().nullish(),
+});
+
+/** Minimal surface of a Prisma client, so scripts can pass their own. */
+export interface BlogSlugLookupClient {
+  blogPost: { findFirst(args: unknown): Promise<{ id: string } | null> };
+  blogPostTranslation: {
+    findFirst(args: unknown): Promise<{ postId: string; locale: string } | null>;
+  };
+}
+
+/**
+ * A translation slug has to be unique against both `blog_posts.slug` and
+ * `blog_post_translations.slug`. The row being written is allowed to keep its
+ * own slug.
+ */
+export function makeTranslationSlugChecker(
+  db: BlogSlugLookupClient,
+  postId: string,
+  locale: string
+) {
+  return async (candidate: string): Promise<boolean> => {
+    const base = await db.blogPost.findFirst({
+      where: { slug: candidate },
+      select: { id: true },
+    });
+    if (base) return true;
+
+    const translation = await db.blogPostTranslation.findFirst({
+      where: { slug: candidate },
+      select: { postId: true, locale: true },
+    });
+    if (!translation) return false;
+    return !(translation.postId === postId && translation.locale === locale);
+  };
+}
+
+function assertSiteLocale(locale: string): SiteLocale {
+  if (!isSiteLocale(locale)) {
+    throw new AppError(
+      400,
+      'UNSUPPORTED_LOCALE',
+      `Unsupported locale "${locale}"; expected one of ${SITE_LOCALES.join(', ')}`
+    );
+  }
+  return locale;
+}
+
+async function getPostForTranslation(id: string) {
+  const post = await prisma.blogPost.findFirst({
+    where: { id: param(id), deletedAt: null },
+  });
+  if (!post) throw new AppError(404, 'NOT_FOUND', 'Blog post not found');
+  return post;
+}
+
+export async function listBlogTranslations(id: string) {
+  const post = await prisma.blogPost.findFirst({
+    where: { id: param(id), deletedAt: null },
+    include: { translations: { orderBy: { locale: 'asc' } } },
+  });
+  if (!post) throw new AppError(404, 'NOT_FOUND', 'Blog post not found');
+
+  const baseLocale = post.locale || DEFAULT_LOCALE;
+  const present = new Set<string>([baseLocale, ...post.translations.map((t) => t.locale)]);
+
+  return {
+    postId: post.id,
+    baseLocale,
+    base: {
+      locale: baseLocale,
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt,
+      category: post.category,
+      tags: post.tags,
+      seoTitle: post.seoTitle,
+      seoDescription: post.seoDescription,
+    },
+    siteLocales: [...SITE_LOCALES],
+    missingLocales: SITE_LOCALES.filter((locale) => !present.has(locale)),
+    translations: post.translations,
+  };
+}
+
+export async function upsertBlogTranslation(
+  id: string,
+  locale: string,
+  body: unknown,
+  userId: string,
+  ip?: string
+) {
+  const target = assertSiteLocale(locale);
+  const data = blogTranslationSchema.parse(body);
+  const post = await getPostForTranslation(id);
+
+  if ((post.locale || DEFAULT_LOCALE) === target) {
+    throw new AppError(
+      400,
+      'LOCALE_CONFLICT',
+      `${target} is this post's base locale; edit the post itself instead`
+    );
+  }
+
+  const slug = await uniqueTranslationSlug(
+    slugify(data.slug || data.title),
+    makeTranslationSlugChecker(prisma as unknown as BlogSlugLookupClient, post.id, target)
+  );
+
+  const payload = {
+    title: data.title,
+    slug,
+    content: data.content,
+    excerpt: data.excerpt ?? null,
+    category: data.category ?? null,
+    tags: data.tags ?? undefined,
+    seoTitle: data.seoTitle ?? null,
+    seoDescription: data.seoDescription ?? null,
+    // A human has touched this row; the backfill and the generator must not
+    // silently overwrite it from now on.
+    isMachine: false,
+  };
+
+  const translation = await prisma.blogPostTranslation.upsert({
+    where: { postId_locale: { postId: post.id, locale: target } },
+    create: { ...payload, postId: post.id, locale: target },
+    update: payload,
+  });
+
+  await logActivity(userId, 'update', 'blog_translation', translation.id, { postId: post.id, locale: target }, ip);
+  cacheService.clear();
+  return translation;
+}
+
+export async function generateBlogTranslation(
+  id: string,
+  locale: string,
+  body: unknown,
+  userId: string,
+  ip?: string
+) {
+  const target = assertSiteLocale(locale);
+  const { force } = z.object({ force: z.boolean().optional() }).parse(body ?? {});
+  const post = await getPostForTranslation(id);
+  const sourceLocale = post.locale || DEFAULT_LOCALE;
+
+  if (sourceLocale === target) {
+    throw new AppError(
+      400,
+      'LOCALE_CONFLICT',
+      `${target} is this post's base locale; nothing to translate`
+    );
+  }
+
+  const existing = await prisma.blogPostTranslation.findUnique({
+    where: { postId_locale: { postId: post.id, locale: target } },
+  });
+  if (existing && existing.isMachine === false && !force) {
+    throw new AppError(
+      409,
+      'HUMAN_TRANSLATION_EXISTS',
+      'This translation was edited by a human; pass { "force": true } to overwrite it'
+    );
+  }
+
+  const result = await translateBlogPost({
+    title: post.title,
+    excerpt: post.excerpt,
+    content: post.content,
+    category: post.category,
+    tags: Array.isArray(post.tags) ? (post.tags as string[]) : null,
+    seoTitle: post.seoTitle,
+    seoDescription: post.seoDescription,
+    sourceLocale,
+    targetLocale: target,
+  });
+
+  const slug = await uniqueTranslationSlug(
+    slugify(result.slug || result.title),
+    makeTranslationSlugChecker(prisma as unknown as BlogSlugLookupClient, post.id, target)
+  );
+
+  const payload = {
+    title: result.title,
+    slug,
+    content: result.content,
+    excerpt: result.excerpt ?? null,
+    category: result.category ?? null,
+    tags: result.tags ?? undefined,
+    seoTitle: result.seoTitle ?? null,
+    seoDescription: result.seoDescription ?? null,
+    isMachine: true,
+  };
+
+  const translation = await prisma.blogPostTranslation.upsert({
+    where: { postId_locale: { postId: post.id, locale: target } },
+    create: { ...payload, postId: post.id, locale: target },
+    update: payload,
+  });
+
+  await logActivity(
+    userId,
+    'generate',
+    'blog_translation',
+    translation.id,
+    { postId: post.id, locale: target, sourceLocale, overwroteHumanEdit: Boolean(existing && !existing.isMachine) },
+    ip
+  );
+  cacheService.clear();
+  return translation;
+}
+
+export async function deleteBlogTranslation(id: string, locale: string, userId: string, ip?: string) {
+  const target = assertSiteLocale(locale);
+  const existing = await prisma.blogPostTranslation.findUnique({
+    where: { postId_locale: { postId: param(id), locale: target } },
+    select: { id: true },
+  });
+  if (!existing) throw new AppError(404, 'NOT_FOUND', 'Translation not found');
+
+  await prisma.blogPostTranslation.delete({ where: { id: existing.id } });
+  await logActivity(userId, 'delete', 'blog_translation', existing.id, { postId: param(id), locale: target }, ip);
   cacheService.clear();
 }

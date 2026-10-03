@@ -1,11 +1,13 @@
 import Image from 'next/image';
+import { Languages } from 'lucide-react';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import { estimateReadTime } from '@/lib/read-time';
 import { JsonLd, breadcrumbSchema, articleSchema } from '@/components/seo/JsonLd';
 import { InternalLinks } from '@/components/seo/InternalLinks';
 import { buildMetadata, localePath, SITE_URL } from '@/lib/seo';
 import { getPillarForCategory, getRelatedServiceLinks } from '@/lib/content-pillars';
-import { getUploadUrl } from '@/lib/api';
+import { blogAlternates, getUploadUrl, withLocale } from '@/lib/api';
+import type { LocalizedContentMeta } from '@/lib/api';
 import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import type { BlogPost, Service } from '@/types';
@@ -15,8 +17,33 @@ import { Link } from '@/i18n/navigation';
 
 type RouteParams = Promise<{ locale: string; slug: string }>;
 
-async function getPost(slug: string) {
-  return fetchPublicApiSafe<BlogPost>(`/blog/${slug}`, 60);
+type LocalizedBlogPost = BlogPost & LocalizedContentMeta;
+
+async function getPost(slug: string, locale: string) {
+  return fetchPublicApiSafe<LocalizedBlogPost>(
+    withLocale(`/blog/${encodeURIComponent(slug)}`, locale),
+    60,
+  );
+}
+
+/**
+ * Replaces the generic same-path hreflang set with one built from the post's
+ * per-language slugs (`slugs`), dropping languages the post does not exist in.
+ * The logic lives in `blogAlternates` so it stays unit-testable — a page module
+ * cannot export extra names.
+ */
+function pruneAlternates(
+  post: LocalizedBlogPost,
+  locale: string,
+  servedSlug: string,
+): Metadata['alternates'] {
+  const { canonical, languages } = blogAlternates({
+    locale,
+    servedSlug,
+    availableLocales: post.availableLocales,
+    slugs: post.slugs,
+  });
+  return { canonical, languages };
 }
 
 async function getServices() {
@@ -71,12 +98,15 @@ function prepareArticleContent(content: string | undefined) {
 export async function generateMetadata({ params }: { params: RouteParams }): Promise<Metadata> {
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: 'catalog' });
-  const post = await getPost(slug);
+  const post = await getPost(slug, locale);
   if (!post) return { title: t('blog.metadataFallback') };
-  return buildMetadata({
+  // The payload carries the slug for the language actually served, which is what
+  // the canonical URL must point at even when the request used the other one.
+  const servedSlug = post.slug || slug;
+  const metadata = buildMetadata({
     title: post.seoTitle || post.title,
     description: post.seoDescription || post.excerpt || '',
-    path: `/blog/${slug}`,
+    path: `/blog/${servedSlug}`,
     keywords: [...(post.tags || []), post.category || ''].filter(Boolean) as string[],
     type: 'article',
     publishedTime: post.publishedAt,
@@ -84,6 +114,7 @@ export async function generateMetadata({ params }: { params: RouteParams }): Pro
     image: post.featuredImage?.url ? getUploadUrl(post.featuredImage.url) : undefined,
     locale,
   });
+  return { ...metadata, alternates: pruneAlternates(post, locale, servedSlug) };
 }
 
 export default async function BlogDetailPage({ params }: { params: RouteParams }) {
@@ -91,8 +122,11 @@ export default async function BlogDetailPage({ params }: { params: RouteParams }
   setRequestLocale(locale);
 
   const [t, format] = await Promise.all([getTranslations('catalog'), getFormatter()]);
-  const [post, services] = await Promise.all([getPost(slug), getServices()]);
+  const [post, services] = await Promise.all([getPost(slug, locale), getServices()]);
   if (!post) notFound();
+
+  const servedSlug = post.slug || slug;
+  const servedLocale = post.locale === 'en' ? 'en' : 'id';
 
   const pillar = getPillarForCategory(post.category);
   const relatedServices = getRelatedServiceLinks(post.category, services);
@@ -110,12 +144,12 @@ export default async function BlogDetailPage({ params }: { params: RouteParams }
       <JsonLd data={breadcrumbSchema([
         { name: t('breadcrumb.home'), url: `${SITE_URL}${localePath('/', locale)}` },
         { name: t('breadcrumb.blog'), url: blogUrl },
-        { name: post.title, url: `${blogUrl}/${slug}` },
+        { name: post.title, url: `${blogUrl}/${servedSlug}` },
       ])} />
       <JsonLd data={articleSchema({
         title: post.title,
         description: post.excerpt,
-        slug,
+        slug: servedSlug,
         publishedAt: post.publishedAt,
         author: post.author?.name,
         image: post.featuredImage?.url ? getUploadUrl(post.featuredImage.url) : undefined,
@@ -136,7 +170,25 @@ export default async function BlogDetailPage({ params }: { params: RouteParams }
             )}
           </nav>
 
-          <article itemScope itemType="https://schema.org/Article">
+          {(post.isFallback || post.isMachineTranslated) && (
+            <div
+              role="note"
+              className="mb-8 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50/70 px-4 py-3 text-sm leading-6 text-amber-900"
+            >
+              <Languages className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" aria-hidden="true" />
+              <p>
+                {post.isFallback && (
+                  <>
+                    <span className="font-semibold">{t('blog.fallback.title')}</span>{' '}
+                    {t('blog.fallback.body', { language: t(`blog.fallback.language.${servedLocale}`) })}{' '}
+                  </>
+                )}
+                {post.isMachineTranslated && t('blog.fallback.machineTranslated')}
+              </p>
+            </div>
+          )}
+
+          <article itemScope itemType="https://schema.org/Article" lang={post.isFallback ? servedLocale : undefined}>
             <header className="article-hero-grid">
               <div className="article-hero-copy">
                 <div className="flex flex-wrap items-center gap-3 text-sm font-semibold text-teal-700">

@@ -1,4 +1,6 @@
 import { endGlobalLoading, startGlobalLoading } from './loading-events';
+import { localePath, SITE_URL } from './seo';
+import { locales, type Locale } from '@/i18n/routing';
 
 const DEFAULT_API_URL = process.env.NODE_ENV === 'production'
   ? 'https://api.dntech.id/api/v1'
@@ -26,6 +28,75 @@ export function getApiBaseUrl(): string {
 }
 
 const API_URL = getApiBaseUrl();
+
+/**
+ * Appends `locale` to an API endpoint so the backend serves blog/search content
+ * in the language of the current route. Works with endpoints that already carry
+ * a query string.
+ */
+export function withLocale(endpoint: string, locale: string | undefined | null): string {
+  if (!locale) return endpoint;
+  const [path, query = ''] = endpoint.split('?');
+  const params = new URLSearchParams(query);
+  params.set('locale', locale);
+  return `${path}?${params.toString()}`;
+}
+
+/** Translation metadata every localized blog payload carries. */
+export interface LocalizedContentMeta {
+  /** The language actually served. */
+  locale?: string;
+  /** The language that was asked for. */
+  requestedLocale?: string;
+  /** True when no translation existed and the other language is shown instead. */
+  isFallback?: boolean;
+  isMachineTranslated?: boolean;
+  availableLocales?: string[];
+  /**
+   * Slug per language, e.g. `{ id: 'panduan-mvp', en: 'mvp-guide' }`. Keys are
+   * whatever locales exist on the post, which can include languages the site
+   * has no route for — callers must filter to the site's own locales.
+   */
+  slugs?: Record<string, string>;
+}
+
+/**
+ * Canonical + hreflang URLs for one blog post, using each language's own slug.
+ *
+ * Languages the post does not exist in are dropped so hreflang never advertises
+ * a translation that is not there, and locales outside the site's routing table
+ * (older posts can carry e.g. `zh`) are ignored because they have no URL.
+ */
+export function blogAlternates({
+  locale,
+  servedSlug,
+  availableLocales,
+  slugs,
+}: {
+  locale: string;
+  /** Slug of the language actually served — the canonical URL's slug. */
+  servedSlug: string;
+  availableLocales?: string[];
+  slugs?: Record<string, string>;
+}): { canonical: string; languages?: Record<string, string> } {
+  const canonical = `${SITE_URL}${localePath(`/blog/${servedSlug}`, locale)}`;
+
+  const available = (availableLocales?.length ? availableLocales : [locale]).filter(
+    (candidate): candidate is Locale => (locales as readonly string[]).includes(candidate),
+  );
+
+  const languages: Record<string, string> = {};
+  for (const candidate of available) {
+    const slug = slugs?.[candidate] || (candidate === locale ? servedSlug : undefined);
+    if (!slug) continue;
+    languages[candidate] = `${SITE_URL}${localePath(`/blog/${slug}`, candidate)}`;
+  }
+
+  if (Object.keys(languages).length === 0) return { canonical };
+
+  languages['x-default'] = languages.id ?? Object.values(languages)[0];
+  return { canonical, languages };
+}
 
 export interface ApiResponse<T> {
   success: boolean;

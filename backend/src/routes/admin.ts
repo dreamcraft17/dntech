@@ -138,6 +138,43 @@ router.delete('/blog/:id', requireWrite('blog'), asyncHandler(async (req, res) =
   successResponse(res, { deleted: true });
 }));
 
+// --- Blog translations ---
+router.get('/blog/:id/translations', asyncHandler(async (req, res) => {
+  successResponse(res, await content.listBlogTranslations(param(req.params.id)));
+}));
+
+router.put('/blog/:id/translations/:locale', requireWrite('blog'), asyncHandler(async (req: AuthRequest, res) => {
+  const translation = await content.upsertBlogTranslation(
+    param(req.params.id),
+    param(req.params.locale),
+    req.body,
+    req.user!.id,
+    req.ip
+  );
+  successResponse(res, translation);
+}));
+
+router.post('/blog/:id/translations/:locale/generate', requireWrite('blog'), asyncHandler(async (req: AuthRequest, res) => {
+  const translation = await content.generateBlogTranslation(
+    param(req.params.id),
+    param(req.params.locale),
+    req.body,
+    req.user!.id,
+    req.ip
+  );
+  successResponse(res, translation);
+}));
+
+router.delete('/blog/:id/translations/:locale', requireWrite('blog'), asyncHandler(async (req: AuthRequest, res) => {
+  await content.deleteBlogTranslation(
+    param(req.params.id),
+    param(req.params.locale),
+    req.user!.id,
+    req.ip
+  );
+  successResponse(res, { deleted: true });
+}));
+
 // --- Leads ---
 router.get('/leads', asyncHandler(async (req, res) => {
   const { leads: items, page, pageSize, total } = await leads.listLeadsAdmin(req.query as Record<string, unknown>);

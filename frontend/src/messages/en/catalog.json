@@ -166,6 +166,16 @@
       "paginationAria": "Article pagination",
       "pageAria": "Page {page}",
       "metadataFallback": "Blog Article",
+      "fallback": {
+        "title": "This article has not been translated yet.",
+        "body": "For now we are showing it in {language}.",
+        "machineTranslated": "This translation was generated automatically, so some wording may read a little stiff.",
+        "badge": "In {language}",
+        "language": {
+          "id": "Indonesian",
+          "en": "English"
+        }
+      },
       "detail": {
         "byAuthor": "By {name}",
         "heroFallback": "DN Tech · Insights",
