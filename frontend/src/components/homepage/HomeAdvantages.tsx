@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { SectionHeading } from '@/components/homepage/SectionHeading';
 import type { HomeAdvantage } from '@/lib/homepage-content';
 
@@ -6,6 +7,7 @@ interface HomeAdvantagesProps {
 }
 
 export function HomeAdvantages({ advantages }: HomeAdvantagesProps) {
+  const t = useTranslations('home.advantages');
   if (advantages.length === 0) return null;
 
   const [lead, ...rest] = advantages;
@@ -13,11 +15,11 @@ export function HomeAdvantages({ advantages }: HomeAdvantagesProps) {
   return (
     <section className="bg-[var(--primary)] py-section text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker="Keunggulan" title="Kenapa Pilih DN Tech?" onDark />
+        <SectionHeading kicker={t('kicker')} title={t('title')} onDark />
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.5fr)] lg:gap-16">
           <div className="lg:sticky lg:top-24 lg:self-start">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-              Alasan utama
+              {t('leadLabel')}
             </p>
             <h3 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
               {lead.title}

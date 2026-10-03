@@ -1,0 +1,115 @@
+{
+  "site": {
+    "tagline": "Software Partner You Can Trust"
+  },
+  "nav": {
+    "home": "Home",
+    "ariaMain": "Main navigation",
+    "ariaMobile": "Mobile navigation",
+    "homeAria": "DN Tech home",
+    "products": "Products",
+    "about": "About",
+    "groups": {
+      "services": "Services",
+      "proof": "Proof",
+      "resources": "Resources"
+    },
+    "links": {
+      "allServices": "All services",
+      "findSolution": "Find your solution",
+      "consultation": "Consultation",
+      "caseStudies": "Case studies",
+      "portfolio": "Portfolio",
+      "testimonials": "Testimonials",
+      "blog": "Blog & insights",
+      "guides": "Guides",
+      "helpCenter": "Help center",
+      "careers": "Careers"
+    },
+    "search": {
+      "open": "Open site search",
+      "close": "Close search",
+      "label": "Search",
+      "title": "Search the site"
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu"
+    },
+    "ctaConsultation": "Free Consultation"
+  },
+  "localeSwitcher": {
+    "label": "Choose language",
+    "id": "Bahasa Indonesia",
+    "en": "English"
+  },
+  "footer": {
+    "navAria": "Footer navigation",
+    "defaultTagline": "Software built for the workflows Indonesian businesses run on.",
+    "cta": "Free Consultation",
+    "columns": {
+      "company": "Company",
+      "offer": "Products & services",
+      "proof": "Our work",
+      "resources": "Resources",
+      "contact": "Get in touch"
+    },
+    "links": {
+      "about": "About",
+      "team": "Team",
+      "careers": "Careers",
+      "contact": "Contact",
+      "products": "Products",
+      "services": "Services",
+      "quiz": "Find your solution",
+      "caseStudies": "Case studies",
+      "portfolio": "Portfolio",
+      "testimonials": "Testimonials",
+      "blog": "Blog",
+      "guides": "Guides",
+      "faq": "FAQ",
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy"
+    },
+    "whatsapp": "WhatsApp {value}",
+    "copyright": "© {year} PT. Dozer Napitupulu Technology. All rights reserved."
+  },
+  "layout": {
+    "skipToContent": "Skip to main content",
+    "loading": "Loading page...",
+    "stickyCta": "Free Consultation",
+    "homeAria": "DN Tech home",
+    "breadcrumbAria": "Breadcrumb",
+    "notFound": {
+      "title": "Page not found",
+      "backHome": "Back to home"
+    },
+    "search": {
+      "placeholder": "Search services, articles...",
+      "aria": "Search the site",
+      "loading": "Searching...",
+      "failed": "Search failed",
+      "error": "Search failed: {message}",
+      "empty": "Nothing matched “{query}” yet. Try another term such as “software”, “web”, “products”, or “contact”."
+    },
+    "clientLogos": {
+      "caption": "Client logos shown with permission"
+    },
+    "trustBadges": {
+      "title": "Why Teams Choose Us"
+    },
+    "teamSpotlight": {
+      "title": "Meet the Team",
+      "subtitle": "The people behind DN Tech",
+      "viewAll": "View all",
+      "socialAria": "{name} on {platform}"
+    },
+    "pageEndCta": {
+      "title": "Not sure which path fits you best?",
+      "description": "Tell us which workflow you want to tidy up. We will point you to the product, service, or next step that makes the most sense.",
+      "primary": "Free consultation",
+      "secondary": "Find your solution"
+    },
+    "booting": "Getting DN Tech ready..."
+  }
+}

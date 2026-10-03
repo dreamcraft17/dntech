@@ -1,5 +1,7 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import type { ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 
 const SIZES = {
@@ -19,6 +21,20 @@ interface LogoProps {
   priority?: boolean;
 }
 
+/**
+ * Only rendered on the localised public site (admin always passes `href={null}`),
+ * so the i18n hooks/Link stay out of the admin tree, which has no intl provider.
+ */
+function LogoHomeLink({ href, children }: { href: string; children: ReactNode }) {
+  const t = useTranslations('layout');
+
+  return (
+    <Link href={href} className="inline-flex shrink-0 items-center" aria-label={t('homeAria')}>
+      {children}
+    </Link>
+  );
+}
+
 export function Logo({ size = 'md', className, href = '/', priority = false }: LogoProps) {
   const dim = SIZES[size];
 
@@ -34,11 +50,7 @@ export function Logo({ size = 'md', className, href = '/', priority = false }: L
   );
 
   if (href) {
-    return (
-      <Link href={href} className="inline-flex shrink-0 items-center" aria-label="Beranda DN Tech">
-        {image}
-      </Link>
-    );
+    return <LogoHomeLink href={href}>{image}</LogoHomeLink>;
   }
 
   return <span className="inline-flex shrink-0 items-center">{image}</span>;

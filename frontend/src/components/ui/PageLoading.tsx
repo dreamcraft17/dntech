@@ -2,9 +2,12 @@ import { LoaderCircle } from 'lucide-react';
 
 export function PageLoading({
   label = 'Memuat halaman...',
+  waitLabel = 'Mohon tunggu sebentar',
   fullScreen = false,
 }: {
   label?: string;
+  /** Localised sub-line (admin renders this without an intl provider). */
+  waitLabel?: string;
   fullScreen?: boolean;
 }) {
   return (
@@ -22,7 +25,7 @@ export function PageLoading({
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-800">{label}</p>
-          <p className="mt-1 text-xs text-gray-500">Mohon tunggu sebentar</p>
+          <p className="mt-1 text-xs text-gray-500">{waitLabel}</p>
         </div>
       </div>
     </div>

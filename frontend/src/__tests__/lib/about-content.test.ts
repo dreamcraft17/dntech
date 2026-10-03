@@ -53,6 +53,15 @@ describe('resolveAboutContent', () => {
     expect(resolved.values).toEqual([{ title: 'Jujur', description: 'No fake clients' }]);
   });
 
+  it('threads locale-aware founder defaults through', () => {
+    const resolved = resolveAboutContent({}, {}, [], {
+      name: 'Dozer Napitupulu',
+      role: 'Founder & Tech Lead',
+      bio: 'English bio.',
+    });
+    expect(resolved.founder?.bio).toBe('English bio.');
+  });
+
   it('prefers SiteSettings aboutContent over brand seed', () => {
     const resolved = resolveAboutContent(
       { story: 'CMS story', mission: 'CMS mission', values: [{ title: 'A', description: 'B' }] },
@@ -68,6 +77,12 @@ describe('resolveAboutContent', () => {
 describe('resolveFounder', () => {
   it('falls back to Dozer Napitupulu when CMS founder is missing', () => {
     expect(resolveFounder()).toEqual(DEFAULT_FOUNDER);
+  });
+
+  it('uses locale-aware defaults when they are supplied', () => {
+    const enDefaults = { name: 'Dozer Napitupulu', role: 'Founder & Tech Lead', bio: 'English bio.' };
+    expect(resolveFounder(undefined, enDefaults)).toEqual(enDefaults);
+    expect(resolveFounder({ name: 'Dozer Napitupulu' }, enDefaults).bio).toBe('English bio.');
   });
 
   it('keeps a provided name and fills missing role or bio from the default', () => {

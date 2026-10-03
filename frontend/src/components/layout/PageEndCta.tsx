@@ -1,15 +1,18 @@
+import { useTranslations } from 'next-intl';
 import { PublicPageCta } from '@/components/layout/PublicPageShell';
 
 /** Shared Mekari-style conversion band for catalog / proof pages. */
 export function PageEndCta() {
+  const t = useTranslations('layout.pageEndCta');
+
   return (
     <PublicPageCta
-      title="Butuh bantuan memilih jalur yang tepat?"
-      description="Ceritakan workflow yang ingin dirapikan. Kami akan arahkan ke produk, layanan, atau langkah berikutnya yang paling masuk akal."
+      title={t('title')}
+      description={t('description')}
       primaryHref="/contact"
-      primaryLabel="Konsultasi gratis"
+      primaryLabel={t('primary')}
       secondaryHref="/quiz"
-      secondaryLabel="Temukan solusi"
+      secondaryLabel={t('secondary')}
     />
   );
 }

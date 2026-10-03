@@ -1,6 +1,7 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { TeamSpotlight } from '@/components/layout/TeamSpotlight';
-import { hasAboutCopy, resolveFounder, type AboutContent } from '@/lib/about-content';
+import { DEFAULT_FOUNDER, hasAboutCopy, resolveFounder, type AboutContent } from '@/lib/about-content';
 import { cn } from '@/lib/utils';
 import type { TeamMember } from '@/types';
 import { PageIntro } from '@/components/layout/PageIntro';
@@ -15,19 +16,26 @@ interface AboutPageContentProps {
 }
 
 export function AboutPageContent({ about, team }: AboutPageContentProps) {
+  const t = useTranslations('pages');
   const hasCopy = hasAboutCopy(about);
-  const founder = resolveFounder(about.founder);
+  const founder = resolveFounder(about.founder, {
+    name: DEFAULT_FOUNDER.name,
+    role: t('founder.role'),
+    bio: t('founder.bio'),
+  });
 
   return (
     <PublicPageShell>
-        <PageIntro kicker="Tentang kami" title="Tentang DN Tech" description={about.story || undefined}>
+        <PageIntro kicker={t('about.kicker')} title={t('about.title')} description={about.story || undefined}>
           {!hasCopy && (
             <p className="text-gray-600">
-              Profil studio belum tersedia. Lihat produk first-party di{' '}
-              <Link href="/products" className="font-medium text-blue-900 underline">
-                halaman Produk
-              </Link>
-              .
+              {t.rich('about.empty', {
+                link: (chunks) => (
+                  <Link href="/products" className="font-medium text-blue-900 underline">
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </p>
           )}
         </PageIntro>
@@ -35,7 +43,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
         <section className="mb-16 border-t border-gray-200 pt-12" aria-labelledby="founded-by-heading">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-12">
             <div className="lg:col-span-2">
-              <p className="text-sm font-semibold uppercase tracking-wider text-teal-600">Didirikan oleh</p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-teal-600">{t('about.foundedBy')}</p>
               <h2 id="founded-by-heading" className="mt-3 text-3xl font-bold text-gray-900">
                 {founder.name}
               </h2>
@@ -55,7 +63,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
           <div className="mb-16 grid grid-cols-1 gap-10 lg:grid-cols-5 lg:gap-8">
             {about.mission && (
               <div className={cn('lg:col-span-3', !about.vision && 'lg:col-span-5')}>
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-teal-600">Misi Kami</h2>
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-teal-600">{t('about.missionHeading')}</h2>
                 <p className="mt-3 border-l-4 border-blue-900 pl-6 text-2xl font-medium leading-snug text-gray-900">
                   {about.mission}
                 </p>
@@ -68,7 +76,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
                   !about.mission && 'lg:col-span-5'
                 )}
               >
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-teal-600">Visi Kami</h2>
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-teal-600">{t('about.visionHeading')}</h2>
                 <p className="mt-3 text-gray-600">{about.vision}</p>
               </div>
             )}
@@ -77,7 +85,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
 
         {about.values && about.values.length > 0 && (
           <div className="mb-16">
-            <h2 className="mb-8 text-2xl font-bold text-gray-900">Nilai-Nilai Kami</h2>
+            <h2 className="mb-8 text-2xl font-bold text-gray-900">{t('about.valuesHeading')}</h2>
             <div className="border-t border-gray-200">
               {about.values.map((v) => (
                 <div
@@ -94,7 +102,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
 
         {about.achievements && about.achievements.length > 0 && (
           <div className="mb-16 border-y-2 border-blue-900 bg-blue-900 p-8">
-            <h2 className="mb-8 text-2xl font-bold text-white">Pencapaian</h2>
+            <h2 className="mb-8 text-2xl font-bold text-white">{t('about.achievementsHeading')}</h2>
             <div className="grid grid-cols-2 divide-x divide-white/20 lg:grid-cols-4">
               {about.achievements.map((a) => (
                 <div key={a} className="text-center text-white">

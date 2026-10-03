@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight, Star, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Testimonial } from '@/types';
@@ -11,6 +12,7 @@ interface TestimonialCarouselProps {
 }
 
 export function TestimonialCarousel({ testimonials, autoPlay = true }: TestimonialCarouselProps) {
+  const tr = useTranslations('interactive.carousel');
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export function TestimonialCarousel({ testimonials, autoPlay = true }: Testimoni
           {(t as Testimonial & { videoUrl?: string }).videoUrl && (
             <a href={(t as Testimonial & { videoUrl?: string }).videoUrl} target="_blank" rel="noopener noreferrer"
               className="ml-auto flex items-center gap-1 text-sm text-blue-900 hover:underline">
-              <Play className="h-4 w-4" /> Tonton video
+              <Play className="h-4 w-4" /> {tr('watchVideo')}
             </a>
           )}
         </div>
@@ -54,18 +56,18 @@ export function TestimonialCarousel({ testimonials, autoPlay = true }: Testimoni
       {testimonials.length > 1 && (
         <div className="flex items-center justify-center gap-4 mt-6">
           <button onClick={() => setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length)}
-            className="p-2 rounded-full border border-gray-200 hover:bg-gray-50" aria-label="Sebelumnya">
+            className="p-2 rounded-full border border-gray-200 hover:bg-gray-50" aria-label={tr('previous')}>
             <ChevronLeft className="h-4 w-4" />
           </button>
           <div className="flex gap-2">
             {testimonials.map((_, i) => (
               <button key={i} onClick={() => setCurrent(i)}
                 className={cn('h-2 rounded-full transition-all', i === current ? 'w-6 bg-blue-900' : 'w-2 bg-gray-300')}
-                aria-label={`Ke testimoni ${i + 1}`} />
+                aria-label={tr('goTo', { index: i + 1 })} />
             ))}
           </div>
           <button onClick={() => setCurrent((c) => (c + 1) % testimonials.length)}
-            className="p-2 rounded-full border border-gray-200 hover:bg-gray-50" aria-label="Berikutnya">
+            className="p-2 rounded-full border border-gray-200 hover:bg-gray-50" aria-label={tr('next')}>
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>

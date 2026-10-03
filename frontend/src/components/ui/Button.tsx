@@ -1,7 +1,8 @@
 'use client';
 
 import { forwardRef } from 'react';
-import Link from 'next/link';
+import NextLink from 'next/link';
+import { Link as LocaleLink } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
@@ -41,6 +42,16 @@ const sizes: Record<ButtonSize, string> = {
   lg: 'px-6 py-3 text-base min-h-[48px]',
 };
 
+/**
+ * Public-site routes go through the locale-aware Link so they keep the active
+ * /id or /en prefix. Admin routes (and external/anchor hrefs) use plain
+ * next/link: the admin area is Indonesian-only, lives outside the [locale]
+ * segment, and is rendered without a NextIntlClientProvider.
+ */
+function isLocaleRoute(href: string) {
+  return href.startsWith('/') && !href.startsWith('//') && !href.startsWith('/admin');
+}
+
 function getButtonClasses(variant: ButtonVariant, size: ButtonSize, className?: string) {
   return cn(
     'inline-flex items-center justify-center gap-2 rounded-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
@@ -65,8 +76,9 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
 
     if ('href' in props && props.href) {
       const { href, ...linkRest } = rest as Omit<ButtonAsLink, keyof BaseButtonProps>;
+      const LinkComponent = isLocaleRoute(href) ? LocaleLink : NextLink;
       return (
-        <Link
+        <LinkComponent
           href={href}
           ref={ref as React.Ref<HTMLAnchorElement>}
           className={classes}
@@ -74,7 +86,7 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           {children}
-        </Link>
+        </LinkComponent>
       );
     }
 

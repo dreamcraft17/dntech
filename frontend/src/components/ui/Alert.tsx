@@ -9,6 +9,12 @@ interface AlertProps {
   children: React.ReactNode;
   className?: string;
   onClose?: () => void;
+  /**
+   * Localised label for the dismiss button. Defaults to Indonesian because
+   * the admin area (src/app/(admin)) renders this outside any
+   * NextIntlClientProvider and stays Indonesian-only.
+   */
+  closeLabel?: string;
 }
 
 const variantConfig = {
@@ -46,7 +52,7 @@ const variantConfig = {
   },
 };
 
-export function Alert({ variant = 'info', title, children, className, onClose }: AlertProps) {
+export function Alert({ variant = 'info', title, children, className, onClose, closeLabel = 'Tutup' }: AlertProps) {
   const config = variantConfig[variant];
   const Icon = config.Icon;
 
@@ -65,7 +71,7 @@ export function Alert({ variant = 'info', title, children, className, onClose }:
           type="button"
           onClick={onClose}
           className="shrink-0 text-gray-400 hover:text-gray-600"
-          aria-label="Tutup"
+          aria-label={closeLabel}
         >
           <X className="h-4 w-4" />
         </button>

@@ -1,0 +1,281 @@
+{
+  "home": {
+    "hero": {
+      "brandRole": "Product engineering studio",
+      "locationIndex": "Indonesia · 01",
+      "promise": "Clear scope · written timeline · direct communication",
+      "asideLabel": "What we focus on",
+      "briefLabel": "Project brief",
+      "briefRef": "DN / 01",
+      "briefIntro": "The work that usually has to happen before software actually gets used:",
+      "briefFootnote": "We start from the operational problem, not from a feature list."
+    },
+    "jobPaths": {
+      "kicker": "Start with the problem",
+      "title": "Which one are you trying to solve?",
+      "subtitle": "No need to pick from a long service menu. Choose the situation closest to yours.",
+      "cta": "See this path",
+      "build": {
+        "label": "01 / Build a product",
+        "title": "Got an MVP or a critical feature that has to ship?",
+        "description": "We start with scope, trade-offs, and milestones you can actually talk through."
+      },
+      "workflow": {
+        "label": "02 / Fix the workflow",
+        "title": "Are your systems and processes still scattered?",
+        "description": "Map the flow, the approvals, and the integrations before deciding what to build."
+      },
+      "evaluate": {
+        "label": "03 / Evaluate a product",
+        "title": "Need software that already exists and works?",
+        "description": "Explore DN Tech's own products — release status, features, and how they work."
+      }
+    },
+    "products": {
+      "kicker": "Products",
+      "featuredBadge": "Featured",
+      "viewProduct": "Explore {name}",
+      "viewAll": "All products"
+    },
+    "services": {
+      "kicker": "Services",
+      "title": "Need a website, an app, or an internal system?",
+      "subtitle": "Start with the workflow that slows you down. We will help you find the software that genuinely fits your team.",
+      "viewService": "View service",
+      "viewAll": "See all services"
+    },
+    "process": {
+      "kicker": "How we work",
+      "title": "What does working with us look like?",
+      "subtitle": "A clear process — from the first conversation through launch and support",
+      "stepLabel": "Step {step}"
+    },
+    "advantages": {
+      "kicker": "Why us",
+      "title": "Why choose DN Tech?",
+      "leadLabel": "The main reason"
+    },
+    "faq": {
+      "kicker": "FAQ",
+      "title": "Frequently asked questions",
+      "moreQuestions": "Still have questions?",
+      "allFaqLink": "See the full FAQ",
+      "or": "or",
+      "contactLink": "get in touch"
+    },
+    "pricing": {
+      "kicker": "Pricing & packages",
+      "title": "Our service packages",
+      "subtitle": "Transparent pricing — exact numbers once we scope your project in a free consultation",
+      "timeline": "Timeline: {value}",
+      "cta": "Book a call for an exact quote"
+    },
+    "contactCta": {
+      "title": "Let's talk about the workflow you want to fix",
+      "body": "Tell us the problem, the goal, and the systems you already run. We will help map the options, scope, timeline, and budget — no drawn-out sales pitch.",
+      "schedule": "Schedule a consultation",
+      "discussScope": "Discuss your scope",
+      "whatsappLabel": "WhatsApp {phone}",
+      "whatsappMessage": "Hello DN Tech, I would like a consultation.",
+      "orGoTo": "Or go straight to the",
+      "contactPage": "contact page"
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "client": "Client: {name}",
+      "result": "Result: {value}",
+      "readCaseStudy": "Read the case study",
+      "viewAll": "View all work"
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "slide": "Testimonial {index}",
+      "viewAll": "See all testimonials →"
+    },
+    "team": {
+      "title": "Who will handle your project",
+      "subtitle": "An experienced team — the founder stays hands-on for the projects that matter",
+      "founderRole": "Founder & Tech Lead",
+      "founderBio": "Building apps and websites since 2017. Personally involved in project strategy and code review.",
+      "hiringTitle": "We're hiring",
+      "viewOpenings": "See open roles →"
+    },
+    "techStack": {
+      "title": "The technology we build on",
+      "subtitle": "A modern, scalable, battle-tested stack for products that need room to grow"
+    },
+    "belowFold": {
+      "loading": "Loading products and services…"
+    },
+    "defaults": {
+      "heroTitle": "Grow the Business Without Breaking the Systems Behind It",
+      "heroSubtitle": "DN Tech.id",
+      "heroBadges": ["Websites & Company Profiles", "Custom Applications", "System Integration"],
+      "heroSupporting": "We help Indonesian startups and businesses build applications, connect their systems, and clean up how work gets done — with scope, pricing, and timeline agreed up front.",
+      "heroPrimaryCta": { "label": "Free 30-Minute Consultation", "href": "/contact" },
+      "heroSecondaryCta": { "label": "See Our Products", "href": "/products" },
+      "productsTitle": "Products That Show How We Work",
+      "productsSubtitle": "We built dnPeople (HRIS), dnCore (ERP), and dnShop for real business workflows. See the features, pricing, release status, and how each one helps a team work cleanly.",
+      "services": [
+        {
+          "name": "Website & Company Profile",
+          "category": "Web",
+          "description": "Professional websites, landing pages, and company profiles that make your business look credible and easy to find online."
+        },
+        {
+          "name": "Web App Development",
+          "category": "Web App",
+          "description": "Dashboards and portals your team actually opens every day to get work done — not just a demo."
+        },
+        {
+          "name": "Mobile App Development",
+          "category": "Mobile",
+          "description": "iOS and Android apps your customers open daily — fast, stable, and ready for the App Store and Play Store."
+        },
+        {
+          "name": "Custom Software",
+          "category": "Software",
+          "description": "From MVP to day-to-day operations — built around your workflow and your business, never a generic template."
+        },
+        {
+          "name": "Maintenance & Support",
+          "category": "Support",
+          "description": "We stay after go-live: regular updates, fast bug fixes, and performance monitoring."
+        },
+        {
+          "name": "Technical Consulting",
+          "category": "Consulting",
+          "description": "Map the problem, the architecture, and the feasibility before development — so your investment goes the right way."
+        },
+        {
+          "name": "Integration & API Development",
+          "category": "Integration",
+          "description": "Connect the systems you already run through APIs and third-party integrations, without replacing everything from scratch."
+        }
+      ],
+      "processSteps": [
+        {
+          "title": "Get in touch",
+          "description": "WhatsApp, email, or the form — whichever suits you. The first 30-minute consultation is free, with no long sales pitch."
+        },
+        {
+          "title": "Scope & quote",
+          "description": "We write a concrete proposal: what gets built, how long it takes, and what it costs — final numbers, not rough guesses."
+        },
+        {
+          "title": "Kick-off",
+          "description": "Once you approve, development starts right away against a delivery date we agreed on together."
+        },
+        {
+          "title": "Development + check-ins",
+          "description": "We work in two-week sprints and send you progress updates weekly. Scope changes get discussed before we build, not after."
+        },
+        {
+          "title": "QA & testing",
+          "description": "Before launch we test functionality, security, and the mobile experience. You give the final green light to go live."
+        },
+        {
+          "title": "Launch & support",
+          "description": "Deploy to production, train your team, 30 days of free bug fixes, then a support package if you need one."
+        }
+      ],
+      "advantages": [
+        {
+          "title": "Transparent pricing",
+          "description": "The cost is agreed up front and written into the proposal — no hidden fees and no surprise billing halfway through."
+        },
+        {
+          "title": "A timeline you can plan around",
+          "description": "Start and finish dates are set before kick-off, so you can plan your launch with confidence instead of waiting on vague promises."
+        },
+        {
+          "title": "Direct access to the builders",
+          "description": "You work with the people writing the code. Dozer, our founder, is hands-on for the projects that matter — no account-manager layer."
+        },
+        {
+          "title": "A modern tech stack",
+          "description": "React, Next.js, PostgreSQL — the same stack behind our first-party products. Built for SaaS-scale products, not throwaway demos."
+        },
+        {
+          "title": "Support after launch",
+          "description": "We don't disappear once the last invoice clears. Maintenance packages keep the support going."
+        },
+        {
+          "title": "Local, and we get the context",
+          "description": "Based in Indonesia — same timezone, same language, and a real understanding of why your processes work the way they do."
+        }
+      ],
+      "techStack": [
+        { "category": "Frontend", "items": ["React", "Next.js", "TypeScript", "Tailwind CSS"] },
+        { "category": "Backend", "items": ["Node.js", "Express", "Python", "FastAPI", "NestJS"] },
+        { "category": "Database", "items": ["PostgreSQL", "MongoDB", "Redis"] },
+        {
+          "category": "Infrastructure",
+          "items": ["AWS", "DigitalOcean", "Docker", "GitHub Actions"]
+        },
+        {
+          "category": "Payments & Integrations",
+          "items": ["Stripe", "BCA API", "Mandiri API", "SendGrid"]
+        },
+        { "category": "Deployment", "items": ["Vercel", "DigitalOcean App", "AWS Lambda"] }
+      ],
+      "pricing": [
+        {
+          "name": "Custom Project",
+          "price": "Scope-based",
+          "timeline": "1–4 months (depending on scope)",
+          "included": ["Design", "Development", "Testing", "30 days of post-launch support"]
+        },
+        {
+          "name": "Hourly Consulting",
+          "price": "From Rp 150,000/hour",
+          "timeline": "",
+          "included": ["Strategy & architecture", "Feasibility review", "Quick technical tasks"]
+        },
+        {
+          "name": "Maintenance Package",
+          "price": "From Rp 2 million/month",
+          "timeline": "",
+          "included": ["Monthly updates", "Bug fixes", "Baseline monitoring"]
+        }
+      ],
+      "faq": [
+        {
+          "question": "What does development cost?",
+          "answer": "It depends on scope. A landing page or a simple feature can start around Rp 25 million; a fuller MVP usually lands between Rp 50–150 million. We go through the details in a free consultation — no pressure."
+        },
+        {
+          "question": "How long does it take?",
+          "answer": "A typical MVP runs 3–6 months depending on complexity. The firm timeline is in the proposal before kick-off."
+        },
+        {
+          "question": "When can you start?",
+          "answer": "Usually within 2–4 weeks of signing the agreement."
+        },
+        {
+          "question": "What quality guarantees do I get?",
+          "answer": "Strict code review, thorough testing, and 30 days of free bug fixes after launch."
+        },
+        {
+          "question": "Who will actually work on my project?",
+          "answer": "The DN Tech team, with Dozer (our founder) involved in the critical work — never handed off to juniors without supervision."
+        },
+        {
+          "question": "What if I need changes after launch?",
+          "answer": "You get 30 days of free bug fixes. After that: a monthly maintenance package, or hire anyone you like — the code is yours."
+        },
+        {
+          "question": "My startup doesn't have a big budget yet — can we still work together?",
+          "answer": "Yes. We offer hourly consulting, revenue share on the right projects, or a flexible arrangement that fits your situation."
+        },
+        {
+          "question": "Can we have a free consultation first?",
+          "answer": "Of course. Thirty minutes, free, to talk through what you need. No pressure — you decide afterwards."
+        }
+      ],
+      "hiringRoles": ["Senior Frontend Developer", "Backend Engineer", "QA Engineer"],
+      "portfolioMessage": "Public case studies appear here once clients approve them. In the meantime, take a look at our own products on the Products page.",
+      "testimonialsMessage": "No public testimonials yet. We only publish quotes with written permission."
+    }
+  }
+}

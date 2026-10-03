@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 export type BreadcrumbItem = {
   label: string;
@@ -6,8 +7,10 @@ export type BreadcrumbItem = {
 };
 
 export function PageBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
+  const t = useTranslations('layout');
+
   return (
-    <nav className="mb-8 text-sm text-gray-500" aria-label="Jejak navigasi">
+    <nav className="mb-8 text-sm text-gray-500" aria-label={t('breadcrumbAria')}>
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
         return (

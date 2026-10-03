@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import * as LucideIcons from 'lucide-react';
 import { Shield } from 'lucide-react';
 import { getApiUrl } from '@/lib/api';
@@ -14,6 +15,7 @@ interface CompetitiveAdvantage {
 }
 
 export function CompetitiveAdvantages() {
+  const t = useTranslations('interactive.brand');
   const [items, setItems] = useState<CompetitiveAdvantage[]>([]);
 
   useEffect(() => {
@@ -29,8 +31,8 @@ export function CompetitiveAdvantages() {
     <section className="py-16 bg-white border-y border-gray-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Kenapa Pilih DN Tech</h2>
-          <p className="mt-2 text-gray-600">Pendekatan kerja yang kami pegang di setiap proyek.</p>
+          <h2 className="text-3xl font-bold text-gray-900">{t('advantagesTitle')}</h2>
+          <p className="mt-2 text-gray-600">{t('advantagesSubtitle')}</p>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {items.map((item) => {

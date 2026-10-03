@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { NextIntlClientProvider } from 'next-intl';
 import { HomeProducts } from './HomeProducts';
+import messages from '@/messages/id/home.json';
 import type { Product } from '@/types';
 
 const meta: Meta<typeof HomeProducts> = {
@@ -7,6 +9,13 @@ const meta: Meta<typeof HomeProducts> = {
   component: HomeProducts,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
+  decorators: [
+    (Story) => (
+      <NextIntlClientProvider locale="id" messages={messages}>
+        <Story />
+      </NextIntlClientProvider>
+    ),
+  ],
 };
 
 export default meta;

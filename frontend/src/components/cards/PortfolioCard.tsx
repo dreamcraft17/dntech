@@ -1,11 +1,13 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 import { ArrowRight, FolderOpen } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { Link } from '@/i18n/navigation';
 import type { PortfolioItem } from '@/types';
 
-export function PortfolioCard({ item }: { item: PortfolioItem }) {
+export async function PortfolioCard({ item }: { item: PortfolioItem }) {
+  const t = await getTranslations('catalog');
   const industries = (item.industries as string[]) || [];
 
   return (
@@ -41,7 +43,7 @@ export function PortfolioCard({ item }: { item: PortfolioItem }) {
           <p className="mt-2 line-clamp-2 text-sm text-gray-600">{item.description}</p>
         )}
         <span className="mt-4 inline-flex items-center text-sm font-medium text-blue-900">
-          Lihat studi kasus <ArrowRight className="ml-1 h-4 w-4" />
+          {t('cards.portfolio.action')} <ArrowRight className="ml-1 h-4 w-4" />
         </span>
       </Card>
     </Link>

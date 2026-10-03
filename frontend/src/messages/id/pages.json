@@ -1,0 +1,253 @@
+{
+  "pages": {
+    "about": {
+      "kicker": "Tentang kami",
+      "title": "Tentang DN Tech",
+      "empty": "Profil studio belum tersedia. Lihat produk first-party di <link>halaman Produk</link>.",
+      "foundedBy": "Didirikan oleh",
+      "missionHeading": "Misi Kami",
+      "visionHeading": "Visi Kami",
+      "valuesHeading": "Nilai-Nilai Kami",
+      "achievementsHeading": "Pencapaian"
+    },
+    "founder": {
+      "role": "Founder & Tech Lead",
+      "bio": "Dozer Napitupulu mendirikan DN Tech agar klien dapat bekerja langsung dengan penulis kodenya, bukan melalui perantara account manager. Beliau mengembangkan aplikasi dan situs web sejak 2017, meliputi HRIS, ERP, dan perangkat lunak operasional. Pada proyek yang bersifat menentukan, beliau tetap terlibat dalam arsitektur, peninjauan kode, dan keputusan yang tidak dapat didelegasikan.\n\nPT. Dozer Napitupulu Technology merupakan badan hukum yang menaungi studio ini. Produk first-party kami adalah bukti kerja teknis: yang telah tayang ditandai secara jelas; yang masih dalam tahap beta tidak disajikan sebagai studi kasus."
+    },
+    "contact": {
+      "kicker": "Mulai percakapan",
+      "title": "Bahas workflow yang ingin dibuat lebih rapi.",
+      "description": "Ceritakan konteks, batasan, dan hasil yang ingin dicapai. Tim kami akan merespons dalam 1 hari kerja dengan langkah berikutnya yang jelas.",
+      "labels": {
+        "email": "Email",
+        "whatsapp": "WhatsApp",
+        "address": "Alamat",
+        "hours": "Jam Operasional"
+      },
+      "whatsappPrefill": "Halo DN Tech, saya ingin konsultasi.",
+      "briefKicker": "Project brief",
+      "briefHeading": "Bahas scope dan workflow Anda",
+      "briefDuration": "± 3 menit"
+    },
+    "faq": {
+      "kicker": "Bantuan",
+      "title": "Jawaban sebelum Anda memutuskan.",
+      "description": "Cari informasi tentang layanan, produk, proses kerja, pricing, dan cara memulai bersama DN Tech.",
+      "searchPlaceholder": "Cari FAQ...",
+      "searchLabel": "Cari pertanyaan umum",
+      "allCategories": "Semua",
+      "empty": "Tidak ada FAQ ditemukan.",
+      "emptyLink": "Hubungi kami"
+    },
+    "careers": {
+      "metaTitle": "Karier di DN Tech",
+      "metaDescription": "Temukan peluang karier di DN Tech dan kenali cara kami membangun aplikasi kustom, produk digital, serta software operasional untuk bisnis Indonesia.",
+      "kicker": "Karier",
+      "title": "Bergabung dengan tim kami",
+      "description": "Bangun masa depan teknologi bersama kami. Jelajahi posisi terbuka di bawah ini.",
+      "apply": "Lamar Sekarang",
+      "applySubject": "Karier: {title}",
+      "empty": "Belum ada posisi terbuka saat ini. Kami akan memperbarui halaman ini saat ada rekrutmen.",
+      "emptyAction": "Kirim CV / Perkenalan"
+    },
+    "team": {
+      "kicker": "Tim DN Tech",
+      "title": "Kenalan dengan tim kami",
+      "description": "Orang-orang di balik DN Tech dan pekerjaan yang kami lakukan untuk bisnis Indonesia.",
+      "empty": "Profil tim akan segera ditambahkan.",
+      "emptyAction": "Hubungi kami",
+      "socialAria": "{name} di {platform}",
+      "breadcrumb": "Tim"
+    },
+    "testimonials": {
+      "metaTitle": "Testimoni",
+      "metaDescription": "Testimoni klien DN Tech — dipublikasikan hanya setelah izin tertulis. Saat ini belum ada testimoni publik.",
+      "kicker": "Cerita pelanggan",
+      "title": "Testimoni",
+      "description": "Kami hanya mempublikasikan testimoni setelah izin tertulis.",
+      "empty": "Belum ada testimoni publik. Lihat produk first-party kami sementara waktu.",
+      "emptyProducts": "Lihat Produk",
+      "emptyContact": "Hubungi Kami"
+    },
+    "resources": {
+      "kicker": "Sumber daya",
+      "title": "Panduan yang bisa langsung dipakai",
+      "description": "Panduan dan wawasan untuk mendukung transformasi digital Anda.",
+      "download": "Unduh",
+      "requestAccess": "Minta Akses",
+      "empty": "Belum ada sumber daya tersedia. Hubungi kami untuk informasi lebih lanjut.",
+      "emptyAction": "Hubungi Kami"
+    },
+    "quiz": {
+      "kicker": "Solution finder",
+      "title": "Mulai dari masalahnya, bukan dari daftar fitur.",
+      "description": "Jawab 5 pertanyaan singkat dan kami akan mengarahkan Anda ke jalur layanan atau produk yang paling relevan.",
+      "breadcrumb": "Pencari Solusi"
+    },
+    "thankYou": {
+      "metaTitle": "Terima Kasih",
+      "metaDescription": "Permintaan Anda telah kami terima. Tim DN Tech akan menghubungi Anda dalam 24 jam kerja.",
+      "title": "Terima kasih telah menghubungi kami",
+      "body": "Permintaan Anda telah kami terima. Tim kami akan menghubungi Anda dalam <strong>24 jam kerja</strong>.",
+      "redirectNote": "Anda akan diarahkan ke blog dalam beberapa detik...",
+      "readArticles": "Baca Artikel Terbaru",
+      "backHome": "Kembali ke Beranda"
+    },
+    "privacy": {
+      "metaTitle": "Kebijakan Privasi DN Tech",
+      "metaDescription": "Kebijakan privasi DN Tech tentang pengumpulan, penggunaan, penyimpanan, dan perlindungan data pribadi di situs kami.",
+      "kicker": "Legal",
+      "title": "Kebijakan Privasi",
+      "description": "Cara kami mengumpulkan, menggunakan, menyimpan, dan melindungi data pribadi di situs DN Tech."
+    },
+    "terms": {
+      "metaTitle": "Syarat dan Ketentuan DN Tech",
+      "metaDescription": "Syarat dan ketentuan penggunaan situs, formulir, konten, produk, dan layanan DN Tech.",
+      "kicker": "Legal",
+      "title": "Syarat dan Ketentuan",
+      "description": "Ketentuan penggunaan situs, formulir, konten, produk, dan layanan DN Tech."
+    },
+    "breadcrumbHome": "Beranda",
+    "pillars": {
+      "kicker": "Resources",
+      "heading": "Jelajahi berdasarkan topik",
+      "hint": "Pilih konteks yang paling relevan",
+      "tech-stack": {
+        "label": "Tech Stack Indonesia",
+        "description": "Next.js, PostgreSQL, DevOps untuk startup lokal"
+      },
+      "scaling": {
+        "label": "Scaling Proyek Software",
+        "description": "Tim remote, version control, strategi testing"
+      },
+      "startup": {
+        "label": "Saran Teknologi Startup",
+        "description": "MVP, optimasi biaya, keamanan dasar"
+      },
+      "insights": {
+        "label": "Insight Kasus",
+        "description": "Pelajaran dari proyek nyata (jika tersedia)"
+      },
+      "links": {
+        "services": "Layanan Kami",
+        "allArticles": "Semua Artikel",
+        "freeConsultation": "Konsultasi Gratis",
+        "processFaq": "FAQ Proses Kerja",
+        "contact": "Hubungi Kami",
+        "startupArticles": "Artikel Startup",
+        "about": "Tentang Kami",
+        "startProject": "Mulai Proyek",
+        "portfolio": "Portfolio",
+        "blog": "Blog",
+        "discussProject": "Diskusi Proyek"
+      }
+    },
+    "forms": {
+      "contact": {
+        "nameLabel": "Nama",
+        "emailLabel": "Email",
+        "phoneLabel": "Telepon",
+        "subjectLabel": "Subjek",
+        "messageLabel": "Pesan",
+        "submit": "Kirim Pesan",
+        "subjects": {
+          "general": "Pertanyaan Umum",
+          "service": "Inquiry Layanan",
+          "partnership": "Kemitraan",
+          "other": "Lainnya"
+        },
+        "errors": {
+          "nameRequired": "Nama wajib diisi",
+          "emailInvalid": "Email tidak valid",
+          "messageMin": "Pesan minimal 10 karakter",
+          "sendFailed": "Gagal mengirim pesan",
+          "generic": "Terjadi kesalahan"
+        },
+        "successTitle": "Terima kasih!",
+        "successBody": "Pesan Anda telah kami terima. Tim kami akan segera menghubungi Anda.",
+        "sendAnother": "Kirim pesan lagi"
+      },
+      "multiStep": {
+        "steps": {
+          "contact": "Info Kontak",
+          "project": "Detail Proyek",
+          "confirm": "Konfirmasi"
+        },
+        "projectTypes": {
+          "placeholder": "Pilih jenis proyek...",
+          "customApp": "Aplikasi Kustom",
+          "consulting": "Konsultasi IT",
+          "maintenance": "Pemeliharaan & Support",
+          "other": "Lainnya"
+        },
+        "timelines": {
+          "placeholder": "Pilih timeline...",
+          "asap": "Segera (ASAP)",
+          "1-3mo": "1–3 bulan",
+          "3-6mo": "3–6 bulan",
+          "flexible": "Fleksibel"
+        },
+        "nameLabel": "Nama Lengkap",
+        "emailLabel": "Email Kerja",
+        "phoneLabel": "Telepon",
+        "companyLabel": "Nama Perusahaan",
+        "projectTypeLabel": "Jenis Proyek",
+        "serviceLabel": "Layanan yang Diminati (opsional)",
+        "servicePlaceholder": "Pilih layanan...",
+        "budgetLabel": "Kisaran Anggaran (opsional)",
+        "budgetPlaceholder": "Lebih baik tidak disebutkan",
+        "budgetUnset": "Tidak disebutkan",
+        "timelineLabel": "Timeline Proyek",
+        "messageLabel": "Deskripsi Proyek",
+        "messagePlaceholder": "Jelaskan tujuan, kebutuhan, dan ekspektasi proyek Anda...",
+        "summary": {
+          "name": "Nama:",
+          "email": "Email:",
+          "phone": "Telepon:",
+          "company": "Perusahaan:",
+          "projectType": "Jenis proyek:",
+          "service": "Layanan:",
+          "budget": "Anggaran:",
+          "timeline": "Timeline:",
+          "message": "Deskripsi:"
+        },
+        "consent": "Saya setuju untuk dihubungi tim sales DN Tech. Baca <link>Kebijakan Privasi</link>.",
+        "responseNote": "Tim kami akan merespons dalam 24 jam kerja.",
+        "back": "Kembali",
+        "next": "Lanjut",
+        "submit": "Kirim Inquiry",
+        "errors": {
+          "nameRequired": "Nama wajib diisi",
+          "emailRequired": "Email wajib diisi",
+          "projectTypeRequired": "Pilih jenis proyek",
+          "timelineRequired": "Pilih timeline",
+          "messageRequired": "Ceritakan workflow atau proyek Anda (min. 50 karakter)",
+          "messageMin": "Minimal 50 karakter",
+          "messageMax": "Maksimal 500 karakter",
+          "consentRequired": "Anda harus setuju untuk melanjutkan",
+          "duplicate": "Kami sudah menerima inquiry Anda — tim kami akan segera menghubungi.",
+          "sendFailed": "Gagal mengirim",
+          "generic": "Terjadi kesalahan"
+        }
+      },
+      "newsletter": {
+        "heading": "Langganan newsletter",
+        "description": "Update produk first-party dan catatan rilis. Tanpa janji “insight enterprise” palsu.",
+        "emailLabel": "Email",
+        "emailPlaceholder": "email@perusahaan.com",
+        "industryLabel": "Industri (opsional)",
+        "industries": {
+          "placeholder": "Pilih industri...",
+          "finance": "Keuangan & Perbankan",
+          "retail": "Ritel & E-Commerce",
+          "manufacturing": "Manufaktur",
+          "healthcare": "Kesehatan",
+          "technology": "Teknologi",
+          "other": "Lainnya"
+        },
+        "submit": "Langganan",
+        "success": "✓ Cek inbox Anda untuk email konfirmasi newsletter."
+      }
+    }
+  }
+}

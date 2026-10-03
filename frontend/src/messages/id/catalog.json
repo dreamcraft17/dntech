@@ -1,0 +1,201 @@
+{
+  "catalog": {
+    "breadcrumb": {
+      "aria": "Jejak navigasi",
+      "home": "Beranda",
+      "services": "Layanan",
+      "products": "Produk",
+      "blog": "Blog",
+      "caseStudies": "Studi Kasus",
+      "portfolio": "Portofolio"
+    },
+    "common": {
+      "all": "Semua",
+      "viewDetail": "Lihat detail",
+      "freeConsultation": "Konsultasi Gratis",
+      "faq": "FAQ",
+      "learnMore": "Pelajari Lebih Lanjut",
+      "relatedArticles": "Artikel Terkait",
+      "viewProducts": "Lihat Produk",
+      "readBlog": "Baca Blog",
+      "scheduleDemo": "Jadwalkan Demo",
+      "readTime": "{minutes} menit baca"
+    },
+    "services": {
+      "kicker": "Layanan",
+      "title": "Dari website sampai sistem bisnis",
+      "description": "Website company profile, aplikasi custom, dan integrasi sistem untuk bisnis yang ingin tampil meyakinkan dan bekerja lebih rapi.",
+      "filterAria": "Filter kategori layanan",
+      "empty": "Tidak ada layanan ditemukan.",
+      "metadataFallback": "Layanan",
+      "detail": {
+        "titleSuffix": "{title} — Indonesia",
+        "ctaPrimary": "Bahas kebutuhan ini",
+        "ctaSecondary": "Lihat cara kerja",
+        "included": "Yang termasuk",
+        "process": "Proses kerja",
+        "faq": "Pertanyaan umum",
+        "relatedArticles": "Artikel terkait",
+        "nextStepKicker": "Next step",
+        "nextStepTitle": "Mulai diskusi proyek Anda",
+        "nextStepBody": "Konsultasi gratis — respons dalam 24 jam.",
+        "relatedServices": "Layanan Terkait"
+      },
+      "process": {
+        "discovery": {
+          "title": "Discovery & Scope",
+          "description": "Memahami kebutuhan bisnis, user, dan constraint teknis proyek Anda."
+        },
+        "planning": {
+          "title": "Perencanaan & Estimasi",
+          "description": "Menyusun roadmap, timeline, dan estimasi biaya yang transparan."
+        },
+        "development": {
+          "title": "Development Iteratif",
+          "description": "Pengembangan bertahap dengan demo berkala dan feedback loop."
+        },
+        "testing": {
+          "title": "Testing & QA",
+          "description": "Pengujian fungsional, keamanan dasar, dan persiapan production."
+        },
+        "launch": {
+          "title": "Launch & Dukungan",
+          "description": "Deployment, handover dokumentasi, dan opsi maintenance berkelanjutan."
+        }
+      }
+    },
+    "products": {
+      "kicker": "Produk DN Tech",
+      "title": "Software untuk pekerjaan yang harus selesai.",
+      "description": "Kami membuat produk untuk pekerjaan operasional yang sering berantakan: mengurus orang, angka, dan proses harian. Lihat dulu produk, harga, batasan, dan statusnya sebelum memutuskan.",
+      "catalogKicker": "Katalog",
+      "catalogTitle": "Pilih yang paling dekat dengan pekerjaan Anda",
+      "catalogNote": "Setiap produk punya detail use case, harga, batasan, dan cara mulai.",
+      "filterAria": "Filter kategori produk",
+      "loading": "Memuat produk...",
+      "empty": "Tidak ada produk ditemukan.",
+      "loadError": "Produk gagal dimuat.",
+      "retry": "Coba lagi",
+      "featuredBadge": "Produk pilihan",
+      "priceFrom": "Mulai dari {price}",
+      "free": "Gratis",
+      "custom": "Custom",
+      "metadataFallback": "Produk",
+      "launchStatus": {
+        "launched": "Tersedia",
+        "in_progress": "Sedang divalidasi",
+        "planned": "Roadmap",
+        "default": "Produk aktif"
+      },
+      "statusBadge": {
+        "customers": "{count} pelanggan"
+      },
+      "roadmapStatus": {
+        "launched": "Launched",
+        "in_progress": "Sedang Dikerjakan",
+        "planned": "Direncanakan"
+      },
+      "detail": {
+        "titleSuffix": "{title} — Indonesia",
+        "summaryKicker": "Ringkasan produk",
+        "statusActive": "Active",
+        "statusLabel": "Status produk",
+        "planCount": "Pilihan paket",
+        "sectionNavAria": "Navigasi detail produk",
+        "navFeatures": "Fitur & outcomes",
+        "navUseCases": "Use case",
+        "navPricing": "Pricing",
+        "navFaq": "FAQ",
+        "features": "Fitur Produk",
+        "interestedTitle": "Tertarik dengan produk ini?",
+        "interestedBody": "Hubungi kami — respons dalam 24 jam.",
+        "contactUs": "Hubungi Kami",
+        "relatedProducts": "Produk Terkait",
+        "useCases": "Solusi untuk Segmen Anda",
+        "pricing": "Pricing",
+        "popular": "Populer",
+        "pricingCalc": "Hitung estimasi harga Anda",
+        "integrations": "Integrasi",
+        "comingSoon": "Coming Soon",
+        "comparison": "Perbandingan",
+        "comparisonFeature": "Fitur",
+        "testimonials": "Kata Pelanggan",
+        "roadmap": "Roadmap",
+        "faq": "Pertanyaan Umum"
+      }
+    },
+    "portfolio": {
+      "kicker": "Pekerjaan terpilih",
+      "title": "Portofolio",
+      "description": "Proyek yang kami izinkan tampil publik.",
+      "descriptionEmpty": "Belum ada item portofolio publik. Lihat produk first-party di halaman Produk.",
+      "metricsPrompt": "Butuh metrik dan testimoni lebih detail?",
+      "metricsLink": "Lihat studi kasus →",
+      "empty": "Item portofolio akan muncul setelah proyek klien selesai dan klien memberi izin publikasi.",
+      "metadataFallback": "Studi Kasus",
+      "detail": {
+        "client": "Klien: {name}",
+        "summary": "Ringkasan Proyek",
+        "outcomes": "Hasil & Capaian",
+        "cta": "Mulai Proyek Anda"
+      }
+    },
+    "caseStudies": {
+      "kicker": "Bukti kerja",
+      "title": "Studi kasus",
+      "description": "Studi kasus dipublikasikan hanya dengan izin klien.",
+      "descriptionEmpty": "Belum ada studi kasus publik. Produk first-party kami ada di halaman Produk.",
+      "empty": "Studi kasus akan dipublikasikan setelah proyek nyata selesai dan klien memberikan izin.",
+      "emptyHint": "Sementara itu, lihat produk first-party atau artikel blog kami.",
+      "metadataFallback": "Studi Kasus",
+      "detail": {
+        "clientLogoAlt": "Klien",
+        "challenge": "Tantangan",
+        "solution": "Solusi Kami",
+        "results": "Hasil",
+        "more": "Studi Kasus Lainnya"
+      }
+    },
+    "blog": {
+      "kicker": "Wawasan",
+      "title": "Blog & Wawasan",
+      "description": "Panduan tech stack, scaling software, dan saran untuk founder startup Indonesia.",
+      "filterAria": "Filter topik blog",
+      "empty": "Belum ada artikel blog yang dipublikasikan.",
+      "emptyForCategory": "Belum ada artikel untuk topik \"{category}\". Cek kembali nanti atau jelajahi topik lain.",
+      "paginationAria": "Navigasi halaman artikel",
+      "pageAria": "Halaman {page}",
+      "metadataFallback": "Artikel Blog",
+      "detail": {
+        "byAuthor": "Oleh {name}",
+        "heroFallback": "DN Tech · Wawasan",
+        "tocAria": "Daftar isi artikel",
+        "tocTitle": "Dalam artikel",
+        "ctaKicker": "Lanjutkan ke solusi",
+        "ctaPeopleTitle": "Sudah waktunya HR bekerja lebih rapi?",
+        "ctaPeopleBody": "Lihat bagaimana dnPeople membantu tim mengelola data karyawan, absensi, cuti, dan proses HR dalam satu tempat.",
+        "ctaPeopleAction": "Lihat dnPeople",
+        "ctaGenericTitle": "Punya workflow yang ingin dirapikan?",
+        "ctaGenericBody": "Ceritakan kebutuhan bisnis dan sistem yang sedang dipakai. Tim DN Tech akan membantu memetakan langkah yang paling masuk akal.",
+        "ctaGenericAction": "Konsultasi dengan DN Tech",
+        "exploreTitle": "Lanjutkan Menjelajah",
+        "exploreDescription": "Layanan dan sumber daya terkait topik ini",
+        "readArticle": "Baca artikel →"
+      }
+    },
+    "cards": {
+      "caseStudy": {
+        "kicker": "Case study",
+        "action": "Baca studi kasus"
+      },
+      "portfolio": {
+        "action": "Lihat studi kasus"
+      },
+      "testimonial": {
+        "ratingAria": "Rating {rating} dari 5",
+        "video": "Video",
+        "videoAria": "Tonton video testimoni {name}"
+      }
+    }
+  }
+}

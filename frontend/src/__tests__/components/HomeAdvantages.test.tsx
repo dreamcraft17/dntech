@@ -2,6 +2,18 @@ import { render, screen } from '@testing-library/react';
 import { HomeAdvantages } from '@/components/homepage/HomeAdvantages';
 import type { HomeAdvantage } from '@/lib/homepage-content';
 
+import { NextIntlClientProvider } from 'next-intl';
+import messages from '@/messages/id/home.json';
+
+function renderIntl(ui: React.ReactElement) {
+  return render(
+    <NextIntlClientProvider locale="id" messages={messages}>
+      {ui}
+    </NextIntlClientProvider>,
+  );
+}
+
+
 const advantages: HomeAdvantage[] = [
   { title: 'Harga Transparan', description: 'Tidak ada hidden fees.' },
   { title: 'Timeline Jelas', description: 'Kami sampaikan kapan selesai.' },
@@ -10,7 +22,7 @@ const advantages: HomeAdvantage[] = [
 
 describe('HomeAdvantages', () => {
   it('renders every advantage, with the first one called out as the lead reason', () => {
-    render(<HomeAdvantages advantages={advantages} />);
+    renderIntl(<HomeAdvantages advantages={advantages} />);
 
     // The lead advantage is distinguishable as a heading rendered under an
     // explicit "Alasan utama" (main reason) label.
@@ -26,7 +38,7 @@ describe('HomeAdvantages', () => {
   });
 
   it('renders the lead advantage alone without crashing when it is the only one', () => {
-    render(<HomeAdvantages advantages={[advantages[0]]} />);
+    renderIntl(<HomeAdvantages advantages={[advantages[0]]} />);
 
     expect(screen.getByText('Alasan utama')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Harga Transparan' })).toBeInTheDocument();
@@ -34,7 +46,7 @@ describe('HomeAdvantages', () => {
   });
 
   it('renders nothing when there are no advantages', () => {
-    const { container } = render(<HomeAdvantages advantages={[]} />);
+    const { container } = renderIntl(<HomeAdvantages advantages={[]} />);
     expect(container).toBeEmptyDOMElement();
   });
 });

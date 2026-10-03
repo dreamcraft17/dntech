@@ -1,4 +1,11 @@
-/** V2 content pillars — SEO Guide & PRD v2 */
+/**
+ * V2 content pillars — SEO Guide & PRD v2.
+ *
+ * `label`/`description`/`label` on links stay Indonesian as a non-i18n
+ * fallback. Localized copy lives in `pages.pillars.*` of the message catalog:
+ * `pages.pillars.<id>.label`, `pages.pillars.<id>.description`, and
+ * `pages.pillars.links.<labelKey>` for the related links.
+ */
 
 export const CONTENT_PILLARS = [
   {
@@ -8,9 +15,9 @@ export const CONTENT_PILLARS = [
     category: 'Tech Stack',
     href: '/blog?category=Tech Stack',
     links: [
-      { href: '/services', label: 'Layanan Kami' },
-      { href: '/blog', label: 'Semua Artikel' },
-      { href: '/contact', label: 'Konsultasi Gratis' },
+      { href: '/services', label: 'Layanan Kami', labelKey: 'services' },
+      { href: '/blog', label: 'Semua Artikel', labelKey: 'allArticles' },
+      { href: '/contact', label: 'Konsultasi Gratis', labelKey: 'freeConsultation' },
     ],
   },
   {
@@ -20,9 +27,9 @@ export const CONTENT_PILLARS = [
     category: 'Scaling',
     href: '/blog?category=Scaling',
     links: [
-      { href: '/services', label: 'Layanan Kami' },
-      { href: '/faq', label: 'FAQ Proses Kerja' },
-      { href: '/contact', label: 'Hubungi Kami' },
+      { href: '/services', label: 'Layanan Kami', labelKey: 'services' },
+      { href: '/faq', label: 'FAQ Proses Kerja', labelKey: 'processFaq' },
+      { href: '/contact', label: 'Hubungi Kami', labelKey: 'contact' },
     ],
   },
   {
@@ -32,9 +39,9 @@ export const CONTENT_PILLARS = [
     category: 'Startup',
     href: '/blog?category=Startup',
     links: [
-      { href: '/blog', label: 'Artikel Startup' },
-      { href: '/about', label: 'Tentang Kami' },
-      { href: '/contact', label: 'Mulai Proyek' },
+      { href: '/blog', label: 'Artikel Startup', labelKey: 'startupArticles' },
+      { href: '/about', label: 'Tentang Kami', labelKey: 'about' },
+      { href: '/contact', label: 'Mulai Proyek', labelKey: 'startProject' },
     ],
   },
   {
@@ -44,9 +51,9 @@ export const CONTENT_PILLARS = [
     category: 'Case Insights',
     href: '/blog?category=Case Insights',
     links: [
-      { href: '/portfolio', label: 'Portfolio' },
-      { href: '/blog', label: 'Blog' },
-      { href: '/contact', label: 'Diskusi Proyek' },
+      { href: '/portfolio', label: 'Portfolio', labelKey: 'portfolio' },
+      { href: '/blog', label: 'Blog', labelKey: 'blog' },
+      { href: '/contact', label: 'Diskusi Proyek', labelKey: 'discussProject' },
     ],
   },
 ] as const;

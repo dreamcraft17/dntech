@@ -1,37 +1,38 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Mail, MessageCircle, MapPin } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { FooterBrand } from '@/components/layout/FooterBrand';
 import { resolveCompanyPhone, whatsAppUrl } from '@/lib/contact-links';
 
 const companyLinks = [
-  { href: '/about', label: 'Tentang' },
-  { href: '/team', label: 'Tim' },
-  { href: '/careers', label: 'Karier' },
-  { href: '/contact', label: 'Kontak' },
-];
+  { href: '/about', key: 'about' },
+  { href: '/team', key: 'team' },
+  { href: '/careers', key: 'careers' },
+  { href: '/contact', key: 'contact' },
+] as const;
 
 const offerLinks = [
-  { href: '/products', label: 'Produk' },
-  { href: '/services', label: 'Layanan' },
-  { href: '/quiz', label: 'Temukan solusi' },
-];
+  { href: '/products', key: 'products' },
+  { href: '/services', key: 'services' },
+  { href: '/quiz', key: 'quiz' },
+] as const;
 
 const proofLinks = [
-  { href: '/case-studies', label: 'Studi kasus' },
-  { href: '/portfolio', label: 'Portofolio' },
-  { href: '/testimonials', label: 'Testimoni' },
-];
+  { href: '/case-studies', key: 'caseStudies' },
+  { href: '/portfolio', key: 'portfolio' },
+  { href: '/testimonials', key: 'testimonials' },
+] as const;
 
 const resourceLinks = [
-  { href: '/blog', label: 'Blog' },
-  { href: '/resources', label: 'Panduan' },
-  { href: '/faq', label: 'FAQ' },
-];
+  { href: '/blog', key: 'blog' },
+  { href: '/resources', key: 'guides' },
+  { href: '/faq', key: 'faq' },
+] as const;
 
 const legalLinks = [
-  { href: '/terms', label: 'Syarat & Ketentuan' },
-  { href: '/privacy', label: 'Kebijakan Privasi' },
-];
+  { href: '/terms', key: 'terms' },
+  { href: '/privacy', key: 'privacy' },
+] as const;
 
 interface FooterProps {
   companyName?: string;
@@ -67,6 +68,7 @@ export function Footer({
   companyPhone,
   companyAddress,
 }: FooterProps) {
+  const t = useTranslations('footer');
   const whatsapp = resolveCompanyPhone(companyPhone);
 
   const contactItems = [
@@ -92,7 +94,7 @@ export function Footer({
           <div className="max-w-md">
             <FooterBrand />
             <p className="mt-3 text-sm leading-relaxed text-gray-600">
-              {tagline || 'Software untuk workflow penting bisnis Indonesia.'}
+              {tagline || t('defaultTagline')}
             </p>
           </div>
 
@@ -100,55 +102,55 @@ export function Footer({
             href="/contact"
             className="inline-flex min-h-[44px] shrink-0 items-center justify-center self-start rounded-[var(--radius-card)] border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
           >
-            Konsultasi Gratis
+            {t('cta')}
           </Link>
         </div>
 
         <nav
           className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-[var(--border)] pt-10 lg:grid-cols-5"
-          aria-label="Navigasi footer"
+          aria-label={t('navAria')}
         >
-          <FooterColumn title="Perusahaan">
+          <FooterColumn title={t('columns.company')}>
             <ul className="mt-2 flex flex-col">
               {companyLinks.map((link) => (
                 <li key={link.href}>
-                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                  <FooterLink href={link.href}>{t(`links.${link.key}`)}</FooterLink>
                 </li>
               ))}
             </ul>
           </FooterColumn>
 
-          <FooterColumn title="Produk & layanan">
+          <FooterColumn title={t('columns.offer')}>
             <ul className="mt-2 flex flex-col">
               {offerLinks.map((link) => (
                 <li key={link.href}>
-                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                  <FooterLink href={link.href}>{t(`links.${link.key}`)}</FooterLink>
                 </li>
               ))}
             </ul>
           </FooterColumn>
 
-          <FooterColumn title="Bukti kerja">
+          <FooterColumn title={t('columns.proof')}>
             <ul className="mt-2 flex flex-col">
               {proofLinks.map((link) => (
                 <li key={link.href}>
-                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                  <FooterLink href={link.href}>{t(`links.${link.key}`)}</FooterLink>
                 </li>
               ))}
             </ul>
           </FooterColumn>
 
-          <FooterColumn title="Resources">
+          <FooterColumn title={t('columns.resources')}>
             <ul className="mt-2 flex flex-col">
               {resourceLinks.map((link) => (
                 <li key={link.href}>
-                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                  <FooterLink href={link.href}>{t(`links.${link.key}`)}</FooterLink>
                 </li>
               ))}
             </ul>
           </FooterColumn>
 
-          <FooterColumn title="Hubungi">
+          <FooterColumn title={t('columns.contact')}>
             <ul className="mt-2 flex flex-col">
               {contactItems.map(({ icon: Icon, value, href, external }) => (
                 <li key={value}>
@@ -162,7 +164,7 @@ export function Footer({
                           : {})}
                         className="rounded-sm transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2"
                       >
-                        {external ? `WhatsApp ${value}` : value}
+                        {external ? t('whatsapp', { value }) : value}
                       </a>
                     ) : (
                       <span>{value}</span>
@@ -176,12 +178,12 @@ export function Footer({
 
         <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-[var(--border)] pt-6 sm:flex-row sm:items-center">
           <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} PT. Dozer Napitupulu Technology. Hak cipta dilindungi.
+            {t('copyright', { year: String(new Date().getFullYear()) })}
           </p>
           <div className="flex flex-wrap gap-4">
             {legalLinks.map((link) => (
               <FooterLink key={link.href} href={link.href}>
-                {link.label}
+                {t(`links.${link.key}`)}
               </FooterLink>
             ))}
           </div>

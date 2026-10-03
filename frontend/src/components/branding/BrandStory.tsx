@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { getApiUrl } from '@/lib/api';
@@ -15,6 +16,7 @@ interface BrandContent {
 }
 
 export function BrandStory() {
+  const t = useTranslations('interactive.brand');
   const [content, setContent] = useState<BrandContent | null>(null);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export function BrandStory() {
           {content.imageUrl ? (
             <Image
               src={content.imageUrl}
-              alt="DN Tech"
+              alt={t('imageAlt')}
               width={560}
               height={420}
               className="h-full w-full rounded-lg border border-gray-200 object-cover"
@@ -41,16 +43,16 @@ export function BrandStory() {
           ) : (
             <Card className="h-full bg-blue-900/10 border-blue-100 flex items-center justify-center min-h-[280px]">
               <p className="text-blue-900 text-sm font-medium tracking-wide uppercase">
-                DN Tech Indonesia
+                {t('placeholder')}
               </p>
             </Card>
           )}
 
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-blue-900">
-              {content.tagline || 'Tentang DN Tech'}
+              {content.tagline || t('aboutEyebrow')}
             </p>
-            <h2 className="mt-2 text-3xl font-bold text-gray-900 lg:text-4xl">Tentang DN Tech</h2>
+            <h2 className="mt-2 text-3xl font-bold text-gray-900 lg:text-4xl">{t('aboutTitle')}</h2>
             {content.story && <p className="mt-4 text-gray-600 leading-relaxed whitespace-pre-line">{content.story}</p>}
             {content.mission && (
               <div className="mt-6 border-l-4 border-blue-900 bg-blue-900/5 p-4">
@@ -58,7 +60,7 @@ export function BrandStory() {
               </div>
             )}
             <div className="mt-6">
-              <Button href="/contact">Mulai Sekarang</Button>
+              <Button href="/contact">{t('aboutCta')}</Button>
             </div>
           </div>
         </div>

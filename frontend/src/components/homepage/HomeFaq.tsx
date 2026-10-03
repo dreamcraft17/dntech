@@ -1,5 +1,6 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { ChevronDown } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { SectionHeading } from '@/components/homepage/SectionHeading';
 
 interface FaqItem {
@@ -13,10 +14,11 @@ interface HomeFaqProps {
 }
 
 export function HomeFaq({ items }: HomeFaqProps) {
+  const t = useTranslations('home.faq');
   return (
     <section className="home-section-alt py-section" id="faq">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker="FAQ" title="Pertanyaan yang Sering Ditanyakan" />
+        <SectionHeading kicker={t('kicker')} title={t('title')} />
         <div className="space-y-3">
           {items.map((faq) => (
             <details
@@ -34,13 +36,13 @@ export function HomeFaq({ items }: HomeFaqProps) {
           ))}
         </div>
         <p className="mt-8 text-sm text-gray-600">
-          Masih ada pertanyaan?{' '}
+          {t('moreQuestions')}{' '}
           <Link href="/faq" className="font-medium text-blue-900 hover:underline">
-            Lihat semua FAQ
+            {t('allFaqLink')}
           </Link>{' '}
-          atau{' '}
+          {t('or')}{' '}
           <Link href="/contact" className="font-medium text-blue-900 hover:underline">
-            hubungi kami
+            {t('contactLink')}
           </Link>
           .
         </p>

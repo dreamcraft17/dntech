@@ -10,6 +10,8 @@ interface ToastProps {
   variant?: 'success' | 'error';
   onClose: () => void;
   duration?: number;
+  /** Localised label for the dismiss button (admin renders this without an intl provider). */
+  closeLabel?: string;
 }
 
 export function Toast({
@@ -18,6 +20,7 @@ export function Toast({
   variant = 'success',
   onClose,
   duration = 5000,
+  closeLabel = 'Tutup notifikasi',
 }: ToastProps) {
   useEffect(() => {
     if (!open) return;
@@ -50,7 +53,7 @@ export function Toast({
         type="button"
         onClick={onClose}
         className="shrink-0 text-gray-400 hover:text-gray-600"
-        aria-label="Tutup notifikasi"
+        aria-label={closeLabel}
       >
         <X className="h-4 w-4" />
       </button>

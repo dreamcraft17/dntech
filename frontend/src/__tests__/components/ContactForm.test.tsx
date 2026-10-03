@@ -1,5 +1,15 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
 import { ContactForm } from '@/components/forms/ContactForm';
+import messages from '@/messages/id/pages.json';
+
+function renderForm() {
+  return render(
+    <NextIntlClientProvider locale="id" messages={messages}>
+      <ContactForm />
+    </NextIntlClientProvider>,
+  );
+}
 
 describe('ContactForm component', () => {
   beforeEach(() => {
@@ -7,7 +17,7 @@ describe('ContactForm component', () => {
   });
 
   it('shows validation errors for invalid form', async () => {
-    render(<ContactForm />);
+    renderForm();
     fireEvent.change(screen.getByLabelText(/nama/i), { target: { value: 'Dozer' } });
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'dozer@example.com' } });
     fireEvent.change(screen.getByLabelText(/pesan/i), { target: { value: 'short' } });
@@ -19,7 +29,7 @@ describe('ContactForm component', () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       json: async () => ({ success: true }),
     });
-    render(<ContactForm />);
+    renderForm();
     fireEvent.change(screen.getByLabelText(/nama/i), { target: { value: 'Dozer' } });
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'dozer@example.com' } });
     fireEvent.change(screen.getByLabelText(/pesan/i), { target: { value: 'Ini pesan panjang untuk validasi.' } });
@@ -31,7 +41,7 @@ describe('ContactForm component', () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       json: async () => ({ success: false, error: { message: 'API down' } }),
     });
-    render(<ContactForm />);
+    renderForm();
     fireEvent.change(screen.getByLabelText(/nama/i), { target: { value: 'Dozer' } });
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'dozer@example.com' } });
     fireEvent.change(screen.getByLabelText(/pesan/i), { target: { value: 'Ini pesan panjang untuk validasi.' } });

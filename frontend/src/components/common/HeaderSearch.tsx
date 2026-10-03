@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { apiFetch } from '@/lib/api';
 import type { SearchResult } from '@/types';
 
@@ -11,6 +12,7 @@ interface HeaderSearchProps {
 }
 
 export function HeaderSearch({ open, onClose }: HeaderSearchProps) {
+  const t = useTranslations('layout.search');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -47,14 +49,14 @@ export function HeaderSearch({ open, onClose }: HeaderSearchProps) {
         setSearchSearched(true);
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') return;
-        setSearchError(err instanceof Error ? err.message : 'Pencarian gagal');
+        setSearchError(err instanceof Error ? err.message : t('failed'));
         setSearchResults([]);
         setSearchSearched(true);
       } finally {
         setSearchLoading(false);
       }
     }, 300);
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (!open) return;
@@ -85,14 +87,14 @@ export function HeaderSearch({ open, onClose }: HeaderSearchProps) {
         <input
           ref={inputRef}
           type="search"
-          placeholder="Cari layanan, blog..."
+          placeholder={t('placeholder')}
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Escape') onClose();
           }}
           className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-base focus:border-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20"
-          aria-label="Cari di situs"
+          aria-label={t('aria')}
         />
         {searchResults.length > 0 && (
           <div className="mt-2 rounded-lg border border-gray-200 bg-white">
@@ -118,11 +120,9 @@ export function HeaderSearch({ open, onClose }: HeaderSearchProps) {
           searchError ||
           (searchSearched && searchQuery.length >= 2 && searchResults.length === 0)) && (
           <div className="mt-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-600">
-            {searchLoading && 'Mencari...'}
-            {!searchLoading && searchError && `Search error: ${searchError}`}
-            {!searchLoading &&
-              !searchError &&
-              `Belum ada hasil untuk “${searchQuery}”. Coba kata lain seperti “software”, “web”, “produk”, atau “kontak”.`}
+            {searchLoading && t('loading')}
+            {!searchLoading && searchError && t('error', { message: searchError })}
+            {!searchLoading && !searchError && t('empty', { query: searchQuery })}
           </div>
         )}
       </div>

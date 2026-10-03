@@ -1,0 +1,161 @@
+{
+  "interactive": {
+    "chatbot": {
+      "name": "dnMate",
+      "panelLabel": "dnMate DN Tech",
+      "subtitle": "Asisten DN Tech berdasarkan konten publik",
+      "closePanel": "Tutup chatbot",
+      "greeting": "Halo! Saya bisa membantu mencari informasi tentang layanan, produk, portofolio, artikel, dan FAQ DN Tech.",
+      "thinking": "Sedang mencari jawaban…",
+      "inputLabel": "Pesan untuk {name}",
+      "placeholder": "Tanyakan sesuatu…",
+      "send": "Kirim pesan",
+      "disclaimer": "AI dapat keliru. Untuk kepastian, hubungi tim DN Tech.",
+      "unavailable": "{name} sedang tidak tersedia.",
+      "openToggle": "Buka {name}",
+      "closeToggle": "Tutup {name}",
+      "launcher": "Tanya {name}"
+    },
+    "bookDemo": {
+      "title": "Jadwalkan Konsultasi Gratis",
+      "description": "Atur panggilan 30 menit dengan tim ahli kami. Tanpa komitmen — cukup diskusi tentang tujuan Anda.",
+      "fallback": "Pilih waktu yang sesuai, atau kirim pesan kepada kami.",
+      "cta": "Minta Demo"
+    },
+    "calendly": {
+      "heading": "Atau jadwalkan panggilan langsung",
+      "iframeTitle": "Jadwalkan pertemuan"
+    },
+    "exitIntent": {
+      "title": "Tunggu! Sebelum Anda pergi...",
+      "body": "Jangan lewatkan kesempatan untuk mendiskusikan proyek Anda bersama tim DN Tech. Hubungi kami hari ini untuk konsultasi gratis.",
+      "dismiss": "Tidak, terima kasih",
+      "cta": "Hubungi Kami",
+      "close": "Tutup modal"
+    },
+    "roi": {
+      "title": "Estimasi Biaya Proyek",
+      "subtitle": "Dapatkan perkiraan anggaran proyek Anda dalam Rupiah",
+      "teamSize": "Ukuran Tim",
+      "seniority": "Level Senioritas",
+      "complexity": "Kompleksitas Proyek",
+      "duration": "Durasi (bulan)",
+      "perHour": "{amount}/jam",
+      "seniorityOption": "{label} ({rate})",
+      "seniorityOptions": {
+        "junior": "Junior",
+        "mid": "Menengah",
+        "senior": "Senior",
+        "lead": "Lead/Arsitek"
+      },
+      "complexityOptions": {
+        "simple": "Sederhana (landing page, CRUD)",
+        "moderate": "Sedang (web app, integrasi)",
+        "complex": "Kompleks (sistem enterprise)",
+        "enterprise": "Enterprise (multi-sistem)"
+      },
+      "calculate": "Hitung Estimasi",
+      "resultTitle": "Perkiraan Biaya Proyek",
+      "range": "{min} – {max}",
+      "savings": "Potensi penghematan vs tim in-house: ~{amount}",
+      "disclaimer": "* Ini perkiraan kasar. Hubungi kami untuk proposal detail sesuai kebutuhan Anda.",
+      "quoteCta": "Minta penawaran detail →"
+    },
+    "quiz": {
+      "progress": "Pertanyaan {current} dari {total}",
+      "percentDone": "{percent}% selesai",
+      "back": "← Kembali",
+      "questions": {
+        "q1": {
+          "question": "Apa yang paling menggambarkan organisasi Anda?",
+          "options": {
+            "enterprise": "Enterprise Besar (500+ karyawan)",
+            "mid": "Perusahaan Menengah (50–500 karyawan)",
+            "startup": "Startup / UMKM (<50 karyawan)"
+          }
+        },
+        "q2": {
+          "question": "Apa tujuan utama Anda?",
+          "options": {
+            "modernization": "Modernisasi sistem legacy",
+            "mvp": "Membangun produk baru / MVP",
+            "scale": "Skala infrastruktur yang ada",
+            "strategy": "Panduan strategis IT"
+          }
+        },
+        "q3": {
+          "question": "Berapa timeline proyek Anda?",
+          "options": {
+            "urgent": "Segera (< 3 bulan)",
+            "medium": "3–6 bulan",
+            "long": "6+ bulan / fase perencanaan"
+          }
+        },
+        "q4": {
+          "question": "Berapa perkiraan anggaran proyek Anda?",
+          "options": {
+            "small": "Di bawah Rp 500 juta",
+            "medium": "Rp 500 juta – Rp 2 miliar",
+            "large": "Rp 2 miliar – Rp 5 miliar",
+            "enterprise-budget": "Rp 5 miliar+"
+          }
+        },
+        "q5": {
+          "question": "Bidang teknologi mana yang paling menarik?",
+          "options": {
+            "erp": "Perangkat Lunak Enterprise / ERP",
+            "app": "Aplikasi Web & Mobile",
+            "cloud": "Cloud & DevOps",
+            "consulting": "Konsultasi IT"
+          }
+        }
+      },
+      "result": {
+        "title": "Kami menemukan solusi terbaik untuk Anda!",
+        "consultation": "Jadwalkan Konsultasi Gratis",
+        "caseStudies": "Lihat Studi Kasus",
+        "emailTitle": "Kirim hasil ke email Anda",
+        "emailDescription": "Kami akan mengirim rekomendasi personal dan langkah selanjutnya.",
+        "nameLabel": "Nama (opsional)",
+        "emailLabel": "Email Kerja",
+        "submit": "Kirim Hasil Saya",
+        "sent": "Hasil terkirim! Cek inbox Anda untuk rekomendasi personal."
+      }
+    },
+    "carousel": {
+      "watchVideo": "Tonton video",
+      "previous": "Sebelumnya",
+      "next": "Berikutnya",
+      "goTo": "Ke testimoni {index}"
+    },
+    "brand": {
+      "imageAlt": "DN Tech",
+      "placeholder": "DN Tech Indonesia",
+      "aboutEyebrow": "Tentang DN Tech",
+      "aboutTitle": "Tentang DN Tech",
+      "aboutCta": "Mulai Sekarang",
+      "testimonialsTitle": "Testimoni",
+      "testimonialsSubtitle": "Kutipan yang kami publikasikan dengan izin tertulis.",
+      "testimonialPrevious": "Sebelumnya",
+      "testimonialNext": "Berikutnya",
+      "testimonialSelect": "Pilih testimoni {index}",
+      "advantagesTitle": "Kenapa Pilih DN Tech",
+      "advantagesSubtitle": "Pendekatan kerja yang kami pegang di setiap proyek.",
+      "valuesTitle": "Mission & Core Values",
+      "valuesSubtitle": "Nilai yang membentuk cara tim DN Tech bekerja."
+    },
+    "internalLinks": {
+      "defaultTitle": "Jelajahi Terkait"
+    },
+    "ui": {
+      "close": "Tutup",
+      "closeModal": "Tutup modal",
+      "closeNotification": "Tutup notifikasi",
+      "showPassword": "Tampilkan kata sandi",
+      "hidePassword": "Sembunyikan kata sandi",
+      "loadingData": "Memuat data...",
+      "loadingPage": "Memuat halaman...",
+      "pleaseWait": "Mohon tunggu sebentar"
+    }
+  }
+}

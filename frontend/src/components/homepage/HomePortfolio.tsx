@@ -1,6 +1,7 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { SectionHeading } from '@/components/homepage/SectionHeading';
@@ -23,12 +24,13 @@ interface HomePortfolioProps {
 }
 
 export function HomePortfolio({ projects }: HomePortfolioProps) {
+  const t = useTranslations('home.portfolio');
   if (!projects.length) return null;
 
   return (
     <section className="home-section-alt py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading title="Portfolio" />
+        <SectionHeading title={t('title')} />
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.slice(0, 3).map((project) => (
@@ -51,7 +53,7 @@ export function HomePortfolio({ projects }: HomePortfolioProps) {
                   <h3 className="font-semibold text-gray-900">{project.title}</h3>
                   {project.clientName && (
                     <p className="mt-1 text-xs font-medium text-teal-600">
-                      Klien: {project.clientName}
+                      {t('client', { name: project.clientName })}
                     </p>
                   )}
                   <p className="mt-2 line-clamp-3 text-sm text-gray-600">
@@ -59,11 +61,11 @@ export function HomePortfolio({ projects }: HomePortfolioProps) {
                   </p>
                   {project.results && (
                     <p className="mt-2 text-sm font-medium text-blue-900">
-                      Hasil: {project.results}
+                      {t('result', { value: project.results })}
                     </p>
                   )}
                   <span className="mt-4 inline-flex items-center text-sm font-medium text-blue-900">
-                    Baca studi kasus <ArrowRight className="ml-1 h-4 w-4" />
+                    {t('readCaseStudy')} <ArrowRight className="ml-1 h-4 w-4" />
                   </span>
                 </div>
               </Card>
@@ -72,7 +74,7 @@ export function HomePortfolio({ projects }: HomePortfolioProps) {
         </div>
         <div className="mt-10 text-center">
           <Button href="/case-studies" variant="outline">
-            Lihat Semua Portfolio
+            {t('viewAll')}
           </Button>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { getApiUrl } from '@/lib/api';
@@ -16,6 +17,7 @@ interface Testimonial {
 }
 
 export function BrandTestimonials() {
+  const t = useTranslations('interactive.brand');
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [current, setCurrent] = useState(0);
 
@@ -33,8 +35,8 @@ export function BrandTestimonials() {
     <section className="py-16 bg-gray-50">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Testimoni</h2>
-          <p className="mt-2 text-gray-600">Kutipan yang kami publikasikan dengan izin tertulis.</p>
+          <h2 className="text-3xl font-bold text-gray-900">{t('testimonialsTitle')}</h2>
+          <p className="mt-2 text-gray-600">{t('testimonialsSubtitle')}</p>
         </div>
 
         <Card className="h-full border-l-4 border-l-teal-600">
@@ -59,7 +61,7 @@ export function BrandTestimonials() {
           <button
             onClick={() => setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length)}
             className="rounded-lg border border-gray-300 bg-white p-2 hover:border-blue-900"
-            aria-label="Sebelumnya"
+            aria-label={t('testimonialPrevious')}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -69,14 +71,14 @@ export function BrandTestimonials() {
                 key={item.id}
                 onClick={() => setCurrent(idx)}
                 className={`h-2 w-2 rounded-full ${idx === current ? 'bg-blue-900' : 'bg-gray-300'}`}
-                aria-label={`Pilih testimoni ${idx + 1}`}
+                aria-label={t('testimonialSelect', { index: idx + 1 })}
               />
             ))}
           </div>
           <button
             onClick={() => setCurrent((c) => (c + 1) % testimonials.length)}
             className="rounded-lg border border-gray-300 bg-white p-2 hover:border-blue-900"
-            aria-label="Berikutnya"
+            aria-label={t('testimonialNext')}
           >
             <ChevronRight className="h-5 w-5" />
           </button>

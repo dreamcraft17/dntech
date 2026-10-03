@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { Card } from '@/components/ui/Card';
 import { Globe } from 'lucide-react';
 import type { TeamMember } from '@/types';
@@ -11,6 +12,7 @@ interface TeamSpotlightProps {
 }
 
 export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
+  const t = useTranslations('layout.teamSpotlight');
   const team = members.slice(0, limit);
   if (!team.length) return null;
   const isSingle = team.length === 1;
@@ -19,10 +21,10 @@ export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
     <section>
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Kenali Tim Kami</h2>
-          <p className="mt-1 text-sm text-gray-600">Orang-orang di balik DN Tech</p>
+          <h2 className="text-2xl font-bold text-gray-900">{t('title')}</h2>
+          <p className="mt-1 text-sm text-gray-600">{t('subtitle')}</p>
         </div>
-        <Link href="/team" className="text-blue-900 text-sm font-medium hover:underline">Lihat semua</Link>
+        <Link href="/team" className="text-blue-900 text-sm font-medium hover:underline">{t('viewAll')}</Link>
       </div>
       <div className="flex flex-wrap justify-center gap-6">
         {team.map((member) => (
@@ -71,7 +73,7 @@ export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 rounded-md bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-900 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-                    aria-label={`${member.name} di ${platform}`}
+                    aria-label={t('socialAria', { name: member.name, platform })}
                   >
                     <Globe className="h-4 w-4" />
                   </a>

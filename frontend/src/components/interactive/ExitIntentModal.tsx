@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { useExitIntent } from '@/hooks/useExitIntent';
 import { Modal, ModalActions } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
@@ -17,6 +18,7 @@ interface ExitIntentModalProps {
 }
 
 export function ExitIntentModal({ autoShow = false }: ExitIntentModalProps) {
+  const t = useTranslations('interactive.exitIntent');
   const primaryButtonRef = useRef<HTMLAnchorElement>(null);
   const { showModal, dismiss, setShowModal } = useExitIntent({
     debug: process.env.NODE_ENV === 'development',
@@ -35,17 +37,20 @@ export function ExitIntentModal({ autoShow = false }: ExitIntentModalProps) {
   }, [showModal]);
 
   return (
-    <Modal open={showModal} onClose={dismiss} title="Tunggu! Sebelum Anda pergi..." className="max-w-md">
-      <p className="text-sm leading-relaxed text-gray-600">
-        Jangan lewatkan kesempatan untuk mendiskusikan proyek Anda bersama tim DN Tech.
-        Hubungi kami hari ini untuk konsultasi gratis.
-      </p>
+    <Modal
+      open={showModal}
+      onClose={dismiss}
+      title={t('title')}
+      closeLabel={t('close')}
+      className="max-w-md"
+    >
+      <p className="text-sm leading-relaxed text-gray-600">{t('body')}</p>
       <ModalActions>
         <Button variant="ghost" onClick={dismiss}>
-          Tidak, terima kasih
+          {t('dismiss')}
         </Button>
         <Button href="/contact" onClick={dismiss} ref={primaryButtonRef}>
-          Hubungi Kami
+          {t('cta')}
         </Button>
       </ModalActions>
     </Modal>

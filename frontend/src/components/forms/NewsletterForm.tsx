@@ -1,13 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { getApiUrl } from '@/lib/api';
 import { Mail } from 'lucide-react';
 
+const INDUSTRY_KEYS = ['finance', 'retail', 'manufacturing', 'healthcare', 'technology', 'other'] as const;
+
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
+  const t = useTranslations('pages');
   const [email, setEmail] = useState('');
   const [industry, setIndustry] = useState('');
   const [success, setSuccess] = useState(false);
@@ -30,19 +34,18 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   }
 
   if (success) {
-    return (
-      <Alert variant="success">✓ Cek inbox Anda untuk email konfirmasi newsletter.</Alert>
-    );
+    return <Alert variant="success">{t('forms.newsletter.success')}</Alert>;
   }
 
   if (compact) {
     return (
       <form onSubmit={subscribe} className="flex gap-2">
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-          placeholder="email@perusahaan.com"
+          placeholder={t('forms.newsletter.emailPlaceholder')}
+          aria-label={t('forms.newsletter.emailLabel')}
           className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-900 focus:outline-none" />
         <Button type="submit" loading={loading} size="sm" className="shrink-0 whitespace-nowrap">
-          Langganan
+          {t('forms.newsletter.submit')}
         </Button>
       </form>
     );
@@ -51,22 +54,27 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   return (
     <form onSubmit={subscribe} className="space-y-4">
       <div className="flex items-center gap-2 mb-2">
-        <Mail className="h-5 w-5 text-blue-900" />
-        <h3 className="font-semibold text-gray-900">Langganan newsletter</h3>
+        <Mail className="h-5 w-5 text-blue-900" aria-hidden="true" />
+        <h3 className="font-semibold text-gray-900">{t('forms.newsletter.heading')}</h3>
       </div>
-      <p className="text-sm text-gray-600">Update produk first-party dan catatan rilis. Tanpa janji “insight enterprise” palsu.</p>
-      <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <Select label="Industri (opsional)" value={industry} onChange={(e) => setIndustry(e.target.value)}
+      <p className="text-sm text-gray-600">{t('forms.newsletter.description')}</p>
+      <Input
+        label={t('forms.newsletter.emailLabel')}
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <Select
+        label={t('forms.newsletter.industryLabel')}
+        value={industry}
+        onChange={(e) => setIndustry(e.target.value)}
         options={[
-          { value: '', label: 'Pilih industri...' },
-          { value: 'finance', label: 'Keuangan & Perbankan' },
-          { value: 'retail', label: 'Ritel & E-Commerce' },
-          { value: 'manufacturing', label: 'Manufaktur' },
-          { value: 'healthcare', label: 'Kesehatan' },
-          { value: 'technology', label: 'Teknologi' },
-          { value: 'other', label: 'Lainnya' },
-        ]} />
-      <Button type="submit" loading={loading} className="w-full">Langganan</Button>
+          { value: '', label: t('forms.newsletter.industries.placeholder') },
+          ...INDUSTRY_KEYS.map((key) => ({ value: key, label: t(`forms.newsletter.industries.${key}`) })),
+        ]}
+      />
+      <Button type="submit" loading={loading} className="w-full">{t('forms.newsletter.submit')}</Button>
     </form>
   );
 }

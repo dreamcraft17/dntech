@@ -70,12 +70,20 @@ function parseFounder(raw: unknown): AboutFounder | undefined {
   return { name, ...(role ? { role } : {}), ...(bio ? { bio } : {}) };
 }
 
-export function resolveFounder(fromSettings?: AboutFounder): AboutFounder {
-  if (!fromSettings) return DEFAULT_FOUNDER;
+/**
+ * Merge CMS founder copy with a fallback. `defaults` is locale-aware: callers
+ * inside a next-intl tree pass the translated role/bio so /about reads in the
+ * active locale; `DEFAULT_FOUNDER` keeps the Indonesian copy for plain callers.
+ */
+export function resolveFounder(
+  fromSettings?: AboutFounder,
+  defaults: AboutFounder = DEFAULT_FOUNDER,
+): AboutFounder {
+  if (!fromSettings) return defaults;
   return {
     name: fromSettings.name,
-    role: fromSettings.role || DEFAULT_FOUNDER.role,
-    bio: fromSettings.bio || DEFAULT_FOUNDER.bio,
+    role: fromSettings.role || defaults.role,
+    bio: fromSettings.bio || defaults.bio,
   };
 }
 
@@ -118,6 +126,7 @@ export function resolveAboutContent(
   fromSettings: AboutContent,
   brand: BrandAboutSource,
   coreValues: CoreValueSource[] = [],
+  founderDefaults: AboutFounder = DEFAULT_FOUNDER,
 ): AboutContent {
   const values =
     fromSettings.values && fromSettings.values.length > 0
@@ -128,7 +137,7 @@ export function resolveAboutContent(
     story: fromSettings.story || brand.story,
     mission: fromSettings.mission || brand.mission,
     vision: fromSettings.vision,
-    founder: resolveFounder(fromSettings.founder),
+    founder: resolveFounder(fromSettings.founder, founderDefaults),
     values: values.length > 0 ? values : undefined,
     achievements: fromSettings.achievements,
   };

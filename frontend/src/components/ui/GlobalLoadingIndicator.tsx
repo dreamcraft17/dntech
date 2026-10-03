@@ -4,7 +4,19 @@ import { useEffect, useRef, useState } from 'react';
 import { LoaderCircle } from 'lucide-react';
 import { LOADING_END_EVENT, LOADING_START_EVENT } from '@/lib/loading-events';
 
-export function GlobalLoadingIndicator() {
+interface GlobalLoadingIndicatorProps {
+  /**
+   * Localised copy. Indonesian defaults because the admin root layout
+   * (src/app/(admin)/layout.tsx) renders this outside any NextIntlClientProvider.
+   */
+  label?: string;
+  waitLabel?: string;
+}
+
+export function GlobalLoadingIndicator({
+  label = 'Memuat data...',
+  waitLabel = 'Mohon tunggu sebentar',
+}: GlobalLoadingIndicatorProps = {}) {
   const [visible, setVisible] = useState(false);
   const pendingRef = useRef(0);
   const timerRef = useRef<number | null>(null);
@@ -36,12 +48,12 @@ export function GlobalLoadingIndicator() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/90" role="status" aria-live="assertive" aria-label="Sedang memuat data">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/90" role="status" aria-live="assertive" aria-label={label}>
       <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-md">
         <LoaderCircle className="h-6 w-6 animate-spin text-blue-900" aria-hidden="true" />
         <div>
-          <p className="text-sm font-semibold text-gray-900">Memuat data...</p>
-          <p className="text-xs text-gray-500">Mohon tunggu sebentar</p>
+          <p className="text-sm font-semibold text-gray-900">{label}</p>
+          <p className="text-xs text-gray-500">{waitLabel}</p>
         </div>
       </div>
     </div>

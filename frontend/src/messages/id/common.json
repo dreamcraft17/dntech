@@ -1,0 +1,115 @@
+{
+  "site": {
+    "tagline": "Solusi Teknologi Terpercaya"
+  },
+  "nav": {
+    "home": "Beranda",
+    "ariaMain": "Navigasi utama",
+    "ariaMobile": "Navigasi mobile",
+    "homeAria": "Beranda DN Tech",
+    "products": "Produk",
+    "about": "Tentang",
+    "groups": {
+      "services": "Layanan",
+      "proof": "Bukti",
+      "resources": "Resources"
+    },
+    "links": {
+      "allServices": "Semua layanan",
+      "findSolution": "Temukan solusi",
+      "consultation": "Konsultasi",
+      "caseStudies": "Studi kasus",
+      "portfolio": "Portofolio",
+      "testimonials": "Testimoni",
+      "blog": "Blog & wawasan",
+      "guides": "Panduan",
+      "helpCenter": "Pusat bantuan",
+      "careers": "Karier"
+    },
+    "search": {
+      "open": "Buka pencarian situs",
+      "close": "Tutup pencarian",
+      "label": "Cari",
+      "title": "Cari di situs"
+    },
+    "menu": {
+      "open": "Buka menu",
+      "close": "Tutup menu"
+    },
+    "ctaConsultation": "Konsultasi Gratis"
+  },
+  "localeSwitcher": {
+    "label": "Pilih bahasa",
+    "id": "Bahasa Indonesia",
+    "en": "English"
+  },
+  "footer": {
+    "navAria": "Navigasi footer",
+    "defaultTagline": "Software untuk workflow penting bisnis Indonesia.",
+    "cta": "Konsultasi Gratis",
+    "columns": {
+      "company": "Perusahaan",
+      "offer": "Produk & layanan",
+      "proof": "Bukti kerja",
+      "resources": "Resources",
+      "contact": "Hubungi"
+    },
+    "links": {
+      "about": "Tentang",
+      "team": "Tim",
+      "careers": "Karier",
+      "contact": "Kontak",
+      "products": "Produk",
+      "services": "Layanan",
+      "quiz": "Temukan solusi",
+      "caseStudies": "Studi kasus",
+      "portfolio": "Portofolio",
+      "testimonials": "Testimoni",
+      "blog": "Blog",
+      "guides": "Panduan",
+      "faq": "FAQ",
+      "terms": "Syarat & Ketentuan",
+      "privacy": "Kebijakan Privasi"
+    },
+    "whatsapp": "WhatsApp {value}",
+    "copyright": "© {year} PT. Dozer Napitupulu Technology. Hak cipta dilindungi."
+  },
+  "layout": {
+    "skipToContent": "Lewati ke konten utama",
+    "loading": "Memuat halaman...",
+    "stickyCta": "Konsultasi Gratis",
+    "homeAria": "Beranda DN Tech",
+    "breadcrumbAria": "Jejak navigasi",
+    "notFound": {
+      "title": "Halaman tidak ditemukan",
+      "backHome": "Kembali ke Beranda"
+    },
+    "search": {
+      "placeholder": "Cari layanan, blog...",
+      "aria": "Cari di situs",
+      "loading": "Mencari...",
+      "failed": "Pencarian gagal",
+      "error": "Pencarian gagal: {message}",
+      "empty": "Belum ada hasil untuk “{query}”. Coba kata lain seperti “software”, “web”, “produk”, atau “kontak”."
+    },
+    "clientLogos": {
+      "caption": "Logo klien yang memberi izin tampil"
+    },
+    "trustBadges": {
+      "title": "Mengapa Memilih Kami"
+    },
+    "teamSpotlight": {
+      "title": "Kenali Tim Kami",
+      "subtitle": "Orang-orang di balik DN Tech",
+      "viewAll": "Lihat semua",
+      "socialAria": "{name} di {platform}"
+    },
+    "pageEndCta": {
+      "title": "Butuh bantuan memilih jalur yang tepat?",
+      "description": "Ceritakan workflow yang ingin dirapikan. Kami akan arahkan ke produk, layanan, atau langkah berikutnya yang paling masuk akal.",
+      "primary": "Konsultasi gratis",
+      "secondary": "Temukan solusi"
+    },
+    "booting": "Menyiapkan DN Tech..."
+  }
+}

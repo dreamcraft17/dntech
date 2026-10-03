@@ -11,6 +11,8 @@ interface ModalProps {
   children: React.ReactNode;
   className?: string;
   showClose?: boolean;
+  /** Localised label for the close button (admin renders this without an intl provider). */
+  closeLabel?: string;
 }
 
 export function Modal({
@@ -20,6 +22,7 @@ export function Modal({
   children,
   className,
   showClose = true,
+  closeLabel = 'Tutup modal',
 }: ModalProps) {
   const titleId = useId();
 
@@ -67,7 +70,7 @@ export function Modal({
                   type="button"
                   onClick={onClose}
                   className="shrink-0 rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                  aria-label="Tutup modal"
+                  aria-label={closeLabel}
                 >
                   <X className="h-5 w-5" />
                 </button>

@@ -1,5 +1,6 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 
 interface InternalLink {
   href: string;
@@ -12,12 +13,15 @@ interface InternalLinksProps {
   links: InternalLink[];
 }
 
-export function InternalLinks({ title = 'Jelajahi Terkait', description, links }: InternalLinksProps) {
+export function InternalLinks({ title, description, links }: InternalLinksProps) {
+  const t = useTranslations('interactive.internalLinks');
+  const heading = title ?? t('defaultTitle');
+
   if (!links.length) return null;
 
   return (
-    <nav aria-label={title} className="saas-panel rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm">
-      <h3 className="font-semibold text-gray-900">{title}</h3>
+    <nav aria-label={heading} className="saas-panel rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm">
+      <h3 className="font-semibold text-gray-900">{heading}</h3>
       {description && <p className="mt-1 text-sm text-gray-600">{description}</p>}
       <ul className="mt-4 space-y-2">
         {links.map((link) => (

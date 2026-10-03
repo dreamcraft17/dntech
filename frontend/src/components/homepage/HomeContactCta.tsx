@@ -1,5 +1,6 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Mail, MessageCircle, Calendar } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { resolveCompanyPhone, whatsAppUrl } from '@/lib/contact-links';
 import type { PublicSettings } from '@/lib/settings';
@@ -9,6 +10,7 @@ interface HomeContactCtaProps {
 }
 
 export function HomeContactCta({ settings }: HomeContactCtaProps) {
+  const t = useTranslations('home.contactCta');
   const email = settings.companyEmail || 'info@dntech.id';
   const whatsapp = resolveCompanyPhone(settings.companyPhone);
   const linkedin = settings.socialLinks?.linkedin;
@@ -17,11 +19,8 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
   return (
     <section className="bg-[var(--primary)] py-section text-white">
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold">Bahas workflow yang ingin Anda perbaiki</h2>
-        <p className="mx-auto mt-4 max-w-2xl text-blue-100">
-          Ceritakan masalah, target, dan sistem yang sudah dipakai. Kami bantu memetakan opsi,
-          scope, timeline, dan budget tanpa sales pitch panjang.
-        </p>
+        <h2 className="text-3xl font-bold">{t('title')}</h2>
+        <p className="mx-auto mt-4 max-w-2xl text-blue-100">{t('body')}</p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           {calendly ? (
             <a
@@ -31,11 +30,11 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-base font-semibold text-blue-900 transition-colors hover:bg-gray-100 min-h-[48px]"
             >
               <Calendar className="h-4 w-4" />
-              Schedule Konsultasi
+              {t('schedule')}
             </a>
           ) : (
             <Button href="/contact" size="lg" variant="inverse">
-              Bahas Scope Anda
+              {t('discussScope')}
             </Button>
           )}
         </div>
@@ -49,13 +48,13 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
             {email}
           </a>
           <a
-            href={whatsAppUrl(whatsapp, 'Halo DN Tech, saya ingin konsultasi.')}
+            href={whatsAppUrl(whatsapp, t('whatsappMessage'))}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm text-blue-100 transition-colors hover:text-white"
           >
             <MessageCircle className="h-4 w-4 text-white" aria-hidden="true" />
-            WhatsApp {whatsapp}
+            {t('whatsappLabel', { phone: whatsapp })}
           </a>
           {linkedin && (
             <a
@@ -71,9 +70,9 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
         </div>
 
         <p className="mt-8 text-sm text-blue-200">
-          Atau langsung ke{' '}
+          {t('orGoTo')}{' '}
           <Link href="/contact" className="font-medium text-white underline underline-offset-2">
-            halaman kontak
+            {t('contactPage')}
           </Link>
         </p>
       </div>

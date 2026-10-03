@@ -6,6 +6,18 @@ import {
 } from '@/components/homepage/HomeProducts';
 import type { Product } from '@/types';
 
+import { NextIntlClientProvider } from 'next-intl';
+import messages from '@/messages/id/home.json';
+
+function renderIntl(ui: React.ReactElement) {
+  return render(
+    <NextIntlClientProvider locale="id" messages={messages}>
+      {ui}
+    </NextIntlClientProvider>,
+  );
+}
+
+
 function product(partial: Partial<Product> & Pick<Product, 'id' | 'name' | 'slug'>): Product {
   return {
     description: `${partial.name} description`,
@@ -36,7 +48,7 @@ describe('productMark', () => {
 
 describe('HomeProducts', () => {
   it('renders a featured panel plus a side rail, not a 3-column services clone', () => {
-    const { container } = render(
+    const { container } = renderIntl(
       <HomeProducts
         products={[
           product({
@@ -56,12 +68,12 @@ describe('HomeProducts', () => {
     expect(screen.getByText('Unggulan')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Lihat dnPeople/ })).toHaveAttribute(
       'href',
-      '/products/dnpeople',
+      '/id/products/dnpeople',
     );
-    expect(screen.getByRole('link', { name: /dnCore/ })).toHaveAttribute('href', '/products/dncore');
+    expect(screen.getByRole('link', { name: /dnCore/ })).toHaveAttribute('href', '/id/products/dncore');
     expect(screen.queryByText('★')).not.toBeInTheDocument();
     expect(container.querySelector('.lg\\:grid-cols-3')).not.toBeInTheDocument();
     expect(container.querySelector('.lg\\:grid-cols-12')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Semua produk' })).toHaveAttribute('href', '/products');
+    expect(screen.getByRole('link', { name: 'Semua produk' })).toHaveAttribute('href', '/id/products');
   });
 });

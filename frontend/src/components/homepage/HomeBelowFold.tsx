@@ -1,5 +1,5 @@
+import { useTranslations } from 'next-intl';
 import { fetchPublicApiList } from '@/lib/server-api';
-import { DEFAULT_FAQ } from '@/lib/homepage-content';
 import type { resolveHomeContent } from '@/lib/homepage-content';
 import type { PublicSettings } from '@/lib/settings';
 import type { Service, Faq, Product } from '@/types';
@@ -14,10 +14,11 @@ import { HomeContactCta } from '@/components/homepage/HomeContactCta';
 type HomeContent = ReturnType<typeof resolveHomeContent>;
 
 export function HomeBelowFoldFallback() {
+  const t = useTranslations('home.belowFold');
   return (
     <div className="bg-surface py-section" aria-busy="true" aria-live="polite">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <p className="text-sm text-gray-600">Memuat produk dan layanan…</p>
+        <p className="text-sm text-gray-600">{t('loading')}</p>
       </div>
     </div>
   );
@@ -39,7 +40,7 @@ export async function HomeBelowFold({
   const faqItems =
     faqs.length > 0
       ? faqs.slice(0, 8).map((f) => ({ id: f.id, question: f.question, answer: f.answer }))
-      : DEFAULT_FAQ.map((f, i) => ({
+      : content.defaultFaq.map((f, i) => ({
           id: `default-faq-${i}`,
           question: f.question,
           answer: f.answer,

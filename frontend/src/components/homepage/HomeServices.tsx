@@ -1,5 +1,6 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { SectionHeading } from '@/components/homepage/SectionHeading';
 import { Button } from '@/components/ui/Button';
 import { productMark } from '@/components/homepage/HomeProducts';
@@ -23,6 +24,7 @@ function ServiceMark({ name }: { name: string }) {
 }
 
 export function HomeServices({ services, defaults }: HomeServicesProps) {
+  const t = useTranslations('home.services');
   const apiItems = services.slice(0, 4).map((s) => ({
     name: s.name,
     description: s.description,
@@ -53,7 +55,7 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
       )}
       {featured.slug && (
         <span className="mt-8 inline-flex min-h-11 w-fit items-center gap-2 border border-[var(--primary)] bg-[var(--primary)] px-5 py-2.5 text-sm font-semibold text-white transition-colors group-hover:bg-blue-800">
-          Lihat layanan
+          {t('viewService')}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </span>
       )}
@@ -64,10 +66,10 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
     <section className="home-section py-section" aria-labelledby="services-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          kicker="Layanan"
+          kicker={t('kicker')}
           titleId="services-heading"
-          title="Butuh website, aplikasi, atau sistem internal?"
-          subtitle="Mulai dari alur kerja yang bikin repot. Kami bantu menemukan bentuk software yang paling masuk akal untuk tim Anda."
+          title={t('title')}
+          subtitle={t('subtitle')}
           className="mb-8 md:mb-10"
         />
 
@@ -129,7 +131,7 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
 
         <div className="mt-8">
           <Button href="/services" variant="outline">
-            Lihat seluruh layanan
+            {t('viewAll')}
           </Button>
         </div>
       </div>

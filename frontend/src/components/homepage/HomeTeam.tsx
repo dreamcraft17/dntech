@@ -1,6 +1,7 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { Mail } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { Card } from '@/components/ui/Card';
 import { SectionHeading } from '@/components/homepage/SectionHeading';
 import type { TeamMember } from '@/types';
@@ -24,15 +25,13 @@ function getInitials(name: string) {
 }
 
 export function HomeTeam({ members, careers, hiringRoles, hiringEmail }: HomeTeamProps) {
+  const t = useTranslations('home.team');
   const openRoles = careers.length > 0 ? careers.slice(0, 3).map((c) => c.title) : hiringRoles;
 
   return (
     <section className="home-section py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Siapa yang Handle Project Anda"
-          subtitle="Tim berpengalaman — founder terlibat langsung di project penting"
-        />
+        <SectionHeading title={t('title')} subtitle={t('subtitle')} />
 
         {members.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -78,15 +77,13 @@ export function HomeTeam({ members, careers, hiringRoles, hiringEmail }: HomeTea
         ) : (
           <Card className="mx-auto max-w-xl">
             <h3 className="font-semibold text-gray-900">Dozer Napitupulu</h3>
-            <p className="text-sm font-medium text-teal-600">Founder & Tech Lead</p>
-            <p className="mt-2 text-sm leading-relaxed text-gray-600">
-              Mengembangkan aplikasi dan situs web sejak 2017. Terlibat langsung dalam strategi proyek dan peninjauan kode.
-            </p>
+            <p className="text-sm font-medium text-teal-600">{t('founderRole')}</p>
+            <p className="mt-2 text-sm leading-relaxed text-gray-600">{t('founderBio')}</p>
           </Card>
         )}
 
         <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6">
-          <h3 className="font-semibold text-gray-900">Kami Sedang Hiring</h3>
+          <h3 className="font-semibold text-gray-900">{t('hiringTitle')}</h3>
           <ul className="mt-3 space-y-1 text-sm text-gray-600">
             {openRoles.map((role) => (
               <li key={role}>· {role}</li>
@@ -101,7 +98,7 @@ export function HomeTeam({ members, careers, hiringRoles, hiringEmail }: HomeTea
               {hiringEmail}
             </a>
             <Link href="/careers" className="text-sm font-medium text-blue-900 hover:underline">
-              Lihat lowongan →
+              {t('viewOpenings')}
             </Link>
           </div>
         </div>

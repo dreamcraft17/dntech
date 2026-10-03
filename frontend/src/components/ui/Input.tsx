@@ -6,9 +6,25 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helperText?: string;
+  /**
+   * Localised labels for the password reveal toggle. Indonesian defaults because
+   * the admin area renders this outside any NextIntlClientProvider.
+   */
+  showPasswordLabel?: string;
+  hidePasswordLabel?: string;
 }
 
-export function Input({ label, error, helperText, className, id, type, ...props }: InputProps) {
+export function Input({
+  label,
+  error,
+  helperText,
+  className,
+  id,
+  type,
+  showPasswordLabel = 'Tampilkan kata sandi',
+  hidePasswordLabel = 'Sembunyikan kata sandi',
+  ...props
+}: InputProps) {
   const generatedId = useId();
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
@@ -48,7 +64,7 @@ export function Input({ label, error, helperText, className, id, type, ...props 
             type="button"
             onClick={() => setShowPassword((v) => !v)}
             className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700"
-            aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+            aria-label={showPassword ? hidePasswordLabel : showPasswordLabel}
             tabIndex={-1}
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}

@@ -28,4 +28,14 @@ const config = {
   ],
 };
 
-module.exports = createJestConfig(config);
+// next-intl v4 is ESM-only. next/jest appends its own node_modules ignore rule,
+// which wins over anything passed in `config`, so the pattern is replaced after
+// next/jest has built the final config.
+module.exports = async () => {
+  const resolved = await createJestConfig(config)();
+  resolved.transformIgnorePatterns = [
+    '/node_modules/(?!(next-intl|use-intl|@formatjs|intl-messageformat)/)',
+    '^.+\\.module\\.(css|sass|scss)$',
+  ];
+  return resolved;
+};

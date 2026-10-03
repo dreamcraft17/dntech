@@ -1,15 +1,18 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { usePathname } from '@/i18n/navigation';
 import { trackPageView } from '@/lib/api';
 
 export function PageTracker() {
+  // Locale-stripped pathname, so /id/blog and /en/blog aggregate on one page key.
   const pathname = usePathname();
+  const locale = useLocale();
 
   useEffect(() => {
     if (pathname && !pathname.startsWith('/admin')) {
-      const track = () => trackPageView(pathname, document.title);
+      const track = () => trackPageView(pathname, `${document.title} [${locale}]`);
 
       if ('requestIdleCallback' in window) {
         const idleId = window.requestIdleCallback(track, { timeout: 3000 });
@@ -19,7 +22,7 @@ export function PageTracker() {
       const timeoutId = setTimeout(track, 1500);
       return () => clearTimeout(timeoutId);
     }
-  }, [pathname]);
+  }, [pathname, locale]);
 
   return null;
 }

@@ -1,18 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useFormatter, useTranslations } from 'next-intl';
 import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Alert } from '@/components/ui/Alert';
 import { Calculator } from 'lucide-react';
-import {
-  DEV_RATES_IDR,
-  IN_HOUSE_RATE_IDR,
-  formatIDR,
-  formatIDRPerHour,
-  formatIDRRange,
-} from '@/lib/currency';
+import { DEV_RATES_IDR, IN_HOUSE_RATE_IDR } from '@/lib/currency';
 
 const DEFAULT_DEV_RATES_IDR = {
   junior: 150_000,
@@ -25,19 +20,31 @@ const COMPLEXITY: Record<string, number> = {
   simple: 1, moderate: 1.5, complex: 2.5, enterprise: 4,
 };
 
-const SENIORITY_OPTIONS = [
-  { value: 'junior', label: 'Junior' },
-  { value: 'mid', label: 'Menengah' },
-  { value: 'senior', label: 'Senior' },
-  { value: 'lead', label: 'Lead/Arsitek' },
-] as const;
+const SENIORITY_KEYS = ['junior', 'mid', 'senior', 'lead'] as const;
+const COMPLEXITY_KEYS = ['simple', 'moderate', 'complex', 'enterprise'] as const;
 
 export function ROICalculator() {
+  const t = useTranslations('interactive.roi');
+  const format = useFormatter();
   const rates = DEV_RATES_IDR ?? DEFAULT_DEV_RATES_IDR;
-  const seniorityOptions = SENIORITY_OPTIONS.map((option) => ({
-    value: option.value,
-    label: `${option.label} (${formatIDRPerHour(rates[option.value])})`,
+
+  // Amounts are always Rupiah; only the grouping/placement of the symbol
+  // follows the active locale.
+  const formatIDR = (amount: number) =>
+    format.number(amount, { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 });
+
+  const seniorityOptions = SENIORITY_KEYS.map((key) => ({
+    value: key,
+    label: t('seniorityOption', {
+      label: t(`seniorityOptions.${key}`),
+      rate: t('perHour', { amount: formatIDR(rates[key]) }),
+    }),
   }));
+  const complexityOptions = COMPLEXITY_KEYS.map((key) => ({
+    value: key,
+    label: t(`complexityOptions.${key}`),
+  }));
+
   const [teamSize, setTeamSize] = useState('3');
   const [seniority, setSeniority] = useState('mid');
   const [complexity, setComplexity] = useState('moderate');
@@ -65,46 +72,39 @@ export function ROICalculator() {
           <Calculator className="h-5 w-5 text-blue-900" />
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Estimasi Biaya Proyek</h2>
-          <p className="text-sm text-gray-500">Dapatkan perkiraan anggaran proyek Anda dalam Rupiah</p>
+          <h2 className="text-lg font-semibold text-gray-900">{t('title')}</h2>
+          <p className="text-sm text-gray-500">{t('subtitle')}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input label="Ukuran Tim" type="number" min="1" max="20" value={teamSize} onChange={(e) => setTeamSize(e.target.value)} />
-        <Select label="Level Senioritas" value={seniority} onChange={(e) => setSeniority(e.target.value)}
+        <Input label={t('teamSize')} type="number" min="1" max="20" value={teamSize} onChange={(e) => setTeamSize(e.target.value)} />
+        <Select label={t('seniority')} value={seniority} onChange={(e) => setSeniority(e.target.value)}
           options={seniorityOptions} />
-        <Select label="Kompleksitas Proyek" value={complexity} onChange={(e) => setComplexity(e.target.value)}
-          options={[
-            { value: 'simple', label: 'Sederhana (landing page, CRUD)' },
-            { value: 'moderate', label: 'Sedang (web app, integrasi)' },
-            { value: 'complex', label: 'Kompleks (sistem enterprise)' },
-            { value: 'enterprise', label: 'Enterprise (multi-sistem)' },
-          ]} />
-        <Input label="Durasi (bulan)" type="number" min="1" max="24" value={months} onChange={(e) => setMonths(e.target.value)} />
+        <Select label={t('complexity')} value={complexity} onChange={(e) => setComplexity(e.target.value)}
+          options={complexityOptions} />
+        <Input label={t('duration')} type="number" min="1" max="24" value={months} onChange={(e) => setMonths(e.target.value)} />
       </div>
 
-      <Button onClick={calculate} className="mt-6 w-full">Hitung Estimasi</Button>
+      <Button onClick={calculate} className="mt-6 w-full">{t('calculate')}</Button>
 
       {result && (
-        <Alert variant="info" title="Perkiraan Biaya Proyek" className="mt-6">
+        <Alert variant="info" title={t('resultTitle')} className="mt-6">
           <div className="text-3xl font-bold text-blue-900">
-            {formatIDRRange(result.min, result.max)}
+            {t('range', { min: formatIDR(result.min), max: formatIDR(result.max) })}
           </div>
           {result.savings > 0 && (
             <p className="mt-2 text-sm text-green-700">
-              Potensi penghematan vs tim in-house: ~{formatIDR(result.savings)}
+              {t('savings', { amount: formatIDR(result.savings) })}
             </p>
           )}
-          <p className="mt-3 text-xs text-gray-500">
-            * Ini perkiraan kasar. Hubungi kami untuk proposal detail sesuai kebutuhan Anda.
-          </p>
+          <p className="mt-3 text-xs text-gray-500">{t('disclaimer')}</p>
           <Button
             href={`/contact?budget=${result.min}-${result.max}&team=${teamSize}&months=${months}`}
             size="sm"
             className="mt-4"
           >
-            Minta penawaran detail →
+            {t('quoteCta')}
           </Button>
         </Alert>
       )}

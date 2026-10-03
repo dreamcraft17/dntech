@@ -10,6 +10,9 @@ describe('content pillars', () => {
     for (const pillar of CONTENT_PILLARS) {
       expect(pillar.id).toBeTruthy();
       expect(pillar.href.startsWith('/')).toBe(true);
+      for (const link of pillar.links) {
+        expect(link.labelKey).toBeTruthy();
+      }
     }
   });
 

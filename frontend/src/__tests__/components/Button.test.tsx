@@ -1,6 +1,18 @@
-import { render, screen } from '@testing-library/react';
+import { render as rtlRender, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { NextIntlClientProvider } from 'next-intl';
 import { Button } from '@/components/ui/Button';
+import messages from '@/messages/id/interactive.json';
+
+// Internal hrefs render through the locale-aware Link from @/i18n/navigation,
+// which needs an intl context.
+function render(ui: React.ReactElement) {
+  return rtlRender(
+    <NextIntlClientProvider locale="id" messages={messages}>
+      {ui}
+    </NextIntlClientProvider>
+  );
+}
 
 describe('Button', () => {
   it('renders button label', () => {
@@ -19,7 +31,7 @@ describe('Button', () => {
   it('renders as link with href', () => {
     render(<Button href="/about">About</Button>);
     const link = screen.getByRole('link', { name: /about/i });
-    expect(link).toHaveAttribute('href', '/about');
+    expect(link).toHaveAttribute('href', '/id/about');
   });
 
   it('disables when loading', () => {

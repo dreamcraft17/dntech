@@ -1,0 +1,281 @@
+{
+  "home": {
+    "hero": {
+      "brandRole": "Product engineering studio",
+      "locationIndex": "Indonesia · 01",
+      "promise": "Scope jelas · timeline tertulis · komunikasi langsung",
+      "asideLabel": "Fokus layanan",
+      "briefLabel": "Project brief",
+      "briefRef": "DN / 01",
+      "briefIntro": "Bantuan yang biasanya dibutuhkan sebelum software benar-benar dipakai:",
+      "briefFootnote": "Mulai dari masalah operasionalnya, bukan dari daftar fitur."
+    },
+    "jobPaths": {
+      "kicker": "Mulai dari masalahnya",
+      "title": "Anda sedang mencoba menyelesaikan yang mana?",
+      "subtitle": "Tidak perlu memilih layanan dari daftar panjang. Pilih konteks yang paling dekat dengan situasi Anda.",
+      "cta": "Lihat jalurnya",
+      "build": {
+        "label": "01 / Bangun produk",
+        "title": "Punya MVP atau fitur penting yang harus jalan?",
+        "description": "Mulai dari scope, trade-off, dan milestone yang bisa dibicarakan dengan jelas."
+      },
+      "workflow": {
+        "label": "02 / Rapikan workflow",
+        "title": "Sistem dan proses kerja masih terpisah-pisah?",
+        "description": "Petakan alur, approval, dan integrasi sebelum memutuskan apa yang perlu dibangun."
+      },
+      "evaluate": {
+        "label": "03 / Evaluasi produk",
+        "title": "Butuh software yang sudah punya bentuk nyata?",
+        "description": "Lihat produk first-party DN Tech, status rilis, fitur, dan cara kerjanya."
+      }
+    },
+    "products": {
+      "kicker": "Produk",
+      "featuredBadge": "Unggulan",
+      "viewProduct": "Lihat {name}",
+      "viewAll": "Semua produk"
+    },
+    "services": {
+      "kicker": "Layanan",
+      "title": "Butuh website, aplikasi, atau sistem internal?",
+      "subtitle": "Mulai dari alur kerja yang bikin repot. Kami bantu menemukan bentuk software yang paling masuk akal untuk tim Anda.",
+      "viewService": "Lihat layanan",
+      "viewAll": "Lihat seluruh layanan"
+    },
+    "process": {
+      "kicker": "Proses Kerja",
+      "title": "Gimana Cara Kerjanya?",
+      "subtitle": "Proses kerja yang jelas — dari konsultasi awal hingga launch & support",
+      "stepLabel": "Langkah {step}"
+    },
+    "advantages": {
+      "kicker": "Keunggulan",
+      "title": "Kenapa Pilih DN Tech?",
+      "leadLabel": "Alasan utama"
+    },
+    "faq": {
+      "kicker": "FAQ",
+      "title": "Pertanyaan yang Sering Ditanyakan",
+      "moreQuestions": "Masih ada pertanyaan?",
+      "allFaqLink": "Lihat semua FAQ",
+      "or": "atau",
+      "contactLink": "hubungi kami"
+    },
+    "pricing": {
+      "kicker": "Harga & Paket",
+      "title": "Paket Layanan Kami",
+      "subtitle": "Harga transparan — detail akurat setelah diskusi scope di konsultasi gratis",
+      "timeline": "Timeline: {value}",
+      "cta": "Konsultasi untuk Quote Akurat"
+    },
+    "contactCta": {
+      "title": "Bahas workflow yang ingin Anda perbaiki",
+      "body": "Ceritakan masalah, target, dan sistem yang sudah dipakai. Kami bantu memetakan opsi, scope, timeline, dan budget tanpa sales pitch panjang.",
+      "schedule": "Schedule Konsultasi",
+      "discussScope": "Bahas Scope Anda",
+      "whatsappLabel": "WhatsApp {phone}",
+      "whatsappMessage": "Halo DN Tech, saya ingin konsultasi.",
+      "orGoTo": "Atau langsung ke",
+      "contactPage": "halaman kontak"
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "client": "Klien: {name}",
+      "result": "Hasil: {value}",
+      "readCaseStudy": "Baca studi kasus",
+      "viewAll": "Lihat Semua Portfolio"
+    },
+    "testimonials": {
+      "title": "Testimoni",
+      "slide": "Testimoni {index}",
+      "viewAll": "Lihat semua testimoni →"
+    },
+    "team": {
+      "title": "Siapa yang Handle Project Anda",
+      "subtitle": "Tim berpengalaman — founder terlibat langsung di project penting",
+      "founderRole": "Founder & Tech Lead",
+      "founderBio": "Mengembangkan aplikasi dan situs web sejak 2017. Terlibat langsung dalam strategi proyek dan peninjauan kode.",
+      "hiringTitle": "Kami Sedang Hiring",
+      "viewOpenings": "Lihat lowongan →"
+    },
+    "techStack": {
+      "title": "Teknologi yang Kami Gunakan",
+      "subtitle": "Stack modern, scalable, dan teruji untuk produk yang siap grow"
+    },
+    "belowFold": {
+      "loading": "Memuat produk dan layanan…"
+    },
+    "defaults": {
+      "heroTitle": "Bisnis Makin Tumbuh, Sistem Jangan Ikut Berantakan",
+      "heroSubtitle": "DN Tech.id",
+      "heroBadges": ["Website & Company Profile", "Aplikasi Custom", "Integrasi Sistem"],
+      "heroSupporting": "Kami bantu startup dan bisnis Indonesia membangun aplikasi, menghubungkan sistem, dan merapikan proses kerja — dengan scope, harga, dan timeline yang jelas dari awal.",
+      "heroPrimaryCta": { "label": "Konsultasi Gratis — 30 Menit", "href": "/contact" },
+      "heroSecondaryCta": { "label": "Lihat Produk", "href": "/products" },
+      "productsTitle": "Produk yang Membuktikan Cara Kami Bekerja",
+      "productsSubtitle": "dnPeople (HRIS), dnCore (ERP), dan dnShop kami bangun untuk workflow bisnis nyata. Lihat fitur, harga, status rilis, dan cara setiap produk membantu tim bekerja lebih rapi.",
+      "services": [
+        {
+          "name": "Website & Company Profile",
+          "category": "Web",
+          "description": "Website profesional, landing page, dan company profile yang membuat bisnis Anda terlihat meyakinkan dan mudah ditemukan online."
+        },
+        {
+          "name": "Web App Development",
+          "category": "Web App",
+          "description": "Dashboard dan portal yang benar-benar dipakai tim Anda tiap hari untuk kerja, bukan sekadar demo."
+        },
+        {
+          "name": "Mobile App Development",
+          "category": "Mobile",
+          "description": "Aplikasi iOS & Android yang pelanggan Anda buka setiap hari — cepat, stabil, siap App Store & Play Store."
+        },
+        {
+          "name": "Custom Software",
+          "category": "Software",
+          "description": "Dari MVP sampai sistem operasional harian — dibangun dari workflow dan kebutuhan bisnis Anda, bukan template generik."
+        },
+        {
+          "name": "Maintenance & Support",
+          "category": "Support",
+          "description": "Setelah go live kami tetap ada: update berkala, perbaikan bug cepat, dan pemantauan performa."
+        },
+        {
+          "name": "Technical Consulting",
+          "category": "Consulting",
+          "description": "Petakan masalah, arsitektur, dan feasibility sebelum development — supaya investasi Anda bergerak ke jalan yang tepat."
+        },
+        {
+          "name": "Integration & API Development",
+          "category": "Integration",
+          "description": "Hubungkan sistem yang sudah dipakai melalui API dan integrasi pihak ketiga, tanpa mengganti semuanya dari nol."
+        }
+      ],
+      "processSteps": [
+        {
+          "title": "Hubungi Kami",
+          "description": "WA, email, atau form — pilih yang paling nyaman. Konsultasi awal 30 menit, gratis, tanpa sales pitch panjang."
+        },
+        {
+          "title": "Scope & Quote",
+          "description": "Kami tulis proposal konkret: apa yang dibangun, berapa lama, dan berapa biayanya — angka final, bukan estimasi kasar."
+        },
+        {
+          "title": "Kick-off",
+          "description": "Setelah Anda approve, development langsung mulai dengan tanggal selesai yang sudah disepakati bersama."
+        },
+        {
+          "title": "Development + Check-in",
+          "description": "Kerja dalam sprint 2 minggu, update progres tiap minggu ke Anda. Ada perubahan scope? Kita bahas sebelum jalan, bukan sesudah."
+        },
+        {
+          "title": "QA & Testing",
+          "description": "Sebelum launch, kami test fungsi, keamanan, dan tampilan mobile. Anda yang kasih lampu hijau terakhir sebelum go live."
+        },
+        {
+          "title": "Launch & Support",
+          "description": "Deploy ke production, training untuk tim Anda, 30 hari bug fix gratis, lalu lanjut ke paket support kalau dibutuhkan."
+        }
+      ],
+      "advantages": [
+        {
+          "title": "Harga Transparan",
+          "description": "Biaya pasti disepakati di awal, tertulis di proposal — tidak ada hidden fees atau surprise billing di tengah jalan."
+        },
+        {
+          "title": "Timeline Jelas",
+          "description": "Tanggal mulai dan selesai disampaikan sebelum kick-off, supaya Anda bisa planning launch dengan pasti — bukan \"insya Allah minggu depan\"."
+        },
+        {
+          "title": "Bisa Hubungi Langsung",
+          "description": "Anda kerja langsung dengan tim yang menulis kodenya. Dozer (founder) turun tangan di project penting — tanpa lapisan account manager."
+        },
+        {
+          "title": "Tech Stack Modern",
+          "description": "React, Next.js, PostgreSQL — stack yang kami pakai di produk first-party. Dirancang untuk skala produk SaaS, bukan demo sekali pakai."
+        },
+        {
+          "title": "Support Sesudah Launch",
+          "description": "Kami tidak hilang setelah invoice terakhir cair. Ada paket maintenance untuk dukungan yang berkelanjutan."
+        },
+        {
+          "title": "Lokal, Paham Konteks",
+          "description": "Berkantor di Indonesia — timezone sama, bahasa sama, dan paham kenapa proses bisnis Anda berjalan seperti itu."
+        }
+      ],
+      "techStack": [
+        { "category": "Frontend", "items": ["React", "Next.js", "TypeScript", "Tailwind CSS"] },
+        { "category": "Backend", "items": ["Node.js", "Express", "Python", "FastAPI", "NestJS"] },
+        { "category": "Database", "items": ["PostgreSQL", "MongoDB", "Redis"] },
+        {
+          "category": "Infrastructure",
+          "items": ["AWS", "DigitalOcean", "Docker", "GitHub Actions"]
+        },
+        {
+          "category": "Payments & Integrations",
+          "items": ["Stripe", "BCA API", "Mandiri API", "SendGrid"]
+        },
+        { "category": "Deployment", "items": ["Vercel", "DigitalOcean App", "AWS Lambda"] }
+      ],
+      "pricing": [
+        {
+          "name": "Custom Project",
+          "price": "Tergantung Scope",
+          "timeline": "1–4 bulan (sesuai scope)",
+          "included": ["Design", "Development", "Testing", "30 hari support pasca-launch"]
+        },
+        {
+          "name": "Hourly Consulting",
+          "price": "Mulai Rp 150.000/jam",
+          "timeline": "",
+          "included": ["Strategy & arsitektur", "Feasibility review", "Quick technical tasks"]
+        },
+        {
+          "name": "Maintenance Package",
+          "price": "Mulai Rp 2 juta/bulan",
+          "timeline": "",
+          "included": ["Update bulanan", "Bug fixes", "Monitoring dasar"]
+        }
+      ],
+      "faq": [
+        {
+          "question": "Berapa harga development?",
+          "answer": "Tergantung scope. Landing page / fitur sederhana bisa mulai Rp 25 juta; MVP lebih lengkap biasanya Rp 50–150 juta. Kami bahas detail di konsultasi gratis — tanpa tekanan."
+        },
+        {
+          "question": "Berapa lama timeline?",
+          "answer": "MVP typical: 3–6 bulan, tergantung kompleksitas. Timeline pasti disampaikan di proposal sebelum kick-off."
+        },
+        {
+          "question": "Bisa mulai kapan?",
+          "answer": "Biasanya bisa mulai dalam 2–4 minggu setelah agreement ditandatangani."
+        },
+        {
+          "question": "Apa garansi kualitas?",
+          "answer": "Code review ketat, testing menyeluruh, dan 30 hari free bug fix setelah launch."
+        },
+        {
+          "question": "Siapa yang handle project saya?",
+          "answer": "Tim DN Tech + Dozer (founder) di project penting — bukan didelegasikan semata ke junior tanpa supervisi."
+        },
+        {
+          "question": "Bagaimana kalau butuh perubahan setelah launch?",
+          "answer": "30 hari free bug fix. Setelah itu: paket maintenance bulanan atau Anda bebas hire developer lain — kode adalah milik Anda."
+        },
+        {
+          "question": "Startup saya belum ada budget besar, bisa?",
+          "answer": "Bisa. Kami tawarkan hourly consulting, revenue share untuk project yang cocok, atau skema fleksibel sesuai situasi Anda."
+        },
+        {
+          "question": "Bisa konsultasi gratis dulu?",
+          "answer": "Tentu. 30 menit gratis untuk diskusi kebutuhan. No pressure — Anda putuskan setelahnya."
+        }
+      ],
+      "hiringRoles": ["Senior Frontend Developer", "Backend Engineer", "QA Engineer"],
+      "portfolioMessage": "Studi kasus publik akan muncul di sini setelah klien memberi izin. Sementara itu, lihat produk first-party di halaman Produk.",
+      "testimonialsMessage": "Belum ada testimoni publik. Kami hanya mempublikasikan kutipan dengan izin tertulis."
+    }
+  }
+}

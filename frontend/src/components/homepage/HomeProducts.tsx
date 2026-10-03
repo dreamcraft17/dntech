@@ -1,8 +1,8 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { SectionHeading } from '@/components/homepage/SectionHeading';
 import { Button } from '@/components/ui/Button';
-import { DEFAULT_PRODUCTS_SECTION } from '@/lib/homepage-content';
 import { formatProductStatusBadge } from '@/lib/product-status';
 import type { Product } from '@/types';
 
@@ -48,11 +48,11 @@ function ProductMark({ name, onDark }: { name: string; onDark?: boolean }) {
   );
 }
 
-export function HomeProducts({
-  products,
-  title = DEFAULT_PRODUCTS_SECTION.title,
-  subtitle = DEFAULT_PRODUCTS_SECTION.subtitle,
-}: HomeProductsProps) {
+export function HomeProducts({ products, title, subtitle }: HomeProductsProps) {
+  const t = useTranslations('home.products');
+  const tDefaults = useTranslations('home.defaults');
+  const sectionTitle = title ?? tDefaults('productsTitle');
+  const sectionSubtitle = subtitle ?? tDefaults('productsSubtitle');
   const { featured, rest } = pickHomepageProducts(products);
   if (!featured) return null;
 
@@ -63,9 +63,9 @@ export function HomeProducts({
   const featuredStatus = formatProductStatusBadge(featured.customerCount);
 
   return (
-    <section className="home-section py-section" aria-label={title}>
+    <section className="home-section py-section" aria-label={sectionTitle}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker="Produk" title={title} subtitle={subtitle} />
+        <SectionHeading kicker={t('kicker')} title={sectionTitle} subtitle={sectionSubtitle} />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6 lg:items-stretch">
           <Link
@@ -79,7 +79,7 @@ export function HomeProducts({
                   <div className="flex flex-wrap items-center gap-2">
                     {featured.featured && (
                       <p className="text-xs font-semibold uppercase tracking-wide text-teal-200">
-                        Unggulan
+                        {t('featuredBadge')}
                       </p>
                     )}
                     {featuredStatus && (
@@ -109,7 +109,7 @@ export function HomeProducts({
               )}
 
               <span className="mt-8 inline-flex min-h-11 w-fit items-center border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white group-hover:bg-blue-800">
-                Lihat {featured.name} <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+                {t('viewProduct', { name: featured.name })} <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
               </span>
             </article>
           </Link>
@@ -149,7 +149,7 @@ export function HomeProducts({
 
         <div className="mt-8">
           <Button href="/products" variant="outline">
-            Semua produk
+            {t('viewAll')}
           </Button>
         </div>
       </div>

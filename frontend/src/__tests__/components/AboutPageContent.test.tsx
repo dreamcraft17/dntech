@@ -1,6 +1,20 @@
 import { render, screen } from '@testing-library/react';
+import type { ReactElement } from 'react';
+import { NextIntlClientProvider } from 'next-intl';
 import { AboutPageContent, type AboutContent } from '@/components/content/AboutPageContent';
+import common from '@/messages/id/common.json';
+import pages from '@/messages/id/pages.json';
 import type { TeamMember } from '@/types';
+
+const messages = { ...common, ...pages };
+
+function renderIntl(ui: ReactElement) {
+  return render(
+    <NextIntlClientProvider locale="id" messages={messages}>
+      {ui}
+    </NextIntlClientProvider>,
+  );
+}
 
 function member(partial: Partial<TeamMember> & Pick<TeamMember, 'id' | 'name' | 'role'>): TeamMember {
   return partial;
@@ -21,7 +35,7 @@ const fullAbout: AboutContent = {
 
 describe('AboutPageContent', () => {
   it('renders mission, vision, values, and achievements when present', () => {
-    render(<AboutPageContent about={fullAbout} team={team} />);
+    renderIntl(<AboutPageContent about={fullAbout} team={team} />);
 
     expect(screen.getByText(fullAbout.story!)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Misi Kami' })).toBeInTheDocument();
@@ -43,12 +57,12 @@ describe('AboutPageContent', () => {
 
   it('shows the "belum ter-load" fallback when about content is empty', () => {
     const emptyAbout: AboutContent = {};
-    render(<AboutPageContent about={emptyAbout} team={team} />);
+    renderIntl(<AboutPageContent about={emptyAbout} team={team} />);
 
     expect(screen.getByText(/Profil studio belum tersedia/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'halaman Produk' })).toHaveAttribute(
       'href',
-      '/products',
+      '/id/products',
     );
 
     expect(screen.queryByRole('heading', { name: 'Misi Kami' })).not.toBeInTheDocument();
@@ -57,7 +71,7 @@ describe('AboutPageContent', () => {
   });
 
   it('renders the team section via TeamSpotlight', () => {
-    render(<AboutPageContent about={fullAbout} team={team} />);
+    renderIntl(<AboutPageContent about={fullAbout} team={team} />);
 
     expect(screen.getByRole('heading', { name: 'Kenali Tim Kami' })).toBeInTheDocument();
     expect(screen.getByText('Dozer')).toBeInTheDocument();
@@ -65,7 +79,7 @@ describe('AboutPageContent', () => {
   });
 
   it('always shows Founded by Dozer Napitupulu when founder is not overridden', () => {
-    render(<AboutPageContent about={fullAbout} team={team} />);
+    renderIntl(<AboutPageContent about={fullAbout} team={team} />);
 
     expect(screen.getByText('Didirikan oleh')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Dozer Napitupulu' })).toBeInTheDocument();
@@ -74,7 +88,7 @@ describe('AboutPageContent', () => {
   });
 
   it('uses CMS founder copy when provided', () => {
-    render(
+    renderIntl(
       <AboutPageContent
         about={{
           ...fullAbout,

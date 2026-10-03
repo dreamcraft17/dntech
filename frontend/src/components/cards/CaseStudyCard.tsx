@@ -1,8 +1,9 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 import { ArrowRight, FolderOpen } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { Link } from '@/i18n/navigation';
 
 interface CaseStudyCardProps {
   slug: string;
@@ -15,7 +16,7 @@ interface CaseStudyCardProps {
   heroImageAlt?: string;
 }
 
-export function CaseStudyCard({
+export async function CaseStudyCard({
   slug,
   title,
   description,
@@ -25,6 +26,8 @@ export function CaseStudyCard({
   heroImage,
   heroImageAlt,
 }: CaseStudyCardProps) {
+  const t = await getTranslations('catalog');
+
   return (
     <Link href={`/case-studies/${slug}`}>
       <Card hover className="h-full">
@@ -46,7 +49,9 @@ export function CaseStudyCard({
             {!industries?.length && <FolderOpen className="h-8 w-8 text-blue-900" />}
           </div>
         )}
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-teal-700">Case study</p>
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-teal-700">
+          {t('cards.caseStudy.kicker')}
+        </p>
         <h3 className="mt-2 font-semibold text-slate-950">{title}</h3>
         {clientName && <p className="mt-1 text-sm text-gray-500">{clientName}</p>}
         {description && <p className="mt-2 line-clamp-2 text-sm text-gray-600">{description}</p>}
@@ -60,7 +65,7 @@ export function CaseStudyCard({
           </div>
         )}
         <span className="mt-4 inline-flex items-center text-sm font-medium text-blue-900">
-          Baca studi kasus <ArrowRight className="ml-1 h-4 w-4" />
+          {t('cards.caseStudy.action')} <ArrowRight className="ml-1 h-4 w-4" />
         </span>
       </Card>
     </Link>

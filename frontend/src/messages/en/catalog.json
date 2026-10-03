@@ -1,0 +1,201 @@
+{
+  "catalog": {
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "home": "Home",
+      "services": "Services",
+      "products": "Products",
+      "blog": "Blog",
+      "caseStudies": "Case Studies",
+      "portfolio": "Portfolio"
+    },
+    "common": {
+      "all": "All",
+      "viewDetail": "View details",
+      "freeConsultation": "Free Consultation",
+      "faq": "FAQ",
+      "learnMore": "Learn More",
+      "relatedArticles": "Related Articles",
+      "viewProducts": "Browse Products",
+      "readBlog": "Read the Blog",
+      "scheduleDemo": "Book a Demo",
+      "readTime": "{minutes} min read"
+    },
+    "services": {
+      "kicker": "Services",
+      "title": "From your website to the systems behind it",
+      "description": "Company profile websites, custom applications, and system integrations for businesses that want to look credible and run cleaner.",
+      "filterAria": "Filter services by category",
+      "empty": "No services found.",
+      "metadataFallback": "Services",
+      "detail": {
+        "titleSuffix": "{title} — Indonesia",
+        "ctaPrimary": "Discuss your needs",
+        "ctaSecondary": "See how we work",
+        "included": "What's included",
+        "process": "How we work",
+        "faq": "Common questions",
+        "relatedArticles": "Related articles",
+        "nextStepKicker": "Next step",
+        "nextStepTitle": "Start the conversation about your project",
+        "nextStepBody": "Free consultation — we reply within 24 hours.",
+        "relatedServices": "Related Services"
+      },
+      "process": {
+        "discovery": {
+          "title": "Discovery & Scope",
+          "description": "Understanding your business goals, your users, and the technical constraints of the project."
+        },
+        "planning": {
+          "title": "Planning & Estimation",
+          "description": "A roadmap, a timeline, and a transparent cost estimate before any code is written."
+        },
+        "development": {
+          "title": "Iterative Development",
+          "description": "Shipping in stages, with regular demos and a tight feedback loop."
+        },
+        "testing": {
+          "title": "Testing & QA",
+          "description": "Functional testing, baseline security checks, and production readiness."
+        },
+        "launch": {
+          "title": "Launch & Support",
+          "description": "Deployment, documentation handover, and optional ongoing maintenance."
+        }
+      }
+    },
+    "products": {
+      "kicker": "DN Tech Products",
+      "title": "Software for the work that has to get done.",
+      "description": "We build products for the operational work that usually turns messy: managing people, numbers, and daily processes. Check the features, pricing, limits, and release status before you commit.",
+      "catalogKicker": "Catalog",
+      "catalogTitle": "Pick the one closest to your work",
+      "catalogNote": "Every product page covers use cases, pricing, limits, and how to get started.",
+      "filterAria": "Filter products by category",
+      "loading": "Loading products...",
+      "empty": "No products found.",
+      "loadError": "We couldn't load the products.",
+      "retry": "Try again",
+      "featuredBadge": "Featured product",
+      "priceFrom": "From {price}",
+      "free": "Free",
+      "custom": "Custom",
+      "metadataFallback": "Products",
+      "launchStatus": {
+        "launched": "Available",
+        "in_progress": "In validation",
+        "planned": "On the roadmap",
+        "default": "Active product"
+      },
+      "statusBadge": {
+        "customers": "{count} customers"
+      },
+      "roadmapStatus": {
+        "launched": "Launched",
+        "in_progress": "In Progress",
+        "planned": "Planned"
+      },
+      "detail": {
+        "titleSuffix": "{title} — Indonesia",
+        "summaryKicker": "Product summary",
+        "statusActive": "Active",
+        "statusLabel": "Product status",
+        "planCount": "Plans available",
+        "sectionNavAria": "Product detail navigation",
+        "navFeatures": "Features & outcomes",
+        "navUseCases": "Use cases",
+        "navPricing": "Pricing",
+        "navFaq": "FAQ",
+        "features": "Product Features",
+        "interestedTitle": "Interested in this product?",
+        "interestedBody": "Get in touch — we reply within 24 hours.",
+        "contactUs": "Contact Us",
+        "relatedProducts": "Related Products",
+        "useCases": "Built for Your Segment",
+        "pricing": "Pricing",
+        "popular": "Popular",
+        "pricingCalc": "Estimate your price",
+        "integrations": "Integrations",
+        "comingSoon": "Coming Soon",
+        "comparison": "Comparison",
+        "comparisonFeature": "Feature",
+        "testimonials": "What Customers Say",
+        "roadmap": "Roadmap",
+        "faq": "Frequently Asked Questions"
+      }
+    },
+    "portfolio": {
+      "kicker": "Selected work",
+      "title": "Portfolio",
+      "description": "Projects our clients have cleared for publication.",
+      "descriptionEmpty": "No public portfolio items yet. Our first-party products are on the Products page.",
+      "metricsPrompt": "Want the metrics and testimonials in full?",
+      "metricsLink": "Read the case studies →",
+      "empty": "Portfolio items appear once a client project wraps up and the client approves publication.",
+      "metadataFallback": "Case Study",
+      "detail": {
+        "client": "Client: {name}",
+        "summary": "Project Overview",
+        "outcomes": "Results & Impact",
+        "cta": "Start Your Project"
+      }
+    },
+    "caseStudies": {
+      "kicker": "Proof of work",
+      "title": "Case studies",
+      "description": "Case studies are published only with client permission.",
+      "descriptionEmpty": "No public case studies yet. Our first-party products are on the Products page.",
+      "empty": "Case studies go live once a real project is complete and the client gives us the go-ahead.",
+      "emptyHint": "In the meantime, take a look at our first-party products or our blog.",
+      "metadataFallback": "Case Study",
+      "detail": {
+        "clientLogoAlt": "Client",
+        "challenge": "The Challenge",
+        "solution": "Our Solution",
+        "results": "Results",
+        "more": "More Case Studies"
+      }
+    },
+    "blog": {
+      "kicker": "Insights",
+      "title": "Blog & Insights",
+      "description": "Tech stack guides, scaling lessons, and practical advice for startup founders in Indonesia.",
+      "filterAria": "Filter articles by topic",
+      "empty": "No blog articles have been published yet.",
+      "emptyForCategory": "No articles on \"{category}\" yet. Check back soon or browse another topic.",
+      "paginationAria": "Article pagination",
+      "pageAria": "Page {page}",
+      "metadataFallback": "Blog Article",
+      "detail": {
+        "byAuthor": "By {name}",
+        "heroFallback": "DN Tech · Insights",
+        "tocAria": "Article contents",
+        "tocTitle": "In this article",
+        "ctaKicker": "Next, the solution",
+        "ctaPeopleTitle": "Ready for HR that actually runs smoothly?",
+        "ctaPeopleBody": "See how dnPeople helps teams keep employee data, attendance, leave, and HR processes in one place.",
+        "ctaPeopleAction": "Explore dnPeople",
+        "ctaGenericTitle": "Got a workflow that needs sorting out?",
+        "ctaGenericBody": "Tell us about your business and the systems you already use. The DN Tech team will help you map the most sensible next step.",
+        "ctaGenericAction": "Talk to DN Tech",
+        "exploreTitle": "Keep Exploring",
+        "exploreDescription": "Services and resources related to this topic",
+        "readArticle": "Read article →"
+      }
+    },
+    "cards": {
+      "caseStudy": {
+        "kicker": "Case study",
+        "action": "Read the case study"
+      },
+      "portfolio": {
+        "action": "View the case study"
+      },
+      "testimonial": {
+        "ratingAria": "Rated {rating} out of 5",
+        "video": "Video",
+        "videoAria": "Watch the video testimonial from {name}"
+      }
+    }
+  }
+}

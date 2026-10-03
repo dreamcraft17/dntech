@@ -1,0 +1,253 @@
+{
+  "pages": {
+    "about": {
+      "kicker": "About us",
+      "title": "About DN Tech",
+      "empty": "The studio profile isn't published yet. Take a look at our first-party products on the <link>Products page</link>.",
+      "foundedBy": "Founded by",
+      "missionHeading": "Our Mission",
+      "visionHeading": "Our Vision",
+      "valuesHeading": "What We Value",
+      "achievementsHeading": "Milestones"
+    },
+    "founder": {
+      "role": "Founder & Tech Lead",
+      "bio": "Dozer Napitupulu started DN Tech so clients could talk straight to the person writing the code, instead of through an account manager. He has been building applications and websites since 2017 — HRIS, ERP, and the operational software companies run on. On the projects that decide whether a business ships, he stays hands-on with architecture, code review, and the calls that cannot be delegated.\n\nPT. Dozer Napitupulu Technology is the legal entity behind the studio. Our first-party products are the proof of technical work: what is live is clearly marked, and anything still in beta is never dressed up as a case study."
+    },
+    "contact": {
+      "kicker": "Start the conversation",
+      "title": "Tell us about the workflow you want to clean up.",
+      "description": "Share the context, the constraints, and the outcome you're after. We reply within one business day with a clear next step.",
+      "labels": {
+        "email": "Email",
+        "whatsapp": "WhatsApp",
+        "address": "Address",
+        "hours": "Business Hours"
+      },
+      "whatsappPrefill": "Hello DN Tech, I'd like to book a consultation.",
+      "briefKicker": "Project brief",
+      "briefHeading": "Walk us through your scope and workflow",
+      "briefDuration": "± 3 minutes"
+    },
+    "faq": {
+      "kicker": "Help centre",
+      "title": "Answers before you commit.",
+      "description": "Find out how our services and products work, how we run projects, what things cost, and how to get started with DN Tech.",
+      "searchPlaceholder": "Search the FAQ...",
+      "searchLabel": "Search frequently asked questions",
+      "allCategories": "All",
+      "empty": "No FAQs matched your search.",
+      "emptyLink": "Contact us"
+    },
+    "careers": {
+      "metaTitle": "Careers at DN Tech",
+      "metaDescription": "Explore career opportunities at DN Tech and see how we build custom applications, digital products, and operational software for businesses in Indonesia.",
+      "kicker": "Careers",
+      "title": "Join the team",
+      "description": "Help build what Indonesian businesses run on. Browse our open roles below.",
+      "apply": "Apply Now",
+      "applySubject": "Career: {title}",
+      "empty": "No open roles right now. We'll update this page as soon as we're hiring again.",
+      "emptyAction": "Send your CV / Introduction"
+    },
+    "team": {
+      "kicker": "The DN Tech team",
+      "title": "Meet the people behind the work",
+      "description": "The engineers and consultants who build and support software for businesses in Indonesia.",
+      "empty": "Team profiles are coming soon.",
+      "emptyAction": "Contact us",
+      "socialAria": "{name} on {platform}",
+      "breadcrumb": "Team"
+    },
+    "testimonials": {
+      "metaTitle": "Testimonials",
+      "metaDescription": "DN Tech client testimonials — published only with written permission. No public testimonials at the moment.",
+      "kicker": "Customer stories",
+      "title": "Testimonials",
+      "description": "We publish testimonials only after we have written permission from the client.",
+      "empty": "No public testimonials yet. Have a look at our first-party products in the meantime.",
+      "emptyProducts": "View Products",
+      "emptyContact": "Contact Us"
+    },
+    "resources": {
+      "kicker": "Resources",
+      "title": "Guides you can put to work today",
+      "description": "Practical guides and insights to support your digital transformation.",
+      "download": "Download",
+      "requestAccess": "Request Access",
+      "empty": "No resources are available yet. Get in touch and we'll point you in the right direction.",
+      "emptyAction": "Contact Us"
+    },
+    "quiz": {
+      "kicker": "Solution finder",
+      "title": "Start with the problem, not the feature list.",
+      "description": "Answer five short questions and we'll point you to the service or product that actually fits.",
+      "breadcrumb": "Solution Finder"
+    },
+    "thankYou": {
+      "metaTitle": "Thank You",
+      "metaDescription": "We've received your request. The DN Tech team will get back to you within 24 business hours.",
+      "title": "Thanks for getting in touch",
+      "body": "We've received your request. Our team will get back to you within <strong>24 business hours</strong>.",
+      "redirectNote": "Taking you to the blog in a few seconds...",
+      "readArticles": "Read the Latest Articles",
+      "backHome": "Back to Home"
+    },
+    "privacy": {
+      "metaTitle": "DN Tech Privacy Policy",
+      "metaDescription": "How DN Tech collects, uses, stores, and protects personal data on our website.",
+      "kicker": "Legal",
+      "title": "Privacy Policy",
+      "description": "How we collect, use, store, and protect personal data across the DN Tech website."
+    },
+    "terms": {
+      "metaTitle": "DN Tech Terms of Service",
+      "metaDescription": "The terms governing use of the DN Tech website, forms, content, products, and services.",
+      "kicker": "Legal",
+      "title": "Terms of Service",
+      "description": "The terms that govern your use of the DN Tech website, forms, content, products, and services."
+    },
+    "breadcrumbHome": "Home",
+    "pillars": {
+      "kicker": "Resources",
+      "heading": "Browse by topic",
+      "hint": "Pick the context closest to your situation",
+      "tech-stack": {
+        "label": "Indonesian Tech Stack",
+        "description": "Next.js, PostgreSQL, and DevOps for local startups"
+      },
+      "scaling": {
+        "label": "Scaling Software Projects",
+        "description": "Remote teams, version control, testing strategy"
+      },
+      "startup": {
+        "label": "Startup Tech Advice",
+        "description": "MVPs, cost control, security fundamentals"
+      },
+      "insights": {
+        "label": "Case Insights",
+        "description": "Lessons from real projects, where we can share them"
+      },
+      "links": {
+        "services": "Our Services",
+        "allArticles": "All Articles",
+        "freeConsultation": "Free Consultation",
+        "processFaq": "Process FAQ",
+        "contact": "Contact Us",
+        "startupArticles": "Startup Articles",
+        "about": "About Us",
+        "startProject": "Start a Project",
+        "portfolio": "Portfolio",
+        "blog": "Blog",
+        "discussProject": "Discuss a Project"
+      }
+    },
+    "forms": {
+      "contact": {
+        "nameLabel": "Name",
+        "emailLabel": "Email",
+        "phoneLabel": "Phone",
+        "subjectLabel": "Subject",
+        "messageLabel": "Message",
+        "submit": "Send Message",
+        "subjects": {
+          "general": "General Question",
+          "service": "Service Enquiry",
+          "partnership": "Partnership",
+          "other": "Other"
+        },
+        "errors": {
+          "nameRequired": "Please enter your name",
+          "emailInvalid": "Please enter a valid email address",
+          "messageMin": "Your message needs at least 10 characters",
+          "sendFailed": "We couldn't send your message",
+          "generic": "Something went wrong"
+        },
+        "successTitle": "Thank you!",
+        "successBody": "We've received your message and will be in touch shortly.",
+        "sendAnother": "Send another message"
+      },
+      "multiStep": {
+        "steps": {
+          "contact": "Your Details",
+          "project": "Project Details",
+          "confirm": "Review"
+        },
+        "projectTypes": {
+          "placeholder": "Select a project type...",
+          "customApp": "Custom Application",
+          "consulting": "IT Consulting",
+          "maintenance": "Maintenance & Support",
+          "other": "Other"
+        },
+        "timelines": {
+          "placeholder": "Select a timeline...",
+          "asap": "As soon as possible",
+          "1-3mo": "1–3 months",
+          "3-6mo": "3–6 months",
+          "flexible": "Flexible"
+        },
+        "nameLabel": "Full Name",
+        "emailLabel": "Work Email",
+        "phoneLabel": "Phone",
+        "companyLabel": "Company Name",
+        "projectTypeLabel": "Project Type",
+        "serviceLabel": "Service of Interest (optional)",
+        "servicePlaceholder": "Select a service...",
+        "budgetLabel": "Budget Range (optional)",
+        "budgetPlaceholder": "I'd rather not say",
+        "budgetUnset": "Not specified",
+        "timelineLabel": "Project Timeline",
+        "messageLabel": "Project Description",
+        "messagePlaceholder": "Describe your goals, requirements, and what success looks like...",
+        "summary": {
+          "name": "Name:",
+          "email": "Email:",
+          "phone": "Phone:",
+          "company": "Company:",
+          "projectType": "Project type:",
+          "service": "Service:",
+          "budget": "Budget:",
+          "timeline": "Timeline:",
+          "message": "Description:"
+        },
+        "consent": "I agree to be contacted by the DN Tech team. Read our <link>Privacy Policy</link>.",
+        "responseNote": "Our team replies within 24 business hours.",
+        "back": "Back",
+        "next": "Continue",
+        "submit": "Send Enquiry",
+        "errors": {
+          "nameRequired": "Please enter your name",
+          "emailRequired": "Please enter your email address",
+          "projectTypeRequired": "Please choose a project type",
+          "timelineRequired": "Please choose a timeline",
+          "messageRequired": "Tell us about your workflow or project (at least 50 characters)",
+          "messageMin": "At least 50 characters",
+          "messageMax": "No more than 500 characters",
+          "consentRequired": "Please agree before continuing",
+          "duplicate": "We already have your enquiry — our team will be in touch shortly.",
+          "sendFailed": "We couldn't send your enquiry",
+          "generic": "Something went wrong"
+        }
+      },
+      "newsletter": {
+        "heading": "Subscribe to the newsletter",
+        "description": "First-party product updates and release notes. No fake “enterprise insights”.",
+        "emailLabel": "Email",
+        "emailPlaceholder": "you@company.com",
+        "industryLabel": "Industry (optional)",
+        "industries": {
+          "placeholder": "Select an industry...",
+          "finance": "Finance & Banking",
+          "retail": "Retail & E-Commerce",
+          "manufacturing": "Manufacturing",
+          "healthcare": "Healthcare",
+          "technology": "Technology",
+          "other": "Other"
+        },
+        "submit": "Subscribe",
+        "success": "✓ Check your inbox for the newsletter confirmation email."
+      }
+    }
+  }
+}

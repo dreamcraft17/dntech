@@ -3,6 +3,18 @@ import { HomeServices } from '@/components/homepage/HomeServices';
 import type { Service } from '@/types';
 import type { HomeServiceCard } from '@/lib/homepage-content';
 
+import { NextIntlClientProvider } from 'next-intl';
+import messages from '@/messages/id/home.json';
+
+function renderIntl(ui: React.ReactElement) {
+  return render(
+    <NextIntlClientProvider locale="id" messages={messages}>
+      {ui}
+    </NextIntlClientProvider>,
+  );
+}
+
+
 function service(partial: Partial<Service> & Pick<Service, 'id' | 'name' | 'slug'>): Service {
   return {
     description: `${partial.name} description`,
@@ -22,21 +34,21 @@ describe('HomeServices', () => {
       service({ id: '2', name: 'Mobile App Development', slug: 'mobile-app-development' }),
     ];
 
-    render(<HomeServices services={services} defaults={defaults} />);
+    renderIntl(<HomeServices services={services} defaults={defaults} />);
 
     expect(
       screen.getByRole('heading', { name: 'Butuh website, aplikasi, atau sistem internal?' }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: /Web App Development/ }),
-    ).toHaveAttribute('href', '/services/web-app-development');
+    ).toHaveAttribute('href', '/id/services/web-app-development');
     expect(
       screen.getByRole('link', { name: /Mobile App Development/ }),
-    ).toHaveAttribute('href', '/services/mobile-app-development');
+    ).toHaveAttribute('href', '/id/services/mobile-app-development');
   });
 
   it('falls back to the default service cards when the API list is empty', () => {
-    render(<HomeServices services={[]} defaults={defaults} />);
+    renderIntl(<HomeServices services={[]} defaults={defaults} />);
 
     expect(screen.getByText('Web App Development')).toBeInTheDocument();
     expect(screen.getByText('Dashboard dan web application.')).toBeInTheDocument();
@@ -47,10 +59,10 @@ describe('HomeServices', () => {
   });
 
   it('always links to the full services listing', () => {
-    render(<HomeServices services={[]} defaults={defaults} />);
+    renderIntl(<HomeServices services={[]} defaults={defaults} />);
     expect(screen.getByRole('link', { name: /Lihat seluruh layanan/ })).toHaveAttribute(
       'href',
-      '/services',
+      '/id/services',
     );
   });
 
@@ -60,7 +72,7 @@ describe('HomeServices', () => {
       service({ id: '2', name: 'Mobile App Development', slug: 'mobile-app-development' }),
     ];
 
-    render(<HomeServices services={services} defaults={defaults} />);
+    renderIntl(<HomeServices services={services} defaults={defaults} />);
 
     expect(screen.queryByText('Pelajari lebih lanjut')).not.toBeInTheDocument();
     expect(screen.getByRole('list')).toBeInTheDocument();

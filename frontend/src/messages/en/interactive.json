@@ -1,0 +1,161 @@
+{
+  "interactive": {
+    "chatbot": {
+      "name": "dnMate",
+      "panelLabel": "dnMate by DN Tech",
+      "subtitle": "DN Tech's assistant, grounded in our public content",
+      "closePanel": "Close chatbot",
+      "greeting": "Hi! Ask me anything about DN Tech — our services, products, portfolio, articles and FAQs.",
+      "thinking": "Looking that up…",
+      "inputLabel": "Message to {name}",
+      "placeholder": "Ask a question…",
+      "send": "Send message",
+      "disclaimer": "AI can get things wrong. For anything binding, talk to the DN Tech team.",
+      "unavailable": "{name} is unavailable right now.",
+      "openToggle": "Open {name}",
+      "closeToggle": "Close {name}",
+      "launcher": "Ask {name}"
+    },
+    "bookDemo": {
+      "title": "Book a Free Consultation",
+      "description": "Grab a 30-minute call with our specialists. No commitment — just a conversation about where you want to go.",
+      "fallback": "Pick a time that works for you, or simply send us a message.",
+      "cta": "Request a Demo"
+    },
+    "calendly": {
+      "heading": "Or book a call right here",
+      "iframeTitle": "Schedule a meeting"
+    },
+    "exitIntent": {
+      "title": "Wait — before you go...",
+      "body": "Don't miss the chance to talk your project through with the DN Tech team. Get in touch today for a free consultation.",
+      "dismiss": "No thanks",
+      "cta": "Contact Us",
+      "close": "Close dialog"
+    },
+    "roi": {
+      "title": "Project Cost Estimator",
+      "subtitle": "Get a ballpark budget for your project, in Rupiah",
+      "teamSize": "Team Size",
+      "seniority": "Seniority Level",
+      "complexity": "Project Complexity",
+      "duration": "Duration (months)",
+      "perHour": "{amount}/hour",
+      "seniorityOption": "{label} ({rate})",
+      "seniorityOptions": {
+        "junior": "Junior",
+        "mid": "Mid-level",
+        "senior": "Senior",
+        "lead": "Lead / Architect"
+      },
+      "complexityOptions": {
+        "simple": "Simple (landing page, CRUD)",
+        "moderate": "Moderate (web app, integrations)",
+        "complex": "Complex (enterprise system)",
+        "enterprise": "Enterprise (multi-system)"
+      },
+      "calculate": "Calculate Estimate",
+      "resultTitle": "Estimated Project Cost",
+      "range": "{min} – {max}",
+      "savings": "Potential saving vs. an in-house team: ~{amount}",
+      "disclaimer": "* This is a rough estimate. Talk to us for a detailed proposal built around your requirements.",
+      "quoteCta": "Request a detailed quote →"
+    },
+    "quiz": {
+      "progress": "Question {current} of {total}",
+      "percentDone": "{percent}% complete",
+      "back": "← Back",
+      "questions": {
+        "q1": {
+          "question": "Which best describes your organisation?",
+          "options": {
+            "enterprise": "Large enterprise (500+ employees)",
+            "mid": "Mid-market company (50–500 employees)",
+            "startup": "Startup / small business (under 50 employees)"
+          }
+        },
+        "q2": {
+          "question": "What is your main goal?",
+          "options": {
+            "modernization": "Modernising legacy systems",
+            "mvp": "Building a new product or MVP",
+            "scale": "Scaling existing infrastructure",
+            "strategy": "Strategic IT guidance"
+          }
+        },
+        "q3": {
+          "question": "What's your project timeline?",
+          "options": {
+            "urgent": "ASAP (under 3 months)",
+            "medium": "3–6 months",
+            "long": "6+ months / still planning"
+          }
+        },
+        "q4": {
+          "question": "What's your estimated project budget?",
+          "options": {
+            "small": "Under Rp 500 million",
+            "medium": "Rp 500 million – Rp 2 billion",
+            "large": "Rp 2 billion – Rp 5 billion",
+            "enterprise-budget": "Rp 5 billion+"
+          }
+        },
+        "q5": {
+          "question": "Which technology area interests you most?",
+          "options": {
+            "erp": "Enterprise Software / ERP",
+            "app": "Web & Mobile Apps",
+            "cloud": "Cloud & DevOps",
+            "consulting": "IT Consulting"
+          }
+        }
+      },
+      "result": {
+        "title": "We found the right solution for you!",
+        "consultation": "Book a Free Consultation",
+        "caseStudies": "See Case Studies",
+        "emailTitle": "Email me these results",
+        "emailDescription": "We'll send your personalised recommendation plus the suggested next steps.",
+        "nameLabel": "Name (optional)",
+        "emailLabel": "Work Email",
+        "submit": "Send My Results",
+        "sent": "Results sent! Check your inbox for your personalised recommendation."
+      }
+    },
+    "carousel": {
+      "watchVideo": "Watch video",
+      "previous": "Previous",
+      "next": "Next",
+      "goTo": "Go to testimonial {index}"
+    },
+    "brand": {
+      "imageAlt": "DN Tech",
+      "placeholder": "DN Tech Indonesia",
+      "aboutEyebrow": "About DN Tech",
+      "aboutTitle": "About DN Tech",
+      "aboutCta": "Get Started",
+      "testimonialsTitle": "Testimonials",
+      "testimonialsSubtitle": "Quotes we publish with written permission.",
+      "testimonialPrevious": "Previous",
+      "testimonialNext": "Next",
+      "testimonialSelect": "Show testimonial {index}",
+      "advantagesTitle": "Why Choose DN Tech",
+      "advantagesSubtitle": "The way we work on every single project.",
+      "valuesTitle": "Mission & Core Values",
+      "valuesSubtitle": "The values that shape how the DN Tech team works."
+    },
+    "internalLinks": {
+      "defaultTitle": "Explore Related"
+    },
+    "ui": {
+      "close": "Close",
+      "closeModal": "Close dialog",
+      "closeNotification": "Dismiss notification",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "loadingData": "Loading data...",
+      "loadingPage": "Loading page...",
+      "pleaseWait": "Just a moment"
+    }
+  }
+}
