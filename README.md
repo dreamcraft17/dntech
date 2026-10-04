@@ -160,6 +160,8 @@ npm run blog:backfill-translations -- --dry-run   # check the plan first
 npm run blog:backfill-translations
 ```
 
+On the VPS the backend is installed without dev dependencies, so `tsx` is missing there and the npm script fails; run the file directly instead: `npx -y tsx scripts/backfill-blog-translations.ts --dry-run`.
+
 The first pass repairs `BlogPost.locale` from the old `language:<code>` tag — automation used to write posts in Indonesian, English or Mandarin at random — so posts are translated from their real language. Translation needs `OPENAI_API_KEY` or `GEMINI_API_KEY`; without one, posts stay single-language.
 
 ## Configuration

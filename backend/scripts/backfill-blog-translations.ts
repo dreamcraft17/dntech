@@ -19,8 +19,22 @@
  *   npm run blog:backfill-translations -- --dry-run
  *   npm run blog:backfill-translations -- --limit=5 --locale=en
  *   npm run blog:backfill-translations -- --post=my-post-slug --force
+ *
+ * On the VPS dev dependencies are not installed, so run the file directly and
+ * load the env file through the shell:
+ *   set -a; . ./.env; set +a
+ *   npx -y tsx scripts/backfill-blog-translations.ts --dry-run
  */
-import 'dotenv/config';
+// Loaded through require so the script still runs where dotenv cannot be
+// resolved — on the VPS it is launched via `npx tsx`, which resolves from npm's
+// cache directory rather than from backend/node_modules. Without dotenv the
+// process simply uses the environment it was given.
+try {
+  require('dotenv/config');
+} catch {
+  // Intentionally empty: env vars are expected to come from the shell instead.
+}
+
 import { PrismaClient } from '@prisma/client';
 import { translateBlogPost } from '../src/services/GeminiContentService';
 import { slugify } from '../src/utils/helpers';
@@ -32,6 +46,14 @@ import {
   type SiteLocale,
 } from '../src/utils/blog-locale';
 import { makeTranslationSlugChecker, type BlogSlugLookupClient } from '../src/services/AdminContentService';
+
+if (!process.env.DATABASE_URL) {
+  console.error(
+    'DATABASE_URL is not set. Run this from backend/ with the env file loaded:\n' +
+      '  set -a; . ./.env; set +a'
+  );
+  process.exit(1);
+}
 
 const prisma = new PrismaClient();
 
