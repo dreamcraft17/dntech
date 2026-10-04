@@ -66,7 +66,6 @@
       "fallback": {
         "title": "This service has not been translated yet.",
         "body": "For now we are showing it in {language}.",
-        "machineTranslated": "This translation was generated automatically and may read a little stiff in places.",
         "language": {
           "id": "Indonesian",
           "en": "English"
@@ -178,7 +177,6 @@
       "fallback": {
         "title": "This article has not been translated yet.",
         "body": "For now we are showing it in {language}.",
-        "machineTranslated": "This translation was generated automatically, so some wording may read a little stiff.",
         "badge": "In {language}",
         "language": {
           "id": "Indonesian",

@@ -66,7 +66,6 @@
       "fallback": {
         "title": "Layanan ini belum diterjemahkan.",
         "body": "Untuk sementara kami menampilkannya dalam {language}.",
-        "machineTranslated": "Terjemahan ini dibuat otomatis, jadi beberapa kalimat mungkin terasa kurang luwes.",
         "language": {
           "id": "bahasa Indonesia",
           "en": "bahasa Inggris"
@@ -178,7 +177,6 @@
       "fallback": {
         "title": "Artikel ini belum diterjemahkan.",
         "body": "Untuk sementara kami menampilkannya dalam {language}.",
-        "machineTranslated": "Terjemahan ini dibuat otomatis, jadi beberapa kalimat mungkin terasa kurang luwes.",
         "badge": "Dalam {language}",
         "language": {
           "id": "bahasa Indonesia",

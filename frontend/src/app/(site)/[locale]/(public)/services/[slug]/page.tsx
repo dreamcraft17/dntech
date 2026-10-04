@@ -127,20 +127,15 @@ export default async function ServiceDetailPage({ params }: { params: RouteParam
             ]}
           />
 
-          {(service.isFallback || service.isMachineTranslated) && (
+          {service.isFallback && (
             <div
               role="note"
               className="mb-8 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50/70 px-4 py-3 text-sm leading-6 text-amber-900"
             >
               <Languages className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" aria-hidden="true" />
               <p>
-                {service.isFallback && (
-                  <>
-                    <span className="font-semibold">{t('services.fallback.title')}</span>{' '}
-                    {t('services.fallback.body', { language: t(`services.fallback.language.${servedLocale}`) })}{' '}
-                  </>
-                )}
-                {service.isMachineTranslated && t('services.fallback.machineTranslated')}
+                <span className="font-semibold">{t('services.fallback.title')}</span>{' '}
+                {t('services.fallback.body', { language: t(`services.fallback.language.${servedLocale}`) })}
               </p>
             </div>
           )}

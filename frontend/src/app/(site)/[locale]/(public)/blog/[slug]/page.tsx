@@ -170,20 +170,15 @@ export default async function BlogDetailPage({ params }: { params: RouteParams }
             )}
           </nav>
 
-          {(post.isFallback || post.isMachineTranslated) && (
+          {post.isFallback && (
             <div
               role="note"
               className="mb-8 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50/70 px-4 py-3 text-sm leading-6 text-amber-900"
             >
               <Languages className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" aria-hidden="true" />
               <p>
-                {post.isFallback && (
-                  <>
-                    <span className="font-semibold">{t('blog.fallback.title')}</span>{' '}
-                    {t('blog.fallback.body', { language: t(`blog.fallback.language.${servedLocale}`) })}{' '}
-                  </>
-                )}
-                {post.isMachineTranslated && t('blog.fallback.machineTranslated')}
+                <span className="font-semibold">{t('blog.fallback.title')}</span>{' '}
+                {t('blog.fallback.body', { language: t(`blog.fallback.language.${servedLocale}`) })}
               </p>
             </div>
           )}
