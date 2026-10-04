@@ -1,0 +1,11 @@
+id,title,url,type,credibility,recency,bias,role
+01,DN Tech repository and current copy,local://dntech-repo,primary,high,high,internal,Current identity and proof architecture
+02,Existing DN Tech SEO and market audit,local://dntech-seo-market-audit,primary,medium-high,high,Prior segmentation and positioning hypothesis
+03,IBM product engineering definition,https://www.ibm.com/think/topics/product-engineering,secondary,high,medium-high,vendor,Category meaning and lifecycle expectation
+04,thoughtbot services,https://thoughtbot.com/services,primary,high,high,vendor,Product strategy/design/development operating model
+05,Thoughtworks product development,https://www.thoughtworks.com/what-we-do/product-development,primary,high,high,vendor,Product-led lifecycle and continuous discovery
+06,Embrace ID,https://embrace.id/en,primary,high,high,vendor,Indonesian software-house competitor packaging
+07,NIS Group,https://nisgroup.id/jasa/jasa-software-house,primary,high,high,vendor,Indonesian category and buyer language
+08,Technosindo,https://technosindo.com/,primary,high,high,vendor,Hybrid software-house/product-thinking competitor
+09,Nagatama,https://www.nagatama.app/id,primary,medium-high,high,vendor,Explicit studio/software-house hybrid
+10,Market-research methodology,local://market-research-scorer,primary,high,high,internal,Segmentation scoring and limitations
