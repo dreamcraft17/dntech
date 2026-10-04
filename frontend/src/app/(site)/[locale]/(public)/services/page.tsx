@@ -4,6 +4,7 @@ import { PageIntro } from '@/components/layout/PageIntro';
 import { JsonLd, breadcrumbSchema, itemListSchema } from '@/components/seo/JsonLd';
 import { buildMetadata, getPageSeo, localePath, SITE_URL } from '@/lib/seo';
 import { fetchPublicApiList } from '@/lib/server-api';
+import { withLocale } from '@/lib/api';
 import type { Service } from '@/types';
 import type { Metadata } from 'next';
 import { Link } from '@/i18n/navigation';
@@ -26,11 +27,11 @@ export async function generateMetadata({
   });
 }
 
-async function getServices(searchParams: { category?: string; search?: string }) {
+async function getServices(searchParams: { category?: string; search?: string }, locale: string) {
   const params = new URLSearchParams();
   if (searchParams.category) params.set('category', searchParams.category);
   if (searchParams.search) params.set('search', searchParams.search);
-  return fetchPublicApiList<Service>(`/services?${params}`, 60);
+  return fetchPublicApiList<Service>(withLocale(`/services?${params}`, locale), 60);
 }
 
 export default async function ServicesPage({
@@ -45,7 +46,7 @@ export default async function ServicesPage({
 
   const t = await getTranslations('catalog');
   const query = await searchParams;
-  const services = await getServices(query);
+  const services = await getServices(query, locale);
   const categories = [...new Set(services.map((s) => s.category).filter(Boolean))];
   const base = `${SITE_URL}${localePath('/services', locale)}`;
 

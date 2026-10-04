@@ -123,17 +123,46 @@ model Service {
   displayOrder   Int           @default(0) @map("display_order")
   seoTitle       String?       @map("seo_title")
   seoDescription String?       @map("seo_description")
+  // Language the columns on this row are written in — every service was
+  // authored by an admin, so this is always 'id' until an editor says otherwise.
+  locale         String        @default("id")
   createdAt      DateTime      @default(now()) @map("created_at")
   updatedAt      DateTime      @updatedAt @map("updated_at")
   createdById    String?       @map("created_by")
   deletedAt      DateTime?     @map("deleted_at")
 
-  createdBy User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdBy    User?                @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  translations ServiceTranslation[]
 
   @@index([slug])
   @@index([status])
   @@index([displayOrder])
   @@map("services")
+}
+
+/// One rendering of a service in a locale other than Service.locale.
+model ServiceTranslation {
+  id             String   @id @default(uuid())
+  serviceId      String   @map("service_id")
+  locale         String
+  name           String
+  slug           String
+  description    String
+  features       Json?
+  category       String?
+  seoTitle       String?  @map("seo_title")
+  seoDescription String?  @map("seo_description")
+  /// False once an editor has revised the machine output.
+  isMachine      Boolean  @default(true) @map("is_machine")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, locale])
+  @@unique([locale, slug])
+  @@index([locale])
+  @@map("service_translations")
 }
 
 model Product {

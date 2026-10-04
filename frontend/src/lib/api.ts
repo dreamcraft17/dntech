@@ -61,25 +61,30 @@ export interface LocalizedContentMeta {
 }
 
 /**
- * Canonical + hreflang URLs for one blog post, using each language's own slug.
+ * Canonical + hreflang URLs for one localized content item (blog post,
+ * service, ...), using each language's own slug under `basePath`.
  *
- * Languages the post does not exist in are dropped so hreflang never advertises
- * a translation that is not there, and locales outside the site's routing table
- * (older posts can carry e.g. `zh`) are ignored because they have no URL.
+ * Languages the item does not exist in are dropped so hreflang never
+ * advertises a translation that is not there, and locales outside the site's
+ * routing table (older blog posts can carry e.g. `zh`) are ignored because
+ * they have no URL.
  */
-export function blogAlternates({
+export function contentAlternates({
+  basePath,
   locale,
   servedSlug,
   availableLocales,
   slugs,
 }: {
+  /** Route segment the slug lives under, e.g. '/blog' or '/services'. */
+  basePath: string;
   locale: string;
   /** Slug of the language actually served — the canonical URL's slug. */
   servedSlug: string;
   availableLocales?: string[];
   slugs?: Record<string, string>;
 }): { canonical: string; languages?: Record<string, string> } {
-  const canonical = `${SITE_URL}${localePath(`/blog/${servedSlug}`, locale)}`;
+  const canonical = `${SITE_URL}${localePath(`${basePath}/${servedSlug}`, locale)}`;
 
   const available = (availableLocales?.length ? availableLocales : [locale]).filter(
     (candidate): candidate is Locale => (locales as readonly string[]).includes(candidate),
@@ -89,13 +94,33 @@ export function blogAlternates({
   for (const candidate of available) {
     const slug = slugs?.[candidate] || (candidate === locale ? servedSlug : undefined);
     if (!slug) continue;
-    languages[candidate] = `${SITE_URL}${localePath(`/blog/${slug}`, candidate)}`;
+    languages[candidate] = `${SITE_URL}${localePath(`${basePath}/${slug}`, candidate)}`;
   }
 
   if (Object.keys(languages).length === 0) return { canonical };
 
   languages['x-default'] = languages.id ?? Object.values(languages)[0];
   return { canonical, languages };
+}
+
+/** @deprecated use `contentAlternates({ basePath: '/blog', ... })` */
+export function blogAlternates(args: {
+  locale: string;
+  servedSlug: string;
+  availableLocales?: string[];
+  slugs?: Record<string, string>;
+}): { canonical: string; languages?: Record<string, string> } {
+  return contentAlternates({ basePath: '/blog', ...args });
+}
+
+/** Canonical + hreflang URLs for one service listing. */
+export function serviceAlternates(args: {
+  locale: string;
+  servedSlug: string;
+  availableLocales?: string[];
+  slugs?: Record<string, string>;
+}): { canonical: string; languages?: Record<string, string> } {
+  return contentAlternates({ basePath: '/services', ...args });
 }
 
 export interface ApiResponse<T> {

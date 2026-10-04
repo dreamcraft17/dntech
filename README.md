@@ -116,6 +116,7 @@ npm run dev
 | `npm run start` | Run compiled API |
 | `npm run worker:blog` | Run the opt-in blog generation queue and daily publish worker |
 | `npm run blog:backfill-translations` | Add the missing id/en version to existing blog posts (run `-- --dry-run` first) |
+| `npm run services:backfill-translations` | Add the missing id/en version to existing services (run `-- --dry-run` first) |
 | `npm run test` | All Jest tests |
 | `npm run test:unit` | Unit tests only |
 | `npm run test:integration` | Integration tests (needs Postgres) |
@@ -150,19 +151,33 @@ The public site is served under a locale prefix; `/admin` is not prefixed and st
 
 **UI copy** lives in `frontend/src/messages/{id,en}/*.json` (next-intl). Metadata emits a per-locale canonical plus `hreflang` alternates, and the sitemap lists both variants of every route.
 
-**Blog posts are bilingual.** A post is one `BlogPost` row written in `BlogPost.locale`, plus a `BlogPostTranslation` row per other language (its own title, slug, body and SEO fields). Public blog endpoints take `?locale=`, resolve either language's slug, and fall back to the original language when a translation is missing — the page then shows a notice. Automated posts are written in Indonesian and translated to English in the same run; if translation fails the Indonesian post still publishes. Editors can review, fix, regenerate or delete the English version from the admin blog screen, and a human-edited translation (`isMachine: false`) is never overwritten by automation.
+**Blog posts and services are bilingual.** Each is one base row written in its own `locale` column (`BlogPost.locale` / `Service.locale`), plus a `*Translation` row per other language (its own title/name, slug, body/description and SEO fields — services also carry `features`). Public endpoints take `?locale=`, resolve either language's slug, and fall back to the original language when a translation is missing — the blog page then shows a notice. Automated blog posts are written in Indonesian and translated to English in the same run; if translation fails the Indonesian post still publishes. Editors can review, fix, regenerate or delete a translation from the admin blog/services screen, and a human-edited translation (`isMachine: false`) is never overwritten by automation.
 
-**Deploying this change.** Push the schema (`npm run db:push`), then backfill the existing posts:
+**Deploying this change.** Push the schema, then backfill the existing content:
 
 ```bash
 cd backend
-npm run blog:backfill-translations -- --dry-run   # check the plan first
+npm run db:push
+npm run blog:backfill-translations -- --dry-run       # check the plan first
 npm run blog:backfill-translations
+npm run services:backfill-translations -- --dry-run
+npm run services:backfill-translations
 ```
 
-On the VPS the backend is installed without dev dependencies, so `tsx` is missing there and the npm script fails; run the file directly instead: `npx -y tsx scripts/backfill-blog-translations.ts --dry-run`.
+The blog script's first pass repairs `BlogPost.locale` from the old `language:<code>` tag — automation used to write posts in Indonesian, English or Mandarin at random — so posts are translated from their real language. Services have no such history (every one was written by an admin in Indonesian), so the services script skips straight to translating. Both need `OPENAI_API_KEY` or `GEMINI_API_KEY`; without one, content stays single-language.
 
-The first pass repairs `BlogPost.locale` from the old `language:<code>` tag — automation used to write posts in Indonesian, English or Mandarin at random — so posts are translated from their real language. Translation needs `OPENAI_API_KEY` or `GEMINI_API_KEY`; without one, posts stay single-language.
+**Running a backfill on the VPS**, where the backend is installed without dev dependencies (`tsx` is missing and the npm script fails with `tsx: not found`):
+
+```bash
+cd ~/dntech/backend
+npm i tsx --no-save        # installs tsx into backend/node_modules
+npx prisma generate        # regenerate the client npm just reset
+npx tsx scripts/backfill-blog-translations.ts --dry-run
+```
+
+Do **not** use `npx -y tsx` — it resolves packages from npm's own cache directory rather than `backend/node_modules`, so `dotenv` and `@prisma/client` are not reachable from there and the script crashes before it can even report `DATABASE_URL` as missing. Installing `tsx` locally (above) is what makes `dotenv/config` pick up `.env` automatically. Afterwards, restore the production-only install and restart: `npm ci --omit=dev && pm2 restart dntech-api`.
+
+**Never run `prisma migrate dev` or `migrate deploy` in this repo** — there is no `prisma/migrations/` directory, so Prisma treats the whole production database as drift and offers to reset it (data loss). Schema changes always go through `prisma db push`, which `scripts/deploy.sh` already runs before restarting the API.
 
 ## Configuration
 

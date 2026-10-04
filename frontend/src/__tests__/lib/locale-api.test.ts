@@ -1,4 +1,4 @@
-import { blogAlternates, withLocale } from '@/lib/api';
+import { blogAlternates, serviceAlternates, withLocale } from '@/lib/api';
 import { SITE_URL } from '@/lib/seo';
 
 describe('withLocale', () => {
@@ -84,6 +84,38 @@ describe('blogAlternates', () => {
     expect(languages).toEqual({
       id: `${SITE_URL}/id/blog/panduan-mvp`,
       'x-default': `${SITE_URL}/id/blog/panduan-mvp`,
+    });
+  });
+});
+
+describe('serviceAlternates', () => {
+  it('points each hreflang alternate at that language own slug under /services', () => {
+    const { canonical, languages } = serviceAlternates({
+      locale: 'en',
+      servedSlug: 'custom-application-development',
+      availableLocales: ['id', 'en'],
+      slugs: { id: 'pengembangan-aplikasi-custom', en: 'custom-application-development' },
+    });
+
+    expect(canonical).toBe(`${SITE_URL}/en/services/custom-application-development`);
+    expect(languages).toEqual({
+      id: `${SITE_URL}/id/services/pengembangan-aplikasi-custom`,
+      en: `${SITE_URL}/en/services/custom-application-development`,
+      'x-default': `${SITE_URL}/id/services/pengembangan-aplikasi-custom`,
+    });
+  });
+
+  it('drops languages the service does not exist in', () => {
+    const { languages } = serviceAlternates({
+      locale: 'en',
+      servedSlug: 'pengembangan-aplikasi-custom',
+      availableLocales: ['id'],
+      slugs: { id: 'pengembangan-aplikasi-custom' },
+    });
+
+    expect(languages).toEqual({
+      id: `${SITE_URL}/id/services/pengembangan-aplikasi-custom`,
+      'x-default': `${SITE_URL}/id/services/pengembangan-aplikasi-custom`,
     });
   });
 });

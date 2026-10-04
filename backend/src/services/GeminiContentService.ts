@@ -691,6 +691,114 @@ ${JSON.stringify(payload)}
   };
 }
 
+const translatedServiceSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1),
+  features: z
+    .array(z.object({ title: z.string(), description: z.string().optional().default('') }))
+    .optional()
+    .nullable(),
+  category: z.string().optional().nullable(),
+  seoTitle: z.string().optional().default(''),
+  seoDescription: z.string().optional().default(''),
+});
+
+export interface ServiceTranslationInput {
+  name: string;
+  description: string;
+  features?: Array<{ title: string; description?: string }> | null;
+  category?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  sourceLocale: string;
+  targetLocale: string;
+}
+
+export interface ServiceTranslationResult {
+  name: string;
+  slug: string;
+  description: string;
+  features: Array<{ title: string; description?: string }>;
+  category: string | null;
+  seoTitle: string;
+  seoDescription: string;
+}
+
+/**
+ * Translates one service listing into another site locale. Pure content
+ * work: it never touches the database and returns only a *suggested* slug
+ * derived from the translated name — the caller makes that slug unique
+ * against both services and service_translations.
+ */
+export async function translateService(input: ServiceTranslationInput): Promise<ServiceTranslationResult> {
+  const openAI = openAIKey();
+  const gemini = process.env.GEMINI_API_KEY?.trim() || '';
+  if (!openAI && !gemini) {
+    throw new AppError(503, 'AI_NOT_CONFIGURED', 'OPENAI_API_KEY atau GEMINI_API_KEY belum dikonfigurasi di backend');
+  }
+
+  const sourceLabel = localeLabel(input.sourceLocale);
+  const targetLabel = localeLabel(input.targetLocale);
+  const payload = {
+    name: input.name,
+    description: input.description,
+    features: input.features || [],
+    category: input.category || '',
+    seoTitle: input.seoTitle || '',
+    seoDescription: input.seoDescription || '',
+  };
+
+  const prompt = `
+You are DN Tech's bilingual marketing editor. Translate the service listing below from ${sourceLabel} into ${targetLabel}.
+
+This is a published marketing/services page, so it must read as if it had been written in ${targetLabel} by a native editor — not as a literal translation.
+
+Rules:
+- Translate name, description, every feature's title and description, category, seoTitle, and seoDescription. Do not add, drop, or reorder features.
+- Never translate brand names and proper nouns: DN Tech, dnPeople, dnCore, dnShopee, product names, company names stay exactly as written.
+- Localize idioms and tone instead of translating word-for-word; keep the same meaning, scope, and level of detail.
+- Do not invent facts, prices, timelines, or claims that are not in the source.
+- seoTitle: at most ${SEO_TITLE_MAX} characters. seoDescription: about 140-${SEO_DESCRIPTION_MAX} characters, never longer than ${SEO_DESCRIPTION_MAX}.
+- Return valid JSON only, no markdown fence, with the fields: name, description, features (array of {title, description}), category, seoTitle, seoDescription.
+
+Source service (JSON):
+${JSON.stringify(payload)}
+`.trim();
+
+  const systemInstruction = `You are a professional ${sourceLabel} to ${targetLabel} marketing translator for DN Tech. You always answer with a single valid JSON object.`;
+  const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+
+  let translated: z.infer<typeof translatedServiceSchema>;
+  if (openAI) {
+    try {
+      translated = translatedServiceSchema.parse(parseJson(await callOpenAIJson(prompt, systemInstruction, openAI)));
+    } catch (error) {
+      if (!gemini) throw error;
+      console.warn('[service-ai] OpenAI translation failed; trying Gemini fallback', error instanceof Error ? error.message : error);
+      translated = translatedServiceSchema.parse(await generateGeminiBlogDraft(prompt, gemini, model));
+    }
+  } else {
+    translated = translatedServiceSchema.parse(await generateGeminiBlogDraft(prompt, gemini, model));
+  }
+
+  const name = translated.name.trim();
+  const seoTitle = (translated.seoTitle || name).trim().slice(0, SEO_TITLE_MAX);
+  const seoDescription = (translated.seoDescription || translated.description).trim().slice(0, SEO_DESCRIPTION_MAX);
+
+  return {
+    name,
+    slug: slugify(name),
+    description: translated.description,
+    features: (translated.features || []).map((feature) => ({
+      title: feature.title,
+      description: feature.description || '',
+    })),
+    category: translated.category?.trim() || null,
+    seoTitle,
+    seoDescription,
+  };
+}
+
 export async function generateServiceDraft(input: unknown, _userId: string) {
   const data = generateServiceSchema.parse(input);
   const apiKey = process.env.GEMINI_API_KEY?.trim();

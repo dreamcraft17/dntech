@@ -5,9 +5,286 @@ import { apiFetch } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
-import { EyeOff, Globe, Plus, Pencil, Trash2, X } from 'lucide-react';
+import { Alert } from '@/components/ui/Alert';
+import { Bot, EyeOff, Globe, Languages, Pencil, Plus, RefreshCw, Trash2, UserCheck, X } from 'lucide-react';
 import type { Service } from '@/types';
 import { ServiceGenerator, type GeneratedServiceDraft } from '@/components/admin/ServiceGenerator';
+
+/** Admin UI stays Indonesian-only; it manages both published languages. */
+const TARGET_LOCALE = 'en';
+
+interface ServiceTranslation {
+  locale: string;
+  name?: string;
+  slug?: string;
+  description?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  isMachine?: boolean;
+}
+
+const EMPTY_SERVICE_TRANSLATION: ServiceTranslation = {
+  locale: TARGET_LOCALE,
+  name: '',
+  slug: '',
+  description: '',
+  seoTitle: '',
+  seoDescription: '',
+};
+
+function toTranslationList(payload: unknown): ServiceTranslation[] {
+  if (Array.isArray(payload)) return payload as ServiceTranslation[];
+  if (payload && typeof payload === 'object') {
+    const record = payload as Record<string, unknown>;
+    if (Array.isArray(record.translations)) return record.translations as ServiceTranslation[];
+  }
+  return [];
+}
+
+function TranslationBadge({ translation }: { translation: ServiceTranslation | undefined }) {
+  if (!translation) {
+    return (
+      <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">
+        Belum ada terjemahan
+      </span>
+    );
+  }
+  return translation.isMachine ? (
+    <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800">
+      <Bot className="h-3.5 w-3.5" /> Hasil AI — belum direview
+    </span>
+  ) : (
+    <span className="inline-flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-800">
+      <UserCheck className="h-3.5 w-3.5" /> Disunting manusia
+    </span>
+  );
+}
+
+function ServiceTranslationsPanel({ services }: { services: Service[] }) {
+  const [translations, setTranslations] = useState<Record<string, ServiceTranslation[]>>({});
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [editing, setEditing] = useState<{ serviceId: string; serviceName: string; draft: ServiceTranslation } | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const loadTranslations = useCallback(async (serviceId: string) => {
+    const payload = await apiFetch<unknown>(`/admin/services/${serviceId}/translations`);
+    setTranslations((prev) => ({ ...prev, [serviceId]: toTranslationList(payload) }));
+  }, []);
+
+  const loadAll = useCallback(async (list: Service[]) => {
+    try {
+      await Promise.all(list.map((service) => loadTranslations(service.id).catch(() => undefined)));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal memuat daftar terjemahan');
+    } finally {
+      setInitialLoading(false);
+    }
+  }, [loadTranslations]);
+
+  useEffect(() => {
+    // loadAll resolves immediately (Promise.all([])) and still flips
+    // initialLoading off via its own finally — no synchronous setState here.
+    const timeoutId = setTimeout(() => {
+      loadAll(services).catch(console.error);
+    }, 0);
+    return () => clearTimeout(timeoutId);
+    // Re-runs when the service list length changes (create/delete), not on every rename.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [services.length, loadAll]);
+
+  function translationFor(serviceId: string) {
+    return translations[serviceId]?.find((item) => item.locale === TARGET_LOCALE);
+  }
+
+  async function generate(service: Service) {
+    if (!confirm(`Buat terjemahan Inggris untuk "${service.name}" dengan AI?`)) return;
+    setError('');
+    setBusyId(service.id);
+    try {
+      await apiFetch(`/admin/services/${service.id}/translations/${TARGET_LOCALE}/generate`, { method: 'POST' });
+      await loadTranslations(service.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal membuat terjemahan');
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function remove(service: Service) {
+    if (!confirm(`Hapus terjemahan Inggris untuk "${service.name}"?`)) return;
+    setError('');
+    setBusyId(service.id);
+    try {
+      await apiFetch(`/admin/services/${service.id}/translations/${TARGET_LOCALE}`, { method: 'DELETE' });
+      await loadTranslations(service.id);
+      setEditing((current) => (current?.serviceId === service.id ? null : current));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menghapus terjemahan');
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function save() {
+    if (!editing) return;
+    setError('');
+    setSaving(true);
+    try {
+      const { draft } = editing;
+      await apiFetch(`/admin/services/${editing.serviceId}/translations/${TARGET_LOCALE}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: draft.name,
+          slug: draft.slug,
+          description: draft.description,
+          seoTitle: draft.seoTitle,
+          seoDescription: draft.seoDescription,
+          // Saving from the editor means a human has reviewed this copy.
+          isMachine: false,
+        }),
+      });
+      await loadTranslations(editing.serviceId);
+      setEditing(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menyimpan terjemahan');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function startEdit(service: Service) {
+    const existing = translationFor(service.id);
+    setEditing({
+      serviceId: service.id,
+      serviceName: service.name,
+      draft: { ...EMPTY_SERVICE_TRANSLATION, ...(existing ?? {}), locale: TARGET_LOCALE },
+    });
+  }
+
+  function patchDraft(patch: Partial<ServiceTranslation>) {
+    setEditing((current) => (current ? { ...current, draft: { ...current.draft, ...patch } } : current));
+  }
+
+  return (
+    <section className="mt-10">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <h2 className="flex items-center gap-2 text-xl font-bold text-gray-900">
+            <Languages className="h-5 w-5 text-blue-900" /> Terjemahan Inggris
+          </h2>
+          <p className="mt-1 text-sm text-gray-600">
+            Layanan ditulis dalam Bahasa Indonesia. Versi Inggris di sini yang tampil di rute /en.
+          </p>
+        </div>
+        <Button variant="secondary" onClick={() => loadAll(services).catch(console.error)}>
+          <RefreshCw className="h-4 w-4" /> Muat ulang
+        </Button>
+      </div>
+
+      {error && <Alert variant="error" className="mb-4">{error}</Alert>}
+
+      {editing && (
+        <Card className="mb-6">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-gray-900">Terjemahan Inggris — {editing.serviceName}</h3>
+              <p className="mt-1 text-xs text-gray-500">
+                Menyimpan dari form ini menandai terjemahan sebagai sudah direview manusia.
+              </p>
+            </div>
+            <button type="button" onClick={() => setEditing(null)} aria-label="Tutup editor terjemahan">
+              <X className="h-5 w-5 text-gray-400" />
+            </button>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <Input label="Nama (EN)" value={editing.draft.name ?? ''} onChange={(e) => patchDraft({ name: e.target.value })} required />
+            <Input label="Slug (EN)" value={editing.draft.slug ?? ''} onChange={(e) => patchDraft({ slug: e.target.value })} />
+            <Textarea label="Deskripsi (EN)" rows={5} className="md:col-span-2" value={editing.draft.description ?? ''} onChange={(e) => patchDraft({ description: e.target.value })} required />
+            <Input label="Meta Title (EN)" value={editing.draft.seoTitle ?? ''} onChange={(e) => patchDraft({ seoTitle: e.target.value })} />
+            <Textarea label="Meta Description (EN)" rows={3} value={editing.draft.seoDescription ?? ''} onChange={(e) => patchDraft({ seoDescription: e.target.value })} />
+          </div>
+          <p className="mt-3 text-xs text-gray-500">
+            Fitur layanan (EN) ikut diterjemahkan otomatis oleh AI dan belum bisa diedit manual di sini.
+          </p>
+          <div className="mt-4 flex gap-2">
+            <Button onClick={save} loading={saving}>Simpan terjemahan</Button>
+            <Button variant="secondary" onClick={() => setEditing(null)}>Batal</Button>
+          </div>
+        </Card>
+      )}
+
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+        <table className="w-full text-sm">
+          <thead className="border-b border-gray-200 bg-gray-50">
+            <tr>
+              <th className="px-4 py-3 text-left font-medium text-gray-600">Layanan</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-600">Status terjemahan EN</th>
+              <th className="px-4 py-3 text-right font-medium text-gray-600">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {services.map((service) => {
+              const translation = translationFor(service.id);
+              return (
+                <tr key={service.id} className="border-b border-gray-100 hover:bg-gray-50">
+                  <td className="px-4 py-3 font-medium text-gray-900">{service.name}</td>
+                  <td className="px-4 py-3">
+                    <TranslationBadge translation={translation} />
+                    {translation?.slug && (
+                      <div className="mt-1 text-xs text-gray-500">/en/services/{translation.slug}</div>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    {!translation && (
+                      <button
+                        onClick={() => generate(service)}
+                        disabled={busyId === service.id}
+                        className="p-1 text-gray-400 hover:text-blue-900 disabled:opacity-50"
+                        aria-label={`Buat terjemahan Inggris untuk ${service.name}`}
+                        title="Buat dengan AI"
+                      >
+                        <Bot className="h-4 w-4" />
+                      </button>
+                    )}
+                    <button
+                      onClick={() => startEdit(service)}
+                      className="ml-1 p-1 text-gray-400 hover:text-blue-900"
+                      aria-label={`Ubah terjemahan Inggris untuk ${service.name}`}
+                      title="Ubah terjemahan"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    {translation && (
+                      <button
+                        onClick={() => remove(service)}
+                        disabled={busyId === service.id}
+                        className="ml-1 p-1 text-gray-400 hover:text-red-600 disabled:opacity-50"
+                        aria-label={`Hapus terjemahan Inggris untuk ${service.name}`}
+                        title="Hapus terjemahan"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {initialLoading && (
+          <div className="flex items-center justify-center gap-2 py-10 text-sm text-gray-500">
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-blue-900 border-t-transparent" /> Memuat terjemahan...
+          </div>
+        )}
+        {!initialLoading && services.length === 0 && (
+          <p className="py-8 text-center text-gray-500">Belum ada layanan</p>
+        )}
+      </div>
+    </section>
+  );
+}
 
 const emptyForm = {
   name: '', description: '', category: '', status: 'draft' as string, displayOrder: 0,
@@ -200,6 +477,8 @@ export default function AdminServicesPage() {
           </tbody>
         </table>
       </div>
+
+      <ServiceTranslationsPanel services={items} />
     </div>
   );
 }

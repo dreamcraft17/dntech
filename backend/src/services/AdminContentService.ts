@@ -10,7 +10,7 @@ import {
   uniqueTranslationSlug,
   type SiteLocale,
 } from '../utils/blog-locale';
-import { translateBlogPost } from './GeminiContentService';
+import { translateBlogPost, translateService } from './GeminiContentService';
 
 /**
  * Admin CRUD logic for the "big 4" CMS content types (services, products,
@@ -70,6 +70,223 @@ export async function deleteService(id: string, userId: string, ip?: string) {
     data: { deletedAt: new Date(), status: 'archived' },
   });
   await logActivity(userId, 'delete', 'service', param(id), undefined, ip);
+  cacheService.clear();
+}
+
+// --- Service translations ---
+// Mirrors the blog translation functions above: a service is one base row
+// (written in Service.locale) plus one ServiceTranslation per other site
+// locale. Machine output can be overwritten freely; anything an editor has
+// touched (isMachine === false) is only replaced when explicitly asked for.
+
+export const serviceTranslationSchema = z.object({
+  name: z.string().min(1),
+  slug: z.string().optional(),
+  description: z.string().min(1),
+  features: z.array(z.object({ title: z.string(), description: z.string().optional() })).nullish(),
+  category: z.string().nullish(),
+  seoTitle: z.string().nullish(),
+  seoDescription: z.string().nullish(),
+});
+
+/** Minimal surface of a Prisma client, so scripts can pass their own. */
+export interface ServiceSlugLookupClient {
+  service: { findFirst(args: unknown): Promise<{ id: string } | null> };
+  serviceTranslation: {
+    findFirst(args: unknown): Promise<{ serviceId: string; locale: string } | null>;
+  };
+}
+
+/**
+ * A translation slug has to be unique against both `services.slug` and
+ * `service_translations.slug`. The row being written is allowed to keep its
+ * own slug.
+ */
+export function makeServiceTranslationSlugChecker(
+  db: ServiceSlugLookupClient,
+  serviceId: string,
+  locale: string
+) {
+  return async (candidate: string): Promise<boolean> => {
+    const base = await db.service.findFirst({ where: { slug: candidate }, select: { id: true } });
+    if (base) return true;
+
+    const translation = await db.serviceTranslation.findFirst({
+      where: { slug: candidate },
+      select: { serviceId: true, locale: true },
+    });
+    if (!translation) return false;
+    return !(translation.serviceId === serviceId && translation.locale === locale);
+  };
+}
+
+async function getServiceForTranslation(id: string) {
+  const service = await prisma.service.findFirst({ where: { id: param(id), deletedAt: null } });
+  if (!service) throw new AppError(404, 'NOT_FOUND', 'Service not found');
+  return service;
+}
+
+export async function listServiceTranslations(id: string) {
+  const service = await prisma.service.findFirst({
+    where: { id: param(id), deletedAt: null },
+    include: { translations: { orderBy: { locale: 'asc' } } },
+  });
+  if (!service) throw new AppError(404, 'NOT_FOUND', 'Service not found');
+
+  const baseLocale = service.locale || DEFAULT_LOCALE;
+  const present = new Set<string>([baseLocale, ...service.translations.map((t) => t.locale)]);
+
+  return {
+    serviceId: service.id,
+    baseLocale,
+    base: {
+      locale: baseLocale,
+      name: service.name,
+      slug: service.slug,
+      description: service.description,
+      features: service.features,
+      category: service.category,
+      seoTitle: service.seoTitle,
+      seoDescription: service.seoDescription,
+    },
+    siteLocales: [...SITE_LOCALES],
+    missingLocales: SITE_LOCALES.filter((locale) => !present.has(locale)),
+    translations: service.translations,
+  };
+}
+
+export async function upsertServiceTranslation(
+  id: string,
+  locale: string,
+  body: unknown,
+  userId: string,
+  ip?: string
+) {
+  const target = assertSiteLocale(locale);
+  const data = serviceTranslationSchema.parse(body);
+  const service = await getServiceForTranslation(id);
+
+  if ((service.locale || DEFAULT_LOCALE) === target) {
+    throw new AppError(
+      400,
+      'LOCALE_CONFLICT',
+      `${target} is this service's base locale; edit the service itself instead`
+    );
+  }
+
+  const slug = await uniqueTranslationSlug(
+    slugify(data.slug || data.name),
+    makeServiceTranslationSlugChecker(prisma as unknown as ServiceSlugLookupClient, service.id, target)
+  );
+
+  const payload = {
+    name: data.name,
+    slug,
+    description: data.description,
+    features: data.features ?? undefined,
+    category: data.category ?? null,
+    seoTitle: data.seoTitle ?? null,
+    seoDescription: data.seoDescription ?? null,
+    // A human has touched this row; the backfill and the generator must not
+    // silently overwrite it from now on.
+    isMachine: false,
+  };
+
+  const translation = await prisma.serviceTranslation.upsert({
+    where: { serviceId_locale: { serviceId: service.id, locale: target } },
+    create: { ...payload, serviceId: service.id, locale: target },
+    update: payload,
+  });
+
+  await logActivity(userId, 'update', 'service_translation', translation.id, { serviceId: service.id, locale: target }, ip);
+  cacheService.clear();
+  return translation;
+}
+
+export async function generateServiceTranslation(
+  id: string,
+  locale: string,
+  body: unknown,
+  userId: string,
+  ip?: string
+) {
+  const target = assertSiteLocale(locale);
+  const { force } = z.object({ force: z.boolean().optional() }).parse(body ?? {});
+  const service = await getServiceForTranslation(id);
+  const sourceLocale = service.locale || DEFAULT_LOCALE;
+
+  if (sourceLocale === target) {
+    throw new AppError(400, 'LOCALE_CONFLICT', `${target} is this service's base locale; nothing to translate`);
+  }
+
+  const existing = await prisma.serviceTranslation.findUnique({
+    where: { serviceId_locale: { serviceId: service.id, locale: target } },
+  });
+  if (existing && existing.isMachine === false && !force) {
+    throw new AppError(
+      409,
+      'HUMAN_TRANSLATION_EXISTS',
+      'This translation was edited by a human; pass { "force": true } to overwrite it'
+    );
+  }
+
+  const result = await translateService({
+    name: service.name,
+    description: service.description,
+    features: Array.isArray(service.features)
+      ? (service.features as Array<{ title: string; description?: string }>)
+      : null,
+    category: service.category,
+    seoTitle: service.seoTitle,
+    seoDescription: service.seoDescription,
+    sourceLocale,
+    targetLocale: target,
+  });
+
+  const slug = await uniqueTranslationSlug(
+    slugify(result.slug || result.name),
+    makeServiceTranslationSlugChecker(prisma as unknown as ServiceSlugLookupClient, service.id, target)
+  );
+
+  const payload = {
+    name: result.name,
+    slug,
+    description: result.description,
+    features: result.features ?? undefined,
+    category: result.category ?? null,
+    seoTitle: result.seoTitle ?? null,
+    seoDescription: result.seoDescription ?? null,
+    isMachine: true,
+  };
+
+  const translation = await prisma.serviceTranslation.upsert({
+    where: { serviceId_locale: { serviceId: service.id, locale: target } },
+    create: { ...payload, serviceId: service.id, locale: target },
+    update: payload,
+  });
+
+  await logActivity(
+    userId,
+    'generate',
+    'service_translation',
+    translation.id,
+    { serviceId: service.id, locale: target, sourceLocale, overwroteHumanEdit: Boolean(existing && !existing.isMachine) },
+    ip
+  );
+  cacheService.clear();
+  return translation;
+}
+
+export async function deleteServiceTranslation(id: string, locale: string, userId: string, ip?: string) {
+  const target = assertSiteLocale(locale);
+  const existing = await prisma.serviceTranslation.findUnique({
+    where: { serviceId_locale: { serviceId: param(id), locale: target } },
+    select: { id: true },
+  });
+  if (!existing) throw new AppError(404, 'NOT_FOUND', 'Translation not found');
+
+  await prisma.serviceTranslation.delete({ where: { id: existing.id } });
+  await logActivity(userId, 'delete', 'service_translation', existing.id, { serviceId: param(id), locale: target }, ip);
   cacheService.clear();
 }
 

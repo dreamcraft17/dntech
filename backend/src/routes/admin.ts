@@ -50,6 +50,43 @@ router.delete('/services/:id', requireWrite('services'), asyncHandler(async (req
   successResponse(res, { deleted: true });
 }));
 
+// --- Service translations ---
+router.get('/services/:id/translations', asyncHandler(async (req, res) => {
+  successResponse(res, await content.listServiceTranslations(param(req.params.id)));
+}));
+
+router.put('/services/:id/translations/:locale', requireWrite('services'), asyncHandler(async (req: AuthRequest, res) => {
+  const translation = await content.upsertServiceTranslation(
+    param(req.params.id),
+    param(req.params.locale),
+    req.body,
+    req.user!.id,
+    req.ip
+  );
+  successResponse(res, translation);
+}));
+
+router.post('/services/:id/translations/:locale/generate', requireWrite('services'), asyncHandler(async (req: AuthRequest, res) => {
+  const translation = await content.generateServiceTranslation(
+    param(req.params.id),
+    param(req.params.locale),
+    req.body,
+    req.user!.id,
+    req.ip
+  );
+  successResponse(res, translation);
+}));
+
+router.delete('/services/:id/translations/:locale', requireWrite('services'), asyncHandler(async (req: AuthRequest, res) => {
+  await content.deleteServiceTranslation(
+    param(req.params.id),
+    param(req.params.locale),
+    req.user!.id,
+    req.ip
+  );
+  successResponse(res, { deleted: true });
+}));
+
 router.post('/services/reorder', requireWrite('services'), asyncHandler(async (req, res) => {
   await content.reorderServices(req.body);
   successResponse(res, { reordered: true });

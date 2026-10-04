@@ -62,6 +62,15 @@
           "title": "Launch & Dukungan",
           "description": "Deployment, handover dokumentasi, dan opsi maintenance berkelanjutan."
         }
+      },
+      "fallback": {
+        "title": "Layanan ini belum diterjemahkan.",
+        "body": "Untuk sementara kami menampilkannya dalam {language}.",
+        "machineTranslated": "Terjemahan ini dibuat otomatis, jadi beberapa kalimat mungkin terasa kurang luwes.",
+        "language": {
+          "id": "bahasa Indonesia",
+          "en": "bahasa Inggris"
+        }
       }
     },
     "products": {

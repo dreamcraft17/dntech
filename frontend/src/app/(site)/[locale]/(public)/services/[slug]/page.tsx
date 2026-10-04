@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Languages } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Button } from '@/components/ui/Button';
 import { JsonLd, breadcrumbSchema, serviceSchema, faqSchema } from '@/components/seo/JsonLd';
@@ -7,6 +7,8 @@ import { CalendlyEmbed } from '@/components/interactive/CalendlyEmbed';
 import { buildMetadata, localePath, SITE_URL } from '@/lib/seo';
 import { SERVICE_PROCESS_STEPS } from '@/lib/service-process';
 import { getPublicSettings } from '@/lib/settings';
+import { serviceAlternates, withLocale } from '@/lib/api';
+import type { LocalizedContentMeta } from '@/lib/api';
 import { fetchPublicApiList, fetchPublicApiSafe } from '@/lib/server-api';
 import type { Service, BlogPost, Faq } from '@/types';
 import type { Metadata } from 'next';
@@ -20,12 +22,35 @@ import { DetailSection } from '@/components/layout/DetailSection';
 
 type RouteParams = Promise<{ locale: string; slug: string }>;
 
-async function getService(slug: string) {
-  return fetchPublicApiSafe<Service>(`/services/${slug}`, 60);
+type LocalizedService = Service & LocalizedContentMeta;
+
+async function getService(slug: string, locale: string) {
+  return fetchPublicApiSafe<LocalizedService>(withLocale(`/services/${slug}`, locale), 60);
 }
 
-async function getRelatedPosts(category: string) {
-  return fetchPublicApiList<BlogPost>(`/blog?category=${encodeURIComponent(category)}&pageSize=3`, 60);
+/**
+ * Builds hreflang from the service's per-language slugs (`slugs`) instead of
+ * assuming every locale shares one slug — mirrors blog/[slug]'s pruneAlternates.
+ */
+function pruneAlternates(
+  service: LocalizedService,
+  locale: string,
+  servedSlug: string,
+): Metadata['alternates'] {
+  const { canonical, languages } = serviceAlternates({
+    locale,
+    servedSlug,
+    availableLocales: service.availableLocales,
+    slugs: service.slugs,
+  });
+  return { canonical, languages };
+}
+
+async function getRelatedPosts(category: string, locale: string) {
+  return fetchPublicApiList<BlogPost>(
+    withLocale(`/blog?category=${encodeURIComponent(category)}&pageSize=3`, locale),
+    60,
+  );
 }
 
 async function getFaqs() {
@@ -36,15 +61,18 @@ async function getFaqs() {
 export async function generateMetadata({ params }: { params: RouteParams }): Promise<Metadata> {
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: 'catalog' });
-  const service = await getService(slug);
+  const service = await getService(slug, locale);
   if (!service) return { title: t('services.metadataFallback') };
-  return buildMetadata({
-    title: t('services.detail.titleSuffix', { title: service.seoTitle || service.name }),
-    description: service.seoDescription || service.description,
-    path: `/services/${slug}`,
-    keywords: [service.category || '', service.name, 'software development Indonesia', 'Jakarta'].filter(Boolean),
-    locale,
-  });
+  return {
+    ...buildMetadata({
+      title: t('services.detail.titleSuffix', { title: service.seoTitle || service.name }),
+      description: service.seoDescription || service.description,
+      path: `/services/${slug}`,
+      keywords: [service.category || '', service.name, 'software development Indonesia', 'Jakarta'].filter(Boolean),
+      locale,
+    }),
+    alternates: pruneAlternates(service, locale, service.slug),
+  };
 }
 
 export default async function ServiceDetailPage({ params }: { params: RouteParams }) {
@@ -53,14 +81,16 @@ export default async function ServiceDetailPage({ params }: { params: RouteParam
 
   const t = await getTranslations('catalog');
   const [service, settings, faqs] = await Promise.all([
-    getService(slug),
+    getService(slug, locale),
     getPublicSettings(),
     getFaqs(),
   ]);
   if (!service) notFound();
 
+  const servedLocale = service.locale || locale;
+
   const features = (service.features as { title: string; description?: string }[]) || [];
-  const relatedPosts = service.category ? await getRelatedPosts(service.category) : [];
+  const relatedPosts = service.category ? await getRelatedPosts(service.category, locale) : [];
   const calendlyUrl = settings.calendlyUrl;
 
   const internalLinks = [
@@ -97,7 +127,25 @@ export default async function ServiceDetailPage({ params }: { params: RouteParam
             ]}
           />
 
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+          {(service.isFallback || service.isMachineTranslated) && (
+            <div
+              role="note"
+              className="mb-8 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50/70 px-4 py-3 text-sm leading-6 text-amber-900"
+            >
+              <Languages className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" aria-hidden="true" />
+              <p>
+                {service.isFallback && (
+                  <>
+                    <span className="font-semibold">{t('services.fallback.title')}</span>{' '}
+                    {t('services.fallback.body', { language: t(`services.fallback.language.${servedLocale}`) })}{' '}
+                  </>
+                )}
+                {service.isMachineTranslated && t('services.fallback.machineTranslated')}
+              </p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3" lang={service.isFallback ? servedLocale : undefined}>
             <div className="lg:col-span-2">
               <DetailPageHeader
                 kicker={service.category || t('services.kicker')}

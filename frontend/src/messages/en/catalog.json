@@ -62,6 +62,15 @@
           "title": "Launch & Support",
           "description": "Deployment, documentation handover, and optional ongoing maintenance."
         }
+      },
+      "fallback": {
+        "title": "This service has not been translated yet.",
+        "body": "For now we are showing it in {language}.",
+        "machineTranslated": "This translation was generated automatically and may read a little stiff in places.",
+        "language": {
+          "id": "Indonesian",
+          "en": "English"
+        }
       }
     },
     "products": {
