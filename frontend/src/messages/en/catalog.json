@@ -35,11 +35,22 @@
         "included": "What's included",
         "process": "How we work",
         "faq": "Common questions",
+        "faqHint": "Quick answers about how DN Tech works — not a formal project quote.",
         "relatedArticles": "Related articles",
         "nextStepKicker": "Next step",
         "nextStepTitle": "Start the conversation about your project",
         "nextStepBody": "Free consultation — we reply within 24 hours.",
-        "relatedServices": "Related Services"
+        "relatedServices": "Related services",
+        "summaryKicker": "Service snapshot",
+        "deliverableCount": "{count}",
+        "deliverableLabel": "Scope items",
+        "processStepCount": "{count}",
+        "processStepLabel": "Process steps",
+        "sectionNavAria": "Service detail sections",
+        "navIncluded": "Scope",
+        "navProcess": "Process",
+        "navFaq": "FAQ",
+        "navArticles": "Articles"
       },
       "process": {
         "discovery": {

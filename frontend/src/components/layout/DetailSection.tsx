@@ -13,8 +13,8 @@ interface DetailSectionProps {
 export function DetailSection({ title, description, children, panel = false, className }: DetailSectionProps) {
   return (
     <section className={`mt-12 ${className ?? ''}`}>
-      <h2 className="text-2xl font-bold tracking-tight text-gray-900">{title}</h2>
-      {description && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-600">{description}</p>}
+      <h2 className="text-2xl font-bold tracking-tight text-slate-950">{title}</h2>
+      {description && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">{description}</p>}
       <div className="mt-6">{panel ? <SaasPanel>{children}</SaasPanel> : children}</div>
     </section>
   );

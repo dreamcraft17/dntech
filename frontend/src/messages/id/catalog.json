@@ -35,11 +35,22 @@
         "included": "Yang termasuk",
         "process": "Proses kerja",
         "faq": "Pertanyaan umum",
+        "faqHint": "Jawaban singkat tentang cara kerja dan engagement DN Tech — bukan quote resmi proyek.",
         "relatedArticles": "Artikel terkait",
-        "nextStepKicker": "Next step",
+        "nextStepKicker": "Langkah berikutnya",
         "nextStepTitle": "Mulai diskusi proyek Anda",
         "nextStepBody": "Konsultasi gratis — respons dalam 24 jam.",
-        "relatedServices": "Layanan Terkait"
+        "relatedServices": "Layanan terkait",
+        "summaryKicker": "Ringkasan layanan",
+        "deliverableCount": "{count}",
+        "deliverableLabel": "Poin cakupan",
+        "processStepCount": "{count}",
+        "processStepLabel": "Tahap proses",
+        "sectionNavAria": "Navigasi detail layanan",
+        "navIncluded": "Cakupan",
+        "navProcess": "Proses",
+        "navFaq": "FAQ",
+        "navArticles": "Artikel"
       },
       "process": {
         "discovery": {
