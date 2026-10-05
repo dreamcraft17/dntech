@@ -1,0 +1,10 @@
+id,title,url,type,credibility,recency,bias,role
+01,Existing DN Tech product UX decision,local://product-page-ux-2026,primary,high,high,internal,Prior catalog and detail-page direction
+02,Local catalog contract and CMS fields,local://product-catalog-code,primary,high,high,internal,Implementation constraints and available proof fields
+03,i10Studios product-team pattern,https://i10studios.com/,primary,high,high,vendor,Featured proof plus supporting work and process
+04,thoughtbot case-study pattern,https://thoughtbot.com/case-studies/folio,primary,high,high,vendor,Problem/outcome/product proof hierarchy
+05,Looplogic product studio pattern,https://looplogic.works/,primary,high,high,vendor,Proof versus mockup and method rhythm
+06,Orion Software product index pattern,https://www.orionsoftware.co/work,primary,high,high,vendor,Product stories with status/platform/context
+07,DARN engineering proof pattern,https://darn.dev/,primary,high,medium,vendor,Selected work and engineering depth
+08,DN Tech product marketing context,local://product-marketing-context,primary,medium-high,internal,Personas,job,proof constraints
+09,Existing market-research segment score,local://dntech-segments,primary,medium,internal,Segment priorities and assumptions
