@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { cn } from '@/lib/utils';
 import { getApiUrl } from '@/lib/api';
-import { BUDGET_OPTIONS } from '@/lib/currency';
 import { Check } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/navigation';
 
@@ -26,6 +25,14 @@ const TIMELINE_KEYS = [
   { value: '1-3mo', key: '1-3mo' },
   { value: '3-6mo', key: '3-6mo' },
   { value: 'flexible', key: 'flexible' },
+] as const;
+
+/** Values are stored as-is on the lead record. */
+const BUDGET_RANGE_KEYS = [
+  { value: 'under-500jt', key: 'under500jt' },
+  { value: '500jt-1m', key: '500jtTo1m' },
+  { value: '1m-5m', key: '1mTo5m' },
+  { value: '5m-plus', key: '5mPlus' },
 ] as const;
 
 const STEP_KEYS = ['contact', 'project', 'confirm'] as const;
@@ -65,6 +72,10 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
   );
   const timelineOptions = useMemo(
     () => TIMELINE_KEYS.map((o) => ({ value: o.value, label: t(`forms.multiStep.timelines.${o.key}`) })),
+    [t],
+  );
+  const budgetOptions = useMemo(
+    () => BUDGET_RANGE_KEYS.map((o) => ({ value: o.value, label: t(`forms.multiStep.budgetRanges.${o.key}`) })),
     [t],
   );
   const steps = useMemo(() => STEP_KEYS.map((key) => t(`forms.multiStep.steps.${key}`)), [t]);
@@ -159,7 +170,7 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
   const projectLabel = projectTypes.find((o) => o.value === values.projectType)?.label || values.projectType;
   const timelineLabel = timelineOptions.find((o) => o.value === values.timeline)?.label || values.timeline;
   const serviceLabel = serviceOptions.find((o) => o.value === values.serviceType)?.label || values.serviceType || '—';
-  const budgetLabel = BUDGET_OPTIONS.find((o) => o.value === values.budgetRange)?.label || t('forms.multiStep.budgetUnset');
+  const budgetLabel = budgetOptions.find((o) => o.value === values.budgetRange)?.label || t('forms.multiStep.budgetUnset');
 
   return (
     <div>
@@ -223,7 +234,7 @@ export function MultiStepForm({ source = 'contact-form', pageSource, defaultServ
             )}
             <Select
               label={t('forms.multiStep.budgetLabel')}
-              options={[{ value: '', label: t('forms.multiStep.budgetPlaceholder') }, ...BUDGET_OPTIONS]}
+              options={[{ value: '', label: t('forms.multiStep.budgetPlaceholder') }, ...budgetOptions]}
               {...register('budgetRange')}
             />
             <Select

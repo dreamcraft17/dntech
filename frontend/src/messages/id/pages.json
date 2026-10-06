@@ -228,6 +228,12 @@
           "duplicate": "Kami sudah menerima inquiry Anda — tim kami akan segera menghubungi.",
           "sendFailed": "Gagal mengirim",
           "generic": "Terjadi kesalahan"
+        },
+        "budgetRanges": {
+          "under500jt": "Di bawah Rp 500 juta",
+          "500jtTo1m": "Rp 500 juta – Rp 1 miliar",
+          "1mTo5m": "Rp 1 miliar – Rp 5 miliar",
+          "5mPlus": "Rp 5 miliar+"
         }
       },
       "newsletter": {

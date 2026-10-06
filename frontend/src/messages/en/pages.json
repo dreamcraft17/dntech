@@ -228,6 +228,12 @@
           "duplicate": "We already have your enquiry — our team will be in touch shortly.",
           "sendFailed": "We couldn't send your enquiry",
           "generic": "Something went wrong"
+        },
+        "budgetRanges": {
+          "under500jt": "Under Rp 500 million",
+          "500jtTo1m": "Rp 500 million – Rp 1 billion",
+          "1mTo5m": "Rp 1 billion – Rp 5 billion",
+          "5mPlus": "Rp 5 billion+"
         }
       },
       "newsletter": {
