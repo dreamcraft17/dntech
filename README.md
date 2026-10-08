@@ -202,7 +202,8 @@ From `backend/.env.example`:
 | `SMTP_FROM_NAME` / `SMTP_FROM_EMAIL` | Sender identity |
 | `EMAIL_RETRY_ATTEMPTS` / `EMAIL_RATE_LIMIT` | Mail queue tuning |
 | `SENTRY_DSN` | Optional error monitoring (no-op if unset) |
-| `OPENAI_API_KEY` / `GEMINI_API_KEY` | Blog generation and fallback provider credentials |
+| `GEMINI_API_KEY` | Blog/service text generation and translation (primary) |
+| `OPENAI_API_KEY` | Blog cover images (required for covers); optional text fallback |
 | `BLOG_AUTOMATION_ENABLED` | Set `true` to run the blog worker |
 | `BLOG_AUTOMATION_POSTS_PER_DAY` | Maximum automation articles published per local day; default `4` |
 | `BLOG_AUTOMATION_QUEUE_TARGET` | Scheduled automation queue target; default `12` |
@@ -210,7 +211,7 @@ From `backend/.env.example`:
 | `BLOG_AUTOMATION_PUBLISH_MODE` / `BLOG_AUTOMATION_DRY_RUN` | Scheduled/direct mode and validation-only mode |
 | `BLOG_AUTOMATION_AUTHOR_EMAIL` | Optional active admin/content author for generated posts |
 
-Blog automation is intentionally opt-in. Set `BLOG_AUTOMATION_ENABLED=true` only after configuring an active admin author and `OPENAI_API_KEY`. The worker keeps a scheduled generation queue (default target: 12 articles), randomly writes each article in Bahasa Indonesia, English, or Mandarin, and publishes no more than four automation articles per local calendar day at the configured slots. It retries drafts that fail the quality guard or do not receive an OpenAI cover image, skips a topic for the current day after all retries fail so it cannot block the remaining queue, rejects short/placeholder drafts, creates a context-aware cover image with OpenAI only, and defaults to `scheduled` status. If OpenAI image generation is unavailable, the worker does not create the article without a cover and will retry/skip the topic. `BLOG_AUTOMATION_DRY_RUN=true` validates content without writing posts or generating images. Run it as a separate PM2 process with `npm run worker:blog`.
+Blog automation is intentionally opt-in. Set `BLOG_AUTOMATION_ENABLED=true` only after configuring an active admin author, `GEMINI_API_KEY` (drafts/translations), and `OPENAI_API_KEY` (cover images). The worker keeps a scheduled generation queue (default target: 12 articles), randomly writes each article in Bahasa Indonesia, English, or Mandarin, and publishes no more than four automation articles per local calendar day at the configured slots. It retries drafts that fail the quality guard or do not receive an OpenAI cover image, skips a topic for the current day after all retries fail so it cannot block the remaining queue, rejects short/placeholder drafts, creates a context-aware cover image with OpenAI only, and defaults to `scheduled` status. If OpenAI image generation is unavailable, the worker does not create the article without a cover and will retry/skip the topic. `BLOG_AUTOMATION_DRY_RUN=true` validates content without writing posts or generating images. Run it as a separate PM2 process with `npm run worker:blog`.
 
 On the VPS, after the first backend build, register the process once: `pm2 start backend/dist/workers/blog-content.worker.js --name dntech-blog-worker --cwd backend`. Future `scripts/deploy.sh` runs restart it automatically when registered.
 
