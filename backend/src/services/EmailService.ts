@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer, { Transporter } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import prisma from '../config/database';
 import { emailTemplates } from '../templates/emailTemplates';
@@ -34,7 +34,7 @@ function adminEmail() {
 }
 
 class EmailService {
-  private transporter: nodemailer.Transporter | null = null;
+  private transporter: Transporter | null = null;
   private readonly maxRetries = Number(process.env.EMAIL_RETRY_ATTEMPTS || 3);
   private readonly retryDelay = Number(process.env.EMAIL_RETRY_DELAY_MS || 1000);
 
@@ -69,7 +69,7 @@ class EmailService {
 
     this.transporter = nodemailer.createTransport(transportOptions as SMTPTransport.Options);
 
-    this.transporter?.verify((error) => {
+    this.transporter?.verify((error: Error | null) => {
       if (error) {
         logger.error({ err: error }, '[Email] SMTP connection failed');
         return;

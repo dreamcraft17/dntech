@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-dntech}
       POSTGRES_USER: ${POSTGRES_USER:-dntech}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dntech123}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env — no insecure default allowed}
     ports:
       - '5432:5432'
     volumes:
@@ -24,15 +24,15 @@ services:
     ports:
       - '4000:4000'
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-dntech}:${POSTGRES_PASSWORD:-dntech123}@db:5432/${POSTGRES_DB:-dntech}?schema=public
-      JWT_SECRET: ${JWT_SECRET:-change-this-in-production-use-long-random-string}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dntech}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env — no insecure default allowed}@db:5432/${POSTGRES_DB:-dntech}?schema=public
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env — no insecure default allowed}
       PORT: ${PORT:-4000}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash-lite}
       CHATBOT_ENABLED: ${CHATBOT_ENABLED:-true}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@dntech.id}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-DevOnly-LocalBootstrap-ChangeMe!}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env — no insecure default allowed}
     volumes:
       - uploads_data:/app/uploads
     depends_on:

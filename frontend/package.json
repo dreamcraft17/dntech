@@ -36,6 +36,9 @@
     "tailwindcss": "^4",
     "zod": "^4.4.3"
   },
+  "overrides": {
+    "sharp": "0.35.5"
+  },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
     "@storybook/addon-a11y": "^8.6.14",
