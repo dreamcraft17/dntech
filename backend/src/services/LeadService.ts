@@ -1,9 +1,21 @@
 import prisma from '../config/database';
-import { LeadStatus } from '@prisma/client';
+import { LeadStatus, FormSubmission } from '@prisma/client';
 import { sendWelcomeEmail, sendLeadNotification } from './EmailService';
 import logger from '../config/logger';
 import { getPagination, param, AppError } from '../utils/helpers';
 import { z } from 'zod';
+import { encryptField, encryptFieldOrNull, decryptFieldOrNull, blindIndex } from '../utils/encryption';
+
+type DecryptedLead<T extends Pick<FormSubmission, 'email' | 'phone'>> = T;
+
+/** email/phone are encrypted at rest (see backend/src/utils/encryption.ts). */
+function decryptLead<T extends Pick<FormSubmission, 'email' | 'phone'>>(lead: T): DecryptedLead<T> {
+  return {
+    ...lead,
+    email: decryptFieldOrNull(lead.email) || lead.email,
+    phone: decryptFieldOrNull(lead.phone),
+  };
+}
 
 export interface LeadInput {
   name: string;
@@ -34,7 +46,7 @@ export function categorizeLead(serviceType?: string, budget?: string): string {
 
 export async function checkDuplicateEmail(email: string): Promise<boolean> {
   const existing = await prisma.formSubmission.findFirst({
-    where: { email, createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
+    where: { emailIndex: blindIndex(email), createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
   });
   return !!existing;
 }
@@ -47,8 +59,9 @@ export async function createLead(data: LeadInput, meta?: { ip?: string; userAgen
     data: {
       formType: 'contact',
       name: data.name,
-      email: data.email,
-      phone: data.phone,
+      email: encryptField(data.email),
+      emailIndex: blindIndex(data.email),
+      phone: encryptFieldOrNull(data.phone),
       companyName: data.companyName,
       serviceInterested: data.serviceType,
       projectType: data.projectType,
@@ -212,11 +225,22 @@ export async function listLeadsAdmin(query: Record<string, unknown>) {
   const where: Record<string, unknown> = {};
   if (status) where.status = String(status);
   if (formType) where.formType = String(formType);
+
+  // email/phone are encrypted at rest, so a DB-level `contains` can't match
+  // them. Free-text search decrypts+filters in-app instead of paginating in
+  // the DB — acceptable at this table's scale (a company's inbound leads).
   if (search) {
-    where.OR = [
-      { name: { contains: String(search) } },
-      { email: { contains: String(search) } },
-    ];
+    const term = String(search).toLowerCase();
+    const all = (await prisma.formSubmission.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      include: { assignedTo: { select: { id: true, name: true } } },
+    })).map(decryptLead);
+
+    const matched = all.filter(
+      (l) => l.name.toLowerCase().includes(term) || l.email.toLowerCase().includes(term) || l.phone?.toLowerCase().includes(term)
+    );
+    return { leads: matched.slice(skip, skip + pageSize), page, pageSize, total: matched.length };
   }
 
   const [leads, total] = await Promise.all([
@@ -230,7 +254,7 @@ export async function listLeadsAdmin(query: Record<string, unknown>) {
     prisma.formSubmission.count({ where }),
   ]);
 
-  return { leads, page, pageSize, total };
+  return { leads: leads.map(decryptLead), page, pageSize, total };
 }
 
 export async function getLeadByIdAdmin(id: string) {
@@ -240,36 +264,39 @@ export async function getLeadByIdAdmin(id: string) {
   });
   if (!lead) throw new AppError(404, 'NOT_FOUND', 'Lead not found');
   await prisma.formSubmission.update({ where: { id: lead.id }, data: { isRead: true } });
-  return lead;
+  return decryptLead(lead);
 }
 
 export async function updateLeadStatus(id: string, body: unknown) {
   const { status } = z.object({
     status: z.enum(['new', 'contacted', 'qualified', 'converted', 'rejected']),
   }).parse(body);
-  return prisma.formSubmission.update({
+  const updated = await prisma.formSubmission.update({
     where: { id: param(id) },
     data: { status },
   });
+  return decryptLead(updated);
 }
 
 export async function assignLead(id: string, body: unknown) {
   const { assignedToId } = z.object({ assignedToId: z.string() }).parse(body);
-  return prisma.formSubmission.update({
+  const updated = await prisma.formSubmission.update({
     where: { id: param(id) },
     data: { assignedToId },
     include: { assignedTo: { select: { name: true, email: true } } },
   });
+  return decryptLead(updated);
 }
 
 export async function addLeadNote(id: string, body: unknown) {
   const { note } = z.object({ note: z.string().min(1) }).parse(body);
   const existing = await prisma.formSubmission.findUnique({ where: { id: param(id) } });
   const notes = existing?.notes ? `${existing.notes}\n\n[${new Date().toISOString()}] ${note}` : note;
-  return prisma.formSubmission.update({
+  const updated = await prisma.formSubmission.update({
     where: { id: param(id) },
     data: { notes },
   });
+  return decryptLead(updated);
 }
 
 export async function exportLeadsCsv(body: { status?: string; formType?: string } | undefined) {
@@ -278,7 +305,7 @@ export async function exportLeadsCsv(body: { status?: string; formType?: string 
   if (status) where.status = status;
   if (formType) where.formType = formType;
 
-  const leads = await prisma.formSubmission.findMany({ where, orderBy: { createdAt: 'desc' } });
+  const leads = (await prisma.formSubmission.findMany({ where, orderBy: { createdAt: 'desc' } })).map(decryptLead);
 
   return [
     'id,form_type,name,email,phone,subject,status,created_at',

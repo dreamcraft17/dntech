@@ -8,7 +8,8 @@ jest.mock('../../config/database', () => ({
   default: {
     newsletterSubscriber: {
       findUnique: jest.fn(),
-      upsert: jest.fn(),
+      findFirst: jest.fn(),
+      create: jest.fn(),
       update: jest.fn(),
     },
   },
@@ -23,7 +24,8 @@ const newsletterRouter = require('../../routes/newsletter').default;
 const mockedPrisma = require('../../config/database').default as {
   newsletterSubscriber: {
     findUnique: jest.Mock;
-    upsert: jest.Mock;
+    findFirst: jest.Mock;
+    create: jest.Mock;
     update: jest.Mock;
   };
 };
@@ -43,8 +45,8 @@ describe('newsletter route integration', () => {
   });
 
   it('subscribes new email and sends confirmation', async () => {
-    mockedPrisma.newsletterSubscriber.findUnique.mockResolvedValueOnce(null);
-    mockedPrisma.newsletterSubscriber.upsert.mockResolvedValueOnce({ id: 'sub_1' });
+    mockedPrisma.newsletterSubscriber.findFirst.mockResolvedValueOnce(null);
+    mockedPrisma.newsletterSubscriber.create.mockResolvedValueOnce({ id: 'sub_1' });
 
     const res = await request(buildApp()).post('/api/v1/newsletter/subscribe').send({
       email: 'subscriber@example.com',
@@ -56,7 +58,7 @@ describe('newsletter route integration', () => {
   });
 
   it('returns already subscribed response', async () => {
-    mockedPrisma.newsletterSubscriber.findUnique.mockResolvedValueOnce({
+    mockedPrisma.newsletterSubscriber.findFirst.mockResolvedValueOnce({
       id: 'sub_1',
       status: 'subscribed',
       isActive: true,

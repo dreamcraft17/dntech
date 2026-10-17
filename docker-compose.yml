@@ -26,6 +26,7 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-dntech}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env — no insecure default allowed}@db:5432/${POSTGRES_DB:-dntech}?schema=public
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env — no insecure default allowed}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?Set ENCRYPTION_KEY in .env — generate with: openssl rand -hex 32}
       PORT: ${PORT:-4000}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}

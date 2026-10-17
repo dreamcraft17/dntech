@@ -29,6 +29,7 @@
     "db:seed-products": "tsx scripts/seed-all-products.ts",
     "db:disable-seed-admin": "tsx scripts/disable-seed-admin.ts",
     "db:backfill-blog-covers": "tsx scripts/backfill-blog-cover-images.ts",
+    "db:backfill-pii-encryption": "tsx scripts/backfill-pii-encryption.ts",
     "blog:backfill-translations": "tsx scripts/backfill-blog-translations.ts",
     "services:backfill-translations": "tsx scripts/backfill-service-translations.ts",
     "validate:env": "tsx scripts/validate-env.ts",

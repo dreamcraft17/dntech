@@ -2,6 +2,7 @@ import prisma from '../config/database';
 import { getPagination } from '../utils/helpers';
 import { emailQueueService } from '../services/EmailQueueService';
 import { getDashboardMetrics as getLeadDashboardMetrics } from '../services/LeadService';
+import { decryptFieldOrNull } from '../utils/encryption';
 
 /**
  * Read-only admin analytics/reporting queries, extracted from
@@ -93,7 +94,12 @@ export async function listNewsletterSubscribers(query: Record<string, unknown>) 
     prisma.newsletterSubscriber.findMany({ orderBy: { createdAt: 'desc' }, skip, take: pageSize }),
     prisma.newsletterSubscriber.count(),
   ]);
-  return { items, page, pageSize, total };
+  return {
+    items: items.map((s) => ({ ...s, email: decryptFieldOrNull(s.email) || s.email })),
+    page,
+    pageSize,
+    total,
+  };
 }
 
 export async function listQuizSubmissions(query: Record<string, unknown>) {
@@ -102,7 +108,12 @@ export async function listQuizSubmissions(query: Record<string, unknown>) {
     prisma.quizSubmission.findMany({ orderBy: { createdAt: 'desc' }, skip, take: pageSize }),
     prisma.quizSubmission.count(),
   ]);
-  return { items, page, pageSize, total };
+  return {
+    items: items.map((s) => ({ ...s, email: decryptFieldOrNull(s.email) })),
+    page,
+    pageSize,
+    total,
+  };
 }
 
 export async function listEmailLogs(query: Record<string, unknown>) {

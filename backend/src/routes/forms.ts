@@ -9,6 +9,7 @@ import {
   sendLeadNotification,
   sendWelcomeEmail,
 } from '../services/EmailService';
+import { encryptField, encryptFieldOrNull, blindIndex } from '../utils/encryption';
 import logger from '../config/logger';
 
 const router = Router();
@@ -57,6 +58,9 @@ async function createSubmission(
   const submission = await prisma.formSubmission.create({
     data: {
       ...data,
+      email: encryptField(data.email as string),
+      emailIndex: blindIndex(data.email as string),
+      phone: encryptFieldOrNull(data.phone as string | undefined),
       ipAddress: req.ip,
       userAgent: req.headers['user-agent'],
     },

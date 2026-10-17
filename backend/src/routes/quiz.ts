@@ -3,6 +3,7 @@ import { z } from 'zod';
 import prisma from '../config/database';
 import { asyncHandler, successResponse } from '../utils/helpers';
 import { sendQuizFollowUp } from '../services/EmailService';
+import { encryptFieldOrNull } from '../utils/encryption';
 import logger from '../config/logger';
 
 const router = Router();
@@ -67,7 +68,7 @@ router.post(
         answers: data.answers,
         result,
         recommendedService: recommendation.service,
-        email: data.email,
+        email: encryptFieldOrNull(data.email),
         name: data.name,
       },
     });

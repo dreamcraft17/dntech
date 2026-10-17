@@ -332,6 +332,10 @@ model FormSubmission {
   formType          FormType   @map("form_type")
   name              String
   email             String
+  // Blind index (HMAC) for exact-match lookups on `email`, which is
+  // encrypted at rest and therefore not queryable directly. See
+  // backend/src/utils/encryption.ts.
+  emailIndex        String?    @map("email_index")
   phone             String?
   subject           String?
   message           String
@@ -356,7 +360,7 @@ model FormSubmission {
 
   assignedTo User? @relation("AssignedLeads", fields: [assignedToId], references: [id], onDelete: SetNull)
 
-  @@index([email])
+  @@index([emailIndex])
   @@index([status])
   @@index([assignedToId])
   @@index([createdAt])
@@ -597,7 +601,14 @@ model ConversionFunnel {
 
 model NewsletterSubscriber {
   id             String    @id @default(uuid())
-  email          String    @unique
+  email          String
+  // Blind index (HMAC) for exact-match lookups — `email` itself is encrypted
+  // at rest and non-deterministic, so it can't be queried directly. Not a DB
+  // unique constraint: legacy rows backfilled after this column was added
+  // would otherwise violate NOT NULL/UNIQUE before the backfill runs (see
+  // docs/runbooks/PII-FIELD-ENCRYPTION.md). Dedup is enforced in application
+  // code (find-by-emailIndex before create) instead.
+  emailIndex     String?   @map("email_index")
   name           String?
   industry       String?
   serviceType    String?   @map("service_type")
@@ -611,7 +622,7 @@ model NewsletterSubscriber {
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
 
-  @@index([email])
+  @@index([emailIndex])
   @@index([status])
   @@map("newsletter_subscribers")
 }

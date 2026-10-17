@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import prisma from '../config/database';
 import { asyncHandler, successResponse } from '../utils/helpers';
 import { sendNewsletterConfirmation, sendNewsletterWelcome } from '../services/EmailService';
+import { encryptField, blindIndex, decryptFieldOrNull } from '../utils/encryption';
 import logger from '../config/logger';
 
 const router = Router();
@@ -22,7 +23,10 @@ router.post(
       serviceType: z.string().optional(),
     }).parse(req.body);
 
-    const existing = await prisma.newsletterSubscriber.findUnique({ where: { email: data.email } });
+    const emailIndex = blindIndex(data.email);
+    // emailIndex is not a DB-unique constraint (see schema comment), so dedup
+    // is a find-then-create/update instead of a single upsert keyed on it.
+    const existing = await prisma.newsletterSubscriber.findFirst({ where: { emailIndex } });
     if (existing?.status === 'subscribed' && existing.isActive) {
       return successResponse(res, { message: 'Anda sudah berlangganan newsletter kami.', alreadySubscribed: true });
     }
@@ -30,25 +34,32 @@ router.post(
     const confirmToken = crypto.randomBytes(32).toString('hex');
     const unsubToken = existing?.unsubToken || crypto.randomBytes(32).toString('hex');
 
-    await prisma.newsletterSubscriber.upsert({
-      where: { email: data.email },
-      create: {
-        ...data,
-        status: 'pending',
-        confirmToken,
-        unsubToken,
-        isActive: false,
-      },
-      update: {
-        name: data.name,
-        industry: data.industry,
-        serviceType: data.serviceType,
-        status: 'pending',
-        confirmToken,
-        unsubToken,
-        isActive: false,
-      },
-    });
+    if (existing) {
+      await prisma.newsletterSubscriber.update({
+        where: { id: existing.id },
+        data: {
+          name: data.name,
+          industry: data.industry,
+          serviceType: data.serviceType,
+          status: 'pending',
+          confirmToken,
+          unsubToken,
+          isActive: false,
+        },
+      });
+    } else {
+      await prisma.newsletterSubscriber.create({
+        data: {
+          ...data,
+          email: encryptField(data.email),
+          emailIndex,
+          status: 'pending',
+          confirmToken,
+          unsubToken,
+          isActive: false,
+        },
+      });
+    }
 
     sendNewsletterConfirmation(data.email, confirmToken).catch((err) => logger.error({ err }, "Background email send failed"));
 
@@ -78,7 +89,7 @@ router.get(
       },
     });
 
-    sendNewsletterWelcome(updated.email, unsubToken).catch((err) => logger.error({ err }, "Background email send failed"));
+    sendNewsletterWelcome(decryptFieldOrNull(updated.email) || updated.email, unsubToken).catch((err) => logger.error({ err }, "Background email send failed"));
     successResponse(res, { message: 'Newsletter berhasil dikonfirmasi.' });
   })
 );
