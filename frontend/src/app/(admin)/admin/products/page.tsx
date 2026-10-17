@@ -14,14 +14,10 @@ import { PricingTiersEditor } from '@/components/admin/PricingTiersEditor';
 import { FaqEditor } from '@/components/admin/FaqEditor';
 
 async function revalidateHomepage() {
-  const revalidateSecret = process.env.NEXT_PUBLIC_REVALIDATE_SECRET;
-  if (!revalidateSecret) return;
-  await fetch('/api/revalidate', {
+  // Goes through the authenticated backend, which holds the real revalidate
+  // secret server-side only — nothing sensitive is sent from the browser.
+  await apiFetch('/admin/revalidate', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-revalidate-secret': revalidateSecret,
-    },
     body: JSON.stringify({ paths: ['/', '/products'] }),
   }).catch(() => undefined);
 }

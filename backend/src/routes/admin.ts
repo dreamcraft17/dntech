@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { asyncHandler, successResponse, paginatedResponse, param } from '../utils/helpers';
+import { z } from 'zod';
+import { asyncHandler, successResponse, paginatedResponse, param, AppError } from '../utils/helpers';
 import {
   authenticate,
   requireRole,
@@ -411,6 +412,38 @@ router.get('/email-stats', requireRole('SuperAdmin', 'ContentManager'), asyncHan
 router.get('/activity-logs', requireRole('SuperAdmin'), asyncHandler(async (req, res) => {
   const { logs, page, pageSize, total } = await analytics.listActivityLogs(req.query as Record<string, unknown>);
   paginatedResponse(res, logs, { page, pageSize, total });
+}));
+
+// --- Frontend cache revalidation ---
+// Proxies to the Next.js /api/revalidate webhook using a server-only secret
+// (REVALIDATE_SECRET) that is never exposed to the browser. Any authenticated
+// admin session can trigger it — the real authorization check already
+// happened via `authenticate` above, so this endpoint carries no secret of
+// its own into client-side code.
+const revalidateBodySchema = z.object({
+  paths: z.array(z.string()).max(20).optional(),
+});
+
+router.post('/revalidate', asyncHandler(async (req, res) => {
+  const { paths } = revalidateBodySchema.parse(req.body);
+  const secret = process.env.REVALIDATE_SECRET;
+  const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3000').split(',')[0].trim();
+
+  if (!secret) {
+    throw new AppError(503, 'REVALIDATE_NOT_CONFIGURED', 'Cache revalidation is not configured');
+  }
+
+  const response = await fetch(`${frontendUrl}/api/revalidate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-revalidate-secret': secret },
+    body: JSON.stringify(paths && paths.length > 0 ? { paths } : {}),
+  });
+
+  if (!response.ok) {
+    throw new AppError(502, 'REVALIDATE_FAILED', 'Frontend cache revalidation failed');
+  }
+
+  successResponse(res, await response.json());
 }));
 
 export default router;

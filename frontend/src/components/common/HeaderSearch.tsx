@@ -65,14 +65,20 @@ export function HeaderSearch({ open, onClose }: HeaderSearchProps) {
     inputRef.current?.focus();
   }, [open]);
 
-  useEffect(() => {
-    if (open) return;
-    setSearchQuery('');
-    setSearchResults([]);
-    setSearchLoading(false);
-    setSearchError('');
-    setSearchSearched(false);
-  }, [open]);
+  // Reset search state when the panel closes. Adjusting state during render
+  // (rather than in an effect) avoids an extra post-close render — see
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (!open) {
+      setSearchQuery('');
+      setSearchResults([]);
+      setSearchLoading(false);
+      setSearchError('');
+      setSearchSearched(false);
+    }
+  }
 
   useEffect(() => {
     return () => {

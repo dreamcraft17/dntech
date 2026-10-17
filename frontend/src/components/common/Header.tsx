@@ -66,10 +66,15 @@ export function Header() {
   const mobileMenuRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
+  // Reset menu state on route change. Adjusting state during render (rather
+  // than in an effect) avoids an extra post-navigation render — see
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
     setOpenGroup(null);
     setMobileOpen(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     if (!openGroup) return;

@@ -33,6 +33,7 @@ services:
       CHATBOT_ENABLED: ${CHATBOT_ENABLED:-true}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@dntech.id}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env — no insecure default allowed}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?Set REVALIDATE_SECRET in .env — must match the frontend service}
     volumes:
       - uploads_data:/app/uploads
     depends_on:
@@ -47,6 +48,7 @@ services:
       - '3000:3000'
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:4000/api/v1}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?Set REVALIDATE_SECRET in .env — must match the backend service}
     depends_on:
       - backend
 

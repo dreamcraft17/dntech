@@ -224,7 +224,8 @@ Use VPS Postgres from this laptop (SSH tunnel). Host alias: ${SSH_HOST}
                             e.g. $(basename "$0") with npm run db:seed-products
                             (refuses db:seed — use the seed subcommand)
   $(basename "$0") psql       psql through the tunnel
-  $(basename "$0") push       prisma db push against VPS (needs CONFIRM_VPS_PUSH=1)
+  $(basename "$0") migrate    prisma migrate deploy against VPS (applies committed migrations only)
+  $(basename "$0") push       prisma db push against VPS (needs CONFIRM_VPS_PUSH=1; prefer 'migrate')
   $(basename "$0") seed       bootstrap admin + branding + products (VPS; rotates admin hash)
 
 Postgres stays bound to localhost on the VPS. Do not open 5432 to the internet.
@@ -254,8 +255,15 @@ main() {
       load_vps_database_url
       exec psql "$DATABASE_URL"
       ;;
+    migrate)
+      start_tunnel
+      write_env_vps
+      load_vps_database_url
+      backend_cd
+      exec npx prisma migrate deploy
+      ;;
     push)
-      [[ "${CONFIRM_VPS_PUSH:-}" == "1" ]] || die "refusing prisma db push to VPS. Re-run with CONFIRM_VPS_PUSH=1 if you intend to change production schema."
+      [[ "${CONFIRM_VPS_PUSH:-}" == "1" ]] || die "refusing prisma db push to VPS. Use '$(basename "$0") migrate' instead, or re-run with CONFIRM_VPS_PUSH=1 if you really intend an unreviewed schema push."
       start_tunnel
       write_env_vps
       load_vps_database_url

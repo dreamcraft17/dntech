@@ -51,10 +51,12 @@ step_backend_build() {
   banner "Backend: npx prisma generate"
   npx prisma generate
 
-  # The PM2 deployment does not use the Docker entrypoint, so apply additive
-  # Prisma schema changes here before restarting the API process.
-  banner "Backend: npx prisma db push"
-  npx prisma db push --skip-generate
+  # The PM2 deployment does not use the Docker entrypoint, so apply pending,
+  # reviewed migrations here before restarting the API process. migrate deploy
+  # only runs committed migrations from prisma/migrations/ — it never
+  # improvises schema changes against the live DB the way `db push` did.
+  banner "Backend: npx prisma migrate deploy"
+  npx prisma migrate deploy
 
   banner "Backend: npm run build"
   npm run build

@@ -102,17 +102,12 @@ export default function AdminSettingsPage() {
         }),
       });
 
-      const revalidateSecret = process.env.NEXT_PUBLIC_REVALIDATE_SECRET;
-      if (revalidateSecret) {
-        await fetch('/api/revalidate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-revalidate-secret': revalidateSecret,
-          },
-          body: JSON.stringify({ paths: ['/', '/about', '/resources', '/team'] }),
-        }).catch(() => undefined);
-      }
+      // Goes through the authenticated backend, which holds the real
+      // revalidate secret server-side only — nothing sensitive leaves the browser.
+      await apiFetch('/admin/revalidate', {
+        method: 'POST',
+        body: JSON.stringify({ paths: ['/', '/about', '/resources', '/team'] }),
+      }).catch(() => undefined);
 
       setSaved(true);
       showToast('Pengaturan berhasil disimpan!', 'success');

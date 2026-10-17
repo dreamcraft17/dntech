@@ -198,7 +198,7 @@ describe('getApiBaseUrl / getApiUrl / getUploadUrl (env-dependent)', () => {
 
   function loadApi() {
     jest.resetModules();
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     return require('@/lib/api') as typeof import('@/lib/api');
   }
 

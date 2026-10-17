@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 jest.mock('next/image', () => ({
   __esModule: true,
   default: (props: Record<string, unknown>) => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const React = require('react');
     const { fill, priority, loader, quality, placeholder, blurDataURL, unoptimized, ...imgProps } =
       props;
