@@ -8,11 +8,12 @@ Full-project ship-gate audit of `dntech` (backend: Express 5 + Prisma/PostgreSQL
 
 ## Remediation status (2026-10-18)
 
-All 4 critical and 5 of 6 high findings are fixed, tested (231 backend / 139 frontend tests pass), and pushed to `main` (`95ca50e..5d0ab8d`):
+All 4 critical and all 6 high findings are fixed, plus 2 of the 5 advisory items (the other 3 are dev-tooling-only CVEs, not runtime-reachable). Tested (231 backend / 139 frontend tests pass) and pushed to `main`:
 
 - `0c5df26` — HIGH: dependency bumps, Dockerfiles run as non-root on Node 22, docker-compose fails fast on missing secrets instead of using weak defaults
 - `c2b351b` — CRITICAL: revalidate-secret leak closed, proxy-addr/Next.js CVEs patched, real Prisma migration baseline established
 - `5d0ab8d` — HIGH #10: lead/newsletter/quiz contact PII (email, phone) encrypted at rest
+- (this change) — ADVISORY: dompurify bumped to 3.4.17, `requirePermission('leads:view')` made explicit on the leads admin routes
 
 **Two manual one-time steps are required before/at the next deploy** — see `docs/runbooks/PRISMA-MIGRATIONS-BASELINE.md` and `docs/runbooks/PII-FIELD-ENCRYPTION.md`: run `prisma migrate resolve --applied 20261017195846_baseline` against any existing database, set `ENCRYPTION_KEY` and `REVALIDATE_SECRET` in production env, and run `npm run db:backfill-pii-encryption` once after deploying.
 
@@ -57,9 +58,9 @@ All 4 critical and 5 of 6 high findings are fixed, tested (231 backend / 139 fro
 
 - `handlebars@4.7.9` has a critical CVE but is only pulled in via `ts-jest` (dev/test-only, not runtime-reachable).
 - `source-map-js` and `uuid@9.0.1` (via Storybook) are vulnerable but are dev-tooling-only, not part of the production build.
-- `dompurify@3.4.14` has a low-severity XSS-hook issue; it's used for HTML sanitization (`isomorphic-dompurify`) — recommend patching regardless.
+- ✅ **FIXED** (2026-10-18, bumped to 3.4.17 via `npm update dompurify`) — `dompurify@3.4.14` had a low-severity XSS-hook issue; used for HTML sanitization (`isomorphic-dompurify`).
 - ~~No `robots.txt`/`sitemap` was found in a quick scan~~ — **correction:** both exist, generated dynamically via `app/robots.ts`/`app/sitemap.ts` (confirmed present in the `next build` route list). The original finding was a false negative from a static-file grep.
-- `POST /admin/leads/export` is protected only by the base `authenticate` middleware, without an explicit `requirePermission('leads:view')` check. This is functionally consistent with the current role model (all roles already have `leads:view`), but the authorization is implicit rather than enforced at the route.
+- ✅ **FIXED** (2026-10-18) — `GET /admin/leads`, `GET /admin/leads/:id`, and `POST /admin/leads/export` now carry an explicit `requirePermission('leads:view')` instead of relying on the base `authenticate` only. No access change (every role already had `leads:view`) — just makes the authorization enforced at the route instead of implicit.
 
 ## Pass (already solid)
 

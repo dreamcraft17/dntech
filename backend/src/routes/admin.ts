@@ -5,6 +5,7 @@ import {
   authenticate,
   requireRole,
   requireWrite,
+  requirePermission,
   AuthRequest,
 } from '../middleware/auth';
 import * as content from '../services/AdminContentService';
@@ -214,12 +215,12 @@ router.delete('/blog/:id/translations/:locale', requireWrite('blog'), asyncHandl
 }));
 
 // --- Leads ---
-router.get('/leads', asyncHandler(async (req, res) => {
+router.get('/leads', requirePermission('leads:view'), asyncHandler(async (req, res) => {
   const { leads: items, page, pageSize, total } = await leads.listLeadsAdmin(req.query as Record<string, unknown>);
   paginatedResponse(res, items, { page, pageSize, total });
 }));
 
-router.get('/leads/:id', asyncHandler(async (req, res) => {
+router.get('/leads/:id', requirePermission('leads:view'), asyncHandler(async (req, res) => {
   successResponse(res, await leads.getLeadByIdAdmin(param(req.params.id)));
 }));
 
@@ -235,7 +236,7 @@ router.post('/leads/:id/notes', requireWrite('leads'), asyncHandler(async (req, 
   successResponse(res, await leads.addLeadNote(param(req.params.id), req.body));
 }));
 
-router.post('/leads/export', asyncHandler(async (req, res) => {
+router.post('/leads/export', requirePermission('leads:view'), asyncHandler(async (req, res) => {
   const csv = await leads.exportLeadsCsv(req.body);
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename=leads.csv');
