@@ -43,12 +43,12 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
         <section className="mb-16 border-t border-gray-200 pt-12" aria-labelledby="founded-by-heading">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-12">
             <div className="lg:col-span-2">
-              <p className="text-sm font-semibold uppercase tracking-wider text-teal-600">{t('about.foundedBy')}</p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-[var(--secondary)]">{t('about.foundedBy')}</p>
               <h2 id="founded-by-heading" className="mt-3 text-3xl font-bold text-gray-900">
                 {founder.name}
               </h2>
               {founder.role && (
-                <p className="mt-1 text-sm font-medium text-teal-600">{founder.role}</p>
+                <p className="mt-1 text-sm font-medium text-[var(--secondary)]">{founder.role}</p>
               )}
             </div>
             {founder.bio && (
@@ -63,7 +63,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
           <div className="mb-16 grid grid-cols-1 gap-10 lg:grid-cols-5 lg:gap-8">
             {about.mission && (
               <div className={cn('lg:col-span-3', !about.vision && 'lg:col-span-5')}>
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-teal-600">{t('about.missionHeading')}</h2>
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--secondary)]">{t('about.missionHeading')}</h2>
                 <p className="mt-3 border-l-4 border-blue-900 pl-6 text-2xl font-medium leading-snug text-gray-900">
                   {about.mission}
                 </p>
@@ -76,7 +76,7 @@ export function AboutPageContent({ about, team }: AboutPageContentProps) {
                   !about.mission && 'lg:col-span-5'
                 )}
               >
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-teal-600">{t('about.visionHeading')}</h2>
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--secondary)]">{t('about.visionHeading')}</h2>
                 <p className="mt-3 text-gray-600">{about.vision}</p>
               </div>
             )}

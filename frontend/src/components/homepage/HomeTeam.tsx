@@ -53,7 +53,7 @@ export function HomeTeam({ members, careers, hiringRoles, hiringEmail }: HomeTea
                   )}
                   <div>
                     <h3 className="font-semibold text-gray-900">{member.name}</h3>
-                    <p className="text-sm font-medium text-teal-600">{member.role}</p>
+                    <p className="text-sm font-medium text-[var(--secondary)]">{member.role}</p>
                     {member.bio && (
                       <p className="mt-2 text-sm leading-relaxed text-gray-600 line-clamp-4">
                         {member.bio}
@@ -77,7 +77,7 @@ export function HomeTeam({ members, careers, hiringRoles, hiringEmail }: HomeTea
         ) : (
           <Card className="mx-auto max-w-xl">
             <h3 className="font-semibold text-gray-900">Dozer Napitupulu</h3>
-            <p className="text-sm font-medium text-teal-600">{t('founderRole')}</p>
+            <p className="text-sm font-medium text-[var(--secondary)]">{t('founderRole')}</p>
             <p className="mt-2 text-sm leading-relaxed text-gray-600">{t('founderBio')}</p>
           </Card>
         )}

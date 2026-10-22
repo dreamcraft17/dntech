@@ -190,7 +190,7 @@ export default async function ServiceDetailPage({ params }: { params: RouteParam
               <ul className="mt-5 space-y-3">
                 {highlightFeatures.map((feature, i) => (
                   <li key={i} className="flex gap-2 text-sm text-slate-700">
-                    <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" aria-hidden="true" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-[var(--secondary)]" aria-hidden="true" />
                     <span>{feature.title}</span>
                   </li>
                 ))}

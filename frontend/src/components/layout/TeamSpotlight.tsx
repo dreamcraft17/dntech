@@ -62,7 +62,7 @@ export function TeamSpotlight({ members, limit = 4 }: TeamSpotlightProps) {
               </div>
             )}
             <h3 className={isSingle ? 'text-xl font-semibold text-gray-900' : 'font-semibold text-gray-900'}>{member.name}</h3>
-            <p className={isSingle ? 'text-teal-600 mt-1' : 'text-sm text-teal-600 mt-0.5'}>{member.role}</p>
+            <p className={isSingle ? 'text-[var(--secondary)] mt-1' : 'text-sm text-[var(--secondary)] mt-0.5'}>{member.role}</p>
             {member.bio && <p className="mt-2 text-sm text-gray-600 line-clamp-2">{member.bio}</p>}
             {member.socialLinks && Object.keys(member.socialLinks).length > 0 && (
               <div className="mt-4 flex justify-center gap-2">

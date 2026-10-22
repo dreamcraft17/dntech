@@ -6,7 +6,12 @@
   --foreground: #272b32;
   --primary: #1e3a8a;
   --secondary: #0f766e;
-  --accent: #c65a16;
+  /* Lightened from #c65a16 — the original only hit 2.40:1 as text on
+     --primary (#1e3a8a), failing WCAG AA even for large text (needs 3:1).
+     #f5a55c hits 5.14:1 there. It's only used as text on the dark --primary
+     background (hero, HomeAdvantages, SectionHeading onDark); decorative
+     hairline dividers elsewhere aren't subject to text contrast rules. */
+  --accent: #f5a55c;
   --muted: #64748b;
   --border: #e2e8f0;
   --surface: #ffffff;

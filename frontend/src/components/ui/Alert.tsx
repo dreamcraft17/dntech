@@ -37,7 +37,7 @@ const variantConfig = {
   warning: {
     bg: 'bg-yellow-50',
     border: 'border-yellow-200',
-    icon: 'text-yellow-600',
+    icon: 'text-yellow-700',
     title: 'text-yellow-900',
     text: 'text-yellow-800',
     Icon: AlertTriangle,

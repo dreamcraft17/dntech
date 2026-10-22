@@ -52,7 +52,7 @@ export function HomePortfolio({ projects }: HomePortfolioProps) {
                 <div className="p-5">
                   <h3 className="font-semibold text-gray-900">{project.title}</h3>
                   {project.clientName && (
-                    <p className="mt-1 text-xs font-medium text-teal-600">
+                    <p className="mt-1 text-xs font-medium text-[var(--secondary)]">
                       {t('client', { name: project.clientName })}
                     </p>
                   )}
