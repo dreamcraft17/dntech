@@ -13,6 +13,7 @@ const SCRIPTS = [
   'seed-dvs-product.ts',
   'seed-threads-automation-product.ts',
   'seed-trusted-jurist-product.ts',
+  'seed-dnfinance-product.ts',
 ];
 
 async function main() {
