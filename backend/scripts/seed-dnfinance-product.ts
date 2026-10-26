@@ -145,7 +145,8 @@ async function main() {
         '**Status produk** — aktif dalam tahap beta/validasi. Fitur yang tersedia mengikuti modul dan konfigurasi deployment saat ini.',
       ].join('\n'),
       status: 'active',
-      featured: true,
+      // dnPeople remains the single featured hero product; dnFinance appears in the supporting catalog.
+      featured: false,
       showOnHomepage: true,
       launchStatus: 'beta',
       freemiumEnabled: false,
