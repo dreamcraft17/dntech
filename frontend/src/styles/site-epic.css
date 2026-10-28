@@ -434,3 +434,162 @@
     transition: none;
   }
 }
+
+/* Final composition pass: keep the story intentional, calm, and content-led. */
+.homepage-story .scene-hero::after {
+  display: none;
+}
+
+.homepage-story .home-section-alt::before,
+.homepage-story .home-section::before {
+  content: none;
+}
+
+.homepage-story .home-section-alt,
+.homepage-story .home-section--services {
+  background: #f7f9fb;
+}
+
+.homepage-story .home-section,
+.homepage-story .home-section-alt {
+  border-bottom: 1px solid var(--story-line);
+}
+
+.homepage-story .home-section--products,
+.homepage-story .home-section--services,
+.homepage-story .home-section--process,
+.homepage-story .home-section--pricing,
+.homepage-story .home-section--faq {
+  padding-top: clamp(4.5rem, 8vw, 7rem);
+  padding-bottom: clamp(4.5rem, 8vw, 7rem);
+}
+
+.homepage-story .home-section--products .grid,
+.homepage-story .home-section--services ul {
+  align-items: stretch;
+}
+
+.homepage-story .home-section--products article,
+.homepage-story .home-section--services article {
+  min-height: 100%;
+  border-width: 1px;
+  border-top-width: 4px;
+  background: #fff;
+}
+
+.homepage-story .home-section--products article {
+  border-top-color: var(--secondary);
+}
+
+.homepage-story .home-section--products article h3,
+.homepage-story .home-section--services article h3 {
+  max-width: 13ch;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.homepage-story .home-section--products ul,
+.homepage-story .home-section--services ul {
+  gap: 0;
+  border-top: 1px solid var(--story-line);
+  border-bottom: 1px solid var(--story-line);
+}
+
+.homepage-story .home-section--products ul li + li,
+.homepage-story .home-section--services ul li + li {
+  border-top: 1px solid var(--story-line);
+}
+
+.homepage-story .home-section--products ul a,
+.homepage-story .home-section--services ul a,
+.homepage-story .home-section--services ul li > div {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.homepage-story .home-section--products ul a:hover,
+.homepage-story .home-section--services ul a:hover,
+.homepage-story .home-section--services ul li > div:hover {
+  background: #fff;
+}
+
+.homepage-story .home-section--process ol {
+  border-color: var(--story-line);
+  box-shadow: 0 12px 30px rgb(7 26 62 / 0.06);
+}
+
+.homepage-story .home-section--process li {
+  border-color: var(--story-line);
+}
+
+.homepage-story .home-section--process li:first-child {
+  border-top: 4px solid var(--accent);
+}
+
+.homepage-story .home-section--advantages,
+.homepage-story .home-section--contact {
+  background: var(--primary);
+}
+
+.homepage-story .home-section--advantages::after,
+.homepage-story .home-section--contact::after {
+  display: none;
+}
+
+.homepage-story .home-section--advantages h2,
+.homepage-story .home-section--contact h2 {
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.homepage-story .home-section--faq details {
+  border-radius: 0;
+  border-color: var(--story-line);
+  background: #fff;
+}
+
+.homepage-story .home-section--faq details + details {
+  margin-top: -1px;
+}
+
+.homepage-story .home-section--pricing article {
+  min-height: 18rem;
+}
+
+@media (min-width: 1024px) {
+  .homepage-story .home-section--products .grid > a,
+  .homepage-story .home-section--services ul > li:first-child {
+    transform: translateY(1.5rem);
+  }
+
+  .homepage-story .home-section--products .grid > ul,
+  .homepage-story .home-section--services ul > li:not(:first-child) {
+    transform: translateY(-1.5rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .homepage-story .home-section--products,
+  .homepage-story .home-section--services,
+  .homepage-story .home-section--process,
+  .homepage-story .home-section--pricing,
+  .homepage-story .home-section--faq {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .homepage-story .home-section--products .grid > a,
+  .homepage-story .home-section--services ul > li:first-child,
+  .homepage-story .home-section--products .grid > ul,
+  .homepage-story .home-section--services ul > li:not(:first-child) {
+    transform: none;
+  }
+
+  .homepage-story .home-section--products article h3,
+  .homepage-story .home-section--services article h3 {
+    max-width: none;
+  }
+}
