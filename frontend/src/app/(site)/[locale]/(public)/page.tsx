@@ -33,12 +33,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const content = resolveHomeContent(settings, locale);
 
   return (
-    <>
+    <div className="homepage-story">
       <HomeHero content={content} />
       <HomeJobPaths />
       <Suspense fallback={<HomeBelowFoldFallback />}>
         <HomeBelowFold content={content} settings={settings} />
       </Suspense>
-    </>
+    </div>
   );
 }

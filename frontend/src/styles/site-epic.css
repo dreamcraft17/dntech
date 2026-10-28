@@ -182,3 +182,255 @@
     animation: none;
   }
 }
+
+/* Homepage story system: a sharper editorial rhythm for the public homepage. */
+.homepage-story {
+  --story-ink: #071a3e;
+  --story-muted: #52647c;
+  --story-line: #d9e1ea;
+  position: relative;
+  isolation: isolate;
+  background: var(--background);
+}
+
+.homepage-story .scene-hero {
+  min-height: min(88vh, 860px);
+  border-bottom: 1px solid rgb(255 255 255 / 0.22);
+}
+
+.homepage-story .scene-hero::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  z-index: 4;
+  height: clamp(2.5rem, 7vw, 6rem);
+  background: var(--background);
+  clip-path: polygon(0 68%, 18% 48%, 37% 70%, 58% 35%, 76% 57%, 100% 22%, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+
+.homepage-story .scene-hero .scene-inner {
+  padding-top: clamp(5rem, 12vw, 8rem);
+  padding-bottom: clamp(7rem, 14vw, 11rem);
+}
+
+.homepage-story .home-hero-title {
+  max-width: 10ch;
+  text-wrap: balance;
+}
+
+.homepage-story .hero-brief-panel {
+  backdrop-filter: blur(4px);
+  box-shadow: 16px 16px 0 rgb(0 0 0 / 0.18);
+}
+
+.homepage-story .home-section-alt {
+  position: relative;
+  background: #f2f6fa;
+  border-bottom: 1px solid var(--story-line);
+}
+
+.homepage-story .home-section-alt::before,
+.homepage-story .home-section::before {
+  content: '';
+  display: block;
+  width: min(7rem, 22vw);
+  height: 3px;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  background: var(--accent);
+}
+
+.homepage-story .home-section-alt > div,
+.homepage-story .home-section > div {
+  position: relative;
+  z-index: 1;
+}
+
+.homepage-story .home-section-alt ul {
+  border-color: var(--story-line);
+}
+
+.homepage-story .home-section-alt li + li {
+  border-color: var(--story-line);
+}
+
+.homepage-story .home-section-alt li a {
+  position: relative;
+  min-height: 15rem;
+  overflow: hidden;
+  border-radius: 0;
+  background: transparent;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.homepage-story .home-section-alt li a::after {
+  content: '↗';
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  color: var(--secondary);
+  font-size: 1.3rem;
+  line-height: 1;
+  opacity: 0;
+  transform: translate(-0.35rem, 0.35rem);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.homepage-story .home-section-alt li a:hover,
+.homepage-story .home-section-alt li a:focus-visible {
+  background: #fff;
+  transform: translateY(-0.2rem);
+}
+
+.homepage-story .home-section-alt li a:hover::after,
+.homepage-story .home-section-alt li a:focus-visible::after {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.homepage-story .home-section:not(.home-section-alt) {
+  border-bottom: 1px solid var(--story-line);
+}
+
+.homepage-story .home-section:not(.home-section-alt) article,
+.homepage-story .home-section:not(.home-section-alt) li > a,
+.homepage-story .home-section:not(.home-section-alt) li > div {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.homepage-story .home-section:not(.home-section-alt) article {
+  border-color: var(--story-line);
+}
+
+.homepage-story .home-section:not(.home-section-alt) article:hover,
+.homepage-story .home-section:not(.home-section-alt) li > a:hover {
+  border-color: var(--secondary);
+}
+
+.homepage-story .home-section:not(.home-section-alt) ul {
+  border-color: var(--story-line);
+}
+
+.homepage-story .home-section:not(.home-section-alt) li {
+  border-color: var(--story-line);
+}
+
+.homepage-story .home-section--services {
+  background: #f8fafc;
+}
+
+.homepage-story .home-section--advantages,
+.homepage-story .home-section--contact {
+  position: relative;
+  overflow: hidden;
+}
+
+.homepage-story .home-section--advantages::after,
+.homepage-story .home-section--contact::after {
+  content: '';
+  position: absolute;
+  top: 2rem;
+  right: clamp(-4rem, -3vw, -1rem);
+  width: clamp(8rem, 18vw, 16rem);
+  aspect-ratio: 1;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2rem rgb(255 255 255 / 0.04), 0 0 0 4rem rgb(255 255 255 / 0.025);
+  pointer-events: none;
+}
+
+.homepage-story .home-section--advantages > div,
+.homepage-story .home-section--contact > div {
+  position: relative;
+  z-index: 1;
+}
+
+.homepage-story .home-section--advantages .epic-section,
+.homepage-story .home-section--contact .epic-section {
+  background: transparent;
+}
+
+.homepage-story .home-section--advantages h2,
+.homepage-story .home-section--contact h2 {
+  max-width: 12ch;
+}
+
+.homepage-story .home-section--process ol {
+  max-width: none;
+}
+
+.homepage-story .home-section--process li {
+  min-height: 13rem;
+  background: #fff;
+}
+
+.homepage-story .home-section--process li:nth-child(2n) {
+  background: #f2f6fa;
+}
+
+.homepage-story .home-section--process li h3 {
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.homepage-story .home-section--contact {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgb(255 255 255 / 0.15);
+}
+
+.homepage-story .home-section--contact::before {
+  margin-right: auto;
+  margin-left: auto;
+  background: var(--accent);
+}
+
+@media (max-width: 767px) {
+  .homepage-story .scene-hero {
+    min-height: 0;
+  }
+
+  .homepage-story .scene-hero::after {
+    height: 2.75rem;
+    clip-path: polygon(0 70%, 28% 46%, 52% 70%, 76% 38%, 100% 58%, 100% 100%, 0 100%);
+  }
+
+  .homepage-story .scene-hero .scene-inner {
+    padding-top: 4.5rem;
+    padding-bottom: 5rem;
+  }
+
+  .homepage-story .hero-brief-panel {
+    box-shadow: 8px 8px 0 rgb(0 0 0 / 0.18);
+  }
+
+  .homepage-story .home-section-alt li a {
+    min-height: 0;
+  }
+
+  .homepage-story .home-section-alt li a::after {
+    opacity: 1;
+    transform: none;
+  }
+
+  .homepage-story .home-section--process li {
+    min-height: 0;
+  }
+
+  .homepage-story .home-section--advantages::after,
+  .homepage-story .home-section--contact::after {
+    top: 1rem;
+    right: -5rem;
+    width: 11rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homepage-story .home-section-alt li a,
+  .homepage-story .home-section-alt li a::after {
+    transition: none;
+  }
+}
