@@ -17,10 +17,10 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
   const calendly = settings.calendlyUrl;
 
   return (
-    <section className="bg-[var(--primary)] py-section text-white">
+    <section className="epic-section bg-[var(--primary)] py-section text-white">
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold">{t('title')}</h2>
-        <p className="mx-auto mt-4 max-w-2xl text-blue-100">{t('body')}</p>
+        <h2 className="epic-reveal text-3xl font-bold">{t('title')}</h2>
+        <p className="epic-reveal mx-auto mt-4 max-w-2xl text-blue-100">{t('body')}</p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           {calendly ? (
             <a

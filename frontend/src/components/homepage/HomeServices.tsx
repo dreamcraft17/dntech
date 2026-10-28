@@ -63,13 +63,14 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
   );
 
   return (
-    <section className="home-section py-section" aria-labelledby="services-heading">
+    <section className="home-section epic-section py-section" aria-labelledby="services-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           kicker={t('kicker')}
           titleId="services-heading"
           title={t('title')}
           subtitle={t('subtitle')}
+          reveal
           className="mb-8 md:mb-10"
         />
 

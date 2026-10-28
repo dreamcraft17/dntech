@@ -16,9 +16,9 @@ interface HomeFaqProps {
 export function HomeFaq({ items }: HomeFaqProps) {
   const t = useTranslations('home.faq');
   return (
-    <section className="home-section-alt py-section" id="faq">
+    <section className="home-section-alt epic-section py-section" id="faq">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker={t('kicker')} title={t('title')} />
+        <SectionHeading kicker={t('kicker')} title={t('title')} reveal />
         <div className="space-y-3">
           {items.map((faq) => (
             <details

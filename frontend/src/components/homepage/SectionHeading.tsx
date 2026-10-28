@@ -10,6 +10,8 @@ interface SectionHeadingProps {
   kicker?: string;
   /** Use the light-on-dark palette for sections with a navy/full-bleed background. */
   onDark?: boolean;
+  /** Scroll-reveal motion (homepage epic layer). */
+  reveal?: boolean;
   className?: string;
 }
 
@@ -19,10 +21,11 @@ export function SectionHeading({
   subtitle,
   kicker,
   onDark = false,
+  reveal = false,
   className = '',
 }: SectionHeadingProps) {
   return (
-    <div className={cn('mb-10 text-left md:mb-14', className)}>
+    <div className={cn('mb-10 text-left md:mb-14', reveal && 'epic-reveal', className)}>
       {kicker && (
         <p
           className={cn(

@@ -63,9 +63,9 @@ export function HomeProducts({ products, title, subtitle }: HomeProductsProps) {
   const featuredStatus = formatProductStatusBadge(featured.customerCount);
 
   return (
-    <section className="home-section py-section" aria-label={sectionTitle}>
+    <section className="home-section epic-section py-section" aria-label={sectionTitle}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker={t('kicker')} title={sectionTitle} subtitle={sectionSubtitle} />
+        <SectionHeading kicker={t('kicker')} title={sectionTitle} subtitle={sectionSubtitle} reveal />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6 lg:items-stretch">
           <Link

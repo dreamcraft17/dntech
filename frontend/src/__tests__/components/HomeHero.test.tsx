@@ -15,13 +15,16 @@ function renderIntl(ui: React.ReactElement) {
 
 
 describe('HomeHero', () => {
-  it('shows text-led hero with hero_bg.png as CSS background (no img tag)', () => {
+  it('shows text-led hero with hero_bg on depth layer and decorative mark only', () => {
     renderIntl(<HomeHero content={resolveHomeContent({})} />);
 
     const section = screen.getByRole('heading', { level: 1 }).closest('section');
-    expect(section).toHaveClass('bg-cover');
-    expect(section).toHaveStyle({ backgroundImage: "url('/hero_bg.png')" });
-    expect(section?.querySelector('img')).toBeNull();
+    expect(section).toHaveClass('scene-hero');
+    const depth0 = section?.querySelector('[data-depth="0"]');
+    expect(depth0).toHaveStyle({ backgroundImage: "url('/hero_bg.png')" });
+    const imgs = section?.querySelectorAll('img') ?? [];
+    expect(imgs.length).toBe(1);
+    expect(imgs[0]).toHaveAttribute('src', '/round.png');
     expect(screen.getByRole('complementary', { name: 'Fokus layanan' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Konsultasi Gratis/ })).toHaveAttribute(
       'href',

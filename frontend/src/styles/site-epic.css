@@ -1,0 +1,184 @@
+/**
+ * DN Tech site epic layer — cinematic hero & scroll reveals (GPU-safe)
+ * Author: Dozer
+ */
+.public-shell--epic .scene {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.public-shell--epic .scene-hero {
+  min-height: min(92vh, 920px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+}
+
+.public-shell--epic .scene .layer {
+  pointer-events: none;
+}
+
+.public-shell--epic .layer.depth-0 {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  transform: translate3d(0, 0, 0) scale(1.02);
+  will-change: transform;
+  filter: blur(0);
+}
+
+.public-shell--epic .layer.depth-1 {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgb(7 26 62 / 0.72);
+}
+
+.public-shell--epic .layer.depth-1::after {
+  content: '';
+  position: absolute;
+  inset: -10% -5%;
+  background:
+    radial-gradient(ellipse 65% 50% at 88% 12%, rgb(245 165 92 / 0.12), transparent 58%),
+    radial-gradient(ellipse 45% 38% at 8% 88%, rgb(15 118 110 / 0.14), transparent 55%);
+}
+
+.public-shell--epic .layer.depth-2 {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.public-shell--epic .epic-mark {
+  position: absolute;
+  right: clamp(1rem, 8vw, 6rem);
+  top: clamp(4rem, 18vh, 10rem);
+  width: clamp(4.5rem, 12vw, 7.5rem);
+  height: auto;
+  opacity: 0.22;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.public-shell--epic .epic-mark.float-loop {
+  animation: site-epic-float 14s ease-in-out infinite;
+}
+
+@keyframes site-epic-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) rotate(-2deg);
+  }
+}
+
+.public-shell--epic .scene-hero .scene-inner {
+  position: relative;
+  z-index: 10;
+}
+
+.public-shell--epic .hero-brief-panel[data-depth='3'] {
+  position: relative;
+  z-index: 3;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.public-shell--epic .home-hero-title.epic-split .epic-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.public-shell--epic .home-hero-title.epic-split .epic-word-inner {
+  display: inline-block;
+  transform: translate3d(0, 110%, 0);
+  opacity: 0;
+}
+
+.public-shell--epic.is-ready .home-hero-title.epic-split .epic-word-inner {
+  animation: site-epic-line-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 0.06s + 0.12s);
+}
+
+@keyframes site-epic-line-up {
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+.public-shell--epic .epic-reveal {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.public-shell--epic .epic-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.public-shell--epic .epic-stagger > .epic-stagger-item {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i, 0) * 0.08s);
+}
+
+.public-shell--epic .epic-stagger.is-visible > .epic-stagger-item {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.public-shell--epic main .epic-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 480px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-shell--epic *,
+  .public-shell--epic *::before,
+  .public-shell--epic *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .public-shell--epic .epic-mark.float-loop,
+  .public-shell--epic .home-hero-title.epic-split .epic-word-inner {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .public-shell--epic .epic-reveal,
+  .public-shell--epic .epic-stagger > .epic-stagger-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .public-shell--epic .layer.depth-0,
+  .public-shell--epic .hero-brief-panel[data-depth='3'],
+  .public-shell--epic .epic-mark {
+    will-change: auto;
+  }
+}
+
+@media (pointer: coarse) {
+  .public-shell--epic .epic-mark.float-loop {
+    animation: none;
+  }
+}

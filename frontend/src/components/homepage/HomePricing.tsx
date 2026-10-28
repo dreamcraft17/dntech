@@ -10,9 +10,9 @@ interface HomePricingProps {
 export function HomePricing({ plans }: HomePricingProps) {
   const t = useTranslations('home.pricing');
   return (
-    <section className="home-section py-section">
+    <section className="home-section epic-section py-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')} />
+        <SectionHeading kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')} reveal />
         <div className="grid grid-cols-1 border-y border-slate-300 md:grid-cols-3 md:divide-x md:divide-slate-300">
           {plans.map((plan, index) => (
             <article key={plan.name} className="flex h-full flex-col border-b border-slate-300 p-6 last:border-b-0 sm:p-8 md:border-b-0">
