@@ -23,8 +23,8 @@ export function PublicPageShell({
   centered?: boolean;
 }) {
   return (
-    <div className={cn('saas-page py-10 sm:py-14', centered && 'text-center', className)}>
-      <div className={cn('mx-auto px-4 sm:px-6 lg:px-8', widthMap[width])}>{children}</div>
+    <div className={cn('dn-page saas-page', centered && 'text-center', className)}>
+      <div className={cn('dn-page__inner mx-auto', widthMap[width])}>{children}</div>
     </div>
   );
 }
@@ -36,16 +36,7 @@ export function SaasPanel({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <div
-      className={cn(
-        'saas-panel rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm sm:p-8',
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={cn('dn-panel saas-panel rounded-[var(--radius-card)]', className)}>{children}</div>;
 }
 
 export function PublicPageCta({
@@ -64,24 +55,16 @@ export function PublicPageCta({
   secondaryLabel?: string;
 }) {
   return (
-    <section className="saas-cta-band mt-14" aria-labelledby="page-cta-title">
-      <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-        <h2 id="page-cta-title" className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-          {title}
-        </h2>
-        <p className="mt-3 text-base leading-relaxed text-blue-100">{description}</p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href={primaryHref}
-            className="inline-flex min-h-11 items-center justify-center border border-white bg-white px-5 py-2.5 text-sm font-semibold text-[var(--primary)] transition-colors hover:bg-blue-50"
-          >
+    <section className="dn-convert-band saas-cta-band epic-section epic-reveal" aria-labelledby="page-cta-title">
+      <div className="dn-convert-band__inner">
+        <h2 id="page-cta-title">{title}</h2>
+        <p>{description}</p>
+        <div className="dn-convert-band__actions">
+          <Link href={primaryHref} className="dn-btn-primary">
             {primaryLabel}
           </Link>
           {secondaryHref && secondaryLabel && (
-            <Link
-              href={secondaryHref}
-              className="inline-flex min-h-11 items-center justify-center border border-white/30 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white"
-            >
+            <Link href={secondaryHref} className="dn-btn-ghost">
               {secondaryLabel}
             </Link>
           )}

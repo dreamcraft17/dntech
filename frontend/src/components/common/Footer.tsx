@@ -46,7 +46,7 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   return (
     <Link
       href={href}
-      className="inline-flex min-h-11 items-center rounded-sm text-sm text-gray-600 transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2"
+      className="inline-flex min-h-11 items-center rounded-sm text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a1628]"
     >
       {children}
     </Link>
@@ -56,7 +56,7 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
 function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
+      <h2>{title}</h2>
       {children}
     </div>
   );
@@ -88,26 +88,26 @@ export function Footer({
   }[];
 
   return (
-    <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="site-footer">
+      <div className="site-footer__inner">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-md">
             <FooterBrand />
-            <p className="mt-3 text-sm leading-relaxed text-gray-600">
+            <p className="mt-3 text-sm leading-relaxed text-slate-400">
               {tagline || t('defaultTagline')}
             </p>
           </div>
 
           <Link
             href="/contact"
-            className="inline-flex min-h-[44px] shrink-0 items-center justify-center self-start rounded-[var(--radius-card)] border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
+            className="site-footer__cta inline-flex min-h-[44px] shrink-0 items-center justify-center self-start px-5 py-2.5 text-sm font-semibold transition-colors"
           >
             {t('cta')}
           </Link>
         </div>
 
         <nav
-          className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-[var(--border)] pt-10 lg:grid-cols-5"
+          className="site-footer__rule mt-10 grid grid-cols-2 gap-x-6 gap-y-8 border-t pt-10 lg:grid-cols-5"
           aria-label={t('navAria')}
         >
           <FooterColumn title={t('columns.company')}>
@@ -154,15 +154,15 @@ export function Footer({
             <ul className="mt-2 flex flex-col">
               {contactItems.map(({ icon: Icon, value, href, external }) => (
                 <li key={value}>
-                  <div className="flex min-h-11 items-center gap-2 text-sm text-gray-600">
-                    <Icon className="h-4 w-4 shrink-0 text-blue-900" aria-hidden="true" />
+                  <div className="flex min-h-11 items-center gap-2 text-sm text-slate-400">
+                    <Icon className="h-4 w-4 shrink-0 text-[var(--accent)]" aria-hidden="true" />
                     {href ? (
                       <a
                         href={href}
                         {...(external
                           ? { target: '_blank', rel: 'noopener noreferrer' }
                           : {})}
-                        className="rounded-sm transition-colors hover:text-blue-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-900 focus-visible:ring-offset-2"
+                        className="rounded-sm transition-colors hover:text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                       >
                         {external ? t('whatsapp', { value }) : value}
                       </a>
@@ -176,8 +176,8 @@ export function Footer({
           </FooterColumn>
         </nav>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-[var(--border)] pt-6 sm:flex-row sm:items-center">
-          <p className="text-sm text-gray-500">
+        <div className="site-footer__rule mt-10 flex flex-col items-start justify-between gap-4 border-t pt-6 sm:flex-row sm:items-center">
+          <p className="text-sm text-slate-500">
             {t('copyright', { year: String(new Date().getFullYear()) })}
           </p>
           <div className="flex flex-wrap gap-4">

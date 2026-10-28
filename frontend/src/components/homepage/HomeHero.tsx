@@ -60,7 +60,7 @@ export function HomeHero({ content }: HomeHeroProps) {
             <p className="epic-reveal mb-4 text-sm font-semibold tracking-wide text-blue-100">
               <HeroKicker subtitle={content.heroSubtitle} />
             </p>
-            <h1 className="home-hero-title max-w-4xl text-4xl font-bold leading-[1.04] tracking-[-0.035em] text-white sm:text-5xl lg:text-7xl">
+            <h1 className="home-hero-title dn-display max-w-4xl text-4xl text-white sm:text-5xl lg:text-7xl">
               {content.heroTitle}
             </h1>
             <p className="epic-reveal mt-6 max-w-2xl text-lg leading-8 text-blue-100 sm:text-xl">

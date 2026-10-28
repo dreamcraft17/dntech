@@ -132,11 +132,8 @@ export function Header() {
   }, [mobileOpen]);
 
   return (
-    <header
-      ref={headerRef}
-      className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-sm supports-[backdrop-filter]:bg-[var(--surface)]/90"
-    >
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
+    <header ref={headerRef} className="site-header">
+      <div className="site-header__bar">
         <Link
           href="/"
           className="inline-flex min-w-0 shrink items-center transition-opacity hover:opacity-80"
@@ -145,17 +142,15 @@ export function Header() {
           <LogoLight size="sm" className="sm:[&_span:last-child]:inline-flex [&_span:last-child]:hidden" />
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label={t('ariaMain')}>
+        <nav className="site-header__nav" aria-label={t('ariaMain')}>
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpenGroup(null)}
               className={cn(
-                'flex min-h-[48px] items-center border-b-2 border-transparent px-3 py-2 text-sm font-medium transition-colors',
-                isNavActive(pathname, link.href)
-                  ? 'border-blue-900 text-blue-900'
-                  : 'text-gray-600 hover:border-gray-300 hover:text-gray-900'
+                'site-header__link',
+                isNavActive(pathname, link.href) && 'is-active',
               )}
             >
               {t(link.key)}
@@ -173,29 +168,21 @@ export function Header() {
                   aria-expanded={isOpen}
                   aria-controls={menuId}
                   className={cn(
-                    'flex min-h-[48px] items-center gap-1 border-b-2 px-3 py-2 text-sm font-medium transition-colors',
-                    isOpen || active
-                      ? 'border-blue-900 text-blue-900'
-                      : 'border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-900'
+                    'site-header__link gap-1',
+                    (isOpen || active) && 'is-active',
                   )}
                 >
                   {t(`groups.${group.key}`)}
                   <ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} aria-hidden="true" />
                 </button>
                 {isOpen && (
-                  <div
-                    id={menuId}
-                    className="absolute left-0 top-full z-50 mt-1 w-56 rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)] p-2 shadow-lg"
-                  >
+                  <div id={menuId} className="site-header__dropdown">
                     {group.links.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}
                         onClick={() => setOpenGroup(null)}
-                        className={cn(
-                          'block rounded-md border-l-2 border-transparent px-3 py-3 text-sm text-gray-700 transition-colors hover:border-[var(--accent)] hover:bg-slate-50 hover:text-blue-900',
-                          isNavActive(pathname, link.href) && 'border-blue-900 bg-slate-50 font-medium text-blue-900'
-                        )}
+                        className={cn(isNavActive(pathname, link.href) && 'is-active font-medium')}
                       >
                         {t(`links.${link.key}`)}
                       </Link>
@@ -224,10 +211,7 @@ export function Header() {
             <span className="text-sm font-medium lg:sr-only">{t('search.label')}</span>
           </button>
           <LocaleSwitcher className="hidden sm:flex" />
-          <Link
-            href="/contact"
-            className="hidden min-h-[48px] items-center rounded-[var(--radius-card)] border border-blue-900 bg-blue-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800 lg:inline-flex"
-          >
+          <Link href="/contact" className="site-header__cta">
             {t('ctaConsultation')}
           </Link>
           <button
@@ -238,7 +222,7 @@ export function Header() {
               setSearchOpen(false);
               setOpenGroup(null);
             }}
-            className="flex min-h-[48px] min-w-[48px] items-center justify-center rounded-[var(--radius-card)] p-2 text-gray-600 transition-colors hover:bg-gray-100 md:hidden"
+            className="site-header__menu-btn"
             aria-label={mobileOpen ? t('menu.close') : t('menu.open')}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
@@ -251,12 +235,7 @@ export function Header() {
       {searchOpen && <HeaderSearch open={searchOpen} onClose={() => setSearchOpen(false)} />}
 
       {mobileOpen && (
-        <nav
-          id="mobile-nav"
-          ref={mobileMenuRef}
-          className="border-t border-[var(--border)] bg-[var(--surface)] px-4 py-3 md:hidden"
-          aria-label={t('ariaMobile')}
-        >
+        <nav id="mobile-nav" ref={mobileMenuRef} className="site-header__mobile md:hidden" aria-label={t('ariaMobile')}>
           {navLinks.map((link) => (
             <Link
               key={link.href}

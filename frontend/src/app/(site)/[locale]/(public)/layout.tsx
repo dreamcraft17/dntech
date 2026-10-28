@@ -19,7 +19,7 @@ export default async function PublicLayout({ children }: { children: React.React
   const settings = await getPublicSettings();
 
   return (
-    <div className="public-shell public-shell--epic min-h-screen">
+    <div className="public-shell public-shell--v4 public-shell--epic min-h-screen">
       <SiteEpicProvider />
       <JsonLd data={buildOrganizationSchema(settings)} />
       <JsonLd data={buildLocalBusinessSchema(settings)} />

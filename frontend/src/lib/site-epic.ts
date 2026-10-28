@@ -57,6 +57,30 @@ function bindStaggerItems(root: ParentNode) {
   });
 }
 
+async function initPageIntroParallax(scene: Element) {
+  const depth0 = scene.querySelector('[data-depth="0"]');
+  if (!depth0) return;
+
+  try {
+    const { gsap } = await import('gsap');
+    const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.to(depth0, {
+      y: 32,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: scene,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.8,
+      },
+    });
+  } catch {
+    /* static */
+  }
+}
+
 async function initHeroParallax(scene: Element) {
   const depth0 = scene.querySelector('[data-depth="0"]');
   const depth2 = scene.querySelector('[data-depth="2"] .epic-mark');
@@ -102,6 +126,9 @@ export function initSiteEpic() {
   if (motionAllowed()) {
     const hero = shell.querySelector('.scene-hero');
     if (hero) void initHeroParallax(hero);
+    shell.querySelectorAll('.scene-page').forEach((pageScene) => {
+      void initPageIntroParallax(pageScene);
+    });
   } else {
     shell.querySelectorAll('.epic-reveal, .epic-stagger').forEach((el) => el.classList.add('is-visible'));
   }

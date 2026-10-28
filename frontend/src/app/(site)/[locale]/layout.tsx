@@ -1,6 +1,21 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { IBM_Plex_Sans, IBM_Plex_Serif } from 'next/font/google';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
+
+const dnSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sans-dn',
+  display: 'swap',
+});
+
+const dnSerif = IBM_Plex_Serif({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+  variable: '--font-display-dn',
+  display: 'swap',
+});
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import '../../globals.css';
 import {
@@ -88,8 +103,8 @@ export default async function LocaleRootLayout({
   const ui = await getTranslations({ locale, namespace: 'interactive.ui' });
 
   return (
-    <html lang={locale} className="h-full">
-      <body className="min-h-full flex flex-col antialiased">
+    <html lang={locale} className={`h-full ${dnSans.variable} ${dnSerif.variable}`}>
+      <body className="min-h-full flex flex-col antialiased font-[family-name:var(--font-sans-dn)]">
         <NextIntlClientProvider>
           <GlobalLoadingIndicator label={ui('loadingData')} waitLabel={ui('pleaseWait')} />
           <AnalyticsLoader

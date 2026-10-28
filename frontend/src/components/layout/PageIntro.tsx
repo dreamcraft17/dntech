@@ -1,29 +1,28 @@
 import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 interface PageIntroProps {
   kicker?: string;
   title: string;
   description?: ReactNode;
   children?: ReactNode;
+  /** Scroll-reveal on enter (homepage epic layer). */
+  reveal?: boolean;
 }
 
-export function PageIntro({ kicker, title, description, children }: PageIntroProps) {
+export function PageIntro({ kicker, title, description, children, reveal = true }: PageIntroProps) {
   return (
-    <header className="saas-intro-band mb-10 pb-10 sm:mb-12 sm:pb-12">
-      <div className="max-w-3xl">
-        {kicker && (
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--secondary)]">{kicker}</p>
-        )}
-        <h1
-          className={`${kicker ? 'mt-3' : ''} text-3xl font-bold leading-[1.12] tracking-tight text-slate-950 sm:text-4xl lg:text-[2.65rem]`}
-        >
-          {title}
-        </h1>
-        {description && (
-          <div className="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-            {description}
-          </div>
-        )}
+    <header
+      className={cn(
+        'dn-page-intro scene scene-page epic-section',
+        reveal && 'epic-reveal',
+      )}
+    >
+      <div className="layer depth-0" data-depth="0" aria-hidden="true" />
+      <div className="dn-page-intro__inner">
+        {kicker && <p className="dn-kicker">{kicker}</p>}
+        <h1 className="dn-display">{title}</h1>
+        {description && <div className="dn-lead">{description}</div>}
         {children && <div className="mt-6">{children}</div>}
       </div>
     </header>

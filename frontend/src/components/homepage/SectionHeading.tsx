@@ -29,19 +29,18 @@ export function SectionHeading({
       {kicker && (
         <p
           className={cn(
-            'mb-3 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em]',
-            onDark ? 'text-[var(--accent)]' : 'text-[var(--secondary)]'
+            'dn-kicker mb-3',
+            onDark && 'text-[var(--accent)] before:bg-[var(--accent)]',
           )}
         >
-          <span className="h-px w-8 bg-[var(--accent)]" aria-hidden="true" />
           {kicker}
         </p>
       )}
       <h2
         id={titleId}
         className={cn(
-          'text-3xl font-bold tracking-tight sm:text-4xl',
-          onDark ? 'text-white' : 'text-gray-900'
+          'dn-display text-3xl sm:text-4xl',
+          onDark ? 'text-white' : 'text-[var(--foreground)]',
         )}
       >
         {title}
