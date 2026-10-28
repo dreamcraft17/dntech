@@ -4,11 +4,13 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dntech.id';
 export const SITE_NAME = 'DN Tech';
 export const DEFAULT_TITLE_TEMPLATE = `%s | ${SITE_NAME}`;
 export const DEFAULT_SITE_DESCRIPTION =
-  'DN Tech membangun aplikasi kustom, integrasi sistem, dan software operasional untuk startup dan bisnis Indonesia—dengan scope, timeline, dan harga yang jelas.';
+  'Software house Indonesia: DN Tech membangun MVP, aplikasi kustom, integrasi sistem, serta produk HRIS & pembukuan (dnPeople, dnFinance, dnShop Finance)—scope, timeline, dan harga jelas.';
 
 export const DEFAULT_KEYWORDS = [
+  'software house Indonesia',
   'software development Indonesia',
   'custom app development Jakarta',
+  'jasa pembuatan aplikasi',
   'startup tech consultant',
   'sewa developer Indonesia',
   'tim development outsource',
@@ -26,7 +28,13 @@ export const PAGE_SEO: Record<string, PageSeoEntry> = {
     title: 'Software Development Indonesia untuk MVP & Workflow Bisnis',
     description:
       'DN Tech membantu startup dan bisnis Indonesia membangun MVP, menghubungkan sistem, dan merapikan workflow operasional dengan scope, timeline, dan harga yang jelas.',
-    keywords: ['software development Indonesia', 'MVP development Indonesia', 'integrasi API sistem bisnis'],
+    keywords: [
+      'software house Indonesia',
+      'software development Indonesia',
+      'MVP development Indonesia',
+      'integrasi API sistem bisnis',
+      'jasa pembuatan website perusahaan',
+    ],
   },
   services: {
     title: 'Jasa Website, Aplikasi Custom & Integrasi Sistem',
@@ -41,9 +49,12 @@ export const PAGE_SEO: Record<string, PageSeoEntry> = {
       'HRIS Indonesia',
       'ERP software Indonesia',
       'pembukuan Shopee',
+      'software akuntansi UKM',
       'software UKM Indonesia',
       'dnPeople',
       'dnCore',
+      'dnFinance',
+      'dnShop Finance',
     ],
   },
   blog: {
@@ -99,7 +110,12 @@ export const PAGE_SEO_EN: Record<string, PageSeoEntry> = {
     title: 'Software Development in Indonesia for MVPs & Business Workflows',
     description:
       'DN Tech helps startups and companies build MVPs, connect systems, and clean up operational workflows — with clear scope, timeline, and pricing.',
-    keywords: ['software development Indonesia', 'MVP development Indonesia', 'business system API integration'],
+    keywords: [
+      'software house Indonesia',
+      'software development Indonesia',
+      'MVP development Indonesia',
+      'business system API integration',
+    ],
   },
   services: {
     title: 'Website, Custom App & System Integration Services',
@@ -111,7 +127,16 @@ export const PAGE_SEO_EN: Record<string, PageSeoEntry> = {
     title: 'HRIS, ERP & Bookkeeping Software for Growing Businesses',
     description:
       'HRIS, ERP, and Shopee bookkeeping software from DN Tech for startups and SMEs. Features, pricing, and release status on every product page.',
-    keywords: ['HRIS Indonesia', 'ERP software Indonesia', 'Shopee bookkeeping', 'SME software Indonesia', 'dnPeople', 'dnCore'],
+    keywords: [
+      'HRIS Indonesia',
+      'ERP software Indonesia',
+      'Shopee bookkeeping',
+      'SME accounting software Indonesia',
+      'dnPeople',
+      'dnCore',
+      'dnFinance',
+      'dnShop Finance',
+    ],
   },
   blog: {
     title: 'Technology Blog for Founders & Product Teams',

@@ -119,14 +119,20 @@ export default async function ServiceDetailPage({ params }: { params: RouteParam
       <JsonLd data={breadcrumbSchema([
         { name: t('breadcrumb.home'), url: `${SITE_URL}${localePath('/', locale)}` },
         { name: t('breadcrumb.services'), url: servicesUrl },
-        { name: service.name, url: `${servicesUrl}/${slug}` },
+        { name: service.name, url: `${SITE_URL}${localePath(`/services/${slug}`, locale)}` },
       ])} />
-      <JsonLd data={serviceSchema({
-        name: service.name,
-        description: service.description,
-        slug,
-        category: service.category,
-      })} />
+      <JsonLd
+        data={serviceSchema(
+          {
+            name: service.name,
+            description: service.description,
+            slug,
+            category: service.category,
+          },
+          'DN Tech',
+          locale
+        )}
+      />
       {faqs.length > 0 && (
         <JsonLd data={faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))} />
       )}

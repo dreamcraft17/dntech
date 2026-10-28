@@ -67,6 +67,7 @@
       "kicker": "Pricing & packages",
       "title": "Our service packages",
       "subtitle": "Transparent pricing — exact numbers once we scope your project in a free consultation",
+      "scopeNote": "Custom Project (1–4 months) applies to locked scope (e.g. a landing page, one module, a single integration). A multi-module MVP is usually 3–6 months — see the timeline FAQ.",
       "timeline": "Timeline: {value}",
       "cta": "Book a call for an exact quote"
     },
@@ -111,11 +112,11 @@
       "heroTitle": "Grow the Business Without Breaking the Systems Behind It",
       "heroSubtitle": "DN Tech.id",
       "heroBadges": ["Websites & Company Profiles", "Custom Applications", "System Integration"],
-      "heroSupporting": "We help Indonesian startups and businesses build applications, connect their systems, and clean up how work gets done — with scope, pricing, and timeline agreed up front.",
+      "heroSupporting": "DN Tech is an Indonesian software house: custom software (websites, web apps, mobile, integrations) and first-party SaaS products we build and operate. We help businesses fix operational workflows through software — with scope, pricing, and timeline agreed before development starts.",
       "heroPrimaryCta": { "label": "Free 30-Minute Consultation", "href": "/contact" },
       "heroSecondaryCta": { "label": "See Our Products", "href": "/products" },
       "productsTitle": "Products That Show How We Work",
-      "productsSubtitle": "We built dnPeople (HRIS), dnCore (ERP), and dnShop for real business workflows. See the features, pricing, release status, and how each one helps a team work cleanly.",
+      "productsSubtitle": "First-party products — dnPeople (HRIS), dnCore (ERP), dnShop Finance (Shopee seller ops + bookkeeping), dnFinance (SME cloud accounting) — built from real workflows. Official names, release status, features, and pricing live on each product page.",
       "services": [
         {
           "name": "Website & Company Profile",
@@ -223,7 +224,7 @@
         {
           "name": "Custom Project",
           "price": "Scope-based",
-          "timeline": "1–4 months (depending on scope)",
+          "timeline": "1–4 months · locked scope (not a full MVP)",
           "included": ["Design", "Development", "Testing", "30 days of post-launch support"]
         },
         {
@@ -246,7 +247,7 @@
         },
         {
           "question": "How long does it take?",
-          "answer": "A typical MVP runs 3–6 months depending on complexity. The firm timeline is in the proposal before kick-off."
+          "answer": "A full MVP (many modules, integrations, rollout) usually runs 3–6 months. Custom work with locked scope — e.g. a company site, one workflow, or a single integration — often fits the 1–4 month Custom Project band on the homepage. The firm timeline is written in the proposal before kick-off."
         },
         {
           "question": "When can you start?",

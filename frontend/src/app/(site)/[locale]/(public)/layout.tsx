@@ -11,6 +11,7 @@ import {
   buildOrganizationSchema,
   buildLocalBusinessSchema,
   buildWebsiteSchema,
+  buildProfessionalServiceSchema,
 } from '@/components/seo/JsonLd';
 import { getPublicSettings } from '@/lib/settings';
 import { SiteEpicProvider } from '@/components/motion/SiteEpicProvider';
@@ -24,6 +25,7 @@ export default async function PublicLayout({ children }: { children: React.React
       <JsonLd data={buildOrganizationSchema(settings)} />
       <JsonLd data={buildLocalBusinessSchema(settings)} />
       <JsonLd data={buildWebsiteSchema(settings)} />
+      <JsonLd data={buildProfessionalServiceSchema(settings)} />
       <SkipToContent />
       <PageTracker />
       <Header />

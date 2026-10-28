@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 const DEFAULT_HERO = {
   title: 'Bisnis Makin Tumbuh, Sistem Jangan Ikut Berantakan',
   supporting:
-    'Kami bantu startup dan bisnis Indonesia membangun aplikasi, menghubungkan sistem, dan merapikan proses kerja — dengan scope, harga, dan timeline yang jelas dari awal.',
+    'DN Tech adalah software house Indonesia: custom software (website, web app, mobile, integrasi sistem) dan produk SaaS first-party yang kami bangun sendiri. Kami bantu bisnis merapikan operasional lewat software — dengan scope, harga, dan timeline yang disepakati sebelum development.',
   badges: ['Website & Company Profile', 'Aplikasi Custom', 'Integrasi Sistem'],
 };
 
@@ -22,7 +22,7 @@ const DEFAULT_FAQ = [
   {
     question: 'Berapa lama timeline?',
     answer:
-      'MVP typical: 3–6 bulan, tergantung kompleksitas. Timeline pasti disampaikan di proposal sebelum kick-off.',
+      'MVP produk lengkap (banyak modul, integrasi, rollout) biasanya 3–6 bulan. Proyek custom dengan scope sudah terkunci — misalnya company profile, satu workflow, atau integrasi tunggal — sering masuk rentang 1–4 bulan seperti paket Custom Project di homepage. Timeline pasti ditulis di proposal sebelum kick-off.',
   },
   {
     question: 'Bisa mulai kapan?',
@@ -64,7 +64,7 @@ async function main() {
     heroSecondaryCta: { label: 'Lihat Produk', href: '/products' },
     productsTitle: 'Produk yang Membuktikan Cara Kami Bekerja',
     productsSubtitle:
-      'dnPeople (HRIS), dnCore (ERP), dan dnShop kami bangun untuk workflow bisnis nyata. Lihat fitur, harga, status rilis, dan cara setiap produk membantu tim bekerja lebih rapi.',
+      'Produk first-party — dnPeople (HRIS), dnCore (ERP), dnShop Finance (seller Shopee + pembukuan), dnFinance (cloud accounting SME) — dibangun dari workflow nyata. Nama resmi, status rilis, fitur, dan harga ada di halaman masing-masing produk.',
     hiringEmail: 'careers@dntech.id',
   };
 

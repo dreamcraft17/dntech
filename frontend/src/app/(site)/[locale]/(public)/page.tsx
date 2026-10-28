@@ -7,6 +7,7 @@ import { resolveHomeContent } from '@/lib/homepage-content';
 import { HomeHero } from '@/components/homepage/HomeHero';
 import { HomeJobPaths } from '@/components/homepage/HomeJobPaths';
 import { HomeBelowFold, HomeBelowFoldFallback } from '@/components/homepage/HomeBelowFold';
+import { HomeFaqJsonLd } from '@/components/seo/HomeFaqJsonLd';
 
 export async function generateMetadata({
   params,
@@ -34,6 +35,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <div className="homepage-story">
+      <HomeFaqJsonLd locale={locale} />
       <HomeHero content={content} />
       <HomeJobPaths />
       <Suspense fallback={<HomeBelowFoldFallback />}>

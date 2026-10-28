@@ -33,6 +33,10 @@ export function productMark(name: string): string {
   return name.slice(0, 2).toUpperCase();
 }
 
+function productStatusLabel(product: Product): string | null {
+  return formatProductStatusBadge(product.launchStatus || product.customerCount);
+}
+
 function ProductMark({ name, onDark }: { name: string; onDark?: boolean }) {
   return (
     <span
@@ -60,7 +64,7 @@ export function HomeProducts({ products, title, subtitle }: HomeProductsProps) {
     featured.tagline && featured.description && featured.description !== featured.tagline
       ? featured.description
       : null;
-  const featuredStatus = formatProductStatusBadge(featured.customerCount);
+  const featuredStatus = productStatusLabel(featured);
 
   return (
     <section className="home-section home-section--products epic-section py-section" aria-label={sectionTitle}>
@@ -116,7 +120,9 @@ export function HomeProducts({ products, title, subtitle }: HomeProductsProps) {
 
           {rest.length > 0 && (
             <ul className="flex flex-col gap-3 lg:col-span-5">
-              {rest.map((product) => (
+              {rest.map((product) => {
+                const listStatus = productStatusLabel(product);
+                return (
                 <li key={product.id} className={rest.length <= 3 ? 'flex min-h-0 flex-1' : ''}>
                   <Link
                     href={`/products/${product.slug}`}
@@ -124,11 +130,18 @@ export function HomeProducts({ products, title, subtitle }: HomeProductsProps) {
                   >
                     <ProductMark name={product.name} />
                     <span className="min-w-0 flex-1">
-                      {product.category && (
-                        <span className="block text-xs font-medium text-[var(--primary)]">
-                          {product.category}
-                        </span>
-                      )}
+                      <span className="flex flex-wrap items-center gap-2">
+                        {product.category && (
+                          <span className="text-xs font-medium text-[var(--primary)]">
+                            {product.category}
+                          </span>
+                        )}
+                        {listStatus && (
+                          <span className="rounded-sm bg-blue-50 px-1.5 py-0.5 text-[10px] font-medium text-blue-900">
+                            {listStatus}
+                          </span>
+                        )}
+                      </span>
                       <span className="block font-semibold text-gray-900">{product.name}</span>
                       {(product.tagline || product.description) && (
                         <span className="mt-0.5 block line-clamp-2 text-sm text-gray-600">
@@ -142,7 +155,8 @@ export function HomeProducts({ products, title, subtitle }: HomeProductsProps) {
                     />
                   </Link>
                 </li>
-              ))}
+              );
+              })}
             </ul>
           )}
         </div>

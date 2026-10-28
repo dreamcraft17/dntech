@@ -28,7 +28,8 @@ export function HomePricing({ plans }: HomePricingProps) {
             </article>
           ))}
         </div>
-        <div className="mt-10">
+        <p className="mt-8 max-w-3xl text-sm leading-relaxed text-[var(--muted)]">{t('scopeNote')}</p>
+        <div className="mt-8">
           <Button href="/contact">{t('cta')}</Button>
         </div>
       </div>

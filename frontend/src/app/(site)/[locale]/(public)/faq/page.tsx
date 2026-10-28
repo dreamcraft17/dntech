@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ChevronDown, Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
@@ -13,10 +14,16 @@ import { PageEndCta } from '@/components/layout/PageEndCta';
 
 export default function FaqPage() {
   const t = useTranslations('pages');
+  const searchParams = useSearchParams();
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [openId, setOpenId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q?.trim()) setSearch(q.trim());
+  }, [searchParams]);
 
   useEffect(() => {
     const params = new URLSearchParams();

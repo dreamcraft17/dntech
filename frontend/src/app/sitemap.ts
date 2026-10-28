@@ -14,11 +14,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/faq', '/careers', '/team', '/testimonials', '/terms', '/privacy', '/quiz', '/resources',
   ];
 
-  const alternatesFor = (path: string) => ({
-    languages: Object.fromEntries(
+  const alternatesFor = (path: string) => {
+    const byLocale = Object.fromEntries(
       locales.map((locale) => [locale, `${SITE_URL}${localePath(path || '/', locale)}`])
-    ),
-  });
+    );
+    return {
+      languages: {
+        ...byLocale,
+        'x-default': `${SITE_URL}${localePath(path || '/', 'id')}`,
+      },
+    };
+  };
 
   const forEachLocale = <T,>(build: (locale: string) => T) => locales.map(build);
 

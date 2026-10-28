@@ -1,4 +1,5 @@
 import type { PublicSettings } from '@/lib/settings';
+import { localePath } from '@/lib/seo';
 
 interface JsonLdProps {
   data: Record<string, unknown>;
@@ -87,15 +88,52 @@ export function buildWebsiteSchema(settings: PublicSettings = {}) {
     name: settings.companyName || 'DN Tech',
     url: SITE_URL,
     description: settings.tagline || undefined,
+    inLanguage: ['id-ID', 'en-US'],
     publisher: { '@type': 'Organization', name: settings.companyName || 'DN Tech', url: SITE_URL },
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${SITE_URL}/blog?search={search_term_string}`,
+        urlTemplate: `${SITE_URL}${localePath('/faq', 'id')}?search={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
+  };
+}
+
+/** Software studio / agency offering for E-E-A-T and local service queries. */
+export function buildProfessionalServiceSchema(settings: PublicSettings = {}) {
+  const name = settings.companyName || 'DN Tech';
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name,
+    url: SITE_URL,
+    description:
+      settings.heroDescription ||
+      settings.tagline ||
+      'Software development, custom applications, and business systems for companies in Indonesia.',
+    areaServed: { '@type': 'Country', name: 'Indonesia' },
+    ...(settings.companyAddress
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: settings.companyAddress,
+            addressCountry: 'ID',
+          },
+        }
+      : {}),
+    ...(settings.companyPhone ? { telephone: settings.companyPhone } : {}),
+    ...(settings.companyEmail ? { email: settings.companyEmail } : {}),
+    priceRange: '$$',
+    knowsAbout: [
+      'Custom software development',
+      'MVP development',
+      'HRIS',
+      'ERP',
+      'E-commerce bookkeeping',
+      'API integration',
+    ],
   };
 }
 
@@ -153,36 +191,46 @@ export function articleSchema(post: {
   };
 }
 
-export function serviceSchema(service: {
-  name: string;
-  description: string;
-  slug: string;
-  category?: string;
-}, companyName = 'DN Tech') {
+export function serviceSchema(
+  service: {
+    name: string;
+    description: string;
+    slug: string;
+    category?: string;
+  },
+  companyName = 'DN Tech',
+  locale = 'id'
+) {
+  const pagePath = localePath(`/services/${service.slug}`, locale);
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: service.name,
     description: service.description,
-    url: `${SITE_URL}/services/${service.slug}`,
+    url: `${SITE_URL}${pagePath}`,
     provider: { '@type': 'Organization', name: companyName, url: SITE_URL },
     areaServed: { '@type': 'Country', name: 'Indonesia' },
     serviceType: service.category,
   };
 }
 
-export function productSchema(product: {
-  name: string;
-  description: string;
-  slug: string;
-  category?: string;
-}, companyName = 'DN Tech') {
+export function productSchema(
+  product: {
+    name: string;
+    description: string;
+    slug: string;
+    category?: string;
+  },
+  companyName = 'DN Tech',
+  locale = 'id'
+) {
+  const pagePath = localePath(`/products/${product.slug}`, locale);
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     description: product.description,
-    url: `${SITE_URL}/products/${product.slug}`,
+    url: `${SITE_URL}${pagePath}`,
     brand: { '@type': 'Organization', name: companyName, url: SITE_URL },
     category: product.category,
   };

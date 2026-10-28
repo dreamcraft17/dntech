@@ -99,14 +99,20 @@ export default async function ProductDetailPage({ params }: { params: RouteParam
       <JsonLd data={breadcrumbSchema([
         { name: t('breadcrumb.home'), url: `${SITE_URL}${localePath('/', locale)}` },
         { name: t('breadcrumb.products'), url: productsUrl },
-        { name: product.name, url: `${productsUrl}/${slug}` },
+        { name: product.name, url: `${SITE_URL}${localePath(`/products/${slug}`, locale)}` },
       ])} />
-      <JsonLd data={productSchema({
-        name: product.name,
-        description: product.description,
-        slug,
-        category: product.category,
-      })} />
+      <JsonLd
+        data={productSchema(
+          {
+            name: product.name,
+            description: product.description,
+            slug,
+            category: product.category,
+          },
+          'DN Tech',
+          locale
+        )}
+      />
       {faqs.length > 0 && (
         <JsonLd data={faqSchema(faqs.map((f) => ({ question: f.question, answer: f.answer })))} />
       )}

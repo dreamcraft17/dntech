@@ -67,6 +67,7 @@
       "kicker": "Harga & Paket",
       "title": "Paket Layanan Kami",
       "subtitle": "Harga transparan — detail akurat setelah diskusi scope di konsultasi gratis",
+      "scopeNote": "Paket Custom Project (1–4 bulan) untuk scope sudah terkunci (mis. landing, satu modul, integrasi). MVP multi-modul biasanya 3–6 bulan — penjelasan di FAQ timeline.",
       "timeline": "Timeline: {value}",
       "cta": "Konsultasi untuk Quote Akurat"
     },
@@ -111,11 +112,11 @@
       "heroTitle": "Bisnis Makin Tumbuh, Sistem Jangan Ikut Berantakan",
       "heroSubtitle": "DN Tech.id",
       "heroBadges": ["Website & Company Profile", "Aplikasi Custom", "Integrasi Sistem"],
-      "heroSupporting": "Kami bantu startup dan bisnis Indonesia membangun aplikasi, menghubungkan sistem, dan merapikan proses kerja — dengan scope, harga, dan timeline yang jelas dari awal.",
+      "heroSupporting": "DN Tech adalah software house Indonesia: custom software (website, web app, mobile, integrasi sistem) dan produk SaaS first-party yang kami bangun sendiri. Kami bantu bisnis merapikan operasional lewat software — dengan scope, harga, dan timeline yang disepakati sebelum development.",
       "heroPrimaryCta": { "label": "Konsultasi Gratis — 30 Menit", "href": "/contact" },
       "heroSecondaryCta": { "label": "Lihat Produk", "href": "/products" },
       "productsTitle": "Produk yang Membuktikan Cara Kami Bekerja",
-      "productsSubtitle": "dnPeople (HRIS), dnCore (ERP), dan dnShop kami bangun untuk workflow bisnis nyata. Lihat fitur, harga, status rilis, dan cara setiap produk membantu tim bekerja lebih rapi.",
+      "productsSubtitle": "Produk first-party — dnPeople (HRIS), dnCore (ERP), dnShop Finance (seller Shopee + pembukuan), dnFinance (cloud accounting SME) — dibangun dari workflow nyata. Nama resmi, status rilis, fitur, dan harga ada di halaman masing-masing produk.",
       "services": [
         {
           "name": "Website & Company Profile",
@@ -223,7 +224,7 @@
         {
           "name": "Custom Project",
           "price": "Tergantung Scope",
-          "timeline": "1–4 bulan (sesuai scope)",
+          "timeline": "1–4 bulan · scope terdefinisi (bukan full MVP)",
           "included": ["Design", "Development", "Testing", "30 hari support pasca-launch"]
         },
         {
@@ -246,7 +247,7 @@
         },
         {
           "question": "Berapa lama timeline?",
-          "answer": "MVP typical: 3–6 bulan, tergantung kompleksitas. Timeline pasti disampaikan di proposal sebelum kick-off."
+          "answer": "MVP produk lengkap (banyak modul, integrasi, rollout) biasanya 3–6 bulan. Proyek custom dengan scope sudah terkunci — misalnya company profile, satu workflow, atau integrasi tunggal — sering masuk rentang 1–4 bulan seperti paket Custom Project di homepage. Timeline pasti ditulis di proposal sebelum kick-off."
         },
         {
           "question": "Bisa mulai kapan?",
