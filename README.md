@@ -287,32 +287,17 @@ CI runs backend lint/test/build, frontend lint/test/build, and Playwright smoke 
 **Full guide:** [DEPLOYMENT-PRODUCTION.md (wiki)](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/DEPLOYMENT-PRODUCTION.md)  
 **VPS Postgres seed:** [vps-postgres-seed.md (wiki)](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/runbooks/vps-postgres-seed.md)
 
-**Recommended:** on the VPS, from the repo root (`~/dntech` or `/var/www/dntech`):
-
-```bash
-chmod +x scripts/update.sh scripts/deploy.sh   # once
-./scripts/update.sh
-# or: npm run update   (recommended — avoids CRLF shebang issues on ./update.sh)
-```
-
-If `./scripts/update.sh` fails with `bash\r: No such file or directory`, normalize line endings once:
-`sed -i 's/\r$//' scripts/*.sh`
-
-If pull fails with unstaged changes, `deploy.sh` uses `git pull --rebase --autostash`. To deploy without pulling:
-`SKIP_GIT_PULL=1 npm run update`
-```
-
-That runs `git pull --rebase`, rebuilds **`./backend`** and **`./frontend`**, and restarts PM2 (`dntech-api`, `dntech-web`, plus `dntech-blog-worker` if registered). Options: `--skip-pull`, `--backend-only`, `--frontend-only` (same as `./scripts/deploy.sh`).
-
-Under the hood (manual fallback):
+**VPS (manual deploy)** — from repo root `~/dntech`:
 
 ```bash
 git pull --rebase origin main
 
-cd backend && npm ci && npx prisma generate && npm run build && pm2 restart dntech-api
+cd backend && npm ci && npx prisma generate && npx prisma migrate deploy && npm run build && pm2 restart dntech-api
 
 cd ../frontend && npm ci && npm run build && pm2 restart dntech-web
 ```
+
+Optional: `./scripts/deploy.sh` runs the same steps (set `SKIP_GIT_PULL=1` if you already pulled). Blog worker: `pm2 restart dntech-blog-worker` when registered.
 
 Production frontend env (in `frontend/.env.local` on server):
 
