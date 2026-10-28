@@ -297,6 +297,9 @@ chmod +x scripts/update.sh scripts/deploy.sh   # once
 
 If `./scripts/update.sh` fails with `bash\r: No such file or directory`, normalize line endings once:
 `sed -i 's/\r$//' scripts/*.sh`
+
+If pull fails with unstaged changes, `deploy.sh` uses `git pull --rebase --autostash`. To deploy without pulling:
+`SKIP_GIT_PULL=1 npm run update`
 ```
 
 That runs `git pull --rebase`, rebuilds **`./backend`** and **`./frontend`**, and restarts PM2 (`dntech-api`, `dntech-web`, plus `dntech-blog-worker` if registered). Options: `--skip-pull`, `--backend-only`, `--frontend-only` (same as `./scripts/deploy.sh`).

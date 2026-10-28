@@ -72,10 +72,26 @@ step_git_pull() {
     banner "Skipping git pull (SKIP_GIT_PULL=1)"
     return 0
   fi
-  banner "git fetch ${GIT_REMOTE} && git pull --rebase ${GIT_REMOTE} ${GIT_BRANCH}"
   cd "$ROOT_DIR"
+
+  if ! git diff-index --quiet HEAD -- 2>/dev/null; then
+    banner "Working tree has local changes (will autostash for pull):"
+    git status -sb >&2 || true
+  fi
+
+  banner "git fetch ${GIT_REMOTE} && git pull --rebase --autostash ${GIT_REMOTE} ${GIT_BRANCH}"
   git fetch "$GIT_REMOTE"
-  git pull --rebase "$GIT_REMOTE" "$GIT_BRANCH"
+  if ! git pull --rebase --autostash "$GIT_REMOTE" "$GIT_BRANCH"; then
+    log ""
+    log "git pull failed. On the VPS, inspect local edits:"
+    log "  git status"
+    log "  git diff"
+    log "Then either: git stash -u && npm run update"
+    log "Or discard tracked edits: git checkout -- . && git clean -fd   (careful: removes untracked files)"
+    log "Or skip pull this run: SKIP_GIT_PULL=1 npm run update"
+    exit 1
+  fi
+
   banner "Now at: $(git rev-parse --short HEAD) — $(git log -1 --format='%s')"
 }
 
