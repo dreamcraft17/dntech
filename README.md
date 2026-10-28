@@ -287,9 +287,17 @@ CI runs backend lint/test/build, frontend lint/test/build, and Playwright smoke 
 **Full guide:** [DEPLOYMENT-PRODUCTION.md (wiki)](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/DEPLOYMENT-PRODUCTION.md)  
 **VPS Postgres seed:** [vps-postgres-seed.md (wiki)](https://github.com/dreamcraft17/company-wiki/blob/main/docs/products/dntech/docs/runbooks/vps-postgres-seed.md)
 
-**Recommended:** on the VPS, run `./scripts/deploy.sh` — it does `git pull`, rebuilds backend + frontend, and restarts both PM2 processes, aborting on the first failure.
+**Recommended:** on the VPS, from the repo root (`~/dntech` or `/var/www/dntech`):
 
-Under the hood (what `scripts/deploy.sh` runs), for reference / manual fallback:
+```bash
+chmod +x scripts/update.sh scripts/deploy.sh   # once
+./scripts/update.sh
+# or: npm run update
+```
+
+That runs `git pull --rebase`, rebuilds **`./backend`** and **`./frontend`**, and restarts PM2 (`dntech-api`, `dntech-web`, plus `dntech-blog-worker` if registered). Options: `--skip-pull`, `--backend-only`, `--frontend-only` (same as `./scripts/deploy.sh`).
+
+Under the hood (manual fallback):
 
 ```bash
 git pull --rebase origin main
