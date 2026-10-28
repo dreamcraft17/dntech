@@ -3,7 +3,7 @@
   "private": true,
   "description": "DN Tech monorepo — use npm run update on VPS after git is cloned",
   "scripts": {
-    "update": "bash scripts/deploy.sh",
+    "update": "bash scripts/update.sh",
     "deploy": "bash scripts/deploy.sh"
   }
 }

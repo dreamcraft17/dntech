@@ -292,7 +292,11 @@ CI runs backend lint/test/build, frontend lint/test/build, and Playwright smoke 
 ```bash
 chmod +x scripts/update.sh scripts/deploy.sh   # once
 ./scripts/update.sh
-# or: npm run update
+# or: npm run update   (recommended — avoids CRLF shebang issues on ./update.sh)
+```
+
+If `./scripts/update.sh` fails with `bash\r: No such file or directory`, normalize line endings once:
+`sed -i 's/\r$//' scripts/*.sh`
 ```
 
 That runs `git pull --rebase`, rebuilds **`./backend`** and **`./frontend`**, and restarts PM2 (`dntech-api`, `dntech-web`, plus `dntech-blog-worker` if registered). Options: `--skip-pull`, `--backend-only`, `--frontend-only` (same as `./scripts/deploy.sh`).
