@@ -1,7 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Mail, MessageCircle, Calendar } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
-import { Button } from '@/components/ui/Button';
 import { resolveCompanyPhone, whatsAppUrl } from '@/lib/contact-links';
 import type { PublicSettings } from '@/lib/settings';
 
@@ -17,64 +16,50 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
   const calendly = settings.calendlyUrl;
 
   return (
-    <section className="home-section home-section--contact epic-section bg-[var(--primary)] py-section text-white">
-      <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="epic-reveal text-3xl font-bold">{t('title')}</h2>
-        <p className="epic-reveal mx-auto mt-4 max-w-2xl text-blue-100">{t('body')}</p>
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
+    <section className="dn-convert-band" aria-labelledby="home-contact-cta">
+      <div className="dn-convert-band__inner hp-v5-container">
+        <h2 id="home-contact-cta" className="dn-display text-white">
+          {t('title')}
+        </h2>
+        <p>{t('body')}</p>
+        <div className="dn-convert-band__actions">
           {calendly ? (
             <a
               href={calendly}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-base font-semibold text-blue-900 transition-colors hover:bg-gray-100 min-h-[48px]"
+              className="dn-btn-primary inline-flex min-h-11 items-center gap-2"
             >
-              <Calendar className="h-4 w-4" />
+              <Calendar className="h-4 w-4" aria-hidden="true" />
               {t('schedule')}
             </a>
           ) : (
-            <Button href="/contact" size="lg" variant="inverse">
+            <Link href="/contact" className="dn-btn-primary inline-flex min-h-11 items-center">
               {t('discussScope')}
-            </Button>
+            </Link>
           )}
-        </div>
-
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap sm:gap-8">
-          <a
-            href={`mailto:${email}`}
-            className="inline-flex items-center gap-2 text-sm text-blue-100 hover:text-white transition-colors"
-          >
-            <Mail className="h-4 w-4 text-white" />
-            {email}
-          </a>
-          <a
-            href={whatsAppUrl(whatsapp, t('whatsappMessage'))}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-blue-100 transition-colors hover:text-white"
-          >
-            <MessageCircle className="h-4 w-4 text-white" aria-hidden="true" />
+          <a href={whatsAppUrl(whatsapp, t('whatsappMessage'))} className="dn-btn-ghost inline-flex min-h-11 items-center gap-2" target="_blank" rel="noopener noreferrer">
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
             {t('whatsappLabel', { phone: whatsapp })}
           </a>
+        </div>
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 text-sm text-slate-400 sm:flex-row sm:gap-6">
+          <a href={`mailto:${email}`} className="inline-flex items-center gap-2 hover:text-white">
+            <Mail className="h-4 w-4" aria-hidden="true" />
+            {email}
+          </a>
           {linkedin && (
-            <a
-              href={linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-blue-100 hover:text-white transition-colors"
-            >
-              <span className="h-4 w-4 text-white font-bold text-xs">in</span>
+            <a href={linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-white">
               LinkedIn
             </a>
           )}
+          <span>
+            {t('orGoTo')}{' '}
+            <Link href="/contact" className="font-medium text-white underline underline-offset-2">
+              {t('contactPage')}
+            </Link>
+          </span>
         </div>
-
-        <p className="mt-8 text-sm text-blue-200">
-          {t('orGoTo')}{' '}
-          <Link href="/contact" className="font-medium text-white underline underline-offset-2">
-            {t('contactPage')}
-          </Link>
-        </p>
       </div>
     </section>
   );

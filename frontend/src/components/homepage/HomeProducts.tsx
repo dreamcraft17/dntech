@@ -37,16 +37,9 @@ function productStatusLabel(product: Product): string | null {
   return formatProductStatusBadge(product.launchStatus || product.customerCount);
 }
 
-function ProductMark({ name, onDark }: { name: string; onDark?: boolean }) {
+function ProductMark({ name }: { name: string }) {
   return (
-    <span
-      aria-hidden="true"
-      className={
-        onDark
-          ? 'inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[var(--secondary)] text-sm font-bold text-white'
-          : 'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[var(--primary)] text-sm font-bold text-white'
-      }
-    >
+    <span aria-hidden="true" className="hp-v5-mark">
       {productMark(name)}
     </span>
   );
@@ -66,96 +59,94 @@ export function HomeProducts({ products, title, subtitle }: HomeProductsProps) {
       : null;
   const featuredStatus = productStatusLabel(featured);
 
-  return (
-    <section className="home-section home-section--products epic-section py-section" aria-label={sectionTitle}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker={t('kicker')} title={sectionTitle} subtitle={sectionSubtitle} reveal />
-
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6 lg:items-stretch">
-          <Link
-            href={`/products/${featured.slug}`}
-            className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 lg:col-span-7"
-          >
-            <article className="flex h-full flex-col rounded-xl border border-t-4 border-[var(--border)] border-t-[var(--primary)] bg-white p-6 text-[var(--foreground)] shadow-sm sm:p-8 lg:p-10">
-              <div className="flex items-start gap-4">
-                <ProductMark name={featured.name} onDark />
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {featured.featured && (
-                      <p className="text-xs font-semibold uppercase tracking-wide text-teal-200">
-                        {t('featuredBadge')}
-                      </p>
-                    )}
-                    {featuredStatus && (
-                        <span className="rounded-sm bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-900">
-                        {featuredStatus}
-                      </span>
-                    )}
-                  </div>
-                  {featured.category && (
-                      <span className="mt-2 inline-block w-fit rounded-sm bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
-                      {featured.category}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <h3 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{featured.name}</h3>
-              {(featured.tagline || featured.description) && (
-                <p className="mt-3 text-base font-medium leading-relaxed text-slate-700">
-                  {featured.tagline || featured.description}
-                </p>
-              )}
-              {featuredBody && (
-                <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-600">
-                  {featuredBody}
-                </p>
-              )}
-
-              <span className="mt-8 inline-flex min-h-11 w-fit items-center border border-blue-900 bg-blue-900 px-5 py-2.5 text-sm font-semibold text-white group-hover:bg-blue-800">
-                {t('viewProduct', { name: featured.name })} <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+  const featuredInner = (
+    <>
+      <div className="flex items-start gap-4">
+        <ProductMark name={featured.name} />
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            {featured.featured && (
+              <span className="text-xs font-bold uppercase tracking-wide text-[var(--secondary)]">
+                {t('featuredBadge')}
               </span>
-            </article>
-          </Link>
+            )}
+            {featuredStatus && (
+              <span className="rounded-[var(--radius-card)] bg-[var(--surface-inset)] px-2 py-0.5 text-xs font-medium text-[var(--primary)]">
+                {featuredStatus}
+              </span>
+            )}
+          </div>
+          {featured.category && (
+            <span className="mt-2 inline-block rounded-[var(--radius-card)] bg-[var(--surface-inset)] px-2 py-0.5 text-xs font-medium text-[var(--muted)]">
+              {featured.category}
+            </span>
+          )}
+        </div>
+      </div>
+      <h3 className="dn-display mt-6 text-3xl sm:text-4xl">{featured.name}</h3>
+      {(featured.tagline || featured.description) && (
+        <p className="mt-3 text-base font-medium leading-relaxed text-[var(--foreground)]">
+          {featured.tagline || featured.description}
+        </p>
+      )}
+      {featuredBody && (
+        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-[var(--muted)]">{featuredBody}</p>
+      )}
+      <span className="mt-8 inline-flex min-h-11 w-fit items-center gap-2 border border-[var(--primary)] bg-[var(--primary)] px-5 py-2.5 text-sm font-semibold text-white">
+        {t('viewProduct', { name: featured.name })} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      </span>
+    </>
+  );
+
+  return (
+    <section className="hp-v5-section" aria-label={sectionTitle}>
+      <div className="hp-v5-container">
+        <SectionHeading kicker={t('kicker')} title={sectionTitle} subtitle={sectionSubtitle} className="mb-8" />
+
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-5 lg:items-stretch">
+          <div className="lg:col-span-7">
+            {featured.slug ? (
+              <Link
+                href={`/products/${featured.slug}`}
+                className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2"
+              >
+                <article className="hp-v5-catalog-feature flex h-full flex-col sm:p-8">{featuredInner}</article>
+              </Link>
+            ) : (
+              <article className="hp-v5-catalog-feature flex h-full flex-col sm:p-8">{featuredInner}</article>
+            )}
+          </div>
 
           {rest.length > 0 && (
-            <ul className="flex flex-col gap-3 lg:col-span-5">
+            <ul className="flex list-none flex-col gap-3 p-0 lg:col-span-5">
               {rest.map((product) => {
                 const listStatus = productStatusLabel(product);
                 return (
-                <li key={product.id} className={rest.length <= 3 ? 'flex min-h-0 flex-1' : ''}>
-                  <Link
-                    href={`/products/${product.slug}`}
-                    className="flex min-h-11 w-full items-center gap-4 rounded-lg border border-gray-200 bg-surface px-4 py-4 text-left transition-colors hover:border-[var(--primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2"
-                  >
-                    <ProductMark name={product.name} />
-                    <span className="min-w-0 flex-1">
-                      <span className="flex flex-wrap items-center gap-2">
-                        {product.category && (
-                          <span className="text-xs font-medium text-[var(--primary)]">
-                            {product.category}
-                          </span>
-                        )}
-                        {listStatus && (
-                          <span className="rounded-sm bg-blue-50 px-1.5 py-0.5 text-[10px] font-medium text-blue-900">
-                            {listStatus}
+                  <li key={product.id} className={rest.length <= 3 ? 'flex min-h-0 flex-1' : ''}>
+                    <Link href={`/products/${product.slug}`} className="hp-v5-catalog-row w-full">
+                      <ProductMark name={product.name} />
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-center gap-2">
+                          {product.category && (
+                            <span className="text-xs font-medium text-[var(--primary)]">{product.category}</span>
+                          )}
+                          {listStatus && (
+                            <span className="rounded-[var(--radius-card)] bg-[var(--surface-inset)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--primary)]">
+                              {listStatus}
+                            </span>
+                          )}
+                        </span>
+                        <span className="block font-semibold text-[var(--foreground)]">{product.name}</span>
+                        {(product.tagline || product.description) && (
+                          <span className="mt-0.5 block line-clamp-2 text-sm text-[var(--muted)]">
+                            {product.tagline || product.description}
                           </span>
                         )}
                       </span>
-                      <span className="block font-semibold text-gray-900">{product.name}</span>
-                      {(product.tagline || product.description) && (
-                        <span className="mt-0.5 block line-clamp-2 text-sm text-gray-600">
-                          {product.tagline || product.description}
-                        </span>
-                      )}
-                    </span>
-                    <ArrowRight
-                      className="h-4 w-4 shrink-0 text-[var(--primary)]"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                </li>
-              );
+                      <ArrowRight className="h-4 w-4 shrink-0 text-[var(--primary)]" aria-hidden="true" />
+                    </Link>
+                  </li>
+                );
               })}
             </ul>
           )}

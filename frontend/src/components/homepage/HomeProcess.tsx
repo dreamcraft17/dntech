@@ -9,22 +9,22 @@ interface HomeProcessProps {
 export function HomeProcess({ steps }: HomeProcessProps) {
   const t = useTranslations('home.process');
   return (
-    <section id="cara-kerja" className="home-section home-section--process epic-section py-section scroll-mt-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')} reveal />
-        <ol className="mx-auto grid max-w-5xl border-y border-slate-300 sm:grid-cols-2 sm:divide-x sm:divide-slate-300">
-          {steps.map((step) => {
-            return (
-              <li key={step.step} className="border-b border-slate-300 p-6 last:border-b-0 sm:p-7 sm:odd:border-b sm:even:border-b lg:p-8">
-                <div className="flex items-start justify-between gap-4">
-                  <span className="font-mono text-3xl font-bold leading-none text-[var(--secondary)]">0{step.step}</span>
-                  <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{t('stepLabel', { step: step.step })}</span>
-                </div>
-                <h3 className="mt-8 text-lg font-semibold text-gray-900">{step.title}</h3>
-                <p className="mt-2 leading-relaxed text-gray-600">{step.description}</p>
-              </li>
-            );
-          })}
+    <section id="cara-kerja" className="hp-v5-section scroll-mt-24">
+      <div className="hp-v5-container">
+        <SectionHeading kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')} className="mb-8" />
+        <ol className="hp-v5-process list-none p-0">
+          {steps.map((step) => (
+            <li key={step.step} className="hp-v5-process__step">
+              <div className="flex items-start justify-between gap-3">
+                <span className="hp-v5-process__num">0{step.step}</span>
+                <span className="text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-[var(--muted)]">
+                  {t('stepLabel', { step: step.step })}
+                </span>
+              </div>
+              <h3 className="mt-6 text-base font-semibold text-[var(--foreground)]">{step.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{step.description}</p>
+            </li>
+          ))}
         </ol>
       </div>
     </section>
