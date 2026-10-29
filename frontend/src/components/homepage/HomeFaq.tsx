@@ -16,32 +16,32 @@ interface HomeFaqProps {
 export function HomeFaq({ items }: HomeFaqProps) {
   const t = useTranslations('home.faq');
   return (
-    <section className="home-section-alt home-section--faq epic-section py-section" id="faq">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker={t('kicker')} title={t('title')} reveal />
-        <div className="space-y-3">
+    <section className="hp-v5-section" id="faq">
+      <div className="hp-v5-container max-w-3xl">
+        <SectionHeading kicker={t('kicker')} title={t('title')} className="mb-8" />
+        <div className="space-y-0 border border-[var(--border-strong)]">
           {items.map((faq) => (
             <details
               key={faq.id}
-              className="group rounded-lg border border-gray-200 open:border-blue-100"
+              className="group border-b border-[var(--border-strong)] bg-[var(--surface)] last:border-b-0"
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-4 text-left min-h-[48px] marker:content-none [&::-webkit-details-marker]:hidden">
-                <span className="font-medium text-gray-900">{faq.question}</span>
-                <ChevronDown className="h-5 w-5 shrink-0 text-gray-500 transition-transform group-open:rotate-180" />
+              <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-4 py-4 text-left marker:content-none [&::-webkit-details-marker]:hidden">
+                <span className="font-medium text-[var(--foreground)]">{faq.question}</span>
+                <ChevronDown className="h-5 w-5 shrink-0 text-[var(--muted)] transition-transform group-open:rotate-180" />
               </summary>
-              <div className="border-t border-gray-100 px-4 py-4 text-sm leading-relaxed text-gray-600">
+              <div className="border-t border-[var(--border)] px-4 py-4 text-sm leading-relaxed text-[var(--muted)]">
                 {faq.answer}
               </div>
             </details>
           ))}
         </div>
-        <p className="mt-8 text-sm text-gray-600">
+        <p className="mt-8 text-sm text-[var(--muted)]">
           {t('moreQuestions')}{' '}
-          <Link href="/faq" className="font-medium text-blue-900 hover:underline">
+          <Link href="/faq" className="font-semibold text-[var(--primary)] hover:underline">
             {t('allFaqLink')}
           </Link>{' '}
           {t('or')}{' '}
-          <Link href="/contact" className="font-medium text-blue-900 hover:underline">
+          <Link href="/contact" className="font-semibold text-[var(--primary)] hover:underline">
             {t('contactLink')}
           </Link>
           .

@@ -13,29 +13,21 @@ export function HomeAdvantages({ advantages }: HomeAdvantagesProps) {
   const [lead, ...rest] = advantages;
 
   return (
-    <section className="home-section home-section--advantages epic-section bg-[var(--primary)] py-section text-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker={t('kicker')} title={t('title')} onDark reveal />
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.5fr)] lg:gap-16">
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-              {t('leadLabel')}
-            </p>
-            <h3 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
-              {lead.title}
-            </h3>
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-blue-100">
-              {lead.description}
-            </p>
+    <section className="hp-v5-section hp-v5-section--alt" aria-labelledby="advantages-heading">
+      <div className="hp-v5-container">
+        <SectionHeading kicker={t('kicker')} titleId="advantages-heading" title={t('title')} className="mb-8" />
+        <div className="hp-v5-advantages">
+          <div className="hp-v5-advantages__lead">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">{t('leadLabel')}</p>
+            <h3 className="dn-display mt-4 text-3xl text-white sm:text-4xl">{lead.title}</h3>
+            <p className="mt-4 max-w-md text-base leading-relaxed text-slate-300">{lead.description}</p>
           </div>
           {rest.length > 0 && (
-            <ul className="divide-y divide-white/15">
+            <ul className="hp-v5-advantages__list">
               {rest.map((item) => (
-                <li key={item.title} className="grid gap-3 py-8 first:pt-0 sm:grid-cols-[minmax(10rem,0.65fr)_1fr] sm:gap-8">
-                  <div>
-                    <h4 className="text-lg font-semibold text-white">{item.title}</h4>
-                  </div>
-                  <p className="leading-relaxed text-blue-100">{item.description}</p>
+                <li key={item.title} className="hp-v5-advantages__item">
+                  <h4 className="text-base font-semibold text-[var(--foreground)]">{item.title}</h4>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{item.description}</p>
                 </li>
               ))}
             </ul>
