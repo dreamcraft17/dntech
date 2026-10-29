@@ -43,7 +43,7 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
             {t('whatsappLabel', { phone: whatsapp })}
           </a>
         </div>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 text-sm text-slate-400 sm:flex-row sm:gap-6">
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 text-sm text-[var(--on-primary-subtle)] sm:flex-row sm:gap-6">
           <a href={`mailto:${email}`} className="inline-flex items-center gap-2 hover:text-white">
             <Mail className="h-4 w-4" aria-hidden="true" />
             {email}

@@ -20,7 +20,9 @@ export function HomeAdvantages({ advantages }: HomeAdvantagesProps) {
           <div className="hp-v5-advantages__lead">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">{t('leadLabel')}</p>
             <h3 className="dn-display mt-4 text-3xl text-white sm:text-4xl">{lead.title}</h3>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-slate-300">{lead.description}</p>
+            <p className="mt-4 max-w-md text-base leading-relaxed text-[var(--on-primary-muted)]">
+              {lead.description}
+            </p>
           </div>
           {rest.length > 0 && (
             <ul className="hp-v5-advantages__list">

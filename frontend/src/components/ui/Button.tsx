@@ -26,16 +26,16 @@ type ButtonAsLink = BaseButtonProps &
 export type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-blue-900 text-white hover:bg-blue-800 focus:ring-blue-900',
-  // Uses the --secondary token (#0f766e, 5.47:1 on white) rather than
-  // Tailwind's teal-600 (#0d9488, 3.74:1 on white) — teal-600 fails WCAG AA
-  // for normal-size button text.
+  primary:
+    'bg-[var(--primary)] text-white hover:bg-[var(--primary-hover,var(--primary))] focus:ring-[var(--primary)]',
   secondary:
-    'border-2 border-[var(--secondary)] text-[var(--secondary)] hover:bg-teal-50 focus:ring-[var(--secondary)] bg-white',
-  outline: 'border-2 border-blue-900 text-blue-900 hover:bg-blue-50 focus:ring-blue-900 bg-white',
+    'border-2 border-[var(--secondary)] text-[var(--secondary)] hover:bg-[var(--surface-inset)] focus:ring-[var(--secondary)] bg-[var(--surface)]',
+  outline:
+    'border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--surface-inset)] focus:ring-[var(--primary)] bg-[var(--surface)]',
   danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-600',
-  ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-400',
-  inverse: 'bg-white text-blue-900 hover:bg-gray-100 focus:ring-white',
+  ghost: 'text-[var(--muted)] hover:bg-[var(--surface-inset)] focus:ring-[var(--border-strong)]',
+  inverse:
+    'bg-[var(--surface)] text-[var(--primary)] hover:bg-[var(--surface-inset)] focus:ring-[var(--surface)]',
   'outline-on-dark':
     'border-2 border-white bg-transparent text-white hover:bg-white/10 focus:ring-white',
 };

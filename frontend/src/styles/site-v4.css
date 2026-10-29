@@ -4,6 +4,7 @@
  */
 
 .public-shell--v4 {
+  /* Ledger & Navy — single palette for header, homepage, footer, CTAs */
   --background: #f0ebe3;
   --surface: #faf8f4;
   --surface-inset: #e8e2d8;
@@ -11,6 +12,12 @@
   --muted: #5a616d;
   --border: #d4cdc2;
   --border-strong: #b8aea0;
+  --primary: #0a1628;
+  --primary-hover: #172554;
+  --secondary: #1e3a8a;
+  --accent: #f5a55c;
+  --on-primary-muted: #cbd5e1;
+  --on-primary-subtle: #94a3b8;
   --radius-card: 0.25rem;
   --space-section: 4.5rem;
   --header-h: 4.25rem;
@@ -127,7 +134,7 @@
   width: 100vw;
   max-width: 100vw;
   border-top: 1px solid rgb(255 255 255 / 0.08);
-  background: #0a1628;
+  background: var(--primary);
   padding: 3.25rem 1rem 3.75rem;
 }
 
@@ -146,7 +153,7 @@
 
 .public-shell--v4 .dn-convert-band p {
   margin-top: 0.75rem;
-  color: #cbd5e1;
+  color: var(--on-primary-muted);
   line-height: 1.65;
 }
 
@@ -163,8 +170,8 @@
   min-height: 2.75rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid #fff;
-  background: #fff;
+  border: 1px solid var(--surface);
+  background: var(--surface);
   padding: 0.625rem 1.25rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -302,7 +309,7 @@
 }
 
 .public-shell--v4 .site-header__cta:hover {
-  background: #172554;
+  background: var(--primary-hover);
 }
 
 @media (min-width: 1024px) {
@@ -348,8 +355,8 @@
 /* —— Footer —— */
 .public-shell--v4 .site-footer {
   border-top: 1px solid rgb(255 255 255 / 0.06);
-  background: #0a1628;
-  color: #cbd5e1;
+  background: var(--primary);
+  color: var(--on-primary-muted);
 }
 
 .public-shell--v4 .site-footer__inner {
@@ -391,13 +398,13 @@
 
 .public-shell--v4 .site-sticky-cta {
   border-top: 1px solid rgb(255 255 255 / 0.12);
-  background: #0a1628;
+  background: var(--primary);
 }
 
 .public-shell--v4 .site-sticky-cta a {
   border-radius: var(--radius-card);
   background: var(--accent);
-  color: #0a1628;
+  color: var(--primary);
   font-weight: 700;
 }
 
@@ -441,4 +448,20 @@
 
 .public-shell--v4 main :is(.text-gray-900, .text-slate-950) {
   color: var(--foreground) !important;
+}
+
+.public-shell--v4 main :is(.text-blue-900, .text-blue-800) {
+  color: var(--primary) !important;
+}
+
+.public-shell--v4 main :is(.bg-blue-900, .bg-blue-800) {
+  background-color: var(--primary) !important;
+}
+
+.public-shell--v4 main :is(.border-blue-900, .border-blue-800) {
+  border-color: var(--primary) !important;
+}
+
+.public-shell--v4 main .bg-blue-50 {
+  background-color: var(--surface-inset) !important;
 }

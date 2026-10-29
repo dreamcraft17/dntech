@@ -46,7 +46,12 @@ export function SectionHeading({
         {title}
       </h2>
       {subtitle && (
-        <p className={cn('mt-3 max-w-2xl leading-relaxed', onDark ? 'text-blue-100' : 'text-[var(--muted)]')}>
+        <p
+          className={cn(
+            'mt-3 max-w-2xl leading-relaxed',
+            onDark ? 'text-[var(--on-primary-muted,#cbd5e1)]' : 'text-[var(--muted)]',
+          )}
+        >
           {subtitle}
         </p>
       )}

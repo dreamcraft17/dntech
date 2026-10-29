@@ -4,12 +4,12 @@
  */
 
 .homepage-v5 {
-  --hp-ink: var(--foreground, #12151c);
-  --hp-muted: var(--muted, #5a616d);
-  --hp-paper: var(--surface, #faf8f4);
-  --hp-canvas: var(--background, #f0ebe3);
-  --hp-line: var(--border-strong, #b8aea0);
-  --hp-navy: #0a1628;
+  --hp-ink: var(--foreground);
+  --hp-muted: var(--muted);
+  --hp-paper: var(--surface);
+  --hp-canvas: var(--background);
+  --hp-line: var(--border-strong);
+  --hp-navy: var(--primary);
   background: var(--hp-canvas);
   color: var(--hp-ink);
 }
@@ -31,7 +31,7 @@
 
 .hp-v5-section--navy {
   background: var(--hp-navy);
-  color: #e2e8f0;
+  color: var(--on-primary-muted);
   border-bottom-color: rgb(255 255 255 / 0.08);
 }
 
@@ -42,7 +42,7 @@
 
 .hp-v5-hero__masthead {
   background: var(--hp-navy);
-  color: #94a3b8;
+  color: var(--on-primary-subtle, #94a3b8);
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -59,7 +59,7 @@
 }
 
 .hp-v5-hero__masthead-inner .hp-v5-mark {
-  color: var(--accent, #f5a55c);
+  color: var(--accent);
 }
 
 .hp-v5-hero__masthead-rule {
@@ -128,7 +128,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--secondary, #1e3a8a);
+  color: var(--secondary);
 }
 
 .hp-v5-ledger__ref {
@@ -167,7 +167,7 @@
   font-family: ui-monospace, monospace;
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--accent, #f5a55c);
+  color: var(--accent);
 }
 
 .hp-v5-ledger__foot {
@@ -351,7 +351,7 @@
 .hp-v5-advantages__lead {
   padding: clamp(1.5rem, 4vw, 2.5rem);
   background: var(--hp-navy);
-  color: #e2e8f0;
+  color: var(--on-primary-muted);
 }
 
 .hp-v5-advantages__list {
