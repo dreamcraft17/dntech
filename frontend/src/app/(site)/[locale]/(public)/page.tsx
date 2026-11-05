@@ -34,7 +34,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const content = resolveHomeContent(settings, locale);
 
   return (
-    <div className="homepage-v5">
+    <div className="homepage-story">
       <HomeFaqJsonLd locale={locale} />
       <HomeHero content={content} />
       <HomeJobPaths />

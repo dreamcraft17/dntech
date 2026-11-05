@@ -10,7 +10,7 @@ interface SectionHeadingProps {
   kicker?: string;
   /** Use the light-on-dark palette for sections with a navy/full-bleed background. */
   onDark?: boolean;
-  /** Legacy epic reveal — ignored on homepage v5. */
+  /** Scroll-reveal motion (homepage epic layer). */
   reveal?: boolean;
   className?: string;
 }
@@ -46,12 +46,7 @@ export function SectionHeading({
         {title}
       </h2>
       {subtitle && (
-        <p
-          className={cn(
-            'mt-3 max-w-2xl leading-relaxed',
-            onDark ? 'text-[var(--on-primary-muted,#cbd5e1)]' : 'text-[var(--muted)]',
-          )}
-        >
+        <p className={cn('mt-3 max-w-2xl', onDark ? 'text-blue-100' : 'text-gray-600')}>
           {subtitle}
         </p>
       )}
