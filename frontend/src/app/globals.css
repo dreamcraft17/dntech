@@ -3,6 +3,9 @@
 @import "../styles/site-epic.css";
 
 :root {
+  /* System font stacks: no web-font download at build or page load. */
+  --font-sans-dn: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --font-display-dn: Georgia, 'Times New Roman', serif;
   /* Mekari Pixel–inspired canvas (DN Tech brand colors retained) */
   --background: #f1f5f9;
   --foreground: #272b32;
