@@ -42,6 +42,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   output: 'standalone',
   poweredByHeader: false,
+  // isomorphic-dompurify runs jsdom on the server; bundled, jsdom cannot find its own browser/default-stylesheet.css
+  // ("Failed to collect page data for /[locale]/blog/[slug]"). Loaded from node_modules at runtime instead.
+  serverExternalPackages: ['isomorphic-dompurify'],
   turbopack: {
     root: process.cwd(),
   },
