@@ -18,8 +18,8 @@ export function HomeContactCta({ settings }: HomeContactCtaProps) {
 
   return (
     <section className="home-section home-section--contact epic-section bg-[var(--primary)] py-section text-white">
-      <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="epic-reveal text-3xl font-bold">{t('title')}</h2>
+      <div className="dn-container text-center">
+        <h2 className="epic-reveal dn-display dn-h2 mx-auto text-white">{t('title')}</h2>
         <p className="epic-reveal mx-auto mt-4 max-w-2xl text-blue-100">{t('body')}</p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           {calendly ? (

@@ -19,13 +19,58 @@
   --on-primary-muted: #cbd5e1;
   --on-primary-subtle: #94a3b8;
   --radius-card: 0.25rem;
-  --space-section: 4.5rem;
+  /* One vertical rhythm for every public section (py-section). */
+  --space-section: clamp(3.5rem, 7vw, 6rem);
+  --container-max: 80rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
   --header-h: 4.25rem;
   color: var(--foreground);
 }
 
 .public-shell--v4 main {
   background: var(--background);
+}
+
+/* —— Proportion system ——
+   One container, one gutter, one heading scale. Header, footer, homepage
+   sections and inner pages share the same left/right edges. */
+.public-shell--v4 .dn-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.public-shell--v4 .dn-h2 {
+  font-size: clamp(1.875rem, 3.4vw, 2.75rem);
+  line-height: 1.1;
+}
+
+.public-shell--v4 .dn-card-title {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.public-shell--v4 .dn-section-head {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+/* Heading column + content column (job paths, FAQ). */
+.public-shell--v4 .dn-split {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .public-shell--v4 .dn-split {
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    gap: 4rem;
+  }
+
+  .public-shell--v4 .dn-split > .dn-section-head {
+    margin-bottom: 0;
+  }
 }
 
 /* —— Page rhythm —— */
@@ -41,7 +86,7 @@
 
 .public-shell--v4 .dn-page__inner {
   margin-inline: auto;
-  padding-inline: clamp(1rem, 4vw, 2rem);
+  padding-inline: var(--gutter);
 }
 
 .public-shell--v4 .dn-kicker {
@@ -240,10 +285,10 @@
   margin-inline: auto;
   display: flex;
   height: 100%;
-  max-width: 80rem;
+  max-width: var(--container-max);
   align-items: center;
   gap: 0.75rem;
-  padding-inline: clamp(1rem, 4vw, 2rem);
+  padding-inline: var(--gutter);
 }
 
 .public-shell--v4 .site-header__nav {
@@ -361,8 +406,8 @@
 
 .public-shell--v4 .site-footer__inner {
   margin-inline: auto;
-  max-width: 80rem;
-  padding: 3rem clamp(1rem, 4vw, 2rem) 2rem;
+  max-width: var(--container-max);
+  padding: 3rem var(--gutter) 2rem;
 }
 
 .public-shell--v4 .site-footer h2 {

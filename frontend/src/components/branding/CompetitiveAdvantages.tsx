@@ -29,7 +29,7 @@ export function CompetitiveAdvantages() {
 
   return (
     <section className="py-16 bg-white border-y border-gray-200">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <div className="mb-10 text-center">
           <h2 className="text-3xl font-bold text-gray-900">{t('advantagesTitle')}</h2>
           <p className="mt-2 text-gray-600">{t('advantagesSubtitle')}</p>

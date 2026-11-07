@@ -30,7 +30,7 @@ export function BrandStory() {
 
   return (
     <section className="py-16 bg-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 items-center">
           {content.imageUrl ? (
             <Image

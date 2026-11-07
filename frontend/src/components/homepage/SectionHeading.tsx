@@ -25,7 +25,7 @@ export function SectionHeading({
   className = '',
 }: SectionHeadingProps) {
   return (
-    <div className={cn('mb-10 text-left md:mb-14', reveal && 'epic-reveal', className)}>
+    <div className={cn('dn-section-head text-left', reveal && 'epic-reveal', className)}>
       {kicker && (
         <p
           className={cn(
@@ -39,14 +39,14 @@ export function SectionHeading({
       <h2
         id={titleId}
         className={cn(
-          'dn-display text-3xl sm:text-4xl',
+          'dn-display dn-h2',
           onDark ? 'text-white' : 'text-[var(--foreground)]',
         )}
       >
         {title}
       </h2>
       {subtitle && (
-        <p className={cn('mt-3 max-w-2xl', onDark ? 'text-blue-100' : 'text-gray-600')}>
+        <p className={cn('mt-4 max-w-2xl text-base leading-7 sm:text-lg', onDark ? 'text-blue-100' : 'text-gray-600')}>
           {subtitle}
         </p>
       )}

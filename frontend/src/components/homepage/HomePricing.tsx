@@ -11,7 +11,7 @@ export function HomePricing({ plans }: HomePricingProps) {
   const t = useTranslations('home.pricing');
   return (
     <section className="home-section home-section--pricing epic-section py-section">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <SectionHeading kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')} reveal />
         <div className="grid grid-cols-1 border-y border-slate-300 md:grid-cols-3 md:divide-x md:divide-slate-300">
           {plans.map((plan, index) => (

@@ -34,7 +34,7 @@ export function TeamSpotlightSection() {
 
   return (
     <section className="py-16 bg-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <TeamSpotlight members={team} limit={5} />
       </div>
     </section>

@@ -26,7 +26,7 @@ export function BrandStats() {
 
   return (
     <section className="bg-blue-900/5 py-12 border-b border-gray-200">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
           {stats.map((stat) => {
             const Icon = ((LucideIcons as Record<string, unknown>)[stat.iconName] as typeof Briefcase) || Briefcase;

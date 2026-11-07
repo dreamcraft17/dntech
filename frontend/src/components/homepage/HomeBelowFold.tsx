@@ -17,7 +17,7 @@ export function HomeBelowFoldFallback() {
   const t = useTranslations('home.belowFold');
   return (
     <div className="bg-surface py-section" aria-busy="true" aria-live="polite">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <p className="text-sm text-gray-600">{t('loading')}</p>
       </div>
     </div>

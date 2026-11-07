@@ -14,14 +14,14 @@ export function HomeAdvantages({ advantages }: HomeAdvantagesProps) {
 
   return (
     <section className="home-section home-section--advantages epic-section bg-[var(--primary)] py-section text-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <SectionHeading kicker={t('kicker')} title={t('title')} onDark reveal />
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.5fr)] lg:gap-16">
           <div className="lg:sticky lg:top-24 lg:self-start">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
               {t('leadLabel')}
             </p>
-            <h3 className="mt-4 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
+            <h3 className="dn-card-title mt-4 font-bold tracking-tight text-white">
               {lead.title}
             </h3>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-blue-100">

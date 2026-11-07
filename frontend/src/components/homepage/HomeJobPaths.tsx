@@ -12,18 +12,18 @@ export function HomeJobPaths() {
   const t = useTranslations('home.jobPaths');
 
   return (
-    <section className="home-section-alt epic-section py-14 sm:py-16" aria-labelledby="job-paths-heading">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:gap-16">
+    <section className="home-section-alt home-section--paths epic-section py-section" aria-labelledby="job-paths-heading">
+      <div className="dn-container">
+        <div className="dn-split">
           <header className="epic-reveal">
             <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[var(--secondary)]">
               <span className="h-px w-8 bg-[var(--accent)]" aria-hidden="true" />
               {t('kicker')}
             </p>
-            <h2 id="job-paths-heading" className="mt-4 max-w-md text-3xl font-bold leading-tight tracking-tight text-slate-950 sm:text-4xl">
+            <h2 id="job-paths-heading" className="dn-display dn-h2 mt-3 max-w-md text-slate-950">
               {t('title')}
             </h2>
-            <p className="mt-4 max-w-md text-base leading-7 text-slate-600">
+            <p className="mt-4 max-w-md text-base leading-7 text-slate-600 sm:text-lg">
               {t('subtitle')}
             </p>
           </header>

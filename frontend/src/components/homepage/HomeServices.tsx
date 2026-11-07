@@ -49,7 +49,7 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
           )}
         </div>
       </div>
-      <h3 className="mt-6 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{featured.name}</h3>
+      <h3 className="dn-card-title mt-6 font-bold tracking-tight text-gray-900">{featured.name}</h3>
       {featured.description && (
         <p className="mt-3 text-base leading-relaxed text-slate-600">{featured.description}</p>
       )}
@@ -64,14 +64,13 @@ export function HomeServices({ services, defaults }: HomeServicesProps) {
 
   return (
     <section className="home-section home-section--services epic-section py-section" aria-labelledby="services-heading">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <SectionHeading
           kicker={t('kicker')}
           titleId="services-heading"
           title={t('title')}
           subtitle={t('subtitle')}
           reveal
-          className="mb-8 md:mb-10"
         />
 
         <ul className="grid list-none grid-cols-1 gap-4 p-0 lg:grid-cols-12 lg:gap-6">

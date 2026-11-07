@@ -68,7 +68,7 @@ export function HomeProducts({ products, title, subtitle }: HomeProductsProps) {
 
   return (
     <section className="home-section home-section--products epic-section py-section" aria-label={sectionTitle}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <SectionHeading kicker={t('kicker')} title={sectionTitle} subtitle={sectionSubtitle} reveal />
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6 lg:items-stretch">
@@ -100,7 +100,7 @@ export function HomeProducts({ products, title, subtitle }: HomeProductsProps) {
                 </div>
               </div>
 
-              <h3 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">{featured.name}</h3>
+              <h3 className="dn-card-title mt-6 font-bold tracking-tight">{featured.name}</h3>
               {(featured.tagline || featured.description) && (
                 <p className="mt-3 text-base font-medium leading-relaxed text-slate-700">
                   {featured.tagline || featured.description}

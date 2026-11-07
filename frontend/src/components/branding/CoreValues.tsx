@@ -30,7 +30,7 @@ export function CoreValues() {
 
   return (
     <section className="py-16 bg-blue-900/5">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-gray-900">{t('valuesTitle')}</h2>
           <p className="mt-2 text-gray-600">{t('valuesSubtitle')}</p>

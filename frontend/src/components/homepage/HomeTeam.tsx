@@ -30,7 +30,7 @@ export function HomeTeam({ members, careers, hiringRoles, hiringEmail }: HomeTea
 
   return (
     <section className="home-section py-section">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <SectionHeading title={t('title')} subtitle={t('subtitle')} />
 
         {members.length > 0 ? (

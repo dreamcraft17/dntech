@@ -10,7 +10,7 @@ export function HomeTechStack({ categories }: HomeTechStackProps) {
   const t = useTranslations('home.techStack');
   return (
     <section className="home-section py-section">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <SectionHeading title={t('title')} subtitle={t('subtitle')} />
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => (

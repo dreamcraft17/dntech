@@ -10,7 +10,7 @@ export function HomeProcess({ steps }: HomeProcessProps) {
   const t = useTranslations('home.process');
   return (
     <section id="cara-kerja" className="home-section home-section--process epic-section py-section scroll-mt-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <SectionHeading kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')} reveal />
         <ol className="mx-auto grid max-w-5xl border-y border-slate-300 sm:grid-cols-2 sm:divide-x sm:divide-slate-300">
           {steps.map((step) => {

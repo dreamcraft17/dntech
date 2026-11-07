@@ -21,7 +21,7 @@ export function TrustBadges({ badges, title }: TrustBadgesProps) {
 
   return (
     <section className="py-16 bg-white border-y border-gray-200">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <h2 className="text-center text-2xl font-bold text-gray-900 mb-10">{heading}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {items.map((badge) => {

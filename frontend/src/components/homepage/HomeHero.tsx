@@ -47,7 +47,7 @@ export function HomeHero({ content }: HomeHeroProps) {
         />
       </div>
 
-      <div className="scene-inner relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div className="scene-inner dn-container relative z-10">
         <div className="epic-reveal mb-12 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/20 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">
           <span className="text-[var(--accent)]">DN Tech</span>
           <span className="h-px w-8 bg-white/40" aria-hidden="true" />
@@ -60,7 +60,7 @@ export function HomeHero({ content }: HomeHeroProps) {
             <p className="epic-reveal mb-4 text-sm font-semibold tracking-wide text-blue-100">
               <HeroKicker subtitle={content.heroSubtitle} />
             </p>
-            <h1 className="home-hero-title dn-display max-w-4xl text-4xl text-white sm:text-5xl lg:text-7xl">
+            <h1 className="home-hero-title dn-display max-w-4xl text-4xl text-white sm:text-5xl lg:text-6xl">
               {content.heroTitle}
             </h1>
             <p className="epic-reveal mt-6 max-w-2xl text-lg leading-8 text-blue-100 sm:text-xl">

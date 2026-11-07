@@ -11,7 +11,7 @@ export function ClientLogos({ logos }: ClientLogosProps) {
 
   return (
     <section className="py-10 bg-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="dn-container">
         <p className="text-center text-sm text-gray-500 mb-6">{t('caption')}</p>
         <div className="flex flex-wrap items-center justify-center gap-6">
           {items.map((logo) => (

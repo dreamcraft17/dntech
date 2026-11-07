@@ -17,8 +17,9 @@ export function HomeFaq({ items }: HomeFaqProps) {
   const t = useTranslations('home.faq');
   return (
     <section className="home-section-alt home-section--faq epic-section py-section" id="faq">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading kicker={t('kicker')} title={t('title')} reveal />
+      <div className="dn-container dn-split">
+        <SectionHeading kicker={t('kicker')} title={t('title')} reveal className="lg:sticky lg:top-24 lg:self-start" />
+        <div>
         <div className="space-y-3">
           {items.map((faq) => (
             <details
@@ -46,6 +47,7 @@ export function HomeFaq({ items }: HomeFaqProps) {
           </Link>
           .
         </p>
+        </div>
       </div>
     </section>
   );
