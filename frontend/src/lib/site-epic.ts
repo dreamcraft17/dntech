@@ -30,9 +30,9 @@ function splitTitle(el: HTMLElement | null) {
   el.dataset.epicSplit = '1';
 }
 
-function initRevealObserver(root: ParentNode) {
-  const targets = root.querySelectorAll('.epic-reveal, .epic-stagger');
-  if (!targets.length) return;
+function initRevealObserver(root: ParentNode): IntersectionObserver | null {
+  const targets = root.querySelectorAll('.epic-reveal:not(.is-visible), .epic-stagger:not(.is-visible)');
+  if (!targets.length) return null;
 
   const io = new IntersectionObserver(
     (entries) => {
@@ -47,6 +47,7 @@ function initRevealObserver(root: ParentNode) {
   );
 
   targets.forEach((el) => io.observe(el));
+  return io;
 }
 
 function bindStaggerItems(root: ParentNode) {
@@ -112,7 +113,7 @@ async function initHeroParallax(scene: Element) {
   }
 }
 
-export function initSiteEpic() {
+export function initSiteEpic(): (() => void) | undefined {
   const shell = document.querySelector('.public-shell--epic');
   if (!shell) return;
 
@@ -121,7 +122,16 @@ export function initSiteEpic() {
   shell.classList.add('is-ready');
 
   bindStaggerItems(shell);
-  initRevealObserver(shell);
+  const io = initRevealObserver(shell);
+
+  // Safety net: never leave content invisible if the observer misses an
+  // element (hidden tab, HMR re-render, odd scroll containers).
+  const fallback = window.setTimeout(() => {
+    shell.querySelectorAll('.epic-reveal, .epic-stagger').forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) el.classList.add('is-visible');
+    });
+  }, 1200);
 
   if (motionAllowed()) {
     const hero = shell.querySelector('.scene-hero');
@@ -132,4 +142,9 @@ export function initSiteEpic() {
   } else {
     shell.querySelectorAll('.epic-reveal, .epic-stagger').forEach((el) => el.classList.add('is-visible'));
   }
+
+  return () => {
+    io?.disconnect();
+    window.clearTimeout(fallback);
+  };
 }

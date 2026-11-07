@@ -542,3 +542,26 @@
   min-height: 18rem;
 }
 
+/* Hero is above the fold: animate on load, never wait for the scroll observer. */
+.public-shell--epic .scene-hero .epic-reveal,
+.public-shell--epic .scene-hero .epic-stagger > .epic-stagger-item {
+  opacity: 1;
+  transform: none;
+  transition: none;
+  animation: site-epic-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.public-shell--epic .scene-hero .epic-stagger > .epic-stagger-item {
+  animation-delay: calc(var(--i, 0) * 0.08s + 0.2s);
+}
+
+@keyframes site-epic-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}

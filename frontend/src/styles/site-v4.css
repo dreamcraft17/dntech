@@ -116,6 +116,11 @@
   color: var(--foreground);
 }
 
+.public-shell--v4 .dn-display.text-white,
+.public-shell--v4 .scene-hero .dn-display {
+  color: #fff;
+}
+
 .public-shell--v4 .dn-page-intro {
   position: relative;
   margin-bottom: 2.75rem;
