@@ -12,7 +12,10 @@ export function HomeJobPaths() {
   const t = useTranslations('home.jobPaths');
 
   return (
-    <section className="home-section-alt home-section--paths epic-section py-section" aria-labelledby="job-paths-heading">
+    <section
+      className="home-section-alt home-section--paths epic-section epic-birth py-section"
+      aria-labelledby="job-paths-heading"
+    >
       <div className="dn-container">
         <div className="dn-split">
           <header className="epic-reveal">
@@ -28,9 +31,9 @@ export function HomeJobPaths() {
             </p>
           </header>
 
-          <ul className="grid divide-y divide-slate-300 border-y border-slate-300 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <ul className="epic-stagger grid divide-y divide-slate-300 border-y border-slate-300 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {paths.map(({ key, href, icon: Icon }) => (
-              <li key={key}>
+              <li key={key} className="epic-stagger-item">
                 <Link
                   href={href}
                   className="group flex h-full min-h-56 flex-col p-5 transition-colors hover:bg-white focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--primary)] sm:p-6"

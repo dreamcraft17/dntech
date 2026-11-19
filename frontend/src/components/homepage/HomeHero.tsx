@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -29,26 +30,43 @@ export function HomeHero({ content }: HomeHeroProps) {
       data-scene="hero"
       aria-label={t('brandRole')}
     >
+      {/* depth-0 — far background illustration (keep scene bg) */}
       <div
         className="layer depth-0 bg-cover bg-center"
         data-depth="0"
         style={{ backgroundImage: "url('/hero_bg.png')" }}
         aria-hidden="true"
       />
+      {/* depth-1 — navy veil + atmospheric glow */}
       <div className="layer depth-1" data-depth="1" aria-hidden="true" />
+      {/* depth-2 — floating brand mark
+          CSS approximation: round.png has a solid dark canvas.
+          Replace with a transparent PNG for best quality. */}
       <div className="layer depth-2" data-depth="2" aria-hidden="true">
         <img
           src="/round.png"
           alt=""
           width={240}
           height={240}
-          className="epic-mark float-loop"
+          className="epic-mark float-loop on-dark-bg"
           decoding="async"
         />
       </div>
 
+      {/* depth-5 — foreground particles (CSS only, no bitmap) */}
+      <div className="layer depth-5 epic-particles" data-depth="5" aria-hidden="true">
+        <span className="epic-particle" style={{ '--px': '12%', '--py': '28%' } as CSSProperties} />
+        <span className="epic-particle" style={{ '--px': '78%', '--py': '22%' } as CSSProperties} />
+        <span className="epic-particle" style={{ '--px': '88%', '--py': '58%' } as CSSProperties} />
+        <span className="epic-particle epic-particle--sm" style={{ '--px': '18%', '--py': '72%' } as CSSProperties} />
+        <span className="epic-particle epic-particle--sm" style={{ '--px': '62%', '--py': '78%' } as CSSProperties} />
+      </div>
+
       <div className="scene-inner dn-container relative z-10">
-        <div className="epic-reveal mb-12 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/20 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">
+        <div
+          className="epic-reveal mb-12 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/20 pb-4 text-xs font-semibold uppercase tracking-[0.18em] text-blue-100"
+          data-depth="4"
+        >
           <span className="text-[var(--accent)]">DN Tech</span>
           <span className="h-px w-8 bg-white/40" aria-hidden="true" />
           <span>{t('brandRole')}</span>
@@ -56,7 +74,7 @@ export function HomeHero({ content }: HomeHeroProps) {
         </div>
 
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1.35fr)_minmax(20rem,0.65fr)] lg:items-end">
-          <div className="epic-copy max-w-3xl">
+          <div className="epic-copy max-w-3xl" data-depth="4">
             <p className="epic-reveal mb-4 text-sm font-semibold tracking-wide text-blue-100">
               <HeroKicker subtitle={content.heroSubtitle} />
             </p>

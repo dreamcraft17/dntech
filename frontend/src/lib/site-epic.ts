@@ -1,7 +1,12 @@
 /**
- * Site epic scroll — parallax hero + in-view reveals
+ * Site epic scroll — multi-depth hero parallax + section births + in-view reveals
+ * Techniques: scrub parallax (0–5), masked line title, top-down clip birth, float-loop
  * Author: Dozer
  */
+
+import type { ScrollTrigger as ScrollTriggerType } from 'gsap/ScrollTrigger';
+
+type Killable = { kill: () => void };
 
 function motionAllowed() {
   if (typeof window === 'undefined') return false;
@@ -16,9 +21,11 @@ function splitTitle(el: HTMLElement | null) {
   const words = text.split(/\s+/);
   el.textContent = '';
   el.classList.add('epic-split');
+  el.setAttribute('aria-label', text);
   words.forEach((word, i) => {
     const wrap = document.createElement('span');
     wrap.className = 'epic-word';
+    wrap.setAttribute('aria-hidden', 'true');
     wrap.style.setProperty('--i', String(i));
     const inner = document.createElement('span');
     inner.className = 'epic-word-inner';
@@ -58,7 +65,27 @@ function bindStaggerItems(root: ParentNode) {
   });
 }
 
-async function initPageIntroParallax(scene: Element) {
+function initClipBirthObserver(root: ParentNode): IntersectionObserver | null {
+  const births = root.querySelectorAll('.epic-birth:not(.is-born):not(.epic-birth--live)');
+  if (!births.length) return null;
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-born');
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { root: null, rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+  );
+
+  births.forEach((el) => io.observe(el));
+  return io;
+}
+
+async function initPageIntroParallax(scene: Element, killables: Killable[]) {
   const depth0 = scene.querySelector('[data-depth="0"]');
   if (!depth0) return;
 
@@ -67,7 +94,7 @@ async function initPageIntroParallax(scene: Element) {
     const { ScrollTrigger } = await import('gsap/ScrollTrigger');
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.to(depth0, {
+    const tween = gsap.to(depth0, {
       y: 32,
       ease: 'none',
       scrollTrigger: {
@@ -77,15 +104,21 @@ async function initPageIntroParallax(scene: Element) {
         scrub: 0.8,
       },
     });
+    killables.push(tween);
+    const st = tween.scrollTrigger as ScrollTriggerType | undefined;
+    if (st) killables.push(st);
   } catch {
     /* static */
   }
 }
 
-async function initHeroParallax(scene: Element) {
+async function initHeroParallax(scene: Element, killables: Killable[]) {
   const depth0 = scene.querySelector('[data-depth="0"]');
+  const depth1 = scene.querySelector('[data-depth="1"]');
   const depth2 = scene.querySelector('[data-depth="2"] .epic-mark');
   const depth3 = scene.querySelector('[data-depth="3"]');
+  const depth4 = scene.querySelector('[data-depth="4"]');
+  const depth5 = scene.querySelector('[data-depth="5"]');
   if (!depth0 && !depth2 && !depth3) return;
 
   try {
@@ -93,23 +126,70 @@ async function initHeroParallax(scene: Element) {
     const { ScrollTrigger } = await import('gsap/ScrollTrigger');
     gsap.registerPlugin(ScrollTrigger);
 
+    const scrubbing = [depth0, depth1, depth2, depth3, depth4, depth5].filter(Boolean) as Element[];
+    scrubbing.forEach((el) => {
+      (el as HTMLElement).style.willChange = 'transform';
+    });
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: scene,
         start: 'top top',
         end: 'bottom top',
         scrub: 0.6,
+        onLeave: () => {
+          scrubbing.forEach((el) => {
+            (el as HTMLElement).style.willChange = 'auto';
+          });
+        },
+        onEnterBack: () => {
+          scrubbing.forEach((el) => {
+            (el as HTMLElement).style.willChange = 'transform';
+          });
+        },
       },
     });
 
-    if (depth0) tl.to(depth0, { y: 56, scale: 1.06, ease: 'none' }, 0);
-    if (depth2) tl.to(depth2, { y: -40, rotate: 4, ease: 'none' }, 0);
-    if (depth3) tl.to(depth3, { y: -24, ease: 'none' }, 0);
+    // Depth table: farther layers move less (positive y = lag), near layers counter-scroll
+    if (depth0) tl.to(depth0, { y: 48, scale: 1.05, ease: 'none' }, 0);
+    if (depth1) tl.to(depth1, { y: 28, ease: 'none' }, 0);
+    if (depth2) tl.to(depth2, { y: -56, rotate: 6, scale: 1.08, ease: 'none' }, 0);
+    if (depth3) tl.to(depth3, { y: -36, ease: 'none' }, 0);
+    if (depth4) tl.to(depth4, { y: 28, opacity: 0.82, ease: 'none' }, 0);
+    if (depth5) tl.to(depth5, { y: -72, opacity: 0.35, ease: 'none' }, 0);
 
-    const copy = scene.querySelector('.epic-copy');
-    if (copy) tl.to(copy, { y: 20, opacity: 0.9, ease: 'none' }, 0);
+    killables.push(tl);
+    if (tl.scrollTrigger) killables.push(tl.scrollTrigger);
   } catch {
     /* GSAP unavailable — static layout is fine */
+  }
+}
+
+async function initJobPathsScrub(section: Element, killables: Killable[]) {
+  try {
+    const { gsap } = await import('gsap');
+    const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+    gsap.registerPlugin(ScrollTrigger);
+
+    const tween = gsap.fromTo(
+      section,
+      { clipPath: 'inset(0 0 100% 0)' },
+      {
+        clipPath: 'inset(0 0 0% 0)',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 92%',
+          end: 'top 48%',
+          scrub: 1.1,
+        },
+      },
+    );
+    killables.push(tween);
+    if (tween.scrollTrigger) killables.push(tween.scrollTrigger);
+  } catch {
+    section.classList.remove('epic-birth--live');
+    section.classList.add('is-born');
   }
 }
 
@@ -117,12 +197,21 @@ export function initSiteEpic(): (() => void) | undefined {
   const shell = document.querySelector('.public-shell--epic');
   if (!shell) return;
 
+  const killables: Killable[] = [];
+
   const title = shell.querySelector('.home-hero-title');
   splitTitle(title as HTMLElement | null);
   shell.classList.add('is-ready');
 
   bindStaggerItems(shell);
+
+  const allowMotion = motionAllowed();
+  const jobPaths = shell.querySelector('.home-section--paths.epic-birth');
+  // Claim clip ownership before the birth observer runs (GSAP loads async).
+  if (allowMotion && jobPaths) jobPaths.classList.add('epic-birth--live');
+
   const io = initRevealObserver(shell);
+  const birthIo = initClipBirthObserver(shell);
 
   // Safety net: never leave content invisible if the observer misses an
   // element (hidden tab, HMR re-render, odd scroll containers).
@@ -131,20 +220,34 @@ export function initSiteEpic(): (() => void) | undefined {
       const rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight) el.classList.add('is-visible');
     });
+    shell.querySelectorAll('.epic-birth:not(.epic-birth--live)').forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.92) el.classList.add('is-born');
+    });
   }, 1200);
 
-  if (motionAllowed()) {
+  if (allowMotion) {
     const hero = shell.querySelector('.scene-hero');
-    if (hero) void initHeroParallax(hero);
+    if (hero) void initHeroParallax(hero, killables);
     shell.querySelectorAll('.scene-page').forEach((pageScene) => {
-      void initPageIntroParallax(pageScene);
+      void initPageIntroParallax(pageScene, killables);
     });
+    if (jobPaths) void initJobPathsScrub(jobPaths, killables);
   } else {
     shell.querySelectorAll('.epic-reveal, .epic-stagger').forEach((el) => el.classList.add('is-visible'));
+    shell.querySelectorAll('.epic-birth').forEach((el) => el.classList.add('is-born'));
   }
 
   return () => {
     io?.disconnect();
+    birthIo?.disconnect();
     window.clearTimeout(fallback);
+    killables.forEach((k) => {
+      try {
+        k.kill();
+      } catch {
+        /* already dead */
+      }
+    });
   };
 }
