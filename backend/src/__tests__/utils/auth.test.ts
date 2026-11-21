@@ -49,4 +49,30 @@ describe('auth utils', () => {
     expect(canWrite(UserRole.Editor, 'blog')).toBe(true);
     expect(canWrite(UserRole.Viewer, 'blog')).toBe(false);
   });
+
+  describe('canWrite per resource', () => {
+    it.each(['services', 'portfolio', 'blog', 'team', 'testimonials', 'media', 'faqs', 'careers'])(
+      'lets an Editor write content resource %s',
+      (resource) => {
+        expect(canWrite(UserRole.Editor, resource)).toBe(true);
+      },
+    );
+
+    it.each(['leads', 'products', 'users', 'settings', 'unknown-resource'])(
+      'blocks an Editor from writing %s',
+      (resource) => {
+        expect(canWrite(UserRole.Editor, resource)).toBe(false);
+      },
+    );
+
+    it.each([UserRole.SuperAdmin, UserRole.ContentManager])('keeps %s able to write anything', (role) => {
+      expect(canWrite(role, 'leads')).toBe(true);
+      expect(canWrite(role, 'products')).toBe(true);
+    });
+
+    it('never lets a Viewer write', () => {
+      expect(canWrite(UserRole.Viewer, 'blog')).toBe(false);
+      expect(canWrite(UserRole.Viewer, 'leads')).toBe(false);
+    });
+  });
 });

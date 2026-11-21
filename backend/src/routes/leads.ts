@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
-import { asyncHandler, successResponse, AppError } from '../utils/helpers';
+import { asyncHandler, successResponse } from '../utils/helpers';
 import { createLead, checkDuplicateEmail } from '../services/LeadService';
 
 const router = Router();

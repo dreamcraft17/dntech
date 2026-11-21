@@ -16,14 +16,18 @@ export default function FaqPage() {
   const t = useTranslations('pages');
   const searchParams = useSearchParams();
   const [faqs, setFaqs] = useState<Faq[]>([]);
-  const [search, setSearch] = useState('');
+  const urlQuery = searchParams.get('search')?.trim() ?? '';
+  const [search, setSearch] = useState(urlQuery);
   const [category, setCategory] = useState('');
   const [openId, setOpenId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const q = searchParams.get('search');
-    if (q?.trim()) setSearch(q.trim());
-  }, [searchParams]);
+  // Re-sync when ?search= changes (e.g. header search while already on /faq).
+  // Adjusting state during render, not in an effect: no extra render pass.
+  const [prevUrlQuery, setPrevUrlQuery] = useState(urlQuery);
+  if (urlQuery !== prevUrlQuery) {
+    setPrevUrlQuery(urlQuery);
+    if (urlQuery) setSearch(urlQuery);
+  }
 
   useEffect(() => {
     const params = new URLSearchParams();

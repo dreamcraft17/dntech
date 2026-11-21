@@ -7,7 +7,7 @@ const router = Router();
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const { industry, technology, search } = req.query;
+    const { industry, search } = req.query;
     const { page, pageSize, skip } = getPagination(req.query as Record<string, unknown>);
 
     const where: Record<string, unknown> = { status: 'active', deletedAt: null };

@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -43,13 +44,13 @@ export function HomeHero({ content }: HomeHeroProps) {
           CSS approximation: round.png has a solid dark canvas.
           Replace with a transparent PNG for best quality. */}
       <div className="layer depth-2" data-depth="2" aria-hidden="true">
-        <img
+        <Image
           src="/round.png"
           alt=""
           width={240}
           height={240}
+          sizes="120px"
           className="epic-mark float-loop on-dark-bg"
-          decoding="async"
         />
       </div>
 

@@ -111,8 +111,14 @@ export function hasPermission(role: UserRole, permission: string): boolean {
   return perms.includes(`${resource}:view`) && permission.endsWith(':view');
 }
 
+// Content resources an Editor may write: ContentManager's whole-resource grants
+// (entries without ':view'), so the two lists cannot drift apart.
+const EDITOR_WRITABLE_RESOURCES: readonly string[] = ROLE_PERMISSIONS.ContentManager.filter(
+  (perm) => !perm.includes(':'),
+);
+
 export function canWrite(role: UserRole, resource: string): boolean {
   if (role === 'SuperAdmin' || role === 'ContentManager') return true;
-  if (role === 'Editor') return true;
+  if (role === 'Editor') return EDITOR_WRITABLE_RESOURCES.includes(resource);
   return false;
 }

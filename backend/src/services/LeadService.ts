@@ -1,5 +1,5 @@
 import prisma from '../config/database';
-import { LeadStatus, FormSubmission } from '@prisma/client';
+import { FormSubmission } from '@prisma/client';
 import { sendWelcomeEmail, sendLeadNotification } from './EmailService';
 import logger from '../config/logger';
 import { getPagination, param, AppError } from '../utils/helpers';

@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { z } from 'zod';
 import prisma from '../config/database';
 import { asyncHandler, successResponse, paginatedResponse, getPagination, param } from '../utils/helpers';
 

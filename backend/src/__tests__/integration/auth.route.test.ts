@@ -37,7 +37,7 @@ jest.mock('../../utils/auth', () => ({
 }));
 
 jest.mock('../../middleware/auth', () => ({
-  authenticate: (req: any, _res: any, next: any) => {
+  authenticate: (req: { user?: unknown }, _res: unknown, next: () => void) => {
     req.user = { id: 'u1', role: UserRole.SuperAdmin };
     next();
   },

@@ -5,8 +5,9 @@ jest.mock('next/image', () => ({
   default: (props: Record<string, unknown>) => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const React = require('react');
-    const { fill, priority, loader, quality, placeholder, blurDataURL, unoptimized, ...imgProps } =
-      props;
+    // Strip next/image-only props that are not valid <img> attributes.
+    const nextOnly = new Set(['fill', 'priority', 'loader', 'quality', 'placeholder', 'blurDataURL', 'unoptimized']);
+    const imgProps = Object.fromEntries(Object.entries(props).filter(([key]) => !nextOnly.has(key)));
     return React.createElement('img', { alt: '', ...imgProps });
   },
 }));
