@@ -208,7 +208,8 @@
 
 .public-shell--epic main .epic-section:not(.epic-birth) {
   content-visibility: auto;
-  contain-intrinsic-size: auto 480px;
+  /* Keep placeholder short — 480px left a big empty strip before paint. */
+  contain-intrinsic-size: auto 120px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -322,8 +323,17 @@
   display: block;
   width: min(7rem, 22vw);
   height: 3px;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
   background: var(--accent);
+}
+
+/* Paths → products was too airy (double py-section + clip scrub). */
+.homepage-story .home-section--paths {
+  padding-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.homepage-story .home-section--products {
+  padding-top: clamp(1.75rem, 3.5vw, 2.75rem);
 }
 
 .homepage-story .home-section-alt > div,

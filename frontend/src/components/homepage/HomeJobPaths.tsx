@@ -13,7 +13,7 @@ export function HomeJobPaths() {
 
   return (
     <section
-      className="home-section-alt home-section--paths epic-section epic-birth py-section"
+      className="home-section-alt home-section--paths epic-section py-section"
       aria-labelledby="job-paths-heading"
     >
       <div className="dn-container">

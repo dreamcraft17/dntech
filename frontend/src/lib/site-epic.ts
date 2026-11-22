@@ -165,34 +165,6 @@ async function initHeroParallax(scene: Element, killables: Killable[]) {
   }
 }
 
-async function initJobPathsScrub(section: Element, killables: Killable[]) {
-  try {
-    const { gsap } = await import('gsap');
-    const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-    gsap.registerPlugin(ScrollTrigger);
-
-    const tween = gsap.fromTo(
-      section,
-      { clipPath: 'inset(0 0 100% 0)' },
-      {
-        clipPath: 'inset(0 0 0% 0)',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 92%',
-          end: 'top 48%',
-          scrub: 1.1,
-        },
-      },
-    );
-    killables.push(tween);
-    if (tween.scrollTrigger) killables.push(tween.scrollTrigger);
-  } catch {
-    section.classList.remove('epic-birth--live');
-    section.classList.add('is-born');
-  }
-}
-
 export function initSiteEpic(): (() => void) | undefined {
   const shell = document.querySelector('.public-shell--epic');
   if (!shell) return;
@@ -206,9 +178,6 @@ export function initSiteEpic(): (() => void) | undefined {
   bindStaggerItems(shell);
 
   const allowMotion = motionAllowed();
-  const jobPaths = shell.querySelector('.home-section--paths.epic-birth');
-  // Claim clip ownership before the birth observer runs (GSAP loads async).
-  if (allowMotion && jobPaths) jobPaths.classList.add('epic-birth--live');
 
   const io = initRevealObserver(shell);
   const birthIo = initClipBirthObserver(shell);
@@ -232,7 +201,6 @@ export function initSiteEpic(): (() => void) | undefined {
     shell.querySelectorAll('.scene-page').forEach((pageScene) => {
       void initPageIntroParallax(pageScene, killables);
     });
-    if (jobPaths) void initJobPathsScrub(jobPaths, killables);
   } else {
     shell.querySelectorAll('.epic-reveal, .epic-stagger').forEach((el) => el.classList.add('is-visible'));
     shell.querySelectorAll('.epic-birth').forEach((el) => el.classList.add('is-born'));
