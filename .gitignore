@@ -12,3 +12,6 @@ uploads/
 .DS_Store
 
 docs/
+
+# handoff Claude per repo (lokal)
+.claude/rules/handoff.md
